@@ -3,10 +3,11 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'https://github.com/rockerhieu/mvn-repo/raw/master/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.+'
-        classpath 'org.robolectric.gradle:gradle-android-test-plugin:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'org.robolectric.gradle:gradle-android-test-plugin:0.10.1-SNAPSHOT'
     }
 }
 
