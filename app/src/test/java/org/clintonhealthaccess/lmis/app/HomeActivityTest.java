@@ -17,6 +17,6 @@ public class HomeActivityTest {
         assertThat(homeActivity, not(nullValue()));
     }
 
-    
+
 
 }
