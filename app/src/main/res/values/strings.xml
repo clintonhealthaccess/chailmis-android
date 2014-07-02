@@ -4,4 +4,12 @@
     <string name="title_activity_home">DHIS LMIS</string>
     <string name="hello_world">Hello world! Uganda</string>
     <string name="action_settings">Settings</string>
+    <string name="losses">Losses &amp; Expiry</string>
+    <string name="reports">Reports</string>
+    <string name="messages">Messages</string>
+    <string name="order">Order</string>
+    <string name="receive">Receive</string>
+    <string name="dispense">Dispense</string>
+    <string name="alerts">Alerts</string>
+    <string name="Notifications">Notifications</string>
 </resources>

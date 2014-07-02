@@ -36,7 +36,6 @@ dependencies {
             'junit:junit:4.11',
             'org.robolectric:robolectric:2.3'
     compile('org.roboguice:roboguice:3.0-alpha-2') { exclude module: 'asm' }
-
-    
     compile 'com.android.support:appcompat-v7:19.1.+'
+    compile files('libs/GraphView-3.1.2.jar')
 }
