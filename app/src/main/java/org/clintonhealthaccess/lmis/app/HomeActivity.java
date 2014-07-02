@@ -1,9 +1,10 @@
 package org.clintonhealthaccess.lmis.app;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import roboguice.activity.RoboActionBarActivity;
 
@@ -11,12 +12,16 @@ import roboguice.activity.RoboActionBarActivity;
 public class HomeActivity extends RoboActionBarActivity {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-    public static final int DATE_TIME_ID = 99;
+    private TextView textFacilityName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.action_bar);
+        textFacilityName = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.textFacilityName);
+        textFacilityName.setText("Kabira Health Center");
     }
 
 
