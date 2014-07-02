@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">CHAI LMIS</string>
-    <string name="title_activity_home">Home</string>
+    <string name="app_name">DHIS LMIS</string>
+    <string name="title_activity_home">DHIS LMIS</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
 </resources>
