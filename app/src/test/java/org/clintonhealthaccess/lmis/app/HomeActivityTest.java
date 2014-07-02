@@ -16,4 +16,7 @@ public class HomeActivityTest {
         HomeActivity homeActivity = Robolectric.buildActivity(HomeActivity.class).create().get();
         assertThat(homeActivity, not(nullValue()));
     }
+
+    
+
 }

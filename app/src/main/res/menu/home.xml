@@ -1,6 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="org.clintonhealthaccess.lmis.app.HomeActivity">
-
-
+    tools:context="org.clintonhealthaccess.lmis.app.HomeActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_help"
+        android:title="HELP"
+        app:showAsAction="always|withText" />
 </menu>
