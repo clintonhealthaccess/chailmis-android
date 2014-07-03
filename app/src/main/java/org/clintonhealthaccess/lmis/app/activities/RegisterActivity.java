@@ -1,7 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +17,6 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
 
-import static android.util.Log.i;
 import static android.view.View.OnClickListener;
 import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -33,8 +32,6 @@ public class RegisterActivity extends RoboActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_register);
 
-        i("User service == null?", String.valueOf(userService == null));
-
         Button registerButton = (Button) findViewById(id.buttonRegister);
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -44,22 +41,31 @@ public class RegisterActivity extends RoboActionBarActivity {
                 if (isBlank(username) || isBlank(password)) {
                     return;
                 }
+                doRegister(username, password);
+            }
+        });
+    }
 
+    private void doRegister(final String username, final String password) {
+        AsyncTask<Void, Void, Void> registerTask = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } catch (ServiceException e) {
                     // TODO: show error message or something...
                 }
+                return null;
             }
-        });
+        };
+        registerTask.execute();
     }
 
     private String getTextFromInputField(int inputFieldId) {
         TextView inputField = (TextView) findViewById(inputFieldId);
         return valueOf(inputField.getText());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -27,13 +27,10 @@ import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.apache.http.HttpStatus.SC_OK;
 
 public class UserService {
-    private Provider<Context> contextProvider;
     private String dhis2BaseUrl = "http://104.131.225.22:8888/dhis2";
 
     @Inject
-    public UserService(Provider<Context> contextProvider) {
-        this.contextProvider = contextProvider;
-    }
+    private Context context;
 
     public boolean userRegistered() {
         try {
@@ -84,7 +81,7 @@ public class UserService {
     }
 
     private Dao<User, Long> initialiseDao() throws SQLException {
-        SQLiteOpenHelper openHelper = getHelper(contextProvider.get(), LmisSqliteOpenHelper.class);
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
         return createDao(connectionSource, User.class);
     }
