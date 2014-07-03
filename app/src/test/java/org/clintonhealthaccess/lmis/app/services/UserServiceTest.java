@@ -1,5 +1,7 @@
 package org.clintonhealthaccess.lmis.app.services;
 
+import com.github.dreamhead.moco.HttpServer;
+import com.github.dreamhead.moco.Runnable;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -10,6 +12,11 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
+import static com.github.dreamhead.moco.Moco.by;
+import static com.github.dreamhead.moco.Moco.httpserver;
+import static com.github.dreamhead.moco.Moco.status;
+import static com.github.dreamhead.moco.Moco.uri;
+import static com.github.dreamhead.moco.Runner.running;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
@@ -21,18 +28,43 @@ public class UserServiceTest {
     @Inject
     private UserService userService;
 
+    private HttpServer mockDhisServer;
+
     @Before
     public void setUp() throws SQLException {
         setUpInjection(this);
+
+        mockDhisServer = httpserver(12306);
+        userService.setDhis2BaseUrl("http://localhost:12306/dhis2");
     }
 
     @Test
     public void testShouldKnowIfThereIsUserRegistered() throws Exception {
         assertThat(userService.userRegistered(), is(false));
 
-        User newUser = userService.register("admin", "district");
-        assertThat(newUser, not(nullValue()));
+        mockDhisServer.request(by(uri("/dhis2/api/users"))).response(status(200));
 
-        assertThat(userService.userRegistered(), is(true));
+        running(mockDhisServer, new Runnable() {
+            @Override
+            public void run() throws Exception {
+                User newUser = userService.register("admin", "district");
+                assertThat(newUser, not(nullValue()));
+                assertThat(userService.userRegistered(), is(true));
+            }
+        });
+    }
+
+    @Test(expected = ServiceException.class)
+    public void testShouldDisallowRegisteringWithInvalidDHISCredentials() throws Exception {
+        assertThat(userService.userRegistered(), is(false));
+
+        mockDhisServer.request(by(uri("/dhis2/api/users"))).response(status(403));
+
+        running(mockDhisServer, new Runnable() {
+            @Override
+            public void run() throws Exception {
+                userService.register("admin", "district");
+            }
+        });
     }
 }
