@@ -14,8 +14,8 @@ android {
 
     lintOptions {
         htmlReport true
-        htmlOutput file("build/lint/lint-report.html")
-        xmlOutput file("build/lint/lint-report.xml")
+        htmlOutput file("build/reports/lint/lint-report.html")
+        xmlOutput file("build/reports/lint/lint-report.xml")
         abortOnError false
     }
 
@@ -34,7 +34,28 @@ android {
             setRoot('src/test')
         }
     }
+}
 
+apply plugin: 'pmd'
+
+check.dependsOn 'pmd'
+
+task pmd(type: Pmd) {
+    ignoreFailures = true
+
+    ruleSets = [
+            "basic", "braces", "android", "junit", "codesize", "coupling", "design",
+            "naming", "unusedcode"
+    ]
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 dependencies {
