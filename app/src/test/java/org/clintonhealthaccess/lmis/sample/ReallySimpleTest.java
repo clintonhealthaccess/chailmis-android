@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.sample;
 
-import org.clintonhealthaccess.lmis.RobolectricGradleTestRunner;
+import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

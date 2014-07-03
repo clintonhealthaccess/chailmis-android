@@ -41,7 +41,7 @@ public class HomeActivity extends RoboActionBarActivity {
     private ListView listViewNotifications;
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
