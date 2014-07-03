@@ -9,7 +9,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.clintonhealthaccess.lmis.utils.MockInjectionUtil.setUpMockInjection;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -32,7 +32,7 @@ public class HomeActivityTest {
         final UserService mockUserService = mock(UserService.class);
         when(mockUserService.userRegistered()).thenReturn(false);
 
-        setUpMockInjection(this, new AbstractModule() {
+        setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(mockUserService);
