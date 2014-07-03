@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.services.ServiceException;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -19,6 +20,7 @@ import roboguice.activity.RoboActionBarActivity;
 import static android.util.Log.i;
 import static android.view.View.OnClickListener;
 import static java.lang.String.valueOf;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.clintonhealthaccess.lmis.app.R.id;
 import static org.clintonhealthaccess.lmis.app.R.layout;
 
@@ -39,8 +41,16 @@ public class RegisterActivity extends RoboActionBarActivity {
             public void onClick(View v) {
                 String username = getTextFromInputField(id.textUsername);
                 String password = getTextFromInputField(id.textPassword);
-                userService.register(username, password);
-                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                if (isBlank(username) || isBlank(password)) {
+                    return;
+                }
+
+                try {
+                    userService.register(username, password);
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                } catch (ServiceException e) {
+                    // TODO: show error message or something...
+                }
             }
         });
     }

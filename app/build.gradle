@@ -66,7 +66,8 @@ dependencies {
             'org.mockito:mockito-all:1.8.4',
             'org.robolectric:robolectric:2.3'
     compile('org.roboguice:roboguice:3.0-alpha-2') { exclude module: 'asm' }
-    compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'org.apache.commons:commons-lang3:3.3.2',
+            'com.j256.ormlite:ormlite-android:4.48',
+            'com.android.support:appcompat-v7:19.1.+'
     compile files('libs/GraphView-3.1.2.jar')
 }
