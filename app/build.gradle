@@ -12,9 +12,9 @@ android {
         versionName "1.0"
     }
 
-    lintOptions { 
-	htmlReport true
-        htmlOutput file("lint-report.html") 
+    lintOptions {
+        htmlReport true
+        htmlOutput file("lint-report.html")
     }
 
     compileOptions {
@@ -39,6 +39,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile 'com.google.guava:guava:14.0.1',
             'junit:junit:4.11',
+            'org.mockito:mockito-all:1.8.4',
             'org.robolectric:robolectric:2.3'
     compile('org.roboguice:roboguice:3.0-alpha-2') { exclude module: 'asm' }
     compile 'com.android.support:appcompat-v7:19.1.+'

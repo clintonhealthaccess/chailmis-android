@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis;
 
 import org.junit.runners.model.InitializationError;
+import org.mockito.MockitoAnnotations;
 import org.robolectric.AndroidManifest;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

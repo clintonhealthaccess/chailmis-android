@@ -10,11 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,11 +40,14 @@ public class HomeActivity extends RoboActionBarActivity {
     @InjectView(R.id.listViewNotifications)
     private ListView listViewNotifications;
 
+    @Inject
+    UserService userService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!userRegistered()) {
+        if(!userService.userRegistered()) {
             startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
         }
 
@@ -53,11 +58,6 @@ public class HomeActivity extends RoboActionBarActivity {
         setFacilityName("Kabira Health Center");
         setupGraph();
         setupAlerts();
-    }
-
-    private boolean userRegistered() {
-        // TODO: more logic goes here
-        return true;
     }
 
     private void setFacilityName(String text) {
