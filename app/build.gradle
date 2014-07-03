@@ -12,6 +12,10 @@ android {
         versionName "1.0"
     }
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+
     lintOptions {
         htmlReport true
         htmlOutput file("build/reports/lint/lint-report.html")
@@ -66,10 +70,11 @@ dependencies {
             'org.mockito:mockito-all:1.8.4',
             'com.github.dreamhead:moco-core:0.9.2',
             'org.robolectric:robolectric:2.3'
-    compile('org.roboguice:roboguice:3.0-alpha-2') { exclude module: 'asm' }
+    compile('org.roboguice:roboguice:3.0-alpha-2') {
+        exclude module: 'asm'
+    }
     compile 'org.apache.commons:commons-lang3:3.3.2',
             'com.j256.ormlite:ormlite-android:4.48',
-            'org.glassfish.jersey.core:jersey-client:2.10',
             'com.android.support:appcompat-v7:19.1.+'
     compile files('libs/GraphView-3.1.2.jar')
 }
