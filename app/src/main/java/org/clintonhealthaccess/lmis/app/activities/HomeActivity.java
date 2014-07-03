@@ -1,5 +1,6 @@
-package org.clintonhealthaccess.lmis.app;
+package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
+
+import org.clintonhealthaccess.lmis.app.R;
 
 import java.util.ArrayList;
 
@@ -38,6 +41,10 @@ public class HomeActivity extends RoboActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(!userRegistered()) {
+            startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+        }
+
         setContentView(R.layout.activity_home);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -49,7 +56,11 @@ public class HomeActivity extends RoboActionBarActivity {
         setupGraph();
 
         setupAlerts();
+    }
 
+    private boolean userRegistered() {
+        // TODO: more logic goes here
+        return true;
     }
 
     private void setFacilityName(String text) {

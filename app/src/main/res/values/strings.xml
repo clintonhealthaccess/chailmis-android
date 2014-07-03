@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">DHIS LMIS</string>
     <string name="title_activity_home">DHIS LMIS</string>
     <string name="hello_world">Hello world! Uganda</string>
@@ -12,4 +13,6 @@
     <string name="dispense">Dispense</string>
     <string name="alerts">Alerts</string>
     <string name="Notifications">Notifications</string>
+    <string name="title_activity_register">RegisterActivity</string>
+
 </resources>
