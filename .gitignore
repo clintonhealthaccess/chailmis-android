@@ -4,3 +4,4 @@
 local.properties
 build
 .DS_Store
+app/lint-report*
