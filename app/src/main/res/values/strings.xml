@@ -3,7 +3,7 @@
 
     <string name="app_name">DHIS LMIS</string>
     <string name="title_activity_home">DHIS LMIS</string>
-    <string name="hello_world">Hello world! Uganda</string>
+    <string name="register_label">Please register with your DHIS2 credentials:</string>
     <string name="action_settings">Settings</string>
     <string name="losses">Losses &amp; Expiry</string>
     <string name="reports">Reports</string>
