@@ -24,5 +24,7 @@
     <string name="register">Register</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="password_error">Password is required</string>
+    <string name="username_error">Username is required</string>
 
 </resources>

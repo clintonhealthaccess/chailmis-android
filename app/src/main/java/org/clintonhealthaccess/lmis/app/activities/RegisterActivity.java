@@ -16,6 +16,7 @@ import org.clintonhealthaccess.lmis.app.services.ServiceException;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static java.lang.String.valueOf;
@@ -27,6 +28,12 @@ public class RegisterActivity extends RoboActionBarActivity {
     @Inject
     private UserService userService;
 
+    @InjectView(id.textUsername)
+    TextView textUsername;
+
+    @InjectView(id.textPassword)
+    TextView textPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +43,18 @@ public class RegisterActivity extends RoboActionBarActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = getTextFromInputField(id.textUsername);
-                String password = getTextFromInputField(id.textPassword);
-                if (isBlank(username) || isBlank(password)) {
+                String username = textUsername.getText().toString();
+                String password = textPassword.getText().toString();
+                if (isBlank(username)) {
+                    textUsername.setError(getString(R.string.username_error));
                     return;
                 }
+
+                if (isBlank(password)) {
+                    textPassword.setError(getString(R.string.password_error));
+                    return;
+                }
+
                 doRegister(username, password);
             }
         });

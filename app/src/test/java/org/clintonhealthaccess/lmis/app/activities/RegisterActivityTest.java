@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,8 +17,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -82,6 +85,25 @@ public class RegisterActivityTest {
         getRegisterButton().performClick();
 
         assertThat(shadowOf(registerActivity).getNextStartedActivity(), nullValue());
+    }
+
+    @Test
+    public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingUsername() {
+        fillTextField(R.id.textPassword, "district");
+        getRegisterButton().performClick();
+
+        assertThat(registerActivity.textUsername.getError(), is(notNullValue()));
+
+    }
+
+    @Test
+    public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingPassword() {
+
+        fillTextField(R.id.textUsername, "admin");
+        getRegisterButton().performClick();
+
+        assertThat(registerActivity.textPassword.getError(), is(notNullValue()));
+
     }
 
     private void fillTextField(int inputFieldId, String text) {
