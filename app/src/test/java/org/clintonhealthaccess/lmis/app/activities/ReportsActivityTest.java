@@ -1,12 +1,16 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,5 +41,14 @@ public class ReportsActivityTest {
 
     }
 
+    @Ignore
+    @Test
+    public void testHelpIsAvailableAsAMenuItem() {
+        ReportsActivity reportsActivity = getReportsActivity();
+        MenuBuilder menu = new MenuBuilder(reportsActivity);
+        reportsActivity.onCreateOptionsMenu(menu);
+        //reportsActivity.menu1
+        assertTrue(menu.findItem(R.id.action_help).isVisible());
+    }
 
 }
