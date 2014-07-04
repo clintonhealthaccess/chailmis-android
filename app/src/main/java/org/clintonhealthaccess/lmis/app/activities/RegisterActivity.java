@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -61,16 +62,27 @@ public class RegisterActivity extends RoboActionBarActivity {
     }
 
     private void doRegister(final String username, final String password) {
-        AsyncTask<Void, Void, Void> registerTask = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } catch (ServiceException e) {
-                    // TODO: show error message or something...
+                    return false;
                 }
-                return null;
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean succeeded) {
+                if (succeeded) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.registration_successful_message),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.registration_failed_error),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         };
         registerTask.execute();

@@ -15,6 +15,8 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowToast;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -103,6 +105,32 @@ public class RegisterActivityTest {
         getRegisterButton().performClick();
 
         assertThat(registerActivity.textPassword.getError(), is(notNullValue()));
+
+    }
+
+
+    @Test
+    public void testErrorShouldBeShownIfRegistrationFailed() {
+        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException());
+        fillTextField(R.id.textUsername, "adminsdsd");
+        fillTextField(R.id.textPassword, "districtsds");
+        getRegisterButton().performClick();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_failed_error)));
+
+    }
+
+
+    @Test
+    public void testMessageShouldBeShownIfRegistrationIsSuccessful() {
+        when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
+        fillTextField(R.id.textUsername, "admin");
+        fillTextField(R.id.textPassword, "district");
+        getRegisterButton().performClick();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
 
     }
 
