@@ -104,6 +104,70 @@ public class HomeActivityTest {
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
     }
 
+    @Test
+    public  void testClickReceiveButtonNavigatesToReceiveActivity(){
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonReceive).callOnClick();
+
+        Intent intent = new Intent(homeActivity, ReceiveActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+    @Test
+    public  void testClickOrderButtonNavigatesToReceiveActivity(){
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonOrder).callOnClick();
+
+        Intent intent = new Intent(homeActivity, OrderActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+    @Test
+    public  void testClickLossesButtonNavigatesToReceiveActivity(){
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonLosses).callOnClick();
+
+        Intent intent = new Intent(homeActivity, LossesActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+    @Test
+    public  void testClickReportsButtonNavigatesToReceiveActivity(){
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonReports).callOnClick();
+
+        Intent intent = new Intent(homeActivity, ReportsActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+    @Test
+    public  void testClickMessagesButtonNavigatesToReceiveActivity(){
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonMessages).callOnClick();
+
+        Intent intent = new Intent(homeActivity, MessagesActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
 
     @Test
     public void testShouldRenderRegisterActivityIfThereIsNoUserRegistered() throws Exception {

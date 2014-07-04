@@ -16,5 +16,10 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_dispense">DispenseActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_receive">ReceiveActivity</string>
+    <string name="title_activity_losses">LossesActivity</string>
+    <string name="title_activity_order">OrderActivity</string>
+    <string name="title_activity_messages">MessagesActivity</string>
+    <string name="title_activity_reports">ReportsActivity</string>
 
 </resources>

@@ -89,14 +89,24 @@ public class HomeActivity extends RoboActionBarActivity {
                         startActivity(intent);
                         break;
                     case R.id.buttonReceive:
+                        Intent receiveIntent = new Intent(getApplicationContext(), ReceiveActivity.class);
+                        startActivity(receiveIntent);
                         break;
                     case R.id.buttonOrder:
+                        Intent orderIntent = new Intent(getApplicationContext(), OrderActivity.class);
+                        startActivity(orderIntent);
                         break;
                     case R.id.buttonLosses:
+                        Intent lossesIntent = new Intent(getApplicationContext(), LossesActivity.class);
+                        startActivity(lossesIntent);
                         break;
                     case R.id.buttonMessages:
+                        Intent messagesIntent = new Intent(getApplicationContext(), MessagesActivity.class);
+                        startActivity(messagesIntent);
                         break;
                     case R.id.buttonReports:
+                        Intent reportsIntent = new Intent(getApplicationContext(), ReportsActivity.class);
+                        startActivity(reportsIntent);
                         break;
 
                 }
