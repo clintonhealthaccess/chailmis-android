@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.jjoe64.graphview.BarGraphView;
 import com.jjoe64.graphview.GraphView;
@@ -20,15 +24,16 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static android.view.View.OnClickListener;
+
 @ContentView(R.layout.activity_home)
 public class HomeActivity extends BaseActivity {
-
-
-
     @InjectView(R.id.layoutGraph)
     LinearLayout layout;
 
@@ -59,6 +64,18 @@ public class HomeActivity extends BaseActivity {
     @Inject
     private UserService userService;
 
+    private Map<Integer, Class<? extends BaseActivity>> buttonRoutes =
+            new HashMap<Integer, Class<? extends BaseActivity>>() {
+                {
+                    put(R.id.buttonDispense, DispenseActivity.class);
+                    put(R.id.buttonReceive, ReceiveActivity.class);
+                    put(R.id.buttonOrder, OrderActivity.class);
+                    put(R.id.buttonLosses, LossesActivity.class);
+                    put(R.id.buttonMessages, MessagesActivity.class);
+                    put(R.id.buttonReports, ReportsActivity.class);
+                }
+            };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,45 +91,19 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupButtonEvents() {
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        OnClickListener onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.buttonDispense:
-                        Intent intent = new Intent(getApplicationContext(), DispenseActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.buttonReceive:
-                        Intent receiveIntent = new Intent(getApplicationContext(), ReceiveActivity.class);
-                        startActivity(receiveIntent);
-                        break;
-                    case R.id.buttonOrder:
-                        Intent orderIntent = new Intent(getApplicationContext(), OrderActivity.class);
-                        startActivity(orderIntent);
-                        break;
-                    case R.id.buttonLosses:
-                        Intent lossesIntent = new Intent(getApplicationContext(), LossesActivity.class);
-                        startActivity(lossesIntent);
-                        break;
-                    case R.id.buttonMessages:
-                        Intent messagesIntent = new Intent(getApplicationContext(), MessagesActivity.class);
-                        startActivity(messagesIntent);
-                        break;
-                    case R.id.buttonReports:
-                        Intent reportsIntent = new Intent(getApplicationContext(), ReportsActivity.class);
-                        startActivity(reportsIntent);
-                        break;
-
-                }
-
+                Class<? extends BaseActivity> activityClass = buttonRoutes.get(view.getId());
+                Intent intent = new Intent(getApplicationContext(), activityClass);
+                startActivity(intent);
             }
         };
-        buttonReceive.setOnClickListener(onClickListener);
-        buttonOrder.setOnClickListener(onClickListener);
-        buttonLosses.setOnClickListener(onClickListener);
-        buttonReports.setOnClickListener(onClickListener);
-        buttonMessages.setOnClickListener(onClickListener);
-        buttonDispense.setOnClickListener(onClickListener);
+        ImmutableList<Button> navigationButtons =
+                ImmutableList.of(buttonDispense, buttonOrder, buttonReceive, buttonLosses, buttonMessages, buttonReports);
+        for (Button navigationButton : navigationButtons) {
+            navigationButton.setOnClickListener(onClickListener);
+        }
     }
 
     private void setupAlerts() {
@@ -147,7 +138,6 @@ public class HomeActivity extends BaseActivity {
         layout.addView(graphView);
 
     }
-
 
 
 }
