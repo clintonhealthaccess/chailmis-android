@@ -14,5 +14,7 @@
     <string name="alerts">Alerts</string>
     <string name="Notifications">Notifications</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_dispense">DispenseActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,9 +24,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
-
+@ContentView(R.layout.activity_home)
 public class HomeActivity extends RoboActionBarActivity {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";
@@ -69,13 +71,44 @@ public class HomeActivity extends RoboActionBarActivity {
             startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
         }
 
-        setContentView(R.layout.activity_home);
-
+        setupButtonEvents();
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         setFacilityName("Kabira Health Center");
         setupGraph();
         setupAlerts();
+    }
+
+    private void setupButtonEvents() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.buttonDispense:
+                        Intent intent = new Intent(getApplicationContext(), DispenseActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.buttonReceive:
+                        break;
+                    case R.id.buttonOrder:
+                        break;
+                    case R.id.buttonLosses:
+                        break;
+                    case R.id.buttonMessages:
+                        break;
+                    case R.id.buttonReports:
+                        break;
+
+                }
+
+            }
+        };
+        buttonReceive.setOnClickListener(onClickListener);
+        buttonOrder.setOnClickListener(onClickListener);
+        buttonLosses.setOnClickListener(onClickListener);
+        buttonReports.setOnClickListener(onClickListener);
+        buttonMessages.setOnClickListener(onClickListener);
+        buttonDispense.setOnClickListener(onClickListener);
     }
 
     private void setFacilityName(String text) {

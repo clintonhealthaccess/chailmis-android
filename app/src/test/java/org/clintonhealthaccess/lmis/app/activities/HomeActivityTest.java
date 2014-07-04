@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Test;
@@ -21,15 +22,28 @@ import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class HomeActivityTest {
+    private void setRegistrationStatus(boolean b) {
+        final UserService mockUserService = mock(UserService.class);
+        when(mockUserService.userRegistered()).thenReturn(b);
+
+        setUpInjection(this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(UserService.class).toInstance(mockUserService);
+            }
+        });
+    }
+
+    private HomeActivity getHomeActivity() {
+        return buildActivity(HomeActivity.class).create().get();
+    }
+
     @Test
     public void testBuildActivity() throws Exception {
         HomeActivity homeActivity = getHomeActivity();
         assertThat(homeActivity, not(nullValue()));
     }
 
-    private HomeActivity getHomeActivity() {
-        return buildActivity(HomeActivity.class).create().get();
-    }
 
     @Test
     public void testDispenseButtonIsConnectedToView() throws Exception {
@@ -70,25 +84,36 @@ public class HomeActivityTest {
 
     @Test
     public void testTextViewFacilityNameIsConnectedToView() throws Exception {
+
         HomeActivity homeActivity = getHomeActivity();
+
         assertThat(homeActivity.textFacilityName, not(nullValue()));
     }
 
     @Test
-    public void testShouldRenderRegisterActivityIfThereIsNoUserRegistered() throws Exception {
-        final UserService mockUserService = mock(UserService.class);
-        when(mockUserService.userRegistered()).thenReturn(false);
+    public void testClickDispenseButtonNavigatesToDispenseActivity() {
 
-        setUpInjection(this, new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(UserService.class).toInstance(mockUserService);
-            }
-        });
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonDispense).callOnClick();
+
+        Intent intent = new Intent(homeActivity, DispenseActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+
+    @Test
+    public void testShouldRenderRegisterActivityIfThereIsNoUserRegistered() throws Exception {
+
+        setRegistrationStatus(false);
 
         HomeActivity homeActivity = getHomeActivity();
 
         Intent registerIntent = new Intent(homeActivity, RegisterActivity.class);
+
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(registerIntent));
     }
 }
