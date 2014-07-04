@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,17 +29,34 @@ import roboguice.inject.InjectView;
 public class HomeActivity extends RoboActionBarActivity {
 
     public static final String DATE_FORMAT = "dd/MM/yyyy";
-    private TextView textFacilityName;
-
+    TextView textFacilityName;
 
     @InjectView(R.id.layoutGraph)
-    private LinearLayout layout;
+    LinearLayout layout;
 
     @InjectView(R.id.listViewAlerts)
-    private ListView listViewAlerts;
+    ListView listViewAlerts;
 
     @InjectView(R.id.listViewNotifications)
-    private ListView listViewNotifications;
+    ListView listViewNotifications;
+
+    @InjectView(R.id.buttonDispense)
+    Button buttonDispense;
+
+    @InjectView(R.id.buttonReceive)
+    Button buttonReceive;
+
+    @InjectView(R.id.buttonOrder)
+    Button buttonOrder;
+
+    @InjectView(R.id.buttonLosses)
+    Button buttonLosses;
+
+    @InjectView(R.id.buttonReports)
+    Button buttonReports;
+
+    @InjectView(R.id.buttonMessages)
+    Button buttonMessages;
 
     @Inject
     private UserService userService;
@@ -47,7 +65,7 @@ public class HomeActivity extends RoboActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(!userService.userRegistered()) {
+        if (!userService.userRegistered()) {
             startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
         }
 

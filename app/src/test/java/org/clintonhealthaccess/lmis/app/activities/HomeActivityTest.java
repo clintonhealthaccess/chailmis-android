@@ -23,8 +23,55 @@ import static org.robolectric.Robolectric.shadowOf;
 public class HomeActivityTest {
     @Test
     public void testBuildActivity() throws Exception {
-        HomeActivity homeActivity = buildActivity(HomeActivity.class).create().get();
+        HomeActivity homeActivity = getHomeActivity();
         assertThat(homeActivity, not(nullValue()));
+    }
+
+    private HomeActivity getHomeActivity() {
+        return buildActivity(HomeActivity.class).create().get();
+    }
+
+    @Test
+    public void testDispenseButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonDispense, not(nullValue()));
+    }
+
+    @Test
+    public void testReceiveButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonReceive, not(nullValue()));
+    }
+
+    @Test
+    public void testLossesButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonLosses, not(nullValue()));
+    }
+
+    @Test
+    public void testOrderButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonOrder, not(nullValue()));
+    }
+
+    @Test
+    public void testReportsButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonReports, not(nullValue()));
+    }
+
+    @Test
+    public void testMessagesButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonMessages, not(nullValue()));
+    }
+
+
+    @Test
+    public void testTextViewFacilityNameIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.textFacilityName, not(nullValue()));
     }
 
     @Test
@@ -39,7 +86,7 @@ public class HomeActivityTest {
             }
         });
 
-        HomeActivity homeActivity = buildActivity(HomeActivity.class).create().get();
+        HomeActivity homeActivity = getHomeActivity();
 
         Intent registerIntent = new Intent(homeActivity, RegisterActivity.class);
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(registerIntent));
