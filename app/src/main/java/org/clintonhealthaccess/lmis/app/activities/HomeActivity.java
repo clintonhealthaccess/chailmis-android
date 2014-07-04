@@ -1,31 +1,20 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.SparseArray;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
-import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -64,8 +53,8 @@ public class HomeActivity extends BaseActivity {
     @Inject
     private UserService userService;
 
-    private Map<Integer, Class<? extends BaseActivity>> buttonRoutes =
-            new HashMap<Integer, Class<? extends BaseActivity>>() {
+    private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
+            new SparseArray<Class<? extends BaseActivity>>() {
                 {
                     put(R.id.buttonDispense, DispenseActivity.class);
                     put(R.id.buttonReceive, ReceiveActivity.class);
@@ -94,50 +83,27 @@ public class HomeActivity extends BaseActivity {
         OnClickListener onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Class<? extends BaseActivity> activityClass = buttonRoutes.get(view.getId());
+                Class<? extends BaseActivity> activityClass = navigationRoutes.get(view.getId());
                 Intent intent = new Intent(getApplicationContext(), activityClass);
                 startActivity(intent);
             }
         };
-        ImmutableList<Button> navigationButtons =
-                ImmutableList.of(buttonDispense, buttonOrder, buttonReceive, buttonLosses, buttonMessages, buttonReports);
+
+        List<Button> navigationButtons = ImmutableList.of(
+                buttonDispense, buttonOrder, buttonReceive,
+                buttonLosses, buttonMessages, buttonReports);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }
     }
 
     private void setupAlerts() {
-        String[] values = new String[]{"Low Stock for Coartem", "Low Stock for Panadol", "Low Stock for Hedex"};
 
-        ArrayList<String> list = new ArrayList<String>();
-        Collections.addAll(list, values);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, list);
-        listViewAlerts.setAdapter(adapter);
-
-        String[] notificationValues = new String[]{"You Have a new Allocation"};
-
-        ArrayList<String> notificationList = new ArrayList<String>();
-        Collections.addAll(notificationList, notificationValues);
-        ArrayAdapter notificationAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, notificationList);
-        listViewNotifications.setAdapter(notificationAdapter);
     }
 
     private void setupGraph() {
-        GraphView graphView = new BarGraphView(this, "Commodity Consumption");
-        GraphViewSeries exampleSeries = new GraphViewSeries(new GraphView.GraphViewData[]{
-                new GraphView.GraphViewData(1, 3.0d),
-                new GraphView.GraphViewData(2, 12d),
-                new GraphView.GraphViewData(3, 4d),
-                new GraphView.GraphViewData(4, 10d),
-                new GraphView.GraphViewData(5, 6d)
-        });
-        graphView.addSeries(exampleSeries);
 
-        layout.addView(graphView);
 
     }
-
 
 }

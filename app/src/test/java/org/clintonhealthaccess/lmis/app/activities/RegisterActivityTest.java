@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,10 +15,14 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowToast;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -82,6 +87,51 @@ public class RegisterActivityTest {
         getRegisterButton().performClick();
 
         assertThat(shadowOf(registerActivity).getNextStartedActivity(), nullValue());
+    }
+
+    @Test
+    public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingUsername() {
+        fillTextField(R.id.textPassword, "district");
+        getRegisterButton().performClick();
+
+        assertThat(registerActivity.textUsername.getError(), is(notNullValue()));
+
+    }
+
+    @Test
+    public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingPassword() {
+
+        fillTextField(R.id.textUsername, "admin");
+        getRegisterButton().performClick();
+
+        assertThat(registerActivity.textPassword.getError(), is(notNullValue()));
+
+    }
+
+
+    @Test
+    public void testErrorShouldBeShownIfRegistrationFailed() {
+        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException());
+        fillTextField(R.id.textUsername, "adminsdsd");
+        fillTextField(R.id.textPassword, "districtsds");
+        getRegisterButton().performClick();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_failed_error)));
+
+    }
+
+
+    @Test
+    public void testMessageShouldBeShownIfRegistrationIsSuccessful() {
+        when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
+        fillTextField(R.id.textUsername, "admin");
+        fillTextField(R.id.textPassword, "district");
+        getRegisterButton().performClick();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
+
     }
 
     private void fillTextField(int inputFieldId, String text) {

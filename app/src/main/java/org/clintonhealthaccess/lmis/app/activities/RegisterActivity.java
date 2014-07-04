@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -16,6 +17,7 @@ import org.clintonhealthaccess.lmis.app.services.ServiceException;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static java.lang.String.valueOf;
@@ -27,6 +29,12 @@ public class RegisterActivity extends RoboActionBarActivity {
     @Inject
     private UserService userService;
 
+    @InjectView(id.textUsername)
+    TextView textUsername;
+
+    @InjectView(id.textPassword)
+    TextView textPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,27 +44,45 @@ public class RegisterActivity extends RoboActionBarActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = getTextFromInputField(id.textUsername);
-                String password = getTextFromInputField(id.textPassword);
-                if (isBlank(username) || isBlank(password)) {
+                String username = textUsername.getText().toString();
+                String password = textPassword.getText().toString();
+                if (isBlank(username)) {
+                    textUsername.setError(getString(R.string.username_error));
                     return;
                 }
+
+                if (isBlank(password)) {
+                    textPassword.setError(getString(R.string.password_error));
+                    return;
+                }
+
                 doRegister(username, password);
             }
         });
     }
 
     private void doRegister(final String username, final String password) {
-        AsyncTask<Void, Void, Void> registerTask = new AsyncTask<Void, Void, Void>() {
+        AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } catch (ServiceException e) {
-                    // TODO: show error message or something...
+                    return false;
                 }
-                return null;
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean succeeded) {
+                if (succeeded) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.registration_successful_message),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.registration_failed_error),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         };
         registerTask.execute();
