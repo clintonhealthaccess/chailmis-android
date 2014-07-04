@@ -13,13 +13,16 @@
     <string name="dispense">Dispense</string>
     <string name="alerts">Alerts</string>
     <string name="Notifications">Notifications</string>
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_dispense">DispenseActivity</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_dispense">Dispense</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_receive">ReceiveActivity</string>
-    <string name="title_activity_losses">LossesActivity</string>
-    <string name="title_activity_order">OrderActivity</string>
-    <string name="title_activity_messages">MessagesActivity</string>
-    <string name="title_activity_reports">ReportsActivity</string>
+    <string name="title_activity_receive">Receive</string>
+    <string name="title_activity_losses">Losses And Expiries</string>
+    <string name="title_activity_order">Order</string>
+    <string name="title_activity_messages">Messages</string>
+    <string name="title_activity_reports">Reports</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 
 </resources>
