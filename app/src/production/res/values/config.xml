@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dhis2_base_url">URL_TO_PROD_DHIS2</string>
+</resources>

@@ -16,6 +16,15 @@ android {
         exclude 'META-INF/LICENSE.txt'
     }
 
+    productFlavors {
+        development {
+            packageName 'org.clintonhealthaccess.lmis.app'
+        }
+        production {
+            packageName 'org.clintonhealthaccess.lmis.app'
+        }
+    }
+
     lintOptions {
         htmlReport true
         htmlOutput file("build/reports/lint/lint-report.html")
@@ -27,12 +36,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
     sourceSets {
         androidTest {
             setRoot('src/test')
