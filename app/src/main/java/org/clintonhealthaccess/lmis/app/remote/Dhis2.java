@@ -15,10 +15,11 @@ import static android.util.Base64.encodeToString;
 import static android.util.Log.i;
 import static org.apache.http.HttpStatus.SC_OK;
 
-public class Dhis2 {
+public class Dhis2 implements LmisServer {
     @InjectResource(R.string.dhis2_base_url)
     private String dhis2BaseUrl;
 
+    @Override
     public void validateLogin(String username, String password) {
         String credentials = username + ":" + password;
         String base64EncodedCredentials = encodeToString(credentials.getBytes(), NO_WRAP);

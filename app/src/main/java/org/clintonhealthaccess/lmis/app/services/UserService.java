@@ -10,7 +10,7 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
-import org.clintonhealthaccess.lmis.app.remote.Dhis2;
+import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
 
@@ -22,7 +22,7 @@ public class UserService {
     @Inject
     private Context context;
     @Inject
-    private Dhis2 dhis2;
+    private LmisServer lmisServer;
 
     public boolean userRegistered() {
         try {
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public User register(String username, String password) {
-        dhis2.validateLogin(username, password);
+        lmisServer.validateLogin(username, password);
 
         User user = new User(username, password);
         try {

@@ -2,6 +2,8 @@ package org.clintonhealthaccess.lmis.utils;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
+
 import roboguice.RoboGuice;
 import roboguice.inject.RoboInjector;
 
@@ -13,7 +15,8 @@ import static roboguice.RoboGuice.setBaseApplicationInjector;
 public class TestInjectionUtil {
     public static void setUpInjection(Object testCase, AbstractModule mockedModule) {
         if (mockedModule != null) {
-            setBaseApplicationInjector(application, DEFAULT_STAGE, newDefaultRoboModule(application), mockedModule);
+            setBaseApplicationInjector(application, DEFAULT_STAGE,
+                    newDefaultRoboModule(application), new GuiceConfigurationModule(), mockedModule);
         }
         RoboInjector injector = RoboGuice.getInjector(application);
         injector.injectMembersWithoutViews(testCase);
