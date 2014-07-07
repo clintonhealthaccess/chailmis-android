@@ -1,7 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -29,9 +29,8 @@ public class DispenseActivity extends BaseActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentManager fm = getFragmentManager();
                     ItemSelectFragment dialog = ItemSelectFragment.newInstance(category);
-
                     dialog.show(fm, "as");
                 }
             });
