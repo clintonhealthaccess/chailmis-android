@@ -1,7 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowHandler;
-import org.robolectric.shadows.ShadowToast;
 
+import static org.clintonhealthaccess.lmis.app.R.id;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -31,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.shadowOf;
+import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class RegisterActivityTest {
@@ -55,8 +55,8 @@ public class RegisterActivityTest {
     public void testShouldRedirectToHomePageAfterSuccessfulRegistration() throws Exception {
         when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
 
-        fillTextField(R.id.textUsername, "admin");
-        fillTextField(R.id.textPassword, "district");
+        fillTextField(id.textUsername, "admin");
+        fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
 
         Intent homeIntent = new Intent(registerActivity, HomeActivity.class);
@@ -68,12 +68,12 @@ public class RegisterActivityTest {
         getRegisterButton().performClick();
         verify(mockUserService, never()).register(anyString(), anyString());
 
-        fillTextField(R.id.textUsername, "admin");
+        fillTextField(id.textUsername, "admin");
         getRegisterButton().performClick();
         verify(mockUserService, never()).register(anyString(), anyString());
 
-        fillTextField(R.id.textUsername, "");
-        fillTextField(R.id.textPassword, "district");
+        fillTextField(id.textUsername, "");
+        fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
         verify(mockUserService, never()).register(anyString(), anyString());
     }
@@ -82,8 +82,8 @@ public class RegisterActivityTest {
     public void testShouldStayOnSamePageIfRegistrationFails() throws Exception {
         when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException());
 
-        fillTextField(R.id.textUsername, "admin");
-        fillTextField(R.id.textPassword, "district");
+        fillTextField(id.textUsername, "admin");
+        fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
 
         assertThat(shadowOf(registerActivity).getNextStartedActivity(), nullValue());
@@ -91,33 +91,36 @@ public class RegisterActivityTest {
 
     @Test
     public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingUsername() {
-        fillTextField(R.id.textPassword, "district");
+        fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
 
-        assertThat(registerActivity.textUsername.getError(), is(notNullValue()));
+        TextView textUsername = getInputField(id.textUsername);
+        assertThat(textUsername.getError(), is(notNullValue()));
 
     }
 
     @Test
     public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingPassword() {
 
-        fillTextField(R.id.textUsername, "admin");
+        fillTextField(id.textUsername, "admin");
         getRegisterButton().performClick();
 
-        assertThat(registerActivity.textPassword.getError(), is(notNullValue()));
+        TextView textPassword = getInputField(id.textPassword);
+        assertThat(textPassword.getError(), is(notNullValue()));
 
     }
 
 
     @Test
     public void testErrorShouldBeShownIfRegistrationFailed() {
-        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException());
-        fillTextField(R.id.textUsername, "adminsdsd");
-        fillTextField(R.id.textPassword, "districtsds");
+        String errorMessage = "Some failure message";
+        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException(errorMessage));
+        fillTextField(id.textUsername, "adminsdsd");
+        fillTextField(id.textPassword, "districtsds");
         getRegisterButton().performClick();
 
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_failed_error)));
+        assertThat(getTextOfLatestToast(), equalTo(errorMessage));
 
     }
 
@@ -125,12 +128,12 @@ public class RegisterActivityTest {
     @Test
     public void testMessageShouldBeShownIfRegistrationIsSuccessful() {
         when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
-        fillTextField(R.id.textUsername, "admin");
-        fillTextField(R.id.textPassword, "district");
+        fillTextField(id.textUsername, "admin");
+        fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
 
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
+        assertThat(getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
 
     }
 
@@ -140,6 +143,10 @@ public class RegisterActivityTest {
     }
 
     private Button getRegisterButton() {
-        return (Button) registerActivity.findViewById(R.id.buttonRegister);
+        return (Button) registerActivity.findViewById(id.buttonRegister);
+    }
+
+    private TextView getInputField(int id) {
+        return (TextView) registerActivity.findViewById(id);
     }
 }

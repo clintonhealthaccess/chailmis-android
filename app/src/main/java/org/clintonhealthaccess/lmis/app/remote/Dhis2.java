@@ -19,6 +19,12 @@ public class Dhis2 implements LmisServer {
     @InjectResource(R.string.dhis2_base_url)
     private String dhis2BaseUrl;
 
+    @InjectResource(R.string.message_invalid_login_credential)
+    private String messageInvalidLoginCredential;
+
+    @InjectResource(R.string.message_network_error)
+    private String messageNetworkError;
+
     @Override
     public void validateLogin(String username, String password) {
         String credentials = username + ":" + password;
@@ -32,13 +38,13 @@ public class Dhis2 implements LmisServer {
             response = httpClient.execute(request);
         } catch (IOException e) {
             i("Failed to connect DHIS2 server.", e.getMessage());
-            throw new ServiceException("Network issue. Please try again later.");
+            throw new ServiceException(messageNetworkError);
         }
 
         int statusCode = response.getStatusLine().getStatusCode();
         if(statusCode != SC_OK) {
             i("Failed attempt to login.", "Response code : " + statusCode);
-            throw new ServiceException("Please input correct username / password combination");
+            throw new ServiceException(messageInvalidLoginCredential);
         }
     }
 }

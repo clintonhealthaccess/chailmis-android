@@ -26,7 +26,8 @@
     <string name="password">Password</string>
     <string name="password_error">Password is required</string>
     <string name="username_error">Username is required</string>
-    <string name="registration_failed_error">Invalid Username or Password.</string>
+    <string name="message_invalid_login_credential">Invalid Username or Password.</string>
+    <string name="message_network_error">Network issue. Please try again later.</string>
     <string name="registration_successful_message">Registration Successful</string>
 
 </resources>

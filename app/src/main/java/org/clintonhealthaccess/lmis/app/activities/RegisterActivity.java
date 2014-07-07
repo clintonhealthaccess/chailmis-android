@@ -3,8 +3,6 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,10 +15,11 @@ import org.clintonhealthaccess.lmis.app.services.ServiceException;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
-import static java.lang.String.valueOf;
+import static android.widget.Toast.LENGTH_SHORT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.clintonhealthaccess.lmis.app.R.id;
 import static org.clintonhealthaccess.lmis.app.R.layout;
@@ -30,10 +29,13 @@ public class RegisterActivity extends RoboActionBarActivity {
     private UserService userService;
 
     @InjectView(id.textUsername)
-    TextView textUsername;
+    private TextView textUsername;
 
     @InjectView(id.textPassword)
-    TextView textPassword;
+    private TextView textPassword;
+
+    @InjectResource(R.string.registration_successful_message)
+    private String registrationSuccessfulMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +65,15 @@ public class RegisterActivity extends RoboActionBarActivity {
 
     private void doRegister(final String username, final String password) {
         AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
+            private ServiceException failureCause;
+
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                 } catch (ServiceException e) {
+                    this.failureCause = e;
                     return false;
                 }
                 return true;
@@ -76,22 +81,10 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean succeeded) {
-                if (succeeded) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.registration_successful_message),
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.registration_failed_error),
-                            Toast.LENGTH_SHORT).show();
-                }
+                String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
+                Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
             }
         };
         registerTask.execute();
     }
-
-    private String getTextFromInputField(int inputFieldId) {
-        TextView inputField = (TextView) findViewById(inputFieldId);
-        return valueOf(inputField.getText());
-    }
-
-
 }
