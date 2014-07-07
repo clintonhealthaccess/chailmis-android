@@ -1,6 +1,10 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +23,9 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.GRAY;
+import static android.graphics.Color.parseColor;
 import static android.util.Log.i;
 
 public class ItemSelectFragment extends DialogFragment {
@@ -52,14 +59,13 @@ public class ItemSelectFragment extends DialogFragment {
 
         final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
 
-        showCommodities(overlayView, category);
-
         LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
 
         List<Category> categoryList = Category.all();
 
         for (final Category category : categoryList) {
-            Button button = new Button(getActivity());
+            Button button = new CategoryButton(getActivity(), category);
+
             button.setText(category.getName());
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +77,8 @@ public class ItemSelectFragment extends DialogFragment {
 
             categoriesLayout.addView(button);
         }
+
+        showCommodities(overlayView, category);
         return overlayView;
     }
 
@@ -81,6 +89,16 @@ public class ItemSelectFragment extends DialogFragment {
             Button commodityButton = new Button(getActivity());
             commodityButton.setText(commodity.getName());
             itemsLayout.addView(commodityButton);
+        }
+
+        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+        for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
+            CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
+            if (button.isOf(currentCategory)) {
+                button.setBackgroundColor(parseColor("#E5E4E2"));
+            } else {
+                button.setBackgroundColor(parseColor("#CCCCCC"));
+            }
         }
     }
 

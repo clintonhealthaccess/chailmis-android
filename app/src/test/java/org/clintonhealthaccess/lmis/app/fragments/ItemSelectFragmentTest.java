@@ -1,6 +1,8 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -12,6 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowDialog;
 
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.parseColor;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -47,11 +51,15 @@ public class ItemSelectFragmentTest {
 
         Dialog dialog = ShadowDialog.getLatestDialog();
         LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
-        categoriesLayout.getChildAt(1).performClick();
+
+        Button secondCategoryButton = (Button)categoriesLayout.getChildAt(1);
+        secondCategoryButton.performClick();
 
         LinearLayout commoditiesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayItems);
         assertThat(commoditiesLayout, not(nullValue()));
-
         assertThat(commoditiesLayout.getChildCount(), is(1));
+
+        ColorDrawable background = (ColorDrawable) secondCategoryButton.getBackground();
+        assertThat(background.getColor(), is(parseColor("#E5E4E2")));
     }
 }
