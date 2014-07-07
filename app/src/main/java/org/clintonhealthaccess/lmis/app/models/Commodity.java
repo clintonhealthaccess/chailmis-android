@@ -2,12 +2,13 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.google.common.base.Function;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Iterables.transform;
 
-public class Commodity {
+public class Commodity implements Serializable {
     private String name;
 
     public Commodity(String name) {
