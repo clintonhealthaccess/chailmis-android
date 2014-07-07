@@ -15,9 +15,10 @@ public class Category implements Serializable {
     }
 
     public static List<Category> all() {
-        Category firstCategory = new Category("Anti Malarials", "Coartem", "Choloquine", "Quinine", "Fansida", "Hedex", "Septrin");
+        Category antiMalarials = new Category("Anti Malarials", "Coartem", "Choloquine", "Quinine", "Fansida", "Hedex", "Septrin");
+        Category antenatal = new Category("Antenatal", "Condom");
         return ImmutableList.of(
-                firstCategory, new Category("Antenatal"), new Category("HIV/AIDS"),
+                antiMalarials, antenatal, new Category("HIV/AIDS"),
                 new Category("Diarrhoea"), new Category("Immunization"), new Category("Others"));
     }
 

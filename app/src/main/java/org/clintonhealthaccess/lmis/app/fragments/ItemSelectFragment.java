@@ -15,6 +15,10 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
+import java.util.List;
+
+import roboguice.inject.InjectView;
+
 import static android.util.Log.i;
 
 public class ItemSelectFragment extends DialogFragment {
@@ -46,17 +50,38 @@ public class ItemSelectFragment extends DialogFragment {
 
         getDialog().setCanceledOnTouchOutside(false);
 
-        View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
+        final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
 
-        LinearLayout itemsLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayItems);
-        i("category", category.getName());
-        for (Commodity commodity : category.getCommodities()) {
-            i("commodity", commodity.getName());
+        showCommodities(overlayView, category);
+
+        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+
+        List<Category> categoryList = Category.all();
+
+        for (final Category category : categoryList) {
+            Button button = new Button(getActivity());
+            button.setText(category.getName());
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCommodities(overlayView, category);
+                }
+            });
+
+            categoriesLayout.addView(button);
+        }
+        return overlayView;
+    }
+
+    private void showCommodities(View overlayView, Category currentCategory) {
+        final LinearLayout itemsLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayItems);
+        itemsLayout.removeViews(0, itemsLayout.getChildCount());
+        for (Commodity commodity : currentCategory.getCommodities()) {
             Button commodityButton = new Button(getActivity());
             commodityButton.setText(commodity.getName());
             itemsLayout.addView(commodityButton);
         }
-        return overlayView;
     }
 
     public static ItemSelectFragment newInstance(Category category) {

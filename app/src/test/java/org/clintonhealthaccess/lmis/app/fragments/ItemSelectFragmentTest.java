@@ -1,6 +1,8 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -12,8 +14,10 @@ import org.robolectric.shadows.ShadowDialog;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.Is.is;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -28,6 +32,26 @@ public class ItemSelectFragmentTest {
 
         LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
         assertThat(categoriesLayout, not(nullValue()));
+
+        assertThat(categoriesLayout.getChildCount(), is(6));
+        for(int i = 0; i < categoriesLayout.getChildCount(); i++) {
+            View button = categoriesLayout.getChildAt(i);
+            assertThat(button, instanceOf(Button.class));
+        }
     }
 
+    @Test
+    public void testCategoryButtonClickChangesCommoditiesShowing() throws Exception{
+        ItemSelectFragment itemSelectFragment = ItemSelectFragment.newInstance(Category.all().get(0));
+        startFragment(itemSelectFragment);
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
+        categoriesLayout.getChildAt(1).performClick();
+
+        LinearLayout commoditiesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayItems);
+        assertThat(commoditiesLayout, not(nullValue()));
+
+        assertThat(commoditiesLayout.getChildCount(), is(1));
+    }
 }
