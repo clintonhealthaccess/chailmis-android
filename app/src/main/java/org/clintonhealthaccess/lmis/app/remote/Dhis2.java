@@ -4,7 +4,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.services.ServiceException;
+import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.io.IOException;
 
@@ -38,13 +38,13 @@ public class Dhis2 implements LmisServer {
             response = httpClient.execute(request);
         } catch (IOException e) {
             i("Failed to connect DHIS2 server.", e.getMessage());
-            throw new ServiceException(messageNetworkError);
+            throw new LmisException(messageNetworkError);
         }
 
         int statusCode = response.getStatusLine().getStatusCode();
         if(statusCode != SC_OK) {
             i("Failed attempt to login.", "Response code : " + statusCode);
-            throw new ServiceException(messageInvalidLoginCredential);
+            throw new LmisException(messageInvalidLoginCredential);
         }
     }
 }

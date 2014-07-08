@@ -7,7 +7,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.services.ServiceException;
+import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.sql.SQLException;
 
@@ -23,7 +23,7 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
         try {
             createTable(connectionSource, User.class);
         } catch (SQLException e) {
-            throw new ServiceException(e);
+            throw new LmisException(e);
         }
     }
 

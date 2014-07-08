@@ -1,0 +1,62 @@
+[
+    {
+        "id": "1",
+        "name": "Anti Malarials",
+        "commodities": [
+            {
+                "id": "2",
+                "name": "Coartem"
+            },
+            {
+                "id": "3",
+                "name": "Choloquine"
+            },
+            {
+                "id": "4",
+                "name": "Quinine"
+            },
+            {
+                "id": "5",
+                "name": "Fansida"
+            },
+            {
+                "id": "6",
+                "name": "Hedex"
+            },
+            {
+                "id": "7",
+                "name": "Septrin"
+            }
+        ]
+    },
+    {
+        "id": "8",
+        "name": "Antenatal",
+        "commodities": [
+            {
+                "id": "9",
+                "name": "Condom"
+            }
+        ]
+    },
+    {
+        "id": "10",
+        "name": "HIV/AIDS",
+        "commodities": []
+    },
+    {
+        "id": "11",
+        "name": "Diarrhoea",
+        "commodities": []
+    },
+    {
+        "id": "12",
+        "name": "Immunization",
+        "commodities": []
+    },
+    {
+        "id": "13",
+        "name": "Others",
+        "commodities": []
+    }
+]

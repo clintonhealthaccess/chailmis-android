@@ -85,6 +85,7 @@ dependencies {
     }
     compile 'com.google.guava:guava:14.0.1',
             'org.apache.commons:commons-lang3:3.3.2',
+            'com.google.code.gson:gson:2.2.4',
             'com.j256.ormlite:ormlite-android:4.48',
             'com.android.support:appcompat-v7:19.1.+'
     compile files('libs/GraphView-3.1.2.jar')

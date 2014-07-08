@@ -11,7 +11,8 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.services.ServiceException;
+import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -27,6 +28,9 @@ import static org.clintonhealthaccess.lmis.app.R.layout;
 public class RegisterActivity extends RoboActionBarActivity {
     @Inject
     private UserService userService;
+
+    @Inject
+    private CommodityService commodityService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -65,17 +69,18 @@ public class RegisterActivity extends RoboActionBarActivity {
 
     private void doRegister(final String username, final String password) {
         AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
-            private ServiceException failureCause;
+            private LmisException failureCause;
 
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                } catch (ServiceException e) {
+                } catch (LmisException e) {
                     this.failureCause = e;
                     return false;
                 }
+                commodityService.initialise();
                 return true;
             }
 

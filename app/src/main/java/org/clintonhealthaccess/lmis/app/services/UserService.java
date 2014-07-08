@@ -8,6 +8,7 @@ import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
@@ -29,7 +30,7 @@ public class UserService {
             Dao<User, Long> userDao = initialiseDao();
             return userDao.countOf() > 0;
         } catch (SQLException e) {
-            throw new ServiceException(e);
+            throw new LmisException(e);
         } finally {
             releaseHelper();
         }
@@ -43,7 +44,7 @@ public class UserService {
             Dao<User, Long> userDao = initialiseDao();
             userDao.create(user);
         } catch (SQLException e) {
-            throw new ServiceException(e);
+            throw new LmisException(e);
         } finally {
             releaseHelper();
         }

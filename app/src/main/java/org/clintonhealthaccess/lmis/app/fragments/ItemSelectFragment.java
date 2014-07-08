@@ -1,10 +1,5 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
-import android.app.DialogFragment;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,21 +10,25 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 
 import java.util.List;
 
-import roboguice.inject.InjectView;
+import roboguice.fragment.RoboDialogFragment;
 
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.GRAY;
 import static android.graphics.Color.parseColor;
-import static android.util.Log.i;
 
-public class ItemSelectFragment extends DialogFragment {
+public class ItemSelectFragment extends RoboDialogFragment {
     private static final String CATEGORY = "param_category";
+
+    @Inject
+    CommoditiesRepository commoditiesRepository;
+
     private Category category;
 
     public ItemSelectFragment() {
@@ -61,7 +60,7 @@ public class ItemSelectFragment extends DialogFragment {
 
         LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
 
-        List<Category> categoryList = Category.all();
+        List<Category> categoryList = commoditiesRepository.allCategories();
 
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);

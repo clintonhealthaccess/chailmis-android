@@ -8,7 +8,7 @@ import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.services.ServiceException;
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -80,7 +80,7 @@ public class RegisterActivityTest {
 
     @Test
     public void testShouldStayOnSamePageIfRegistrationFails() throws Exception {
-        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException());
+        when(mockUserService.register(anyString(), anyString())).thenThrow(new LmisException());
 
         fillTextField(id.textUsername, "admin");
         fillTextField(id.textPassword, "district");
@@ -114,7 +114,7 @@ public class RegisterActivityTest {
     @Test
     public void testErrorShouldBeShownIfRegistrationFailed() {
         String errorMessage = "Some failure message";
-        when(mockUserService.register(anyString(), anyString())).thenThrow(new ServiceException(errorMessage));
+        when(mockUserService.register(anyString(), anyString())).thenThrow(new LmisException(errorMessage));
         fillTextField(id.textUsername, "adminsdsd");
         fillTextField(id.textPassword, "districtsds");
         getRegisterButton().performClick();

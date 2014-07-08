@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 
 import org.apache.http.client.methods.HttpUriRequest;
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -47,7 +48,7 @@ public class UserServiceTest {
         assertThat(requestedUri, equalTo(expectedUri));
     }
 
-    @Test(expected = ServiceException.class)
+    @Test(expected = LmisException.class)
     public void testShouldDisallowRegisteringWithInvalidDHISCredentials() throws Exception {
         assertThat(userService.userRegistered(), is(false));
 
