@@ -25,14 +25,6 @@
             android:layout_weight="1"
             android:id="@+id/layoutCategories">
 
-            <Button
-                android:id="@+id/buttonCategoriesHeader"
-                android:layout_width="fill_parent"
-                android:layout_height="45dp"
-                android:text="@string/categories"
-                android:enabled="true"
-                android:background="@drawable/category_button_on_overlay"
-                />
 
         </LinearLayout>
         
