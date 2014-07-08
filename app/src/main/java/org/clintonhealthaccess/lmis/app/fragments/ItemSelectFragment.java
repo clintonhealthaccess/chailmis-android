@@ -84,15 +84,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
     }
 
     private void setupDialog() {
-        Window window = getDialog().getWindow();
-
-        window.setGravity(Gravity.TOP | Gravity.LEFT);
-
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.x = 200;
-        params.y = 50;
-        window.setAttributes(params);
-
         getDialog().setCanceledOnTouchOutside(false);
     }
 
@@ -110,9 +101,9 @@ public class ItemSelectFragment extends RoboDialogFragment {
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
             if (button.isOf(currentCategory)) {
-                  button.setSelected(true);
+                button.setSelected(true);
             } else {
-                  button.setSelected(false);
+                button.setSelected(false);
             }
         }
     }
