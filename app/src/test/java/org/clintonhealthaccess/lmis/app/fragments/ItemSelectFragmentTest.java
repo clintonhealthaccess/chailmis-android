@@ -60,7 +60,6 @@ public class ItemSelectFragmentTest {
         assertThat(commoditiesLayout, not(nullValue()));
         assertThat(commoditiesLayout.getAdapter().getCount(), is(1));
 
-        ColorDrawable background = (ColorDrawable) secondCategoryButton.getBackground();
-        assertThat(background.getColor(), is(parseColor("#E5E4E2")));
+        assertThat(secondCategoryButton.isSelected(), is(true));
     }
 }

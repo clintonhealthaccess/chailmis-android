@@ -58,6 +58,8 @@ public class ItemSelectFragment extends DialogFragment {
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);
 
+            button.setBackgroundResource(R.drawable.category_button_on_overlay);
+
             button.setText(category.getName());
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +103,9 @@ public class ItemSelectFragment extends DialogFragment {
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
             if (button.isOf(currentCategory)) {
-                button.setBackgroundColor(parseColor("#E5E4E2"));
+                  button.setSelected(true);
             } else {
-                button.setBackgroundColor(parseColor("#CCCCCC"));
+                  button.setSelected(false);
             }
         }
     }
