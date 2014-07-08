@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowDialog;
 
 import static junit.framework.Assert.assertTrue;
-import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseCommodities;
+import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
@@ -36,7 +36,7 @@ public class ItemSelectFragmentTest {
     @Before
     public void setUp() throws Exception {
         setUpInjection(this);
-        initialiseCommodities(application);
+        initialiseDefaultCommodities(application);
 
         Category antiMalarialCategory = commoditiesRepository.allCategories().get(0);
         ItemSelectFragment itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory);

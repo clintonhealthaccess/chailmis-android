@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseCommodities;
+import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,7 +29,7 @@ public class DispenseActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        initialiseCommodities(application);
+        initialiseDefaultCommodities(application);
     }
 
     @Test

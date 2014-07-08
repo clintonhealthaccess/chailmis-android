@@ -1,12 +1,19 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
+import android.content.Context;
+
+import com.google.common.io.CharStreams;
+import com.google.inject.Inject;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.R;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import roboguice.inject.InjectResource;
 
@@ -24,6 +31,9 @@ public class Dhis2 implements LmisServer {
 
     @InjectResource(R.string.message_network_error)
     private String messageNetworkError;
+
+    @Inject
+    private Context context;
 
     @Override
     public void validateLogin(String username, String password) {
@@ -45,6 +55,17 @@ public class Dhis2 implements LmisServer {
         if(statusCode != SC_OK) {
             i("Failed attempt to login.", "Response code : " + statusCode);
             throw new LmisException(messageInvalidLoginCredential);
+        }
+    }
+
+    @Override
+    public String fetchCommodities() {
+        // FIXME: should fetch from DHIS2 and populate JSON
+        try {
+            InputStream src = context.getAssets().open("default_commodities.json");
+            return CharStreams.toString(new InputStreamReader(src));
+        } catch (IOException e) {
+            throw new LmisException("Doesn't matter, we will change this anyway.", e);
         }
     }
 }
