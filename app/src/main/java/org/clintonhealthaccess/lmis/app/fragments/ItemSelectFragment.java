@@ -2,12 +2,14 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.List;
 
@@ -90,15 +93,15 @@ public class ItemSelectFragment extends DialogFragment {
     }
 
     private void showCommodities(Category currentCategory) {
-        CommoditiesAdapter adapter = new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, currentCategory.getCommodities());
+        final CommoditiesAdapter adapter = new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, currentCategory.getCommodities());
         listViewCommodities.setAdapter(adapter);
-
-//        itemsLayout.removeViews(0, itemsLayout.getChildCount());
-//        for (Commodity commodity : currentCategory.getCommodities()) {
-//            Button commodityButton = new Button(getActivity());
-//            commodityButton.setText(commodity.getName());
-//            itemsLayout.addView(commodityButton);
-//        }
+        listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                adapter.getItem(i).toggleSelected();
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
@@ -118,4 +121,5 @@ public class ItemSelectFragment extends DialogFragment {
         fragment.setArguments(arguments);
         return fragment;
     }
+
 }

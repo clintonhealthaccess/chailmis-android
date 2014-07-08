@@ -26,9 +26,9 @@ public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
         View rowView = inflater.inflate(R.layout.commodity_list_item, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
-
         Commodity commodity = getItem(position);
         textViewCommodityName.setText(commodity.getName());
+        checkboxCommoditySelected.setChecked(commodity.getSelected());
 
         return rowView;
     }
