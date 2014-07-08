@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -60,7 +61,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
         listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
 
         List<Category> categoryList = commoditiesRepository.allCategories();
-
 
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);

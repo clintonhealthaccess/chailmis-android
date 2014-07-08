@@ -1,6 +1,9 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.support.v4.app.FragmentManager;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +31,17 @@ public class DispenseActivity extends BaseActivity {
 
         List<Category> categoryList = commoditiesRepository.allCategories();
 
+        Drawable drawable = getResources().getDrawable(R.drawable.arrow_black_right);
+        drawable.setBounds(0, 0, 20,30);
+
         for (final Category category : categoryList) {
             Button button = new Button(this);
+
+            button.setBackgroundResource(R.drawable.category_button_on_overlay);
+
+            button.setCompoundDrawables(
+                    null, null, drawable, null);
+
             button.setText(category.getName());
             button.setOnClickListener(new View.OnClickListener() {
                 @Override

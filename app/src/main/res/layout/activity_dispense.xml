@@ -14,12 +14,32 @@
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:paddingTop="15dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/layoutCategories"></LinearLayout>
+            android:paddingLeft="15dp"
+            android:layout_weight="1"
+            android:id="@+id/layoutCategories">
+
+            <Button
+                android:id="@+id/buttonCategoriesHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:text="@string/categories"
+                android:enabled="true"
+                android:background="@drawable/category_button_on_overlay"
+                />
+
+        </LinearLayout>
+        
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="4"></LinearLayout>
     </LinearLayout>
 </RelativeLayout>
