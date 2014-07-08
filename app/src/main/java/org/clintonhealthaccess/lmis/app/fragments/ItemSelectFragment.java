@@ -1,10 +1,6 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.DialogFragment;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,23 +10,24 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.List;
 
-import roboguice.inject.InjectView;
-
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.GRAY;
 import static android.graphics.Color.parseColor;
-import static android.util.Log.i;
 
 public class ItemSelectFragment extends DialogFragment {
     private static final String CATEGORY = "param_category";
     private Category category;
+
+    ListView listViewCommodities;
+
+
+    private LinearLayout categoriesLayout;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -46,6 +43,38 @@ public class ItemSelectFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setupDialog();
+
+        final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
+
+
+        categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+
+        listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
+
+        List<Category> categoryList = Category.all();
+
+
+        for (final Category category : categoryList) {
+            Button button = new CategoryButton(getActivity(), category);
+
+            button.setText(category.getName());
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCommodities(category);
+                }
+            });
+
+            categoriesLayout.addView(button);
+        }
+
+        showCommodities(category);
+        return overlayView;
+    }
+
+    private void setupDialog() {
         Window window = getDialog().getWindow();
 
         window.setGravity(Gravity.TOP | Gravity.LEFT);
@@ -56,42 +85,19 @@ public class ItemSelectFragment extends DialogFragment {
         window.setAttributes(params);
 
         getDialog().setCanceledOnTouchOutside(false);
-
-        final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
-
-        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
-
-        List<Category> categoryList = Category.all();
-
-        for (final Category category : categoryList) {
-            Button button = new CategoryButton(getActivity(), category);
-
-            button.setText(category.getName());
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showCommodities(overlayView, category);
-                }
-            });
-
-            categoriesLayout.addView(button);
-        }
-
-        showCommodities(overlayView, category);
-        return overlayView;
     }
 
-    private void showCommodities(View overlayView, Category currentCategory) {
-        final LinearLayout itemsLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayItems);
-        itemsLayout.removeViews(0, itemsLayout.getChildCount());
-        for (Commodity commodity : currentCategory.getCommodities()) {
-            Button commodityButton = new Button(getActivity());
-            commodityButton.setText(commodity.getName());
-            itemsLayout.addView(commodityButton);
-        }
+    private void showCommodities(Category currentCategory) {
+        CommoditiesAdapter adapter = new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, currentCategory.getCommodities());
+        listViewCommodities.setAdapter(adapter);
 
-        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+//        itemsLayout.removeViews(0, itemsLayout.getChildCount());
+//        for (Commodity commodity : currentCategory.getCommodities()) {
+//            Button commodityButton = new Button(getActivity());
+//            commodityButton.setText(commodity.getName());
+//            itemsLayout.addView(commodityButton);
+//        }
+
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
             if (button.isOf(currentCategory)) {

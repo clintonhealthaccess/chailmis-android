@@ -31,5 +31,5 @@
         android:layout_weight="2.5"
         android:text="Health Center"
         android:textSize="18sp"
-        android:textColor="#ffffffff" />
+        android:textColor="#ffffff" />
 </LinearLayout>

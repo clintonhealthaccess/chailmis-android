@@ -1,22 +1,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".fragments.ItemSelectFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:minWidth="500dp"
         android:minHeight="300dp"
         android:layout_gravity="center_horizontal|top">
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/itemSelectOverlayHeader"
             android:layout_weight="3">
@@ -26,26 +25,21 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_weight="6"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/itemSelectOverlayBody">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_weight="3"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/itemSelectOverlayCategories"></LinearLayout>
+                android:id="@+id/itemSelectOverlayCategories" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:layout_width="fill_parent"
+            <ListView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:id="@+id/itemSelectOverlayItems">
+                android:id="@+id/listViewCommodities" />
 
-            </LinearLayout>
 
         </LinearLayout>
 
