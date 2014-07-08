@@ -11,6 +11,7 @@ import static com.google.common.collect.Iterables.transform;
 public class Commodity implements Serializable {
     private final String id;
     private final String name;
+    private boolean selected;
 
     public Commodity(String name) {
         this.id = name;
@@ -28,5 +29,13 @@ public class Commodity implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public void toggleSelected() {
+        selected = !selected;
     }
 }

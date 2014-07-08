@@ -7,21 +7,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 
 import java.util.List;
 
 import roboguice.fragment.RoboDialogFragment;
-
-import static android.graphics.Color.parseColor;
 
 public class ItemSelectFragment extends RoboDialogFragment {
     private static final String CATEGORY = "param_category";
@@ -30,6 +30,11 @@ public class ItemSelectFragment extends RoboDialogFragment {
     CommoditiesRepository commoditiesRepository;
 
     private Category category;
+
+    ListView listViewCommodities;
+
+
+    private LinearLayout categoriesLayout;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -45,6 +50,40 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setupDialog();
+
+        final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
+
+
+        categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+
+        listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
+
+        List<Category> categoryList = commoditiesRepository.allCategories();
+
+
+        for (final Category category : categoryList) {
+            Button button = new CategoryButton(getActivity(), category);
+
+            button.setBackgroundResource(R.drawable.category_button_on_overlay);
+
+            button.setText(category.getName());
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCommodities(category);
+                }
+            });
+
+            categoriesLayout.addView(button);
+        }
+
+        showCommodities(category);
+        return overlayView;
+    }
+
+    private void setupDialog() {
         Window window = getDialog().getWindow();
 
         window.setGravity(Gravity.TOP | Gravity.LEFT);
@@ -55,48 +94,25 @@ public class ItemSelectFragment extends RoboDialogFragment {
         window.setAttributes(params);
 
         getDialog().setCanceledOnTouchOutside(false);
-
-        final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
-
-        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
-
-        List<Category> categoryList = commoditiesRepository.allCategories();
-
-        for (final Category category : categoryList) {
-            Button button = new CategoryButton(getActivity(), category);
-
-            button.setText(category.getName());
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showCommodities(overlayView, category);
-                }
-            });
-
-            categoriesLayout.addView(button);
-        }
-
-        showCommodities(overlayView, category);
-        return overlayView;
     }
 
-    private void showCommodities(View overlayView, Category currentCategory) {
-        final LinearLayout itemsLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayItems);
-        itemsLayout.removeViews(0, itemsLayout.getChildCount());
-        for (Commodity commodity : currentCategory.getCommodities()) {
-            Button commodityButton = new Button(getActivity());
-            commodityButton.setText(commodity.getName());
-            itemsLayout.addView(commodityButton);
-        }
+    private void showCommodities(Category currentCategory) {
+        final CommoditiesAdapter adapter = new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, currentCategory.getCommodities());
+        listViewCommodities.setAdapter(adapter);
+        listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                adapter.getItem(i).toggleSelected();
+                adapter.notifyDataSetChanged();
+            }
+        });
 
-        LinearLayout categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
             if (button.isOf(currentCategory)) {
-                button.setBackgroundColor(parseColor("#E5E4E2"));
+                  button.setSelected(true);
             } else {
-                button.setBackgroundColor(parseColor("#CCCCCC"));
+                  button.setSelected(false);
             }
         }
     }
@@ -109,4 +125,5 @@ public class ItemSelectFragment extends RoboDialogFragment {
         fragment.setArguments(arguments);
         return fragment;
     }
+
 }

@@ -1,10 +1,10 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowDialog;
 
-import static android.graphics.Color.parseColor;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -53,25 +52,24 @@ public class ItemSelectFragmentTest {
         assertThat(categoriesLayout, not(nullValue()));
 
         assertThat(categoriesLayout.getChildCount(), is(6));
-        for(int i = 0; i < categoriesLayout.getChildCount(); i++) {
+        for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             View button = categoriesLayout.getChildAt(i);
             assertThat(button, instanceOf(Button.class));
         }
     }
 
     @Test
-    public void testCategoryButtonClickChangesCommoditiesShowing() throws Exception{
+    public void testCategoryButtonClickChangesCommoditiesShowing() throws Exception {
         Dialog dialog = ShadowDialog.getLatestDialog();
         LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
 
-        Button secondCategoryButton = (Button)categoriesLayout.getChildAt(1);
+        Button secondCategoryButton = (Button) categoriesLayout.getChildAt(1);
         secondCategoryButton.performClick();
 
-        LinearLayout commoditiesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayItems);
+        ListView commoditiesLayout = (ListView) dialog.findViewById(R.id.listViewCommodities);
         assertThat(commoditiesLayout, not(nullValue()));
-        assertThat(commoditiesLayout.getChildCount(), is(1));
+        assertThat(commoditiesLayout.getAdapter().getCount(), is(1));
 
-        ColorDrawable background = (ColorDrawable) secondCategoryButton.getBackground();
-        assertThat(background.getColor(), is(parseColor("#E5E4E2")));
+        assertThat(secondCategoryButton.isSelected(), is(true));
     }
 }
