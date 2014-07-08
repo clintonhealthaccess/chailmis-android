@@ -89,4 +89,5 @@ dependencies {
             'com.j256.ormlite:ormlite-android:4.48',
             'com.android.support:appcompat-v7:19.1.+'
     compile files('libs/GraphView-3.1.2.jar')
+    compile 'de.greenrobot:eventbus:2.2.1'
 }

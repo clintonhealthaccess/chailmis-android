@@ -38,4 +38,21 @@ public class Commodity implements Serializable {
     public void toggleSelected() {
         selected = !selected;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Commodity)) return false;
+
+        Commodity commodity = (Commodity) o;
+
+        if (!id.equals(commodity.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

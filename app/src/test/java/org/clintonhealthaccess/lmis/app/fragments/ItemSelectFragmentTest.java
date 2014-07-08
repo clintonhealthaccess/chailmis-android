@@ -10,12 +10,15 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowDialog;
+
+import java.util.ArrayList;
 
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
@@ -39,7 +42,7 @@ public class ItemSelectFragmentTest {
         initialiseDefaultCommodities(application);
 
         Category antiMalarialCategory = commoditiesRepository.allCategories().get(0);
-        ItemSelectFragment itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory);
+        ItemSelectFragment itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<Commodity>());
         startFragment(itemSelectFragment);
     }
 
