@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -123,17 +125,33 @@ public class DispenseActivityTest {
     @Test
     public void getDispensingShouldGetItemsInTheListView() throws Exception {
 
+        DispenseActivity dispenseActivity = getActivity();
 
+        String commodityName = "food";
+
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity("commodity two"));
+
+        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+
+        dispenseActivity.listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
+
+        Dispensing dispensing = dispenseActivity.getDispensing();
+
+        assertThat(dispensing.getDispensingItems().size(), is(2));
+        assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
     }
 
     @Test
     public void testSubmitButtonShouldBeHiddenIfThereAreNoItemsInTheList() throws Exception {
 
         DispenseActivity dispenseActivity = getActivity();
+
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
+        dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
 
-        dispenseActivity.selectedCommodities.add(new Commodity("asdas"));
+
         dispenseActivity.checkVisibilityOfSubmitButton();
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);

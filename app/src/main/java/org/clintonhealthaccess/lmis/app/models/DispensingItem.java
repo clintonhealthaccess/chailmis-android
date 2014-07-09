@@ -8,4 +8,12 @@ public class DispensingItem {
         this.commodity = commodity;
         this.quantity = quantity;
     }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
 }

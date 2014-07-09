@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,17 +102,23 @@ public class DispenseActivity extends BaseActivity {
         dialog.show(fm, "confirmDispensing");
     }
 
-    private Dispensing getDispensing() {
-        int childCount = listViewSelectedCommodities.getChildCount();
+    protected Dispensing getDispensing() {
         Dispensing dispensing = new Dispensing();
-        for (int iterator = 0; iterator < childCount; iterator++) {
-            View view = listViewSelectedCommodities.getChildAt(iterator);
+        for (int i = 0; i <
+                selectedCommoditiesAdapter.getCount(); i++) {
+            View view = selectedCommoditiesAdapter.getView(i, null, listViewSelectedCommodities);
             EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-            int quantity = Integer.parseInt(editTextQuantity.getText().toString());
-            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(iterator);
-            dispensing.addItem(new DispensingItem(commodity, quantity));
+            int quantity = 0;
+            try {
+                quantity = Integer.parseInt(editTextQuantity.getText().toString());
+            } catch (NumberFormatException exception) {
 
+            }
+
+            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
+            dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
         }
+        Log.e("DDnn", String.format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
     }
 
