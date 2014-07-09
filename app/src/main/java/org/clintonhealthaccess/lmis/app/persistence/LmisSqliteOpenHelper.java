@@ -8,6 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.LmisException;
 
@@ -26,6 +27,7 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             createTable(connectionSource, User.class);
             createTable(connectionSource, Dispensing.class);
             createTable(connectionSource, DispensingItem.class);
+            createTable(connectionSource, StockItem.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

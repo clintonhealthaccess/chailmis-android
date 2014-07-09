@@ -6,6 +6,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import java.net.URI;
 import java.sql.SQLException;
 
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -30,6 +32,11 @@ public class UserServiceTest {
     @Before
     public void setUp() throws SQLException {
         setUpInjection(this);
+    }
+
+    @After
+    public void tearDown() {
+        releaseHelper();
     }
 
     @Test
