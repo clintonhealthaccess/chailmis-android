@@ -1,4 +1,4 @@
-package org.clintonhealthaccess.lmis.app.fragments;
+package org.clintonhealthaccess.lmis.app.views;
 
 import android.content.Context;
 import android.widget.Button;

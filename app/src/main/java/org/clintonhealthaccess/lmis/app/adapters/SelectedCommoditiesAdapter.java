@@ -36,5 +36,4 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<Commodity> {
 
 
 
-
 }

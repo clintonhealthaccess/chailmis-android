@@ -18,6 +18,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
+import org.clintonhealthaccess.lmis.app.views.CategoryButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private LinearLayout categoriesLayout;
     private HashMap<Category, CommoditiesAdapter> adapterHashMap;
     private ArrayList<Commodity> selectedCommodities;
+    private Button buttonClose;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -62,6 +64,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
         final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
+        setupCloseButton(overlayView);
         listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
         List<Category> categoryList = commoditiesRepository.allCategories();
         adapterHashMap = new LinkedHashMap<>();
@@ -87,6 +90,16 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
         showCommodities(category);
         return overlayView;
+    }
+
+    private void setupCloseButton(View overlayView) {
+        buttonClose = (Button) overlayView.findViewById(R.id.buttonClose);
+        buttonClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
     }
 
     private void setupDialog() {

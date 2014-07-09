@@ -13,14 +13,20 @@
         android:minHeight="300dp"
         android:layout_gravity="center_horizontal|top">
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/itemSelectOverlayHeader"
             android:layout_weight="3">
 
-        </LinearLayout>
+            <Button
+                android:id="@+id/buttonClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/close" />
+        </RelativeLayout>
 
         <LinearLayout
             android:orientation="horizontal"

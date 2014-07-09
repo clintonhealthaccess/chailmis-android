@@ -93,4 +93,12 @@ public class DispenseActivityTest {
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
 
     }
+
+    @Test
+    public void testThatSubmitButtonIsWiredUp() throws Exception {
+        DispenseActivity activity = getActivity();
+        assertThat(activity.buttonSubmitDispense, is(notNullValue()));
+    }
+
+
 }

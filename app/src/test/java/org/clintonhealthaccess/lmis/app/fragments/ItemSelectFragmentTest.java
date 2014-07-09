@@ -20,6 +20,7 @@ import org.robolectric.shadows.ShadowDialog;
 
 import java.util.ArrayList;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -35,6 +36,7 @@ import static org.robolectric.util.FragmentTestUtil.startFragment;
 public class ItemSelectFragmentTest {
     @Inject
     private CommoditiesRepository commoditiesRepository;
+    private ItemSelectFragment itemSelectFragment;
 
     @Before
     public void setUp() throws Exception {
@@ -42,7 +44,7 @@ public class ItemSelectFragmentTest {
         initialiseDefaultCommodities(application);
 
         Category antiMalarialCategory = commoditiesRepository.allCategories().get(0);
-        ItemSelectFragment itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<Commodity>());
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<Commodity>());
         startFragment(itemSelectFragment);
     }
 
@@ -74,5 +76,24 @@ public class ItemSelectFragmentTest {
         assertThat(commoditiesLayout.getAdapter().getCount(), is(1));
 
         assertThat(secondCategoryButton.isSelected(), is(true));
+    }
+
+    @Test
+    public void testCloseButtonExists() throws Exception {
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        Button buttonClose = (Button) dialog.findViewById(R.id.buttonClose);
+        assertThat(buttonClose, not(nullValue()));
+
+    }
+
+    @Test
+    public void testCloseButtonClosesTheDialog() throws Exception {
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        Button buttonClose = (Button) dialog.findViewById(R.id.buttonClose);
+        assertTrue(itemSelectFragment.isVisible());
+        buttonClose.callOnClick();
+        assertFalse(itemSelectFragment.isVisible());
+
     }
 }
