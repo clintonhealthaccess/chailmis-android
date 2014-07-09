@@ -14,7 +14,6 @@ import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
@@ -43,21 +42,6 @@ public class DispensingService {
         } finally {
             releaseHelper();
         }
-    }
-
-    public List<DispensingItem> getAllDispensingItems() {
-        try {
-            Dao<DispensingItem, Long> dispensingDao = initialiseDispensingItemDao();
-            return dispensingDao.queryForAll();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            releaseHelper();
-        }
-
-        return null;
-
     }
 
 
