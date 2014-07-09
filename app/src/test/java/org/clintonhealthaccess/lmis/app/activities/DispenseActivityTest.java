@@ -1,21 +1,26 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -100,5 +105,22 @@ public class DispenseActivityTest {
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
+    @Test
+    public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
+        DispenseActivity dispenseActivity = getActivity();
+        Commodity commodity = new Commodity("name");
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
+        EventBus.getDefault().post(commodityToggledEvent);
 
+        SelectedCommoditiesAdapter adapter = dispenseActivity.selectedCommoditiesAdapter;
+
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_commodity_list_item, null);
+        View row = adapter.getView(0, convertView, genericLayout);
+        ImageButton cancelButton = (ImageButton)row.findViewById(R.id.imageButtonCancel);
+
+        cancelButton.performClick();
+
+        assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
+    }
 }

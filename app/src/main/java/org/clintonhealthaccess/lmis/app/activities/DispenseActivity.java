@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.support.v4.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -33,12 +34,11 @@ public class DispenseActivity extends BaseActivity {
 
     @InjectView(R.id.listViewSelectedCommodities)
     protected ListView listViewSelectedCommodities;
-
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
-    private SelectedCommoditiesAdapter adapter;
 
+    protected SelectedCommoditiesAdapter selectedCommoditiesAdapter;
     protected ArrayList<Commodity> selectedCommodities = new ArrayList<>();
     private List<Dispensing> dispensings;
 
@@ -61,8 +61,7 @@ public class DispenseActivity extends BaseActivity {
 
             button.setBackgroundResource(R.drawable.category_button_on_overlay);
 
-            button.setCompoundDrawables(
-                    null, null, drawable, null);
+            button.setCompoundDrawables(null, null, drawable, null);
 
             button.setText(category.getName());
             button.setOnClickListener(new View.OnClickListener() {
@@ -76,16 +75,15 @@ public class DispenseActivity extends BaseActivity {
             categoriesLayout.addView(button);
         }
 
-        adapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
-
-        listViewSelectedCommodities.setAdapter(adapter);
-
         buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 confirmDispensing();
             }
         });
+
+        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
+        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
         EventBus.getDefault().register(this);
     }
 
@@ -99,12 +97,12 @@ public class DispenseActivity extends BaseActivity {
         Commodity commodity = event.getCommodity();
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
-            adapter.remove(commodity);
+            selectedCommoditiesAdapter.remove(commodity);
         } else {
-            adapter.add(commodity);
+            selectedCommoditiesAdapter.add(commodity);
             selectedCommodities.add(commodity);
         }
-        adapter.notifyDataSetChanged();
+        selectedCommoditiesAdapter.notifyDataSetChanged();
     }
 
 }

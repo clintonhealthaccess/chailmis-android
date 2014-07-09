@@ -8,20 +8,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import de.greenrobot.event.EventBus;
-
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 public class SelectedCommoditiesAdapter extends ArrayAdapter<Commodity> {
 
     public SelectedCommoditiesAdapter(Context context, int resource, List<Commodity> commodities) {
         super(context, resource, commodities);
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
