@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -117,5 +118,26 @@ public class DispenseActivityTest {
 
         assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+    }
+
+    @Test
+    public void getDispensingShouldGetItemsInTheListView() throws Exception {
+
+
+    }
+
+    @Test
+    public void testSubmitButtonShouldBeHiddenIfThereAreNoItemsInTheList() throws Exception {
+
+        DispenseActivity dispenseActivity = getActivity();
+        assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+
+
+        dispenseActivity.selectedCommodities.add(new Commodity("asdas"));
+        dispenseActivity.checkVisibilityOfSubmitButton();
+
+        assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+
+
     }
 }

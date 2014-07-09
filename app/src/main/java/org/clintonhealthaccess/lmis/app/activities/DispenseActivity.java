@@ -1,11 +1,11 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.support.v4.app.FragmentManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -19,6 +19,7 @@ import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 
 import java.util.ArrayList;
@@ -96,8 +97,22 @@ public class DispenseActivity extends BaseActivity {
 
     private void confirmDispensing() {
         FragmentManager fm = getSupportFragmentManager();
-        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(new Dispensing());
+        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
         dialog.show(fm, "confirmDispensing");
+    }
+
+    private Dispensing getDispensing() {
+        int childCount = listViewSelectedCommodities.getChildCount();
+        Dispensing dispensing = new Dispensing();
+        for (int iterator = 0; iterator < childCount; iterator++) {
+            View view = listViewSelectedCommodities.getChildAt(iterator);
+            EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+            int quantity = Integer.parseInt(editTextQuantity.getText().toString());
+            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(iterator);
+            dispensing.addItem(new DispensingItem(commodity, quantity));
+
+        }
+        return dispensing;
     }
 
     public void onEvent(CommodityToggledEvent event) {
@@ -110,6 +125,16 @@ public class DispenseActivity extends BaseActivity {
             selectedCommodities.add(commodity);
         }
         selectedCommoditiesAdapter.notifyDataSetChanged();
+        checkVisibilityOfSubmitButton();
+    }
+
+    protected void checkVisibilityOfSubmitButton() {
+        if (selectedCommodities.size() > 0) {
+            buttonSubmitDispense.setVisibility(View.VISIBLE);
+        } else {
+            buttonSubmitDispense.setVisibility(View.INVISIBLE);
+
+        }
     }
 
 }
