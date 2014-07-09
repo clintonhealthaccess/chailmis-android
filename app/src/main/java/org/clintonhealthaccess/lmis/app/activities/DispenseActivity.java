@@ -31,7 +31,7 @@ public class DispenseActivity extends BaseActivity {
 
     protected ListView listViewSelectedCommodities;
     private SelectedCommoditiesAdapter adapter;
-    protected ArrayList<Commodity> selectedCommodities = new ArrayList<Commodity>();
+    protected ArrayList<Commodity> selectedCommodities = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,8 +16,8 @@ import java.util.List;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
-    public CommoditiesAdapter(Context context, int resource, List<Commodity> objects) {
-        super(context, resource, objects);
+    public CommoditiesAdapter(Context context, int resource, List<Commodity> commodities) {
+        super(context, resource, commodities);
     }
 
     @Override

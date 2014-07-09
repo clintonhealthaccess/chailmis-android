@@ -61,22 +61,15 @@ public class ItemSelectFragment extends RoboDialogFragment {
         setupDialog();
 
         final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
-
-
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
-
         listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
-
         List<Category> categoryList = commoditiesRepository.allCategories();
+        adapterHashMap = new LinkedHashMap<>();
 
-        adapterHashMap = new LinkedHashMap<Category, CommoditiesAdapter>();
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);
-
             button.setBackgroundResource(R.drawable.category_button_on_overlay);
-
             button.setText(category.getName());
-
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +82,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
             }
 
             adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, category.getCommodities()));
-
             categoriesLayout.addView(button);
         }
 
@@ -126,9 +118,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     public static ItemSelectFragment newInstance(Category category, ArrayList<Commodity> selectedCommodities) {
         Bundle arguments = new Bundle();
-
         arguments.putSerializable(CATEGORY, category);
-
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
 
         ItemSelectFragment fragment = new ItemSelectFragment();
