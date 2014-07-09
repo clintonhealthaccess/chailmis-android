@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.LmisException;
 
@@ -22,6 +24,8 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             createTable(connectionSource, User.class);
+            createTable(connectionSource, Dispensing.class);
+            createTable(connectionSource, DispensingItem.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

@@ -18,6 +18,7 @@ public class Commodity implements Serializable {
         this.name = name;
     }
 
+
     static List<Commodity> buildList(String[] commodityNames) {
         return copyOf(transform(copyOf(commodityNames), new Function<String, Commodity>() {
             @Override
@@ -54,5 +55,9 @@ public class Commodity implements Serializable {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public String getId() {
+        return id;
     }
 }
