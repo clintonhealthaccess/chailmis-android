@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,8 @@ import android.widget.Button;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 
-import roboguice.fragment.RoboDialogFragment;
 
-
-public class DispenseConfirmationFragment extends RoboDialogFragment {
+public class DispenseConfirmationFragment extends DialogFragment {
 
     public static final String DISPENSING = "param_dispensings";
     private Dispensing dispensing;

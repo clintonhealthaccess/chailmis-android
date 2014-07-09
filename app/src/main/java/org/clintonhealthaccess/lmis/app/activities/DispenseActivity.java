@@ -48,6 +48,22 @@ public class DispenseActivity extends BaseActivity {
 
         setContentView(R.layout.activity_dispense);
 
+        setupCommodities();
+
+        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
+
+        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
+
+        buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmDispensing();
+            }
+        });
+        EventBus.getDefault().register(this);
+    }
+
+    private void setupCommodities() {
         LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
 
         List<Category> categoryList = commoditiesRepository.allCategories();
@@ -75,16 +91,7 @@ public class DispenseActivity extends BaseActivity {
             categoriesLayout.addView(button);
         }
 
-        buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmDispensing();
-            }
-        });
 
-        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
-        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
-        EventBus.getDefault().register(this);
     }
 
     private void confirmDispensing() {

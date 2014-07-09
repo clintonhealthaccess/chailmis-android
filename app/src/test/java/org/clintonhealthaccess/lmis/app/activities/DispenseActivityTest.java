@@ -117,7 +117,7 @@ public class DispenseActivityTest {
         ViewGroup genericLayout = new LinearLayout(Robolectric.application);
         View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_commodity_list_item, null);
         View row = adapter.getView(0, convertView, genericLayout);
-        ImageButton cancelButton = (ImageButton)row.findViewById(R.id.imageButtonCancel);
+        ImageButton cancelButton = (ImageButton) row.findViewById(R.id.imageButtonCancel);
 
         cancelButton.performClick();
 
