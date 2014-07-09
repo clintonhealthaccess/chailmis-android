@@ -1,12 +1,10 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,15 +14,22 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboDialogFragment;
 
 public class ItemSelectFragment extends RoboDialogFragment {
     private static final String CATEGORY = "param_category";
+    private static final String SELECTED_COMMODITIES = "param_selected_commodities";
 
     @Inject
     CommoditiesRepository commoditiesRepository;
@@ -35,6 +40,8 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
 
     private LinearLayout categoriesLayout;
+    private HashMap<Category, CommoditiesAdapter> adapterHashMap;
+    private ArrayList<Commodity> selectedCommodities;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -45,6 +52,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
+            selectedCommodities = (ArrayList<Commodity>) getArguments().getSerializable(SELECTED_COMMODITIES);
         }
     }
 
@@ -53,22 +61,15 @@ public class ItemSelectFragment extends RoboDialogFragment {
         setupDialog();
 
         final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
-
-
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
-
         listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
-
         List<Category> categoryList = commoditiesRepository.allCategories();
-
+        adapterHashMap = new LinkedHashMap<>();
 
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);
-
             button.setBackgroundResource(R.drawable.category_button_on_overlay);
-
             button.setText(category.getName());
-
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,6 +77,11 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 }
             });
 
+            for (Commodity commodity : category.getCommodities()) {
+                if (selectedCommodities.contains(commodity)) commodity.toggleSelected();
+            }
+
+            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, category.getCommodities()));
             categoriesLayout.addView(button);
         }
 
@@ -84,42 +90,36 @@ public class ItemSelectFragment extends RoboDialogFragment {
     }
 
     private void setupDialog() {
-        Window window = getDialog().getWindow();
-
-        window.setGravity(Gravity.TOP | Gravity.LEFT);
-
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.x = 200;
-        params.y = 50;
-        window.setAttributes(params);
-
         getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
     }
 
     private void showCommodities(Category currentCategory) {
-        final CommoditiesAdapter adapter = new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, currentCategory.getCommodities());
+        final CommoditiesAdapter adapter = adapterHashMap.get(currentCategory);
         listViewCommodities.setAdapter(adapter);
         listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 adapter.getItem(i).toggleSelected();
                 adapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new CommodityToggledEvent(adapter.getItem(i)));
             }
         });
 
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             CategoryButton button = (CategoryButton) categoriesLayout.getChildAt(i);
             if (button.isOf(currentCategory)) {
-                  button.setSelected(true);
+                button.setSelected(true);
             } else {
-                  button.setSelected(false);
+                button.setSelected(false);
             }
         }
     }
 
-    public static ItemSelectFragment newInstance(Category category) {
+    public static ItemSelectFragment newInstance(Category category, ArrayList<Commodity> selectedCommodities) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(CATEGORY, category);
+        arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
 
         ItemSelectFragment fragment = new ItemSelectFragment();
         fragment.setArguments(arguments);

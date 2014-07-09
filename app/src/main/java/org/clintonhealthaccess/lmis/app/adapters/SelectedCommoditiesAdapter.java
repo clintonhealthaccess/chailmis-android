@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -13,23 +12,29 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.List;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+public class SelectedCommoditiesAdapter extends ArrayAdapter<Commodity> {
+    private List<Commodity> objects;
 
-public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
-    public CommoditiesAdapter(Context context, int resource, List<Commodity> commodities) {
-        super(context, resource, commodities);
+    public SelectedCommoditiesAdapter(Context context, int resource, List<Commodity> objects) {
+        super(context, resource, objects);
+        this.objects = objects;
+
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.commodity_list_item, parent, false);
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.selected_commodity_list_item, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
         Commodity commodity = getItem(position);
         textViewCommodityName.setText(commodity.getName());
-        checkboxCommoditySelected.setChecked(commodity.getSelected());
 
         return rowView;
     }
+
+
+
+
 }
