@@ -1,8 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -16,11 +14,11 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 
 import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertFalse;
+import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -96,7 +94,6 @@ public class DispenseActivityTest {
         EventBus.getDefault().post(commodityToggledEvent);
 
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
-
     }
 
     @Test
@@ -114,13 +111,11 @@ public class DispenseActivityTest {
 
         SelectedCommoditiesAdapter adapter = dispenseActivity.selectedCommoditiesAdapter;
 
-        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
-        View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_commodity_list_item, null);
-        View row = adapter.getView(0, convertView, genericLayout);
-        ImageButton cancelButton = (ImageButton) row.findViewById(R.id.imageButtonCancel);
+        ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_commodity_list_item, R.id.imageButtonCancel);
 
         cancelButton.performClick();
 
         assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
+        assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 }
