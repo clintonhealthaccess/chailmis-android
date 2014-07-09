@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -28,6 +29,8 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class DispenseActivity extends BaseActivity {
 
@@ -59,10 +62,32 @@ public class DispenseActivity extends BaseActivity {
         buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmDispensing();
+                if (dispensingIsValid()) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
+                    dialog.show(fm, "confirmDispensing");
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.dispense_submit_validation_message), LENGTH_SHORT).show();
+                }
             }
+
+
         });
         EventBus.getDefault().register(this);
+    }
+
+    protected boolean dispensingIsValid() {
+        boolean valid = true;
+        for (int i = 0; i <
+                selectedCommoditiesAdapter.getCount(); i++) {
+            View view = listViewSelectedCommodities.getChildAt(i);
+            EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+            if (editTextQuantity.getText().toString().isEmpty()) {
+                valid = false;
+            }
+
+        }
+        return valid;
     }
 
     private void setupCommodities() {
@@ -82,6 +107,7 @@ public class DispenseActivity extends BaseActivity {
             button.setCompoundDrawables(null, null, drawable, null);
 
             button.setText(category.getName());
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,17 +122,11 @@ public class DispenseActivity extends BaseActivity {
 
     }
 
-    private void confirmDispensing() {
-        FragmentManager fm = getSupportFragmentManager();
-        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
-        dialog.show(fm, "confirmDispensing");
-    }
-
     protected Dispensing getDispensing() {
         Dispensing dispensing = new Dispensing();
         for (int i = 0; i <
                 selectedCommoditiesAdapter.getCount(); i++) {
-            View view = selectedCommoditiesAdapter.getView(i, null, listViewSelectedCommodities);
+            View view = listViewSelectedCommodities.getChildAt(i);
             EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
             int quantity = 0;
             try {

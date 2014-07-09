@@ -34,5 +34,6 @@
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
+    <string name="dispense_submit_validation_message">Make sure all fields are filled</string>
 
 </resources>

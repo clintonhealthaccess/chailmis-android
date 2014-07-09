@@ -5,6 +5,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -13,7 +14,9 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,6 +35,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
@@ -121,7 +125,7 @@ public class DispenseActivityTest {
         assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
-
+    @Ignore("WIP")
     @Test
     public void getDispensingShouldGetItemsInTheListView() throws Exception {
 
@@ -151,10 +155,45 @@ public class DispenseActivityTest {
 
         dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
 
-
         dispenseActivity.checkVisibilityOfSubmitButton();
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+
+
+    }
+    @Ignore("WIP")
+    @Test
+    public void testThatDispensingIsInvalidIfNoQuantitiesAreSet() throws Exception {
+        DispenseActivity dispenseActivity = getActivity();
+
+        String commodityName = "food";
+
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
+
+        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+
+        dispenseActivity.listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
+
+        assertFalse(dispenseActivity.dispensingIsValid());
+    }
+    @Ignore("WIP")
+    @Test
+    public void testThatDispensingIsValidIfQuantitiesAreSet() throws Exception {
+        DispenseActivity dispenseActivity = getActivity();
+
+        String commodityName = "food";
+
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
+
+        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+
+        ListView listViewSelectedCommodities = dispenseActivity.listViewSelectedCommodities;
+
+        listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
+
+        assertTrue(listViewSelectedCommodities.isShown());
+
+        assertThat(listViewSelectedCommodities.getChildCount(), is(1));
 
 
     }

@@ -9,14 +9,20 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 
 public class DispenseConfirmationFragment extends DialogFragment {
 
     public static final String DISPENSING = "param_dispensings";
     private Dispensing dispensing;
+
+    @Inject
+    DispensingService dispensingService;
 
     Button buttonDispenseConfirm;
 
@@ -49,7 +55,12 @@ public class DispenseConfirmationFragment extends DialogFragment {
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
+
+                    dispensingService.addDispensing(dispensing);
+                    dismiss();
+                    getActivity().finish();
+
+
             }
         });
         getDialog().setCanceledOnTouchOutside(false);
