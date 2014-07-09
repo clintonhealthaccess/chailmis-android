@@ -32,10 +32,6 @@ public class Commodity implements Serializable {
         return name;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public boolean getSelected() {
         return selected;
     }
