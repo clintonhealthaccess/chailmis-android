@@ -2,13 +2,16 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +19,9 @@ import org.junit.runner.RunWith;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -91,6 +97,65 @@ public class DispenseActivityTest {
         EventBus.getDefault().post(commodityToggledEvent);
 
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+    }
+
+    @Test
+    public void testThatSubmitButtonIsWiredUp() throws Exception {
+        DispenseActivity activity = getActivity();
+        assertThat(activity.buttonSubmitDispense, is(notNullValue()));
+    }
+
+    @Test
+    public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
+        DispenseActivity dispenseActivity = getActivity();
+        Commodity commodity = new Commodity("name");
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
+        EventBus.getDefault().post(commodityToggledEvent);
+
+        SelectedCommoditiesAdapter adapter = dispenseActivity.selectedCommoditiesAdapter;
+
+        ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_commodity_list_item, R.id.imageButtonCancel);
+
+        cancelButton.performClick();
+
+        assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
+        assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+    }
+
+    @Test
+    public void getDispensingShouldGetItemsInTheListView() throws Exception {
+
+        DispenseActivity dispenseActivity = getActivity();
+
+        String commodityName = "food";
+
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
+        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity("commodity two"));
+
+        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+
+        dispenseActivity.listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
+
+        Dispensing dispensing = dispenseActivity.getDispensing();
+
+        assertThat(dispensing.getDispensingItems().size(), is(2));
+        assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
+    }
+
+    @Test
+    public void testSubmitButtonShouldBeHiddenIfThereAreNoItemsInTheList() throws Exception {
+
+        DispenseActivity dispenseActivity = getActivity();
+
+        assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+
+        dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
+
+
+        dispenseActivity.checkVisibilityOfSubmitButton();
+
+        assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+
 
     }
 }

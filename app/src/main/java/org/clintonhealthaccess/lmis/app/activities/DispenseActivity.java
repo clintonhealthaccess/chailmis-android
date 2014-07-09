@@ -1,12 +1,12 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.support.v4.app.FragmentManager;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ScaleDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -15,43 +15,71 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
 
 public class DispenseActivity extends BaseActivity {
+
     @Inject
     private CommoditiesRepository commoditiesRepository;
 
+    @InjectView(R.id.listViewSelectedCommodities)
     protected ListView listViewSelectedCommodities;
-    private SelectedCommoditiesAdapter adapter;
+    @InjectView(R.id.buttonSubmitDispense)
+    Button buttonSubmitDispense;
+
+
+    protected SelectedCommoditiesAdapter selectedCommoditiesAdapter;
     protected ArrayList<Commodity> selectedCommodities = new ArrayList<>();
+    private List<Dispensing> dispensings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_dispense);
-        listViewSelectedCommodities = (ListView) findViewById(R.id.listViewSelectedCommodities);
+
+        setupCommodities();
+
+        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
+
+        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
+
+        buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                confirmDispensing();
+            }
+        });
+        EventBus.getDefault().register(this);
+    }
+
+    private void setupCommodities() {
         LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
 
         List<Category> categoryList = commoditiesRepository.allCategories();
 
         Drawable drawable = getResources().getDrawable(R.drawable.arrow_black_right);
-        drawable.setBounds(0, 0, 20,30);
+
+        drawable.setBounds(0, 0, 20, 30);
 
         for (final Category category : categoryList) {
             Button button = new Button(this);
 
             button.setBackgroundResource(R.drawable.category_button_on_overlay);
 
-            button.setCompoundDrawables(
-                    null, null, drawable, null);
+            button.setCompoundDrawables(null, null, drawable, null);
 
             button.setText(category.getName());
             button.setOnClickListener(new View.OnClickListener() {
@@ -65,21 +93,55 @@ public class DispenseActivity extends BaseActivity {
             categoriesLayout.addView(button);
         }
 
-        adapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
-        listViewSelectedCommodities.setAdapter(adapter);
-        EventBus.getDefault().register(this);
+
+    }
+
+    private void confirmDispensing() {
+        FragmentManager fm = getSupportFragmentManager();
+        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
+        dialog.show(fm, "confirmDispensing");
+    }
+
+    protected Dispensing getDispensing() {
+        Dispensing dispensing = new Dispensing();
+        for (int i = 0; i <
+                selectedCommoditiesAdapter.getCount(); i++) {
+            View view = selectedCommoditiesAdapter.getView(i, null, listViewSelectedCommodities);
+            EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+            int quantity = 0;
+            try {
+                quantity = Integer.parseInt(editTextQuantity.getText().toString());
+            } catch (NumberFormatException exception) {
+
+            }
+
+            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
+            dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
+        }
+        Log.e("DDnn", String.format(" dispensing items %d", dispensing.getDispensingItems().size()));
+        return dispensing;
     }
 
     public void onEvent(CommodityToggledEvent event) {
         Commodity commodity = event.getCommodity();
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
-            adapter.remove(commodity);
+            selectedCommoditiesAdapter.remove(commodity);
         } else {
-            adapter.add(commodity);
+            selectedCommoditiesAdapter.add(commodity);
             selectedCommodities.add(commodity);
         }
-        adapter.notifyDataSetChanged();
+        selectedCommoditiesAdapter.notifyDataSetChanged();
+        checkVisibilityOfSubmitButton();
+    }
+
+    protected void checkVisibilityOfSubmitButton() {
+        if (selectedCommodities.size() > 0) {
+            buttonSubmitDispense.setVisibility(View.VISIBLE);
+        } else {
+            buttonSubmitDispense.setVisibility(View.INVISIBLE);
+
+        }
     }
 
 }
