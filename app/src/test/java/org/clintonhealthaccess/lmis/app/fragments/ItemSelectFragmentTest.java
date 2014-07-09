@@ -1,7 +1,6 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,10 +23,10 @@ import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
@@ -56,8 +55,9 @@ public class ItemSelectFragmentTest {
 
         assertThat(categoriesLayout.getChildCount(), is(6));
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
-            View button = categoriesLayout.getChildAt(i);
-            assertThat(button, instanceOf(Button.class));
+            Button button = (Button)categoriesLayout.getChildAt(i);
+            Category currentCategory = commoditiesRepository.allCategories().get(i);
+            assertThat(button.getText().toString(), equalTo(currentCategory.getName()));
         }
     }
 

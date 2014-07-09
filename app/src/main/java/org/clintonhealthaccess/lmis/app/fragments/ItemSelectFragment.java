@@ -68,8 +68,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
         for (final Category category : categoryList) {
             Button button = new CategoryButton(getActivity(), category);
-            button.setBackgroundResource(R.drawable.category_button_on_overlay);
-            button.setText(category.getName());
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,7 +76,9 @@ public class ItemSelectFragment extends RoboDialogFragment {
             });
 
             for (Commodity commodity : category.getCommodities()) {
-                if (selectedCommodities.contains(commodity)) commodity.toggleSelected();
+                if (selectedCommodities.contains(commodity)) {
+                    commodity.toggleSelected();
+                }
             }
 
             adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, category.getCommodities()));
