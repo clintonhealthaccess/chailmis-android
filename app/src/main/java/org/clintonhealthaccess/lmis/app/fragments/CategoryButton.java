@@ -6,7 +6,7 @@ import android.widget.Button;
 import org.clintonhealthaccess.lmis.app.models.Category;
 
 public class CategoryButton extends Button {
-    private Category category;
+    private final Category category;
 
     public CategoryButton(Context context, Category category) {
         super(context);

@@ -1,7 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.support.v7.internal.view.menu.MenuBuilder;
-import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -9,9 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -41,7 +38,7 @@ public class ReportsActivityTest {
 
     }
 
-    @Ignore
+    @Ignore("we didn't find a way to verify menu item visible yet.")
     @Test
     public void testHelpIsAvailableAsAMenuItem() {
         ReportsActivity reportsActivity = getReportsActivity();

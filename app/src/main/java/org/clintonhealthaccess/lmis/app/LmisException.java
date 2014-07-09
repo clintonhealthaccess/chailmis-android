@@ -1,19 +1,19 @@
 package org.clintonhealthaccess.lmis.app;
 
 public class LmisException extends RuntimeException {
-    public LmisException(Throwable e) {
-        super(e);
+    public LmisException(Throwable cause) {
+        super(cause);
     }
 
     public LmisException() {
         super("");
     }
 
-    public LmisException(String s) {
-        super(s);
+    public LmisException(String message) {
+        super(message);
     }
 
-    public LmisException(String s, Exception e) {
-        super(s, e);
+    public LmisException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
