@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @DatabaseTable(tableName = "dispensings")
@@ -17,6 +18,9 @@ public class Dispensing implements Serializable {
     @DatabaseField
     private boolean dispenseToFacility;
 
+    @DatabaseField
+    private Date created;
+
     public void addItem(DispensingItem dispensingItem) {
         dispensingItems.add(dispensingItem);
     }
@@ -27,5 +31,6 @@ public class Dispensing implements Serializable {
 
     public Dispensing() {
         dispenseToFacility = false;
+        created = new Date();
     }
 }
