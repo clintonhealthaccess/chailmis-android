@@ -25,6 +25,9 @@ import static org.robolectric.Robolectric.application;
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommodityServiceTest {
     @Inject
+    private CategoryService categoryService;
+
+    @Inject
     private CommodityService commodityService;
 
     @Before
@@ -53,7 +56,7 @@ public class CommodityServiceTest {
     }
 
     private void verifyAllCommodityCategories() {
-        List<Category> allCategories = commodityService.all();
+        List<Category> allCategories = categoryService.all();
 
         assertThat(allCategories.size(), is(6));
         Category antiMalarialCategory = allCategories.get(0);

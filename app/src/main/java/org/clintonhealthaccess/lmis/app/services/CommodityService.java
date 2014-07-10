@@ -18,15 +18,6 @@ public class CommodityService {
     @Inject
     private DbUtil dbUtil;
 
-    public List<Category> all() {
-        return dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
-            @Override
-            public List<Category> operate(Dao<Category, String> dao) throws SQLException {
-                return dao.queryForAll();
-            }
-        });
-    }
-
     public void initialise() {
         List<Category> allCommodities = lmisServer.fetchCommodities();
         saveToDatabase(allCommodities);

@@ -51,4 +51,8 @@ public class StockService {
         }
         return stockItem;
     }
+
+    public void initialise() {
+
+    }
 }
