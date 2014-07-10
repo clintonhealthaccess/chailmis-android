@@ -8,7 +8,8 @@ public class StockItem {
 
     public static final String COMMODITY_COLUMN_NAME = "commodity";
 
-    public StockItem() {}
+    public StockItem() {
+    }
 
     @DatabaseField(generatedId = true)
     protected int id;
@@ -26,5 +27,9 @@ public class StockItem {
 
     public int quantity() {
         return quantity;
+    }
+
+    public void reduceQuantityBy(int quantityToReduceBy) {
+        quantity -= quantityToReduceBy;
     }
 }

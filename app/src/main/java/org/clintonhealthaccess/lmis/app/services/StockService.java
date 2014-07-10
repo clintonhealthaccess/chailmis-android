@@ -65,4 +65,22 @@ public class StockService {
             });
         }
     }
+
+    public void updateStockLevelFor(final Commodity commodity, int quantity) {
+        try {
+            final StockItem stockItem = getStockItem(commodity);
+            stockItem.reduceQuantityBy(quantity);
+            dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
+                @Override
+                public Void operate(Dao<StockItem, String> dao) throws SQLException {
+                    dao.update(stockItem);
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        }
+
+    }
+
 }
