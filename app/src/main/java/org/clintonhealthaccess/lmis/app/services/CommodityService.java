@@ -9,6 +9,7 @@ import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommodityService {
@@ -16,16 +17,10 @@ public class CommodityService {
     private LmisServer lmisServer;
 
     @Inject
-    private DbUtil dbUtil;
+    private CategoryService categoryService;
 
-    public List<Category> all() {
-        return dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
-            @Override
-            public List<Category> operate(Dao<Category, String> dao) throws SQLException {
-                return dao.queryForAll();
-            }
-        });
-    }
+    @Inject
+    private DbUtil dbUtil;
 
     public void initialise() {
         List<Category> allCommodities = lmisServer.fetchCommodities();
@@ -56,5 +51,14 @@ public class CommodityService {
                 return null;
             }
         });
+    }
+
+    public List<Commodity> all() {
+        List<Category> categories = categoryService.all();
+        List<Commodity> commodities = new ArrayList<>();
+        for(Category category : categories) {
+            commodities.addAll(category.getCommodities());
+        }
+        return commodities;
     }
 }

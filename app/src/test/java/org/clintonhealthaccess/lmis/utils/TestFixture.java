@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -29,7 +30,7 @@ public class TestFixture {
     public static void initialiseDefaultCommodities(Context context) throws IOException {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
-            for (Category category : defaultCommodities(context)) {
+            for (Category category : defaultCategories(context)) {
                 initialiseCategoryDao(openHelper).create(category);
                 for (Commodity commodity : category.getNotSavedCommodities()) {
                     commodity.setCategory(category);
@@ -43,10 +44,18 @@ public class TestFixture {
         }
     }
 
-    public static List<Category> defaultCommodities(Context context) throws IOException {
+    public static List<Category> defaultCategories(Context context) throws IOException {
         InputStream src = context.getAssets().open("default_commodities.json");
         String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
         return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
+    }
+
+    public static List<Commodity> getDefaultCommodities(Context context) throws IOException {
+        List<Commodity> defaultCommodities = new ArrayList<>();
+        for(Category category : defaultCategories(context)) {
+            defaultCommodities.addAll(category.getCommodities());
+        }
+        return defaultCommodities;
     }
 
     private static Dao<Category, String> initialiseCategoryDao(SQLiteOpenHelper openHelper) throws SQLException {

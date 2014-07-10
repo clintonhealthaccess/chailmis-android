@@ -9,6 +9,8 @@ import com.google.inject.AbstractModule;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -26,6 +28,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -36,15 +39,21 @@ import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 public class RegisterActivityTest {
     private RegisterActivity registerActivity;
     private UserService mockUserService;
+    private CommodityService mockCommodityService;
+    private StockService mockStockService;
 
     @Before
     public void setUp() throws Exception {
         mockUserService = mock(UserService.class);
+        mockCommodityService = mock(CommodityService.class);
+        mockStockService = mock(StockService.class);
 
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(mockUserService);
+                bind(CommodityService.class).toInstance(mockCommodityService);
+                bind(StockService.class).toInstance(mockStockService);
             }
         });
 
@@ -53,14 +62,38 @@ public class RegisterActivityTest {
 
     @Test
     public void testShouldRedirectToHomePageAfterSuccessfulRegistration() throws Exception {
+        performSuccessfulRegistration();
+
+        Intent homeIntent = new Intent(registerActivity, HomeActivity.class);
+        assertThat(shadowOf(registerActivity).getNextStartedActivity(), equalTo(homeIntent));
+    }
+
+    @Test
+    public void testMessageShouldBeShownIfRegistrationIsSuccessful() {
+        performSuccessfulRegistration();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
+    }
+
+    @Test
+    public void shouldCallInitialiseForCommoditiesOnSuccessfulRegistration() {
+        performSuccessfulRegistration();
+        verify(mockCommodityService, times(1)).initialise();
+    }
+
+    @Test
+    public void shouldCallInitialiseStockOnSuccessfulRegistration() {
+        performSuccessfulRegistration();
+        verify(mockStockService, times(1)).initialise();
+    }
+
+    private void performSuccessfulRegistration() {
         when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
 
         fillTextField(id.textUsername, "admin");
         fillTextField(id.textPassword, "district");
         getRegisterButton().performClick();
-
-        Intent homeIntent = new Intent(registerActivity, HomeActivity.class);
-        assertThat(shadowOf(registerActivity).getNextStartedActivity(), equalTo(homeIntent));
     }
 
     @Test
@@ -89,6 +122,7 @@ public class RegisterActivityTest {
         assertThat(shadowOf(registerActivity).getNextStartedActivity(), nullValue());
     }
 
+
     @Test
     public void testErrorShouldBeShownIfRegisterButtonIsClickedBeforeSupplyingUsername() {
         fillTextField(id.textPassword, "district");
@@ -110,7 +144,6 @@ public class RegisterActivityTest {
 
     }
 
-
     @Test
     public void testErrorShouldBeShownIfRegistrationFailed() {
         String errorMessage = "Some failure message";
@@ -122,18 +155,6 @@ public class RegisterActivityTest {
         ShadowHandler.idleMainLooper();
         assertThat(getTextOfLatestToast(), equalTo(errorMessage));
 
-    }
-
-
-    @Test
-    public void testMessageShouldBeShownIfRegistrationIsSuccessful() {
-        when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
-        fillTextField(id.textUsername, "admin");
-        fillTextField(id.textPassword, "district");
-        getRegisterButton().performClick();
-
-        ShadowHandler.idleMainLooper();
-        assertThat(getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
     }
 
     private void fillTextField(int inputFieldId, String text) {

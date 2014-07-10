@@ -10,7 +10,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,7 @@ import static org.robolectric.util.FragmentTestUtil.startFragment;
 @RunWith(RobolectricGradleTestRunner.class)
 public class ItemSelectFragmentTest {
     @Inject
-    private CommodityService commodityService;
+    private CategoryService categoryService;
 
     private ItemSelectFragment itemSelectFragment;
 
@@ -43,7 +43,7 @@ public class ItemSelectFragmentTest {
         setUpInjection(this);
         initialiseDefaultCommodities(application);
 
-        Category antiMalarialCategory = commodityService.all().get(0);
+        Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<Commodity>());
         startFragment(itemSelectFragment);
     }
@@ -59,7 +59,7 @@ public class ItemSelectFragmentTest {
         assertThat(categoriesLayout.getChildCount(), is(6));
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             Button button = (Button)categoriesLayout.getChildAt(i);
-            Category currentCategory = commodityService.all().get(i);
+            Category currentCategory = categoryService.all().get(i);
             assertThat(button.getText().toString(), equalTo(currentCategory.getName()));
         }
     }

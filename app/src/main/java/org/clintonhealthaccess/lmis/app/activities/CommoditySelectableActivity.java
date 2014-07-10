@@ -16,7 +16,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
     @Inject
-    private CommodityService commodityService;
+    private CategoryService categoryService;
 
     // FIXME: These methods should be private. Can we find a better way to test them?
     SelectedCommoditiesAdapter selectedCommoditiesAdapter;
@@ -75,7 +75,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     private void setupCommodities() {
         Drawable commodityButtonBackground = createCommodityButtonBackground();
         LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
-        for (final Category category : commodityService.all()) {
+        for (final Category category : categoryService.all()) {
             Button button = createCommoditySelectionButton(category, commodityButtonBackground);
             categoriesLayout.addView(button);
         }
@@ -101,9 +101,5 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             }
         });
         return button;
-    }
-
-    public interface SelectedCommodityViewHandler {
-        void operateOn(View view);
     }
 }

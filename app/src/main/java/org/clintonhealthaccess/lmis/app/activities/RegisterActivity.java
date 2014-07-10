@@ -12,7 +12,9 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -31,6 +33,9 @@ public class RegisterActivity extends RoboActionBarActivity {
 
     @Inject
     private CommodityService commodityService;
+
+    @Inject
+    private StockService stockService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -67,7 +72,7 @@ public class RegisterActivity extends RoboActionBarActivity {
         });
     }
 
-    private void doRegister(final String username, final String password) {
+    protected void doRegister(final String username, final String password) {
         AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
             private LmisException failureCause;
 
@@ -81,6 +86,7 @@ public class RegisterActivity extends RoboActionBarActivity {
                     return false;
                 }
                 commodityService.initialise();
+                stockService.initialise();
                 return true;
             }
 

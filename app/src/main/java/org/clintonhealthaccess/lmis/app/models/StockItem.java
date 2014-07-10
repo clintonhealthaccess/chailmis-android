@@ -13,7 +13,7 @@ public class StockItem {
     @DatabaseField(generatedId = true)
     protected int id;
 
-    @DatabaseField(unique = true, foreign = true, columnName = COMMODITY_COLUMN_NAME)
+    @DatabaseField(unique = true, foreign = true, columnName = COMMODITY_COLUMN_NAME, canBeNull = false)
     protected Commodity commodity;
 
     @DatabaseField(canBeNull = false)
