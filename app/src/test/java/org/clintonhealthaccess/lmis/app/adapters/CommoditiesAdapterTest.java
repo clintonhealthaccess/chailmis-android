@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getRowFromListView;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
@@ -59,6 +60,7 @@ public class CommoditiesAdapterTest {
 
     @Test
     public void shouldCheckTheCheckBoxIfCommodityIsSelected() {
+        fixStockLevelTo(10);
         CommoditiesAdapter adapter = makeAdapterWithCommodities();
 
         CheckBox checkboxCommoditySelectedOne = (CheckBox) getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
@@ -72,12 +74,16 @@ public class CommoditiesAdapterTest {
     public void shouldDisableRowViewIfCommodityStockIsZero() {
         fixStockLevelTo(0);
         CommoditiesAdapter adapter = makeAdapterWithCommodities();
+
         View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
-        assertFalse(listRow.isEnabled());
+//        assertThat(((ColorDrawable)listRow.getBackground()).getColor(), is(R.color.disabled));
+
+        View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
+        assertFalse(checkBox.isShown());
     }
 
-    private void fixStockLevelTo(int stockLevel) {
-        when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(stockLevel);
+    private void fixStockLevelTo(int level) {
+        when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(level);
     }
 
     private CommoditiesAdapter makeAdapterWithCommodities() {

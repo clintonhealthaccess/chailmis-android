@@ -34,13 +34,16 @@ public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.commodity_list_item, parent, false);
-        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
         Commodity commodity = getItem(position);
-        textViewCommodityName.setText(commodity.getName());
         checkboxCommoditySelected.setChecked(commodity.getSelected());
+        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        textViewCommodityName.setText(commodity.getName());
 
-        if (stockService.getStockLevelFor(commodity) == 0) rowView.setEnabled(false);
+        if (stockService.getStockLevelFor(commodity) == 0) {
+            rowView.setBackgroundColor(getContext().getResources().getColor(R.color.disabled));
+            checkboxCommoditySelected.setVisibility(View.INVISIBLE);
+        }
 
         return rowView;
     }
