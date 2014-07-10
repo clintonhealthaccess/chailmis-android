@@ -9,11 +9,15 @@ import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommodityService {
     @Inject
     private LmisServer lmisServer;
+
+    @Inject
+    private CategoryService categoryService;
 
     @Inject
     private DbUtil dbUtil;
@@ -47,5 +51,14 @@ public class CommodityService {
                 return null;
             }
         });
+    }
+
+    public List<Commodity> all() {
+        List<Category> categories = categoryService.all();
+        List<Commodity> commodities = new ArrayList<>();
+        for(Category category : categories) {
+            commodities.addAll(category.getCommodities());
+        }
+        return commodities;
     }
 }

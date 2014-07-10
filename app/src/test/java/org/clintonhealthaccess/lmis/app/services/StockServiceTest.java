@@ -54,7 +54,7 @@ public class StockServiceTest {
     }
 
     @Test
-    public void shouldCreateAStockItemRowForEachCommodityOnInitialised() {
+    public void shouldCreateAStockItemRowForEachCommodityOnInitialise() {
         stockService.initialise();
         List<Commodity> commodities;
     }
