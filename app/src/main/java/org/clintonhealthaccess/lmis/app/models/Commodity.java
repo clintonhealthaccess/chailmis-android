@@ -1,6 +1,8 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import com.google.common.base.Function;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -8,13 +10,28 @@ import java.util.List;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Iterables.transform;
 
+@DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
-    private final String id;
-    private final String name;
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
+
+    @DatabaseField(canBeNull = false)
+    private String lmisId;
+
+    @DatabaseField(canBeNull = false)
+    private String name;
+
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Category category;
+
     private boolean selected;
 
+    public Commodity() {
+        // ormlite likes it
+    }
+
     public Commodity(String name) {
-        this.id = name;
+        this.lmisId = name;
         this.name = name;
     }
 
@@ -47,17 +64,21 @@ public class Commodity implements Serializable {
 
         Commodity commodity = (Commodity) o;
 
-        if (!id.equals(commodity.id)) return false;
+        if (!lmisId.equals(commodity.lmisId)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return lmisId.hashCode();
     }
 
-    public String getId() {
-        return id;
+    public String getLmisId() {
+        return lmisId;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

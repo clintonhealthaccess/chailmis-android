@@ -23,7 +23,7 @@ public class DispensingItem implements Serializable {
 
     public DispensingItem(Commodity commodity, int quantity) {
         this.commodity = commodity;
-        this.commodityId = commodity.getId();
+        this.commodityId = commodity.getLmisId();
         this.quantity = quantity;
     }
 

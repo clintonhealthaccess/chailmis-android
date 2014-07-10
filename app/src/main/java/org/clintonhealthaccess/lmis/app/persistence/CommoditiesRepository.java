@@ -1,24 +1,23 @@
 package org.clintonhealthaccess.lmis.app.persistence;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
+import com.j256.ormlite.android.AndroidConnectionSource;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.google.common.io.ByteStreams.copy;
-import static java.util.Arrays.asList;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
+import static com.j256.ormlite.dao.DaoManager.createDao;
 
 public class CommoditiesRepository {
     @Inject
@@ -27,30 +26,41 @@ public class CommoditiesRepository {
     public static final String COMMODITIES_FILE = "commodities.json";
 
     public List<Category> allCategories() {
-        InputStreamReader jsonReader;
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
-            FileInputStream fileInput = context.openFileInput(COMMODITIES_FILE);
-            jsonReader = new InputStreamReader(fileInput);
-        } catch (IOException e) {
-            throw new LmisException("Cannot read file: " + COMMODITIES_FILE, e);
+            return initialiseCategoryDao(openHelper).queryForAll();
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } finally {
+            releaseHelper();
         }
-
-        Category[] categories = new Gson().fromJson(jsonReader, Category[].class);
-        if (categories == null) {
-            throw new LmisException("Invalid commodity categories in " + COMMODITIES_FILE);
-        }
-        return asList(categories);
     }
 
     public void save(List<Category> allCategories) {
-        String jsonString = new Gson().toJson(allCategories);
-        InputStream src = new ByteArrayInputStream(jsonString.getBytes());
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
-            FileOutputStream dest = context.openFileOutput(COMMODITIES_FILE, MODE_PRIVATE);
-            copy(src, dest);
-        } catch (IOException e) {
-            throw new LmisException("Cannot write file: " + COMMODITIES_FILE, e);
+            for (Category category : allCategories) {
+                initialiseCategoryDao(openHelper).create(category);
+                for (Commodity commodity : category.getNotSavedCommodities()) {
+                    commodity.setCategory(category);
+                    initialiseCommodityDao(openHelper).create(commodity);
+                }
+            }
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } finally {
+            releaseHelper();
         }
+    }
+
+    private Dao<Category, String> initialiseCategoryDao(SQLiteOpenHelper openHelper) throws SQLException {
+        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
+        return createDao(connectionSource, Category.class);
+    }
+
+    private Dao<Commodity, String> initialiseCommodityDao(SQLiteOpenHelper openHelper) throws SQLException {
+        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
+        return createDao(connectionSource, Commodity.class);
     }
 
 }

@@ -1,61 +1,61 @@
 [
     {
-        "id": "1",
+        "lmisId": "1",
         "name": "Anti Malarials",
         "commodities": [
             {
-                "id": "2",
+                "lmisId": "2",
                 "name": "Coartem"
             },
             {
-                "id": "3",
+                "lmisId": "3",
                 "name": "Choloquine"
             },
             {
-                "id": "4",
+                "lmisId": "4",
                 "name": "Quinine"
             },
             {
-                "id": "5",
+                "lmisId": "5",
                 "name": "Fansida"
             },
             {
-                "id": "6",
+                "lmisId": "6",
                 "name": "Hedex"
             },
             {
-                "id": "7",
+                "lmisId": "7",
                 "name": "Septrin"
             }
         ]
     },
     {
-        "id": "8",
+        "lmisId": "8",
         "name": "Antenatal",
         "commodities": [
             {
-                "id": "9",
+                "lmisId": "9",
                 "name": "Condom"
             }
         ]
     },
     {
-        "id": "10",
+        "lmisId": "10",
         "name": "HIV/AIDS",
         "commodities": []
     },
     {
-        "id": "11",
+        "lmisId": "11",
         "name": "Diarrhoea",
         "commodities": []
     },
     {
-        "id": "12",
+        "lmisId": "12",
         "name": "Immunization",
         "commodities": []
     },
     {
-        "id": "13",
+        "lmisId": "13",
         "name": "Others",
         "commodities": []
     }

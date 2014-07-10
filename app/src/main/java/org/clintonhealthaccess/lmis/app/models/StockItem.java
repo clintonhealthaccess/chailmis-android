@@ -15,7 +15,7 @@ public class StockItem {
     private int quantity;
 
     public StockItem(Commodity commodity, int quantity) {
-        commodityId = commodity.getId();
+        commodityId = commodity.getLmisId();
         this.quantity = quantity;
     }
 

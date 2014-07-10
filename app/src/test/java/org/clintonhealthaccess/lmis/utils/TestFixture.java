@@ -1,29 +1,46 @@
 package org.clintonhealthaccess.lmis.utils;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
+import com.j256.ormlite.android.AndroidConnectionSource;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.support.ConnectionSource;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-import static com.google.common.io.ByteStreams.copy;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
+import static com.j256.ormlite.dao.DaoManager.createDao;
 import static java.util.Arrays.asList;
-import static org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository.COMMODITIES_FILE;
 
 public class TestFixture {
     public static void initialiseDefaultCommodities(Context context) throws IOException {
-        InputStream src = context.getAssets().open("default_commodities.json");
-        FileOutputStream dest = context.openFileOutput(COMMODITIES_FILE, MODE_PRIVATE);
-        copy(src, dest);
-        dest.close();
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        try {
+            for (Category category : defaultCommodities(context)) {
+                initialiseCategoryDao(openHelper).create(category);
+                for (Commodity commodity : category.getNotSavedCommodities()) {
+                    commodity.setCategory(category);
+                    initialiseCommodityDao(openHelper).create(commodity);
+                }
+            }
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } finally {
+            releaseHelper();
+        }
     }
 
     public static List<Category> defaultCommodities(Context context) throws IOException {
@@ -31,4 +48,15 @@ public class TestFixture {
         String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
         return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
     }
+
+    private static Dao<Category, String> initialiseCategoryDao(SQLiteOpenHelper openHelper) throws SQLException {
+        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
+        return createDao(connectionSource, Category.class);
+    }
+
+    private static Dao<Commodity, String> initialiseCommodityDao(SQLiteOpenHelper openHelper) throws SQLException {
+        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
+        return createDao(connectionSource, Commodity.class);
+    }
+
 }

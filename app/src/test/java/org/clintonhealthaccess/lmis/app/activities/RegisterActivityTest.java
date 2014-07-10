@@ -134,7 +134,6 @@ public class RegisterActivityTest {
 
         ShadowHandler.idleMainLooper();
         assertThat(getTextOfLatestToast(), equalTo(registerActivity.getString(R.string.registration_successful_message)));
-
     }
 
     private void fillTextField(int inputFieldId, String text) {

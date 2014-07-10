@@ -1,17 +1,39 @@
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.collect.ImmutableList;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class Category implements Serializable {
-    private final String id;
-    private final String name;
-    private final List<Commodity> commodities;
+import static com.google.common.collect.Lists.newArrayList;
 
-    public Category(String name, String... commodityNames) {
-        this.id = name;
+@DatabaseTable(tableName = "commodity_categories")
+public class Category implements Serializable {
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
+
+    @DatabaseField(canBeNull = false)
+    private String lmisId;
+
+    @DatabaseField(canBeNull = false)
+    private String name;
+
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<Commodity> commoditiesCollection;
+
+    private List<Commodity> commodities;
+
+    public Category() {
+        // ormlite likes it
+    }
+
+    public Category(String name) {
+        this.lmisId = name;
         this.name = name;
-        commodities = Commodity.buildList(commodityNames);
     }
 
     public String getName() {
@@ -19,6 +41,13 @@ public class Category implements Serializable {
     }
 
     public List<Commodity> getCommodities() {
+        if(commoditiesCollection == null) {
+            return newArrayList();
+        }
+        return ImmutableList.copyOf(commoditiesCollection);
+    }
+
+    public List<Commodity> getNotSavedCommodities() {
         return commodities;
     }
 

@@ -80,11 +80,9 @@ public class ItemSelectFragmentTest {
 
     @Test
     public void testCloseButtonExists() throws Exception {
-
         Dialog dialog = ShadowDialog.getLatestDialog();
         Button buttonClose = (Button) dialog.findViewById(R.id.buttonClose);
         assertThat(buttonClose, not(nullValue()));
-
     }
 
     @Test

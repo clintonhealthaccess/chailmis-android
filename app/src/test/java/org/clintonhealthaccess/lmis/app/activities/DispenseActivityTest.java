@@ -2,7 +2,6 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,7 +13,6 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -35,7 +33,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
-import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {

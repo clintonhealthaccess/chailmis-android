@@ -6,15 +6,17 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.sql.SQLException;
 
-import static com.j256.ormlite.table.TableUtils.createTable;
+import static com.j256.ormlite.table.TableUtils.createTableIfNotExists;
 
 public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
     public LmisSqliteOpenHelper(Context context) {
@@ -24,10 +26,12 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            createTable(connectionSource, User.class);
-            createTable(connectionSource, Dispensing.class);
-            createTable(connectionSource, DispensingItem.class);
-            createTable(connectionSource, StockItem.class);
+            createTableIfNotExists(connectionSource, Category.class);
+            createTableIfNotExists(connectionSource, Commodity.class);
+            createTableIfNotExists(connectionSource, User.class);
+            createTableIfNotExists(connectionSource, Dispensing.class);
+            createTableIfNotExists(connectionSource, DispensingItem.class);
+            createTableIfNotExists(connectionSource, StockItem.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

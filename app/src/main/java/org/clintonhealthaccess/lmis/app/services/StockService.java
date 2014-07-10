@@ -29,7 +29,7 @@ public class StockService {
         Dao<StockItem, String> stockDao;
         try {
             stockDao = initialiseDao();
-            stockItem = stockDao.queryForId(commodity.getId());
+            stockItem = stockDao.queryForId(commodity.getLmisId());
         } catch (SQLException e) {
             throw new LmisException(e);
         } finally {
@@ -39,7 +39,7 @@ public class StockService {
         return stockItem.quantity();
     }
 
-    public Dao<StockItem, String> initialiseDao() throws SQLException {
+    private Dao<StockItem, String> initialiseDao() throws SQLException {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
         return createDao(connectionSource, StockItem.class);
