@@ -8,20 +8,22 @@ import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 
 public class DispensingService {
     @Inject
     private Context context;
+
+    @Inject
+    private DbUtil dbUtil;
 
     private Dao<Dispensing, Long> initialiseDispensingDao() throws SQLException {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
@@ -29,35 +31,29 @@ public class DispensingService {
         return createDao(connectionSource, Dispensing.class);
     }
 
-    public void addDispensing(Dispensing dispensing) {
-        try {
-            Dao<DispensingItem, Long> dispensingDao = initialiseDispensingItemDao();
-            saveDispensing(dispensing);
-            for (DispensingItem item : dispensing.getDispensingItems()) {
-                item.setDispensing(dispensing);
-                dispensingDao.create(item);
+    public void addDispensing(final Dispensing dispensing) {
+        dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, DispensingItem>() {
+            @Override
+            public DispensingItem operate(Dao<DispensingItem, String> dao) throws SQLException {
+                saveDispensing(dispensing);
+                for (DispensingItem item : dispensing.getDispensingItems()) {
+                    item.setDispensing(dispensing);
+                    dao.create(item);
+                }
+                return null;
             }
-        } catch (SQLException e) {
-            throw new LmisException(e);
-        } finally {
-            releaseHelper();
-        }
+        });
     }
 
 
-    private Dao<DispensingItem, Long> initialiseDispensingItemDao() throws SQLException {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
-        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
-        return createDao(connectionSource, DispensingItem.class);
-    }
-
-    private void saveDispensing(Dispensing dispensing) throws SQLException {
-        try {
-            Dao<Dispensing, Long> dispensingDao = initialiseDispensingDao();
-            dispensingDao.create(dispensing);
-        } finally {
-            releaseHelper();
-        }
+    private void saveDispensing(final Dispensing dispensing) throws SQLException {
+        dbUtil.withDao(Dispensing.class, new DbUtil.Operation<Dispensing, Dispensing>() {
+            @Override
+            public Dispensing operate(Dao<Dispensing, String> dao) throws SQLException {
+                dao.create(dispensing);
+                return dispensing;
+            }
+        });
 
 
     }

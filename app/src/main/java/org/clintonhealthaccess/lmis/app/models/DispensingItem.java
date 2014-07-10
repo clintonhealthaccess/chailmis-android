@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @DatabaseTable(tableName = "dispensingItems")
 public class DispensingItem implements Serializable {
@@ -21,10 +22,14 @@ public class DispensingItem implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Dispensing dispensing;
 
+    @DatabaseField
+    private Date created;
+
     public DispensingItem(Commodity commodity, int quantity) {
         this.commodity = commodity;
         this.commodityId = commodity.getLmisId();
         this.quantity = quantity;
+        created = new Date();
     }
 
     public Commodity getCommodity() {
@@ -40,5 +45,6 @@ public class DispensingItem implements Serializable {
     }
 
     public DispensingItem() {
+        created = new Date();
     }
 }
