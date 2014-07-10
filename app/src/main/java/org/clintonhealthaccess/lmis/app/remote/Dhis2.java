@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.remote;
 import android.content.Context;
 
 import com.google.common.io.CharStreams;
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 
 import org.apache.http.HttpResponse;
@@ -10,16 +11,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Category;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import roboguice.inject.InjectResource;
 
 import static android.util.Base64.NO_WRAP;
 import static android.util.Base64.encodeToString;
 import static android.util.Log.i;
+import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_OK;
 
 public class Dhis2 implements LmisServer {
@@ -52,20 +56,22 @@ public class Dhis2 implements LmisServer {
         }
 
         int statusCode = response.getStatusLine().getStatusCode();
-        if(statusCode != SC_OK) {
+        if (statusCode != SC_OK) {
             i("Failed attempt to login.", "Response code : " + statusCode);
             throw new LmisException(messageInvalidLoginCredential);
         }
     }
 
     @Override
-    public String fetchCommodities() {
+    public List<Category> fetchCommodities() {
         // FIXME: should fetch from DHIS2 and populate JSON
+        String defaultCommoditiesAsJson;
         try {
             InputStream src = context.getAssets().open("default_commodities.json");
-            return CharStreams.toString(new InputStreamReader(src));
+            defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
         } catch (IOException e) {
             throw new LmisException("Doesn't matter, we will change this anyway.", e);
         }
+        return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
     }
 }

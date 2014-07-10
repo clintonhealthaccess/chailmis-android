@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.app.persistence;
 
-import com.google.common.io.CharStreams;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.sql.SQLException;
@@ -66,13 +65,11 @@ public class CommoditiesRepositoryTest {
     }
 
     @Test
-    public void testShouldSaveAllCommodityCategoriesToLocalFile() throws Exception {
-        InputStream src = application.getAssets().open("default_commodities.json");
-        String jsonString = CharStreams.toString(new InputStreamReader(src));
-
-        commoditiesRepository.save(jsonString);
+    public void testShouldSaveAllCommodityCategories() throws Exception {
+        List<Category> categories = ImmutableList.of(new Category("Test Category"));
+        commoditiesRepository.save(categories);
 
         List<Category> allCategories = commoditiesRepository.allCategories();
-        assertThat(allCategories.size(), is(6));
+        assertThat(allCategories.size(), is(1));
     }
 }

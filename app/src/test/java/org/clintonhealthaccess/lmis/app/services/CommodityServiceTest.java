@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCommoditiesJson;
+import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertThat;
@@ -29,7 +29,7 @@ public class CommodityServiceTest {
     @Before
     public void setUp() throws Exception {
         final LmisServer mockLmisServer = mock(LmisServer.class);
-        when(mockLmisServer.fetchCommodities()).thenReturn(defaultCommoditiesJson(application));
+        when(mockLmisServer.fetchCommodities()).thenReturn(defaultCommodities(application));
 
         setUpInjection(this, new AbstractModule() {
             @Override

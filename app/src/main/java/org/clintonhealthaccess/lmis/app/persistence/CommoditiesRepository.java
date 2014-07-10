@@ -42,7 +42,8 @@ public class CommoditiesRepository {
         return asList(categories);
     }
 
-    public void save(String jsonString) {
+    public void save(List<Category> allCategories) {
+        String jsonString = new Gson().toJson(allCategories);
         InputStream src = new ByteArrayInputStream(jsonString.getBytes());
         try {
             FileOutputStream dest = context.openFileOutput(COMMODITIES_FILE, MODE_PRIVATE);
@@ -51,4 +52,5 @@ public class CommoditiesRepository {
             throw new LmisException("Cannot write file: " + COMMODITIES_FILE, e);
         }
     }
+
 }
