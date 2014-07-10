@@ -17,6 +17,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowHandler;
 
 import de.greenrobot.event.EventBus;
 
@@ -30,12 +31,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
@@ -104,12 +107,6 @@ public class DispenseActivityTest {
     }
 
     @Test
-    public void testThatSubmitButtonExists() throws Exception {
-        DispenseActivity activity = getActivity();
-        assertThat(activity.buttonSubmitDispense, is(notNullValue()));
-    }
-
-    @Test
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
         DispenseActivity dispenseActivity = getActivity();
         Commodity commodity = new Commodity("name");
@@ -127,6 +124,12 @@ public class DispenseActivityTest {
     }
 
     @Test
+    public void testThatSubmitButtonExists() throws Exception {
+        DispenseActivity activity = getActivity();
+        assertThat(activity.buttonSubmitDispense, is(notNullValue()));
+    }
+
+    @Test
     public void testSubmitButtonVisibility() throws Exception {
 
         DispenseActivity dispenseActivity = getActivity();
@@ -139,6 +142,31 @@ public class DispenseActivityTest {
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
+
+    }
+
+
+    @Test
+    public void testSubmitButtonLogicWhenDispensingIsInValid() throws Exception {
+        DispenseActivity dispenseActivity = getActivity();
+
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
+
+
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
+
+        dispenseActivity.listViewSelectedCommodities = mockListView;
+
+        assertFalse(dispenseActivity.dispensingIsValid());
+
+        dispenseActivity.buttonSubmitDispense.callOnClick();
+
+        ShadowHandler.idleMainLooper();
+        assertThat(getTextOfLatestToast(), equalTo("Make sure all fields are filled"));
 
     }
 
