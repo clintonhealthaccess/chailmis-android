@@ -8,16 +8,26 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import java.util.List;
+
+import roboguice.RoboGuice;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
+
+    @Inject
+    private StockService stockService;
+
     public CommoditiesAdapter(Context context, int resource, List<Commodity> commodities) {
         super(context, resource, commodities);
+        RoboGuice.getInjector(context).injectMembers(this);
     }
 
     @Override
@@ -29,6 +39,8 @@ public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
         Commodity commodity = getItem(position);
         textViewCommodityName.setText(commodity.getName());
         checkboxCommoditySelected.setChecked(commodity.getSelected());
+
+        if (stockService.getStockLevelFor(commodity) == 0) rowView.setEnabled(false);
 
         return rowView;
     }

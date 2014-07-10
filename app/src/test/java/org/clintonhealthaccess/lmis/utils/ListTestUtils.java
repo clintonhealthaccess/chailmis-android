@@ -14,9 +14,17 @@ public class ListTestUtils {
     }
 
     public static View getViewFromListRow(int index, ArrayAdapter adapter, int row_layout, int viewId) {
+        View row = getRowFromListView(index, adapter, row_layout);
+        return row.findViewById(viewId);
+    }
+
+    public static View getRowFromListView(ArrayAdapter adapter, int row_layout) {
+        return getRowFromListView(0, adapter, row_layout);
+    }
+
+    public static View getRowFromListView(int index, ArrayAdapter adapter, int row_layout) {
         ViewGroup genericLayout = new LinearLayout(Robolectric.application);
         View convertView = LayoutInflater.from(Robolectric.application).inflate(row_layout, null);
-        View row = adapter.getView(index, convertView, genericLayout);
-        return row.findViewById(viewId);
+        return adapter.getView(index, convertView, genericLayout);
     }
 }
