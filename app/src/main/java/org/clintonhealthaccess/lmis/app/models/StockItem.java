@@ -10,6 +10,9 @@ public class StockItem {
 
     public StockItem() {}
 
+    @DatabaseField(generatedId = true)
+    protected int id;
+
     @DatabaseField(unique = true, foreign = true, columnName = COMMODITY_COLUMN_NAME)
     protected Commodity commodity;
 
@@ -24,6 +27,4 @@ public class StockItem {
     public int quantity() {
         return quantity;
     }
-    //TODO Remove this.
-    public String getId() {return commodity.getLmisId(); }
 }
