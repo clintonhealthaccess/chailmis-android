@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.robolectric.shadows.ShadowDialog;
 
+import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -65,7 +66,7 @@ public class DispenseConfirmationFragmentTest {
 
         buttonClose.callOnClick();
         verify(mockDispensingService).addDispensing(Matchers.<Dispensing>anyObject());
-
+        assertFalse(dialog.isShowing());
 
     }
 }
