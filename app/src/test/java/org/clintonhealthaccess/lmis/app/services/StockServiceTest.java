@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -57,9 +58,10 @@ public class StockServiceTest {
 
     }
 
-    @Test
+    @Test(expected = LmisException.class)
     public void shouldThrowExceptionWhenAskedForStockLevelForNonPersistedCommodity() {
-        //Implement. Next test depends on this behaviour
+        Commodity inexistentCommodity = new Commodity("Some Inexistent Commodity");
+        stockService.getStockLevelFor(inexistentCommodity);
     }
 
     @Test
@@ -71,8 +73,5 @@ public class StockServiceTest {
         for(Commodity commodity : commodityService.all()) {
             assertThat(stockService.getStockLevelFor(commodity), greaterThanOrEqualTo(0));
         }
-
-        // getStockLevel will blow up if asked for a commodity that doesn't exist
-        assertThat(1, is(1));
     }
 }

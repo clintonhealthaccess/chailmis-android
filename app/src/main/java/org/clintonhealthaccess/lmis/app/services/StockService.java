@@ -44,11 +44,10 @@ public class StockService {
         StockItem stockItem;
         if (stockItems.size() == 1) {
             stockItem = stockItems.get(0);
-        } else if (stockItems.size() == 0) {
-            throw new LmisException(String.format("Stock for commodity %s not found", commodity));
         } else {
-            throw new LmisException(String.format("More than one row found for commodity %s", commodity));
+            throw new LmisException(String.format("Stock for commodity %s not found", commodity));
         }
+
         return stockItem;
     }
 
