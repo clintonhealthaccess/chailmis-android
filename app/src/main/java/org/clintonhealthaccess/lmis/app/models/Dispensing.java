@@ -33,4 +33,12 @@ public class Dispensing implements Serializable {
         dispenseToFacility = false;
         created = new Date();
     }
+
+    public void setDispenseToFacility(boolean dispenseToFacility) {
+        this.dispenseToFacility = dispenseToFacility;
+    }
+
+    public boolean isDispenseToFacility() {
+        return dispenseToFacility;
+    }
 }

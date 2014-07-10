@@ -17,15 +17,56 @@
         android:layout_alignParentLeft="true"
         android:id="@+id/layoutCategories">
 
+        <TextView
+            android:background="@color/gray_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/categories"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
 
     </LinearLayout>
 
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_toRightOf="@id/layoutCategories"
-        android:paddingLeft="10dp"
         android:layout_height="wrap_content"
-        android:id="@+id/listViewSelectedCommodities" />
+        android:paddingLeft="10dp"
+        android:id="@+id/layoutSelectedItems"
+        android:layout_toRightOf="@id/layoutCategories">
+
+        <TextView
+            android:background="@color/gray_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/dispense"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/checkboxDispenseToFacility"
+                android:layout_width="wrap_content"
+                android:text="@string/dispense_to_facility"
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+
+            android:paddingLeft="10dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewSelectedCommodities" />
+    </LinearLayout>
+
 
     <Button
         android:layout_width="wrap_content"
@@ -34,6 +75,6 @@
         android:text="@string/submit"
         android:id="@+id/buttonSubmitDispense"
         android:padding="20dp"
-        android:layout_below="@id/listViewSelectedCommodities"
+        android:layout_below="@id/layoutSelectedItems"
         android:layout_alignParentRight="true" />
 </RelativeLayout>

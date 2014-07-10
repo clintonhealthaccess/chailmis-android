@@ -66,9 +66,9 @@ public class DispenseActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(6));
+        assertThat(buttonAmount, is(7));
 
-        for (int i = 0; i < buttonAmount; i++) {
+        for (int i = 1; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);
             assertThat(childView, instanceOf(Button.class));
         }
@@ -130,6 +130,12 @@ public class DispenseActivityTest {
     }
 
     @Test
+    public void testThatDispenseToFacilityExists() throws Exception {
+        DispenseActivity activity = getActivity();
+        assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
+    }
+
+    @Test
     public void testSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
@@ -174,6 +180,8 @@ public class DispenseActivityTest {
 
         DispenseActivity dispenseActivity = getActivity();
 
+        dispenseActivity.checkboxCommoditySelected.setChecked(true);
+
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
@@ -194,6 +202,7 @@ public class DispenseActivityTest {
         Dispensing dispensing = dispenseActivity.getDispensing();
 
         assertThat(dispensing.getDispensingItems().size(), is(1));
+        assertThat(dispensing.isDispenseToFacility(), is(true));
 
         assertThat(dispensing.getDispensingItems().get(0).getQuantity(), is(12));
         assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
