@@ -35,9 +35,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @Inject
     private CategoryService categoriesService;
 
-    @InjectView(R.id.listViewSelectedCommodities)
-    ListView listViewSelectedCommodities;
-
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
@@ -63,8 +60,8 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected ListView getListViewForSelectedCommodities() {
-        return listViewSelectedCommodities;
+    protected int getSelectedCommoditiesAdapterId() {
+        return R.layout.commodity_list_item;
     }
 
     @Override
@@ -89,16 +86,15 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     protected Dispensing getDispensing() {
-        Dispensing dispensing = new Dispensing();
-        for (int i = 0; i <
-                listViewSelectedCommodities.getChildCount(); i++) {
-            View view = listViewSelectedCommodities.getChildAt(i);
-            EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-            int quantity = parseInt(editTextQuantity.getText().toString());
-
-            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
-            dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
-        }
+        final Dispensing dispensing = new Dispensing();
+        onEachSelectedCommodity(new SelectedCommodityHandler() {
+            @Override
+            public void operate(View view, Commodity commodity) {
+                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                int quantity = parseInt(editTextQuantity.getText().toString());
+                dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
+            }
+        });
         Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
     }

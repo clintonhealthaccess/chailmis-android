@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.Lists.newArrayList;
@@ -29,6 +30,9 @@ import static com.google.common.collect.Lists.newArrayList;
 abstract public class CommoditySelectableActivity extends BaseActivity {
     @Inject
     private CategoryService categoryService;
+
+    @InjectView(R.id.listViewSelectedCommodities)
+    ListView listViewSelectedCommodities;
 
     // FIXME: These methods should be private. Can we find a better way to test them?
     SelectedCommoditiesAdapter selectedCommoditiesAdapter;
@@ -42,9 +46,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
         setupCommodities();
 
-        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
+        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<Commodity>());
 
-        getListViewForSelectedCommodities().setAdapter(selectedCommoditiesAdapter);
+        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
 
         afterCreate(savedInstanceState);
 
@@ -64,7 +69,15 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         onCommoditySelectionChanged(selectedCommodities);
     }
 
-    abstract protected ListView getListViewForSelectedCommodities();
+    protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
+        for (int i = 0; i < listViewSelectedCommodities.getChildCount(); i++) {
+            View view = listViewSelectedCommodities.getChildAt(i);
+            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
+            handler.operate(view, commodity);
+        }
+    }
+
+    abstract protected int getSelectedCommoditiesAdapterId();
 
     abstract protected void onCommoditySelectionChanged(List<Commodity> selectedCommodities);
 
@@ -101,5 +114,9 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             }
         });
         return button;
+    }
+
+    protected interface SelectedCommodityHandler {
+        void operate(View view, Commodity commodity);
     }
 }
