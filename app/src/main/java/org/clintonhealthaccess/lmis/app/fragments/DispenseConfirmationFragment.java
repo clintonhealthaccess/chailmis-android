@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
+import roboguice.fragment.RoboDialogFragment;
 
-public class DispenseConfirmationFragment extends DialogFragment {
+
+public class DispenseConfirmationFragment extends RoboDialogFragment {
 
     public static final String DISPENSING = "param_dispensings";
-    private Dispensing dispensing;
+    protected Dispensing dispensing;
 
     @Inject
     DispensingService dispensingService;
@@ -55,20 +58,17 @@ public class DispenseConfirmationFragment extends DialogFragment {
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                    dispensingService.addDispensing(dispensing);
-                    dismiss();
-                    getActivity().finish();
-
-
+                dispensingService.addDispensing(dispensing);
+                dismiss();
+                FragmentActivity activity = getActivity();
+                if (activity != null)
+                    activity.finish();
             }
         });
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
-
-
 
 
 }

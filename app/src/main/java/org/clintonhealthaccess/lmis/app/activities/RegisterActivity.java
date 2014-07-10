@@ -75,7 +75,7 @@ public class RegisterActivity extends RoboActionBarActivity {
             protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+
                 } catch (LmisException e) {
                     this.failureCause = e;
                     return false;
@@ -86,6 +86,11 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean succeeded) {
+                if (succeeded) {
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
+                }
+
                 String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
                 Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
             }
