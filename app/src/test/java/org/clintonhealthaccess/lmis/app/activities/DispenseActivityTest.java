@@ -129,16 +129,16 @@ public class DispenseActivityTest {
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
-    // FIXME: this is testing internal states...
     @Test
     public void testSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
-        dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
+        Commodity commodity = new Commodity("name");
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
 
-        dispenseActivity.onCommoditySelectionChanged(dispenseActivity.selectedCommodities);
+        EventBus.getDefault().post(commodityToggledEvent);
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
     }
@@ -207,6 +207,26 @@ public class DispenseActivityTest {
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
+
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
+
+        dispenseActivity.listViewSelectedCommodities = mockListView;
+
+        assertFalse(dispenseActivity.dispensingIsValid());
+    }
+
+    @Test
+    public void testThatDispensingIsInvalidIfAnyFieldHasAnError() throws Exception {
+        DispenseActivity dispenseActivity = getActivity();
+
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
+
+        mockEditText.setText("12");
+        mockEditText.setError("error");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);

@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -70,7 +69,7 @@ public class StockServiceTest {
 
         stockService.initialise();
 
-        for(Commodity commodity : commodityService.all()) {
+        for (Commodity commodity : commodityService.all()) {
             assertThat(stockService.getStockLevelFor(commodity), greaterThanOrEqualTo(0));
         }
     }

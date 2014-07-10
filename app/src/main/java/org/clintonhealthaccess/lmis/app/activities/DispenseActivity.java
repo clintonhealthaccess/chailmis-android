@@ -79,7 +79,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
             @Override
             public boolean apply(View view) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getText().toString().isEmpty();
+                return editTextQuantity.getText().toString().isEmpty() || editTextQuantity.getError() != null;
             }
         });
         return commoditiesWithoutAmount.size() == 0;

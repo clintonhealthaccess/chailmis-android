@@ -6,7 +6,6 @@ import android.widget.EditText;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -16,7 +15,9 @@ import org.mockito.Matchers;
 
 import static android.text.Editable.Factory;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.mockito.Matchers.anyObject;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -53,6 +54,13 @@ public class QuantityTextWatcherTest {
 
     }
 
+    @Test
+    public void shouldShowErrorWithRemainingStockIfQuantityIsGreaterThanStockAvailable() throws Exception {
+        when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(2);
+        watcher.afterTextChanged(new Factory().newEditable("12"));
+        assertThat(editText.getError().toString(), containsString("(2)"));
+
+    }
 
     @Test
     public void shouldNotShowErrorIfQuantityIsLessThanStockAvailable() throws Exception {
