@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,7 +15,6 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,6 +31,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
 
@@ -101,7 +104,7 @@ public class DispenseActivityTest {
     }
 
     @Test
-    public void testThatSubmitButtonIsWiredUp() throws Exception {
+    public void testThatSubmitButtonExists() throws Exception {
         DispenseActivity activity = getActivity();
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
@@ -122,29 +125,9 @@ public class DispenseActivityTest {
         assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
         assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
-    @Ignore("WIP")
-    @Test
-    public void getDispensingShouldGetItemsInTheListView() throws Exception {
-
-        DispenseActivity dispenseActivity = getActivity();
-
-        String commodityName = "food";
-
-        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
-        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity("commodity two"));
-
-        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
-
-        dispenseActivity.listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
-
-        Dispensing dispensing = dispenseActivity.getDispensing();
-
-        assertThat(dispensing.getDispensingItems().size(), is(2));
-        assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
-    }
 
     @Test
-    public void testSubmitButtonShouldBeHiddenIfThereAreNoItemsInTheList() throws Exception {
+    public void testSubmitButtonVisibility() throws Exception {
 
         DispenseActivity dispenseActivity = getActivity();
 
@@ -158,40 +141,76 @@ public class DispenseActivityTest {
 
 
     }
-    @Ignore("WIP")
+
+    @Test
+    public void getDispensingShouldGetItemsInTheListView() throws Exception {
+        String commodityName = "food";
+
+        DispenseActivity dispenseActivity = getActivity();
+
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
+
+        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
+
+        mockEditText.setText("12");
+
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new Commodity(commodityName));
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
+        when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
+
+        dispenseActivity.listViewSelectedCommodities = mockListView;
+
+
+        Dispensing dispensing = dispenseActivity.getDispensing();
+
+        assertThat(dispensing.getDispensingItems().size(), is(1));
+
+        assertThat(dispensing.getDispensingItems().get(0).getQuantity(), is(12));
+        assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
+    }
+
     @Test
     public void testThatDispensingIsInvalidIfNoQuantitiesAreSet() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
-        String commodityName = "food";
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
 
-        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
 
-        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
 
-        dispenseActivity.listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
+        dispenseActivity.listViewSelectedCommodities = mockListView;
 
         assertFalse(dispenseActivity.dispensingIsValid());
     }
-    @Ignore("WIP")
+
     @Test
     public void testThatDispensingIsValidIfQuantitiesAreSet() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
-        String commodityName = "food";
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
 
-        dispenseActivity.selectedCommoditiesAdapter.add(new Commodity(commodityName));
+        mockEditText.setText("12");
 
-        dispenseActivity.selectedCommoditiesAdapter.notifyDataSetChanged();
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
 
-        ListView listViewSelectedCommodities = dispenseActivity.listViewSelectedCommodities;
+        dispenseActivity.listViewSelectedCommodities = mockListView;
 
-        listViewSelectedCommodities.setAdapter(dispenseActivity.selectedCommoditiesAdapter);
 
-        assertTrue(listViewSelectedCommodities.isShown());
-
-        assertThat(listViewSelectedCommodities.getChildCount(), is(1));
-
+        assertTrue(dispenseActivity.dispensingIsValid());
 
     }
+
+
 }

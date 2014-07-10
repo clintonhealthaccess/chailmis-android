@@ -44,7 +44,6 @@ public class DispenseActivity extends BaseActivity {
 
     protected SelectedCommoditiesAdapter selectedCommoditiesAdapter;
     protected ArrayList<Commodity> selectedCommodities = new ArrayList<>();
-    private List<Dispensing> dispensings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +77,7 @@ public class DispenseActivity extends BaseActivity {
     protected boolean dispensingIsValid() {
         boolean valid = true;
         for (int i = 0; i <
-                selectedCommoditiesAdapter.getCount(); i++) {
+                listViewSelectedCommodities.getChildCount(); i++) {
             View view = listViewSelectedCommodities.getChildAt(i);
             EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
             if (editTextQuantity.getText().toString().isEmpty()) {
@@ -124,15 +123,11 @@ public class DispenseActivity extends BaseActivity {
     protected Dispensing getDispensing() {
         Dispensing dispensing = new Dispensing();
         for (int i = 0; i <
-                selectedCommoditiesAdapter.getCount(); i++) {
+                listViewSelectedCommodities.getChildCount(); i++) {
             View view = listViewSelectedCommodities.getChildAt(i);
             EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
             int quantity = 0;
-            try {
-                quantity = Integer.parseInt(editTextQuantity.getText().toString());
-            } catch (NumberFormatException exception) {
-
-            }
+            quantity = Integer.parseInt(editTextQuantity.getText().toString());
 
             Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
             dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
