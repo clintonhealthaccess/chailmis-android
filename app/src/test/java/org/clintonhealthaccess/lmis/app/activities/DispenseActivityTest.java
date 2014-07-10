@@ -129,20 +129,18 @@ public class DispenseActivityTest {
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
+    // FIXME: this is testing internal states...
     @Test
     public void testSubmitButtonVisibility() throws Exception {
-
         DispenseActivity dispenseActivity = getActivity();
 
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
         dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
 
-        dispenseActivity.checkVisibilityOfSubmitButton();
+        dispenseActivity.onCommoditySelectionChanged(dispenseActivity.selectedCommodities);
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
-
-
     }
 
 

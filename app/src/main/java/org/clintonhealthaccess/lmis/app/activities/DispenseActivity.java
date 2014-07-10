@@ -1,63 +1,49 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.inject.Inject;
+import com.google.common.base.Predicate;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
-import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
-import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
-import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.services.CommodityService;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
+import static android.view.View.OnClickListener;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 
-public class DispenseActivity extends BaseActivity {
-    @Inject
-    private CommodityService commodityService;
-
+public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.listViewSelectedCommodities)
-    protected ListView listViewSelectedCommodities;
+    ListView listViewSelectedCommodities;
+
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
-
-    protected SelectedCommoditiesAdapter selectedCommoditiesAdapter;
-    protected ArrayList<Commodity> selectedCommodities = new ArrayList<>();
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_dispense;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_dispense);
-
-        setupCommodities();
-
-        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(this, R.layout.commodity_list_item, new ArrayList<Commodity>());
-
-        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
-
-        buttonSubmitDispense.setOnClickListener(new View.OnClickListener() {
+    protected void afterCreate(Bundle savedInstanceState) {
+        buttonSubmitDispense.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (dispensingIsValid()) {
@@ -68,56 +54,33 @@ public class DispenseActivity extends BaseActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.dispense_submit_validation_message), LENGTH_SHORT).show();
                 }
             }
-
-
         });
-        EventBus.getDefault().register(this);
     }
 
+    @Override
+    protected ListView getListViewForSelectedCommodities() {
+        return listViewSelectedCommodities;
+    }
+
+    @Override
+    protected void onCommoditySelectionChanged(List<Commodity> selectedCommodities) {
+        if (selectedCommodities.size() > 0) {
+            buttonSubmitDispense.setVisibility(View.VISIBLE);
+        } else {
+            buttonSubmitDispense.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // FIXME: These methods should be private. Can we find a better way to test them?
     protected boolean dispensingIsValid() {
-        boolean valid = true;
-        for (int i = 0; i <
-                listViewSelectedCommodities.getChildCount(); i++) {
-            View view = listViewSelectedCommodities.getChildAt(i);
-            EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-            if (editTextQuantity.getText().toString().isEmpty()) {
-                valid = false;
+        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
+            @Override
+            public boolean apply(View view) {
+                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                return editTextQuantity.getText().toString().isEmpty();
             }
-
-        }
-        return valid;
-    }
-
-    private void setupCommodities() {
-        LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
-
-        List<Category> categoryList = commodityService.all();
-
-        Drawable drawable = getResources().getDrawable(R.drawable.arrow_black_right);
-
-        drawable.setBounds(0, 0, 20, 30);
-
-        for (final Category category : categoryList) {
-            Button button = new Button(this);
-
-            button.setBackgroundResource(R.drawable.category_button_on_overlay);
-
-            button.setCompoundDrawables(null, null, drawable, null);
-
-            button.setText(category.getName());
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities);
-                    dialog.show(fm, "selectCommodities");
-                }
-            });
-            categoriesLayout.addView(button);
-        }
-
-
+        });
+        return commoditiesWithoutAmount.size() == 0;
     }
 
     protected Dispensing getDispensing() {
@@ -126,36 +89,20 @@ public class DispenseActivity extends BaseActivity {
                 listViewSelectedCommodities.getChildCount(); i++) {
             View view = listViewSelectedCommodities.getChildAt(i);
             EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-            int quantity = 0;
-            quantity = Integer.parseInt(editTextQuantity.getText().toString());
+            int quantity = parseInt(editTextQuantity.getText().toString());
 
             Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
             dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
         }
-        Log.e("DDnn", String.format(" dispensing items %d", dispensing.getDispensingItems().size()));
+        Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
     }
 
-    public void onEvent(CommodityToggledEvent event) {
-        Commodity commodity = event.getCommodity();
-        if (selectedCommodities.contains(commodity)) {
-            selectedCommodities.remove(commodity);
-            selectedCommoditiesAdapter.remove(commodity);
-        } else {
-            selectedCommoditiesAdapter.add(commodity);
-            selectedCommodities.add(commodity);
+    private List<View> wrap(ListView listView) {
+        List<View> result = newArrayList();
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            result.add(listView.getChildAt(i));
         }
-        selectedCommoditiesAdapter.notifyDataSetChanged();
-        checkVisibilityOfSubmitButton();
+        return result;
     }
-
-    protected void checkVisibilityOfSubmitButton() {
-        if (selectedCommodities.size() > 0) {
-            buttonSubmitDispense.setVisibility(View.VISIBLE);
-        } else {
-            buttonSubmitDispense.setVisibility(View.INVISIBLE);
-
-        }
-    }
-
 }
