@@ -22,7 +22,7 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,8 @@ import roboguice.inject.InjectView;
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class DispenseActivity extends BaseActivity {
-
     @Inject
-    private CommoditiesRepository commoditiesRepository;
+    private CommodityService commodityService;
 
     @InjectView(R.id.listViewSelectedCommodities)
     protected ListView listViewSelectedCommodities;
@@ -93,7 +92,7 @@ public class DispenseActivity extends BaseActivity {
     private void setupCommodities() {
         LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
 
-        List<Category> categoryList = commoditiesRepository.allCategories();
+        List<Category> categoryList = commodityService.all();
 
         Drawable drawable = getResources().getDrawable(R.drawable.arrow_black_right);
 

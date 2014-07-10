@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import org.robolectric.Robolectric;
 
 public class ListTestUtils {
-
     public static View getViewFromListRow(ArrayAdapter adapter, int row_layout, int viewId) {
         return getViewFromListRow(0, adapter, row_layout, viewId);
     }

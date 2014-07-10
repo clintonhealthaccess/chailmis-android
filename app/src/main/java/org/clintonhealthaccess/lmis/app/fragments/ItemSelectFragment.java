@@ -17,7 +17,7 @@ import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.views.CategoryButton;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private static final String SELECTED_COMMODITIES = "param_selected_commodities";
 
     @Inject
-    CommoditiesRepository commoditiesRepository;
+    private CommodityService commodityService;
 
     private Category category;
 
@@ -66,7 +66,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
         setupCloseButton(overlayView);
         listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
-        List<Category> categoryList = commoditiesRepository.allCategories();
+        List<Category> categoryList = commodityService.all();
         adapterHashMap = new LinkedHashMap<>();
 
         for (final Category category : categoryList) {

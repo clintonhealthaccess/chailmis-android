@@ -3,16 +3,20 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.persistence.CommoditiesRepository;
+import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCommodities;
+import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,9 +26,6 @@ import static org.robolectric.Robolectric.application;
 public class CommodityServiceTest {
     @Inject
     private CommodityService commodityService;
-
-    @Inject
-    private CommoditiesRepository commoditiesRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -40,9 +41,24 @@ public class CommodityServiceTest {
     }
 
     @Test
+    public void testShouldLoadAllCommodityCategories() throws Exception {
+        initialiseDefaultCommodities(application);
+        verifyAllCommodityCategories();
+    }
+
+    @Test
     public void testShouldPrepareDefaultCommodities() throws Exception {
         commodityService.initialise();
+        verifyAllCommodityCategories();
+    }
 
-        assertThat(commoditiesRepository.allCategories().size(), greaterThan(0));
+    private void verifyAllCommodityCategories() {
+        List<Category> allCategories = commodityService.all();
+
+        assertThat(allCategories.size(), is(6));
+        Category antiMalarialCategory = allCategories.get(0);
+        assertThat(antiMalarialCategory.getName(), equalTo("Anti Malarials"));
+        assertThat(antiMalarialCategory.getCommodities().size(), is(6));
+        assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
     }
 }

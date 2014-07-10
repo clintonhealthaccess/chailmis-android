@@ -1,59 +1,50 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.inject.Inject;
-import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.support.ConnectionSource;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
-import static com.j256.ormlite.dao.DaoManager.createDao;
+import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class UserService {
     @Inject
     private Context context;
+
+    @Inject
+    private DbUtil dbUtil;
+
     @Inject
     private LmisServer lmisServer;
 
     public boolean userRegistered() {
-        try {
-            Dao<User, Long> userDao = initialiseDao();
-            return userDao.countOf() > 0;
-        } catch (SQLException e) {
-            throw new LmisException(e);
-        } finally {
-            releaseHelper();
-        }
+        return dbUtil.withDao(User.class, new Operation<User, Boolean>() {
+            @Override
+            public Boolean operate(Dao<User, String> dao) throws SQLException {
+                return dao.countOf() > 0;
+            }
+        });
     }
 
-    public User register(String username, String password) {
+    public User register(final String username, final String password) {
         lmisServer.validateLogin(username, password);
-
-        User user = new User(username, password);
-        try {
-            Dao<User, Long> userDao = initialiseDao();
-            userDao.create(user);
-        } catch (SQLException e) {
-            throw new LmisException(e);
-        } finally {
-            releaseHelper();
-        }
-        return user;
+        return saveUserToDatabase(username, password);
     }
 
-    private Dao<User, Long> initialiseDao() throws SQLException {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
-        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
-        return createDao(connectionSource, User.class);
+    private User saveUserToDatabase(final String username, final String password) {
+        return dbUtil.withDao(User.class, new Operation<User, User>() {
+            @Override
+            public User operate(Dao<User, String> dao) throws SQLException {
+                User user = new User(username, password);
+                dao.create(user);
+                return user;
+            }
+        });
     }
 }
