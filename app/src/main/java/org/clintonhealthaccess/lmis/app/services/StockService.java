@@ -15,7 +15,10 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 
 public class StockService {
 
-    @Inject private DbUtil dbUtil;
+    @Inject
+    private DbUtil dbUtil;
+    @Inject
+    CommodityService commodityService;
 
     public int getStockLevelFor(Commodity commodity) {
         StockItem stockItem;
@@ -23,8 +26,7 @@ public class StockService {
             stockItem = getStockItem(commodity);
         } catch (SQLException e) {
             throw new LmisException(e);
-        }
-        finally {
+        } finally {
             releaseHelper();
         }
 
@@ -40,19 +42,27 @@ public class StockService {
         });
 
         StockItem stockItem;
-        if(stockItems.size() == 1) {
+        if (stockItems.size() == 1) {
             stockItem = stockItems.get(0);
-        }
-        else if(stockItems.size() == 0) {
+        } else if (stockItems.size() == 0) {
             throw new LmisException(String.format("Stock for commodity %s not found", commodity));
-        }
-        else {
+        } else {
             throw new LmisException(String.format("More than one row found for commodity %s", commodity));
         }
         return stockItem;
     }
 
     public void initialise() {
-
+        for (final Commodity commodity : commodityService.all()) {
+            dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
+                @Override
+                public Void operate(Dao<StockItem, String> dao) throws SQLException {
+                    // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
+                    StockItem stockItem = new StockItem(commodity, 10);
+                    dao.create(stockItem);
+                    return null;
+                }
+            });
+        }
     }
 }
