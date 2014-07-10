@@ -14,6 +14,7 @@ import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
@@ -29,10 +30,21 @@ public class StockService {
         Dao<StockItem, String> stockDao;
         try {
             stockDao = initialiseDao();
-            stockItem = stockDao.queryForId(commodity.getLmisId());
+            List<StockItem> stockItems = stockDao.queryForEq(StockItem.COMMODITY_COLUMN_NAME, commodity);
+            if(stockItems.size() == 1) {
+                stockItem = stockItems.get(0);
+            }
+            else if(stockItems.size() == 0) {
+                throw new LmisException(String.format("Stock for commodity %s not found", commodity));
+            }
+            else {
+                throw new LmisException(String.format("More than one row found for commodity %s", commodity));
+            }
+
         } catch (SQLException e) {
             throw new LmisException(e);
-        } finally {
+        }
+        finally {
             releaseHelper();
         }
 
