@@ -34,12 +34,13 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<Commodity> {
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
 
-
         final Commodity commodity = getItem(position);
         textViewCommodityName.setText(commodity.getName());
 
         TextWatcher watcher = new QuantityTextWatcher(editTextQuantity,commodity);
         editTextQuantity.addTextChangedListener(watcher);
+        int quantity = commodity.getQuantityToDispense();
+        if(quantity > 0) editTextQuantity.setText(Integer.toString(quantity));
         activateCancelButton(imageButtonCancel, commodity);
 
         return rowView;

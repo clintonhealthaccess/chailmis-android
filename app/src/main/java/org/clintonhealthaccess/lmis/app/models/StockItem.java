@@ -32,4 +32,8 @@ public class StockItem implements Serializable {
     public void reduceQuantityBy(int quantityToReduceBy) {
         quantity -= quantityToReduceBy;
     }
+
+    public boolean isFinished() {
+        return quantity == 0;
+    }
 }

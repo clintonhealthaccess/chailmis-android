@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Iterables.transform;
 
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
@@ -28,10 +27,8 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
-    @ForeignCollectionField(eager = true)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
-
-    private boolean selected;
 
     public Commodity() {
         // ormlite likes it
@@ -43,25 +40,8 @@ public class Commodity implements Serializable {
     }
 
 
-    static List<Commodity> buildList(String[] commodityNames) {
-        return copyOf(transform(copyOf(commodityNames), new Function<String, Commodity>() {
-            @Override
-            public Commodity apply(String name) {
-                return new Commodity(name);
-            }
-        }));
-    }
-
     public String getName() {
         return name;
-    }
-
-    public boolean getSelected() {
-        return selected;
-    }
-
-    public void toggleSelected() {
-        selected = !selected;
     }
 
     @Override
@@ -85,6 +65,7 @@ public class Commodity implements Serializable {
         return lmisId;
     }
 
+    //BAD
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -95,5 +76,34 @@ public class Commodity implements Serializable {
         } catch(Exception e) {
             throw new LmisException(String.format("Stock for commodity %s not found", name));
         }
+    }
+
+    private boolean selected;
+    private int quantityToDispense;
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public int getQuantityToDispense() {
+        return quantityToDispense;
+    }
+
+    public void setQuantityToDispense(int quantity) {
+        this.quantityToDispense = quantity;
+    }
+
+    public void toggleSelected() {
+        selected = !selected;
+    }
+    // FIXME: End FixMe
+
+    public boolean stockIsFinished() {
+        if (stockItems != null) {
+            List<StockItem> items = ImmutableList.copyOf(stockItems);
+            if (items.size() > 0) return items.get(0).isFinished();
+        }
+
+        return true;
     }
 }

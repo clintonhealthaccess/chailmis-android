@@ -41,7 +41,7 @@ public class Category implements Serializable {
     }
 
     public List<Commodity> getCommodities() {
-        if(commoditiesCollection == null) {
+        if (commoditiesCollection == null) {
             return newArrayList();
         }
         return ImmutableList.copyOf(commoditiesCollection);
