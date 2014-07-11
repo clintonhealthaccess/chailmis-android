@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.google.common.base.Predicate;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -64,7 +65,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void onCommoditySelectionChanged(List<Commodity> selectedCommodities) {
+    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
         if (selectedCommodities.size() > 0) {
             buttonSubmitDispense.setVisibility(View.VISIBLE);
         } else {
@@ -89,10 +90,10 @@ public class DispenseActivity extends CommoditySelectableActivity {
         dispensing.setDispenseToFacility(checkboxCommoditySelected.isChecked());
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
-            public void operate(View view, Commodity commodity) {
+            public void operate(View view, CommodityViewModel commodityViewModel) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
                 int quantity = parseInt(editTextQuantity.getText().toString());
-                dispensing.getDispensingItems().add(new DispensingItem(commodity, quantity));
+                dispensing.getDispensingItems().add(new DispensingItem(commodityViewModel.getCommodity(), quantity));
             }
         });
         Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));

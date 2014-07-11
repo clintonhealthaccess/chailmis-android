@@ -5,6 +5,7 @@ import android.widget.EditText;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -43,7 +44,7 @@ public class QuantityTextWatcherTest {
             }
         });
         editText = spy(new EditText(application));
-        watcher = new QuantityTextWatcher(editText, new Commodity(""));
+        watcher = new QuantityTextWatcher(editText, new CommodityViewModel(new Commodity("")));
     }
 
     @Test

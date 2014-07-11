@@ -6,21 +6,21 @@ import android.widget.EditText;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import roboguice.RoboGuice;
 
 public class QuantityTextWatcher implements TextWatcher {
     private final EditText editTextQuantity;
-    private final Commodity commodity;
+    private final CommodityViewModel commodityViewModel;
 
     @Inject
     StockService stockService;
 
-    public QuantityTextWatcher(EditText editTextQuantity, Commodity commodity) {
+    public QuantityTextWatcher(EditText editTextQuantity, CommodityViewModel commodityViewModel) {
         this.editTextQuantity = editTextQuantity;
-        this.commodity = commodity;
+        this.commodityViewModel = commodityViewModel;
         RoboGuice.getInjector(editTextQuantity.getContext()).injectMembers(this);
     }
 
@@ -39,8 +39,8 @@ public class QuantityTextWatcher implements TextWatcher {
         String value = editable.toString();
         if (!value.isEmpty()) {
             int quantity = Integer.parseInt(value);
-            int stock_level = stockService.getStockLevelFor(commodity);
-            commodity.setQuantityToDispense(quantity);
+            int stock_level = stockService.getStockLevelFor(commodityViewModel.getCommodity());
+            commodityViewModel.setQuantityToDispense(quantity);
             if (quantity > stock_level) {
                 editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
             }

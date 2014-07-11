@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
@@ -58,7 +59,7 @@ public class ItemSelectFragmentTest {
         initialiseDefaultCommodities(application);
 
         Category antiMalarialCategory = categoryService.all().get(0);
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<Commodity>());
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>());
         startFragment(itemSelectFragment);
     }
 

@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -46,7 +47,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     private LinearLayout categoriesLayout;
     private HashMap<Category, CommoditiesAdapter> adapterHashMap;
-    private ArrayList<Commodity> selectedCommodities;
+    private ArrayList<CommodityViewModel> selectedCommodities;
     private Button buttonClose;
 
     public ItemSelectFragment() {
@@ -58,7 +59,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
-            selectedCommodities = (ArrayList<Commodity>) getArguments().getSerializable(SELECTED_COMMODITIES);
+            selectedCommodities = (ArrayList<CommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
         }
     }
 
@@ -83,17 +84,27 @@ public class ItemSelectFragment extends RoboDialogFragment {
             });
 
             for (Commodity commodity : category.getCommodities()) {
-                if (selectedCommodities.contains(commodity)) {
-                    commodity.toggleSelected();
+                CommodityViewModel commodityViewModel = new CommodityViewModel(commodity);
+                if (selectedCommodities.contains(commodityViewModel)) {
+                    commodityViewModel.toggleSelected();
                 }
             }
 
-            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, category.getCommodities()));
+            List<CommodityViewModel> commodities = convertToViewModelsList(category.getCommodities());
+            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities));
             categoriesLayout.addView(button);
         }
 
         showCommodities(category);
         return overlayView;
+    }
+
+    private List<CommodityViewModel> convertToViewModelsList(List<Commodity> commodities) {
+        List<CommodityViewModel> listToReturn = new ArrayList<>();
+        for(Commodity commodity : commodities) {
+            listToReturn.add(new CommodityViewModel(commodity));
+        }
+        return listToReturn;
     }
 
     private void setupCloseButton(View overlayView) {
@@ -117,9 +128,9 @@ public class ItemSelectFragment extends RoboDialogFragment {
         listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Commodity commodity = adapter.getItem(i);
-                if(stockService.getStockLevelFor(commodity) > 0) {
-                    commodity.toggleSelected();
+                CommodityViewModel commodityViewModel = adapter.getItem(i);
+                if(stockService.getStockLevelFor(commodityViewModel.getCommodity()) > 0) {
+                    commodityViewModel.toggleSelected();
                     EventBus.getDefault().post(new CommodityToggledEvent(adapter.getItem(i)));
                     adapter.notifyDataSetChanged();
                 }
@@ -136,7 +147,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         }
     }
 
-    public static ItemSelectFragment newInstance(Category category, ArrayList<Commodity> selectedCommodities) {
+    public static ItemSelectFragment newInstance(Category category, ArrayList<CommodityViewModel> selectedCommodities) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(CATEGORY, category);
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);

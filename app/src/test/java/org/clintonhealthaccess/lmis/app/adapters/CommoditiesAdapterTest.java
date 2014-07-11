@@ -5,6 +5,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -34,9 +35,10 @@ public class CommoditiesAdapterTest {
 
     @Test
     public void shouldPopulateTextViewWithCommodityName() {
-        ArrayList<Commodity> commodities = new ArrayList<>();
+        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         String commodityName = "game";
-        commodities.add(new Commodity(commodityName));
+        Commodity commodity = new Commodity(commodityName);
+        commodities.add(new CommodityViewModel(commodity));
         CommoditiesAdapter adapter = new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
 
         TextView textViewCommodityName = (TextView) getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.textViewCommodityName);
@@ -67,11 +69,11 @@ public class CommoditiesAdapterTest {
 
 
     private CommoditiesAdapter makeAdapterWithCommodities() {
-        ArrayList<Commodity> commodities = new ArrayList<>();
-        Commodity commodityOne = new Commodity("game");
+        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        CommodityViewModel commodityOne = new CommodityViewModel(new Commodity("game"));
         commodityOne.toggleSelected();
         commodities.add(commodityOne);
-        commodities.add(new Commodity("other game"));
+        commodities.add(new CommodityViewModel(new Commodity("other game")));
 
         return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
     }
