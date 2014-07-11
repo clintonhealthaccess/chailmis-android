@@ -24,8 +24,6 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
-    private boolean selected;
-
     public Commodity() {
         // ormlite likes it
     }
@@ -49,14 +47,6 @@ public class Commodity implements Serializable {
         return name;
     }
 
-    public boolean getSelected() {
-        return selected;
-    }
-
-    public void toggleSelected() {
-        selected = !selected;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,7 +68,29 @@ public class Commodity implements Serializable {
         return lmisId;
     }
 
+    //BAD
     public void setCategory(Category category) {
         this.category = category;
     }
+
+    // FIXME: Display specific code. Move to View Model
+    private boolean selected;
+    private int quantityToDispense;
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public int getQuantityToDispense() {
+        return quantityToDispense;
+    }
+
+    public void setQuantityToDispense(int quantity) {
+        this.quantityToDispense = quantity;
+    }
+
+    public void toggleSelected() {
+        selected = !selected;
+    }
+    // FIXME: End FixMe
 }
