@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -76,51 +77,58 @@ public class DispenseActivityTest {
 
     @Test
     public void shouldToggleSelectedItemsWhenToggleEventIsTriggered() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
-        Commodity commodity = new Commodity("name");
-        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
 
-        EventBus.getDefault().post(commodityToggledEvent);
+        assertThat(eventDetails.dispenseActivity.selectedCommodities, contains(eventDetails.commodityViewModel()));
 
-        assertThat(dispenseActivity.selectedCommodities, contains(commodity));
+        refire(eventDetails.commodityToggledEvent);
 
-        EventBus.getDefault().post(commodityToggledEvent);
-
-        assertThat(dispenseActivity.selectedCommodities, not(contains(commodity)));
+        assertThat(eventDetails.dispenseActivity.selectedCommodities, not(contains(eventDetails.commodityViewModel())));
     }
 
+    private void refire(CommodityToggledEvent commodityToggledEvent) {
+        EventBus.getDefault().post(commodityToggledEvent);
+    }
+
+    private class CommodityToggledEventDetails {
+        protected DispenseActivity dispenseActivity;
+        protected CommodityToggledEvent commodityToggledEvent;
+
+        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
+            this.dispenseActivity = dispenseActivity;
+            this.commodityToggledEvent = commodityToggledEvent;
+        }
+
+        public CommodityViewModel commodityViewModel() {
+            return  this.commodityToggledEvent.getCommodity();
+        }
+    }
 
     @Test
     public void listViewShouldToggleCommodityWhenToggleEventIsTriggered() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
-        Commodity commodity = new Commodity("name");
-        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
-        EventBus.getDefault().post(commodityToggledEvent);
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
 
-        Commodity commodityInList = (Commodity) dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
+        CommodityViewModel commodityInList = (CommodityViewModel)eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
 
-        assertThat(commodityInList, is(commodity));
+        assertThat(commodityInList, is(eventDetails.commodityViewModel()));
 
-        EventBus.getDefault().post(commodityToggledEvent);
+        refire(eventDetails.commodityToggledEvent);
 
-        assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+        assertThat(eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 
     @Test
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
-        DispenseActivity dispenseActivity = getActivity();
-        Commodity commodity = new Commodity("name");
-        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
-        EventBus.getDefault().post(commodityToggledEvent);
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
 
-        SelectedCommoditiesAdapter adapter = dispenseActivity.selectedCommoditiesAdapter;
+        SelectedCommoditiesAdapter adapter = eventDetails.dispenseActivity.selectedCommoditiesAdapter;
 
         ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_commodity_list_item, R.id.imageButtonCancel);
 
         cancelButton.performClick();
 
-        assertFalse(dispenseActivity.selectedCommodities.contains(commodity));
-        assertThat(dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+        assertFalse(eventDetails.dispenseActivity.selectedCommodities.contains(eventDetails.commodityViewModel()));
+        assertThat(eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 
     @Test
@@ -135,15 +143,24 @@ public class DispenseActivityTest {
         assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
     }
 
+    private CommodityToggledEventDetails fireCommodityToggledEvent() {
+        DispenseActivity dispenseActivity = getActivity();
+        CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
+
+        refire(commodityToggledEvent);
+
+        return new CommodityToggledEventDetails(dispenseActivity, commodityToggledEvent);
+    }
+
     @Test
-    public void testSubmitButtonVisibility() throws Exception {
+    public void shouldToggleSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
-        Commodity commodity = new Commodity("name");
-        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
-
+        CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
@@ -190,7 +207,8 @@ public class DispenseActivityTest {
 
         mockEditText.setText("12");
 
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new Commodity(commodityName));
+        Commodity commodity = new Commodity(commodityName);
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(commodity));
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
         when(mockListView.getChildCount()).thenReturn(1);
@@ -262,10 +280,6 @@ public class DispenseActivityTest {
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
 
-
         assertTrue(dispenseActivity.dispensingIsValid());
-
     }
-
-
 }

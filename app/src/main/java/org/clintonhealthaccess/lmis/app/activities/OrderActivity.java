@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.Bundle;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.List;
@@ -15,9 +16,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void onCommoditySelectionChanged(List<Commodity> selectedCommodities) {
-
-    }
+    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {}
 
     @Override
     protected int getLayoutId() {

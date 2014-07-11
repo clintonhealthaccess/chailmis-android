@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
+import static com.google.common.collect.Lists.transform;
 
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
@@ -31,14 +33,13 @@ public class Commodity implements Serializable {
     private ForeignCollection<StockItem> stockItems;
 
     public Commodity() {
-        // ormlite likes it
+        // ormlite wants it
     }
 
     public Commodity(String name) {
         this.lmisId = name;
         this.name = name;
     }
-
 
     public String getName() {
         return name;
@@ -51,9 +52,8 @@ public class Commodity implements Serializable {
 
         Commodity commodity = (Commodity) o;
 
-        if (!lmisId.equals(commodity.lmisId)) return false;
+        return lmisId.equals(commodity.lmisId);
 
-        return true;
     }
 
     @Override
@@ -77,26 +77,6 @@ public class Commodity implements Serializable {
             throw new LmisException(String.format("Stock for commodity %s not found", name));
         }
     }
-
-    private boolean selected;
-    private int quantityToDispense;
-
-    public boolean getSelected() {
-        return selected;
-    }
-
-    public int getQuantityToDispense() {
-        return quantityToDispense;
-    }
-
-    public void setQuantityToDispense(int quantity) {
-        this.quantityToDispense = quantity;
-    }
-
-    public void toggleSelected() {
-        selected = !selected;
-    }
-    // FIXME: End FixMe
 
     public boolean stockIsFinished() {
         if (stockItems != null) {

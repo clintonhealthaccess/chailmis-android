@@ -1,15 +1,15 @@
 package org.clintonhealthaccess.lmis.app.events;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 
 public class CommodityToggledEvent {
-    private final Commodity commodity;
+    private final CommodityViewModel commodity;
 
-    public CommodityToggledEvent(Commodity commodity) {
+    public CommodityToggledEvent(CommodityViewModel commodity) {
         this.commodity = commodity;
     }
 
-    public Commodity getCommodity() {
+    public CommodityViewModel getCommodity() {
         return commodity;
     }
 }

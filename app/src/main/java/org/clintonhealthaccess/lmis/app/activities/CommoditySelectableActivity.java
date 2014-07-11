@@ -11,11 +11,11 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     // FIXME: These methods should be private. Can we find a better way to test them?
     SelectedCommoditiesAdapter selectedCommoditiesAdapter;
-    ArrayList<Commodity> selectedCommodities = newArrayList();
+    ArrayList<CommodityViewModel> selectedCommodities = newArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
         setContentView(getLayoutId());
 
-        setupCommodities();
+        setupCategories();
 
         selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<Commodity>());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
 
         listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
 
@@ -57,7 +57,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     public void onEvent(CommodityToggledEvent event) {
-        Commodity commodity = event.getCommodity();
+        CommodityViewModel commodity = event.getCommodity();
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
             selectedCommoditiesAdapter.remove(commodity);
@@ -72,20 +72,20 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
         for (int i = 0; i < listViewSelectedCommodities.getChildCount(); i++) {
             View view = listViewSelectedCommodities.getChildAt(i);
-            Commodity commodity = (Commodity) listViewSelectedCommodities.getAdapter().getItem(i);
-            handler.operate(view, commodity);
+            CommodityViewModel commodityViewModel = (CommodityViewModel) listViewSelectedCommodities.getAdapter().getItem(i);
+            handler.operate(view, commodityViewModel);
         }
     }
 
     abstract protected int getSelectedCommoditiesAdapterId();
 
-    abstract protected void onCommoditySelectionChanged(List<Commodity> selectedCommodities);
+    abstract protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities);
 
     abstract protected int getLayoutId();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
-    private void setupCommodities() {
+    private void setupCategories() {
         Drawable commodityButtonBackground = createCommodityButtonBackground();
         LinearLayout categoriesLayout = (LinearLayout) findViewById(R.id.layoutCategories);
         for (final Category category : categoryService.all()) {
@@ -117,6 +117,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     protected interface SelectedCommodityHandler {
-        void operate(View view, Commodity commodity);
+        void operate(View view, CommodityViewModel commodityViewModel);
     }
 }
