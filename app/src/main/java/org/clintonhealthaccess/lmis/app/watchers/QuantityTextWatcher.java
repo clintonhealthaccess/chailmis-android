@@ -41,7 +41,7 @@ public class QuantityTextWatcher implements TextWatcher {
             int quantity = Integer.parseInt(value);
             int stock_level = stockService.getStockLevelFor(commodity);
             if (quantity > stock_level) {
-                editTextQuantity.setError("The quantity entered is greater than Stock available.");
+                editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
             }
         }
 

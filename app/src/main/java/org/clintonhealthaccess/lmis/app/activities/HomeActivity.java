@@ -71,6 +71,7 @@ public class HomeActivity extends BaseActivity {
 
         if (!userService.userRegistered()) {
             startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+            finish();
         }
 
         setupButtonEvents();

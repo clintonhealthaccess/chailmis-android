@@ -44,11 +44,10 @@ public class StockService {
         StockItem stockItem;
         if (stockItems.size() == 1) {
             stockItem = stockItems.get(0);
-        } else if (stockItems.size() == 0) {
-            throw new LmisException(String.format("Stock for commodity %s not found", commodity));
         } else {
-            throw new LmisException(String.format("More than one row found for commodity %s", commodity));
+            throw new LmisException(String.format("Stock for commodity %s not found", commodity));
         }
+
         return stockItem;
     }
 
@@ -57,12 +56,41 @@ public class StockService {
             dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
                 @Override
                 public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                    // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
-                    StockItem stockItem = new StockItem(commodity, 10);
+                    StockItem stockItem = new StockItem(commodity, nextStockLevel());
                     dao.create(stockItem);
                     return null;
                 }
             });
+        }
+    }
+
+    public void updateStockLevelFor(final Commodity commodity, int quantity) {
+        try {
+            final StockItem stockItem = getStockItem(commodity);
+            stockItem.reduceQuantityBy(quantity);
+            dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
+                @Override
+                public Void operate(Dao<StockItem, String> dao) throws SQLException {
+                    dao.update(stockItem);
+                    return null;
+                }
+            });
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        }
+
+    }
+
+    private int previous = 0;
+    private int nextStockLevel() {
+        // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
+        if(previous == 0) {
+            previous = 10;
+            return previous;
+        }
+        else {
+            previous = 0;
+            return previous;
         }
     }
 }

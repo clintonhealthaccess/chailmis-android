@@ -35,5 +35,7 @@
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
     <string name="dispense_submit_validation_message">Make sure all fields are filled</string>
+    <string name="categories_header">CATEGORIES</string>
+    <string name="dispense_to_facility">Dispense To Facility</string>
 
 </resources>

@@ -66,9 +66,9 @@ public class DispenseActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(6));
+        assertThat(buttonAmount, is(7));
 
-        for (int i = 0; i < buttonAmount; i++) {
+        for (int i = 1; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);
             assertThat(childView, instanceOf(Button.class));
         }
@@ -129,16 +129,22 @@ public class DispenseActivityTest {
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
-    // FIXME: this is testing internal states...
+    @Test
+    public void testThatDispenseToFacilityExists() throws Exception {
+        DispenseActivity activity = getActivity();
+        assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
+    }
+
     @Test
     public void testSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getActivity();
 
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
-        dispenseActivity.selectedCommodities.add(new Commodity("commodity one"));
+        Commodity commodity = new Commodity("name");
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodity);
 
-        dispenseActivity.onCommoditySelectionChanged(dispenseActivity.selectedCommodities);
+        EventBus.getDefault().post(commodityToggledEvent);
 
         assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
     }
@@ -174,6 +180,8 @@ public class DispenseActivityTest {
 
         DispenseActivity dispenseActivity = getActivity();
 
+        dispenseActivity.checkboxCommoditySelected.setChecked(true);
+
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
@@ -194,6 +202,7 @@ public class DispenseActivityTest {
         Dispensing dispensing = dispenseActivity.getDispensing();
 
         assertThat(dispensing.getDispensingItems().size(), is(1));
+        assertThat(dispensing.isDispenseToFacility(), is(true));
 
         assertThat(dispensing.getDispensingItems().get(0).getQuantity(), is(12));
         assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
@@ -207,6 +216,26 @@ public class DispenseActivityTest {
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
+
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
+
+        dispenseActivity.listViewSelectedCommodities = mockListView;
+
+        assertFalse(dispenseActivity.dispensingIsValid());
+    }
+
+    @Test
+    public void testThatDispensingIsInvalidIfAnyFieldHasAnError() throws Exception {
+        DispenseActivity dispenseActivity = getActivity();
+
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
+
+        mockEditText.setText("12");
+        mockEditText.setError("error");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);

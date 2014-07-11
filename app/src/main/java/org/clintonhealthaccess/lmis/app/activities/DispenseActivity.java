@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,6 +33,9 @@ import static java.lang.String.format;
 public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
+
+    @InjectView(R.id.checkboxDispenseToFacility)
+    CheckBox checkboxCommoditySelected;
 
     @Override
     protected int getLayoutId() {
@@ -74,7 +78,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
             @Override
             public boolean apply(View view) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getText().toString().isEmpty();
+                return editTextQuantity.getText().toString().isEmpty() || editTextQuantity.getError() != null;
             }
         });
         return commoditiesWithoutAmount.size() == 0;
@@ -82,6 +86,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     protected Dispensing getDispensing() {
         final Dispensing dispensing = new Dispensing();
+        dispensing.setDispenseToFacility(checkboxCommoditySelected.isChecked());
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
             public void operate(View view, Commodity commodity) {

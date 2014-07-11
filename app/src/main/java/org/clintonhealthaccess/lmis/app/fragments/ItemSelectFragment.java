@@ -18,6 +18,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.views.CategoryButton;
 
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     @Inject
     private CategoryService categoryService ;
+
+    @Inject
+    private StockService stockService;
 
     private Category category;
 
@@ -113,9 +117,12 @@ public class ItemSelectFragment extends RoboDialogFragment {
         listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                adapter.getItem(i).toggleSelected();
-                adapter.notifyDataSetChanged();
-                EventBus.getDefault().post(new CommodityToggledEvent(adapter.getItem(i)));
+                Commodity commodity = adapter.getItem(i);
+                if(stockService.getStockLevelFor(commodity) > 0) {
+                    commodity.toggleSelected();
+                    EventBus.getDefault().post(new CommodityToggledEvent(adapter.getItem(i)));
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 

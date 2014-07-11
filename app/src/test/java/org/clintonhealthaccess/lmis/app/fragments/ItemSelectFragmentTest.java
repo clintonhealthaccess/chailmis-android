@@ -5,12 +5,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,9 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
@@ -37,10 +42,19 @@ public class ItemSelectFragmentTest {
     private CategoryService categoryService;
 
     private ItemSelectFragment itemSelectFragment;
+    private StockService mockStockService;
 
     @Before
     public void setUp() throws Exception {
-        setUpInjection(this);
+        mockStockService = mock(StockService.class);
+        setUpInjection(this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(StockService.class).toInstance(mockStockService);
+            }
+        });
+        when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(10);
+
         initialiseDefaultCommodities(application);
 
         Category antiMalarialCategory = categoryService.all().get(0);

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blue">#1D5288</color>
+    <color name="disabled">#D3D3D3</color>
+    <color name="gray_header">#CACACA</color>
 </resources>
