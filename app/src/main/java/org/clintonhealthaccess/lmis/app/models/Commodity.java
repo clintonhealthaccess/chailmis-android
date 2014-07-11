@@ -1,6 +1,5 @@
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -13,7 +12,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
-import static com.google.common.collect.Lists.transform;
 
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
@@ -53,7 +51,6 @@ public class Commodity implements Serializable {
         Commodity commodity = (Commodity) o;
 
         return lmisId.equals(commodity.lmisId);
-
     }
 
     @Override
