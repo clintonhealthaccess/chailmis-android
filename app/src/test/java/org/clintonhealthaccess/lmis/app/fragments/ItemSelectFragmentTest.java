@@ -13,6 +13,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -34,13 +34,14 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.robolectric.Robolectric.application;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class ItemSelectFragmentTest {
     @Inject
     private CategoryService categoryService;
+    @Inject
+    private CommodityService commodityService;
 
     private ItemSelectFragment itemSelectFragment;
     private StockService mockStockService;
@@ -56,8 +57,7 @@ public class ItemSelectFragmentTest {
         });
         when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(10);
 
-        initialiseDefaultCommodities(application);
-        categoryService.clearCache();
+        commodityService.initialise();
 
         Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>());

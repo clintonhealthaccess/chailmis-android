@@ -35,7 +35,6 @@ public class DispensingServiceTest {
     public void setUp() throws SQLException {
         setUpInjection(this);
         commodityService.initialise();
-        categoryService.clearCache();
     }
 
 

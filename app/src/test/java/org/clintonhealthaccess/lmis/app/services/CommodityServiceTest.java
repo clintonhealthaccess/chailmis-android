@@ -16,7 +16,6 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.getDefaultCommodities;
-import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
@@ -49,13 +48,13 @@ public class CommodityServiceTest {
 
     @Test
     public void testShouldLoadAllCommodityCategories() throws Exception {
-        initialiseDefaultCommodities(application);
+        commodityService.initialise();
         verifyAllCommodityCategories();
     }
 
     @Test
     public void shouldLoadAllCommodities() throws IOException {
-        initialiseDefaultCommodities(application);
+        commodityService.initialise();
         List<Commodity> expectedCommodities = getDefaultCommodities(application);
 
         List<Commodity> commodities = commodityService.all();

@@ -28,6 +28,7 @@ public class CommodityService {
     public void initialise() {
         List<Category> allCommodities = lmisServer.fetchCommodities();
         saveToDatabase(allCommodities);
+        categoryService.clearCache();
     }
 
     public List<Commodity> all() {
