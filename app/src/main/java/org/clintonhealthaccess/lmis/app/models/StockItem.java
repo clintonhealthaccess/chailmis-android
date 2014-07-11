@@ -32,4 +32,8 @@ public class StockItem {
     public void reduceQuantityBy(int quantityToReduceBy) {
         quantity -= quantityToReduceBy;
     }
+
+    public boolean isFinished() {
+        return quantity == 0;
+    }
 }

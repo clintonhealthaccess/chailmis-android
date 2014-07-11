@@ -1,7 +1,10 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
@@ -23,6 +26,11 @@ public class Commodity implements Serializable {
 
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
+
+
+    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    private ForeignCollection<StockItem> stockItems;
+
 
     public Commodity() {
         // ormlite likes it
@@ -93,4 +101,14 @@ public class Commodity implements Serializable {
         selected = !selected;
     }
     // FIXME: End FixMe
+
+    public boolean stockIsFinished() {
+        if (stockItems != null) {
+            List<StockItem> items = ImmutableList.copyOf(stockItems);
+            if (items.size() > 0) return items.get(0).isFinished();
+        }
+
+        return true;
+    }
+
 }

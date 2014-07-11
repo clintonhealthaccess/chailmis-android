@@ -22,8 +22,6 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
 
-    @Inject
-    private StockService stockService;
 
     public CommoditiesAdapter(Context context, int resource, List<Commodity> commodities) {
         super(context, resource, commodities);
@@ -40,7 +38,7 @@ public class CommoditiesAdapter extends ArrayAdapter<Commodity> {
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodity.getName());
 
-        if (stockService.getStockLevelFor(commodity) == 0) {
+        if (commodity.stockIsFinished()) {
             rowView.setBackgroundColor(getContext().getResources().getColor(R.color.disabled));
             checkboxCommoditySelected.setVisibility(View.INVISIBLE);
         }
