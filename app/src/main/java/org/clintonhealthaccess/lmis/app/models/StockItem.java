@@ -3,18 +3,18 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 @DatabaseTable(tableName = "stock")
-public class StockItem {
-
-    public static final String COMMODITY_COLUMN_NAME = "commodity";
-
+public class StockItem implements Serializable {
     public StockItem() {
+        // don't delete. ormlite likes it.
     }
 
     @DatabaseField(generatedId = true)
     protected int id;
 
-    @DatabaseField(unique = true, foreign = true, columnName = COMMODITY_COLUMN_NAME, canBeNull = false)
+    @DatabaseField(unique = true, foreign = true, canBeNull = false)
     protected Commodity commodity;
 
     @DatabaseField(canBeNull = false)

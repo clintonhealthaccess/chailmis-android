@@ -1,8 +1,12 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import com.google.common.base.Function;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +27,9 @@ public class Commodity implements Serializable {
 
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
+
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<StockItem> stockItems;
 
     private boolean selected;
 
@@ -80,5 +87,13 @@ public class Commodity implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public StockItem getStockItem() {
+        try {
+            return copyOf(stockItems).get(0);
+        } catch(Exception e) {
+            throw new LmisException(String.format("Stock for commodity %s not found", name));
+        }
     }
 }

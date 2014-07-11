@@ -22,7 +22,7 @@ public class Category implements Serializable {
     @DatabaseField(canBeNull = false)
     private String name;
 
-    @ForeignCollectionField(eager = true)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<Commodity> commoditiesCollection;
 
     private List<Commodity> commodities;

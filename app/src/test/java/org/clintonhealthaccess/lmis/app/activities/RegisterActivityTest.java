@@ -82,12 +82,6 @@ public class RegisterActivityTest {
         verify(mockCommodityService, times(1)).initialise();
     }
 
-    @Test
-    public void shouldCallInitialiseStockOnSuccessfulRegistration() {
-        performSuccessfulRegistration();
-        verify(mockStockService, times(1)).initialise();
-    }
-
     private void performSuccessfulRegistration() {
         when(mockUserService.register(anyString(), anyString())).thenReturn(new User());
 

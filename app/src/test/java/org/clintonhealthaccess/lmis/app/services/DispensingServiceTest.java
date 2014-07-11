@@ -6,7 +6,6 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -22,30 +21,28 @@ import static org.hamcrest.core.Is.is;
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispensingServiceTest {
     @Inject
-    DispensingService dispensingService;
+    private CommodityService commodityService;
     @Inject
-    DbUtil dbUtil;
+    private DispensingService dispensingService;
     @Inject
-    StockService stockService;
+    private DbUtil dbUtil;
+    @Inject
+    private StockService stockService;
 
     @Before
     public void setUp() throws SQLException {
         setUpInjection(this);
+        commodityService.initialise();
     }
 
 
     @Test
     public void testSaveDispensingSavesItsDispensingItems() throws Exception {
-
-        Commodity food = new Commodity("food");
-        DispensingItem item1 = new DispensingItem(food, 1);
-        createStockItem(food);
+        Commodity commodity = commodityService.all().get(0);
         Dispensing dispensing = new Dispensing();
-
-        dispensing.addItem(item1);
-
+        DispensingItem newDispensingItem = new DispensingItem(commodity, 1);
+        dispensing.addItem(newDispensingItem);
         dispensingService.addDispensing(dispensing);
-
 
         Long count = dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, Long>() {
             @Override
@@ -59,35 +56,18 @@ public class DispensingServiceTest {
 
     }
 
-    private void createStockItem(Commodity food) {
-        final StockItem stockItem = new StockItem(food, 100);
-        dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
-            @Override
-            public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                dao.create(stockItem);
-                return null;
-            }
-        });
-    }
-
     @Test
     public void addDispensingShouldReduceTheStockLevels() {
-        String name = "item name";
-        Commodity commodity = new Commodity(name);
-        createStockItem(commodity);
+        Commodity commodity = commodityService.all().get(0);
         int stockLevel = stockService.getStockLevelFor(commodity);
-        assertThat(stockLevel, is(100));
+        assertThat(stockLevel, is(10));
 
-        DispensingItem item1 = new DispensingItem(commodity, 10);
-
+        DispensingItem item1 = new DispensingItem(commodity, 1);
         Dispensing dispensing = new Dispensing();
-
         dispensing.addItem(item1);
-
         dispensingService.addDispensing(dispensing);
 
         stockLevel = stockService.getStockLevelFor(commodity);
-
-        assertThat(stockLevel, is(90));
+        assertThat(stockLevel, is(9));
     }
 }

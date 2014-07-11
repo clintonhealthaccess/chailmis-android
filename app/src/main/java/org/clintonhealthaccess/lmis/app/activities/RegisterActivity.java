@@ -10,9 +10,8 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.LmisException;
-import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
@@ -80,13 +79,11 @@ public class RegisterActivity extends RoboActionBarActivity {
             protected Boolean doInBackground(Void... params) {
                 try {
                     userService.register(username, password);
-
                 } catch (LmisException e) {
                     this.failureCause = e;
                     return false;
                 }
                 commodityService.initialise();
-                stockService.initialise();
                 return true;
             }
 
