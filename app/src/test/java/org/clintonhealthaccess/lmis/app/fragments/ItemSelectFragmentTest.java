@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -17,6 +18,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowDialog;
@@ -25,6 +27,8 @@ import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest.fireCommodityToggledEvent;
+import static org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest.getDispenseActivity;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -109,6 +113,19 @@ public class ItemSelectFragmentTest {
         assertTrue(itemSelectFragment.isVisible());
         buttonClose.callOnClick();
         assertFalse(itemSelectFragment.isVisible());
+    }
 
+    @Ignore
+    @Test
+    public void shouldPreCheckCommoditiesInSelectedCommoditiesListPassedByDispenseActivity() {
+        DispenseActivityTest.CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
+        itemSelectFragment.dismiss();
+
+        startFragment(itemSelectFragment);
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        ListView commoditiesLayout = (ListView) dialog.findViewById(R.id.listViewCommodities);
+        CommodityViewModel loadedCommodity = (CommodityViewModel)commoditiesLayout.getAdapter().getItem(0);
+        assertTrue(loadedCommodity.isSelected());
     }
 }

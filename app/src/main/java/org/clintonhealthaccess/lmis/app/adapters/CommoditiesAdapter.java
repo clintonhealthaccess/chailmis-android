@@ -8,12 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.google.inject.Inject;
-
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import java.util.List;
 
@@ -35,7 +31,7 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         View rowView = inflater.inflate(R.layout.commodity_list_item, parent, false);
         CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
         CommodityViewModel commodityViewModel = getItem(position);
-        checkboxCommoditySelected.setChecked(commodityViewModel.getSelected());
+        checkboxCommoditySelected.setChecked(commodityViewModel.isSelected());
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodityViewModel.getName());
 

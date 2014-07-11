@@ -46,10 +46,11 @@ import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
+
     @Inject
     private CommodityService commodityService;
 
-    private DispenseActivity getActivity() {
+    public static DispenseActivity getDispenseActivity() {
         return buildActivity(DispenseActivity.class).create().get();
     }
 
@@ -61,7 +62,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testBuildActivity() throws Exception {
-        DispenseActivity activity = getActivity();
+        DispenseActivity activity = getDispenseActivity();
         assertThat(activity, not(nullValue()));
         TextView textViewAppName = (TextView) activity.getActionBar().getCustomView().findViewById(R.id.textAppName);
         assertThat(textViewAppName, is(notNullValue()));
@@ -70,7 +71,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testShouldDisplayAllCategoriesAsButtons() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
@@ -84,7 +85,7 @@ public class DispenseActivityTest {
 
     @Test
     public void shouldToggleSelectedItemsWhenToggleEventIsTriggered() throws Exception {
-        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
         assertThat(eventDetails.dispenseActivity.selectedCommodities, contains(eventDetails.commodityViewModel()));
 
@@ -93,27 +94,9 @@ public class DispenseActivityTest {
         assertThat(eventDetails.dispenseActivity.selectedCommodities, not(contains(eventDetails.commodityViewModel())));
     }
 
-    private void refire(CommodityToggledEvent commodityToggledEvent) {
-        EventBus.getDefault().post(commodityToggledEvent);
-    }
-
-    private class CommodityToggledEventDetails {
-        protected DispenseActivity dispenseActivity;
-        protected CommodityToggledEvent commodityToggledEvent;
-
-        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
-            this.dispenseActivity = dispenseActivity;
-            this.commodityToggledEvent = commodityToggledEvent;
-        }
-
-        public CommodityViewModel commodityViewModel() {
-            return  this.commodityToggledEvent.getCommodity();
-        }
-    }
-
     @Test
     public void listViewShouldToggleCommodityWhenToggleEventIsTriggered() throws Exception {
-        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
         CommodityViewModel commodityInList = (CommodityViewModel)eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
 
@@ -126,7 +109,7 @@ public class DispenseActivityTest {
 
     @Test
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
-        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent();
+        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
         SelectedCommoditiesAdapter adapter = eventDetails.dispenseActivity.selectedCommoditiesAdapter;
 
@@ -140,18 +123,21 @@ public class DispenseActivityTest {
 
     @Test
     public void testThatSubmitButtonExists() throws Exception {
-        DispenseActivity activity = getActivity();
+        DispenseActivity activity = getDispenseActivity();
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
     @Test
     public void testThatDispenseToFacilityExists() throws Exception {
-        DispenseActivity activity = getActivity();
+        DispenseActivity activity = getDispenseActivity();
         assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
     }
 
-    private CommodityToggledEventDetails fireCommodityToggledEvent() {
-        DispenseActivity dispenseActivity = getActivity();
+    public static void refire(CommodityToggledEvent commodityToggledEvent) {
+        EventBus.getDefault().post(commodityToggledEvent);
+    }
+
+    public static CommodityToggledEventDetails fireCommodityToggledEvent(DispenseActivity dispenseActivity) {
         CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
 
@@ -160,9 +146,23 @@ public class DispenseActivityTest {
         return new CommodityToggledEventDetails(dispenseActivity, commodityToggledEvent);
     }
 
+    public static class CommodityToggledEventDetails {
+        public DispenseActivity dispenseActivity;
+        public CommodityToggledEvent commodityToggledEvent;
+
+        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
+            this.dispenseActivity = dispenseActivity;
+            this.commodityToggledEvent = commodityToggledEvent;
+        }
+
+        public CommodityViewModel commodityViewModel() {
+            return  this.commodityToggledEvent.getCommodity();
+        }
+    }
+
     @Test
     public void shouldToggleSubmitButtonVisibility() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
 
@@ -176,7 +176,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testSubmitButtonLogicWhenDispensingIsInValid() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
@@ -202,7 +202,7 @@ public class DispenseActivityTest {
     public void getDispensingShouldGetItemsInTheListView() throws Exception {
         String commodityName = "food";
 
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         dispenseActivity.checkboxCommoditySelected.setChecked(true);
 
@@ -235,7 +235,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testThatDispensingIsInvalidIfNoQuantitiesAreSet() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
@@ -253,7 +253,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testThatDispensingIsInvalidIfAnyFieldHasAnError() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
@@ -273,7 +273,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testThatDispensingIsValidIfQuantitiesAreSet() throws Exception {
-        DispenseActivity dispenseActivity = getActivity();
+        DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);

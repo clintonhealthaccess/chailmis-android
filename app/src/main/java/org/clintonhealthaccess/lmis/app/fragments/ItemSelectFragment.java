@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,14 +80,14 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 }
             });
 
-            for (Commodity commodity : category.getCommodities()) {
-                CommodityViewModel commodityViewModel = new CommodityViewModel(commodity);
+            List<CommodityViewModel> commodities = convertToViewModelsList(category.getCommodities());
+
+            for (CommodityViewModel commodityViewModel : commodities) {
                 if (selectedCommodities.contains(commodityViewModel)) {
                     commodityViewModel.toggleSelected();
                 }
             }
 
-            List<CommodityViewModel> commodities = convertToViewModelsList(category.getCommodities());
             adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities));
             categoriesLayout.addView(button);
         }

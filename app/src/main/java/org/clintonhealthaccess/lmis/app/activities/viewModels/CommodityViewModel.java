@@ -12,7 +12,7 @@ public class CommodityViewModel {
         this.commodity = commodity;
     }
 
-    public boolean getSelected() {
+    public boolean isSelected() {
         return selected;
     }
 
@@ -38,5 +38,20 @@ public class CommodityViewModel {
 
     public boolean stockIsFinished() {
         return commodity.stockIsFinished();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CommodityViewModel that = (CommodityViewModel) o;
+
+        return commodity.equals(that.commodity);
+    }
+
+    @Override
+    public int hashCode() {
+        return commodity.hashCode();
     }
 }
