@@ -57,6 +57,7 @@ public class ItemSelectFragmentTest {
         when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(10);
 
         initialiseDefaultCommodities(application);
+        categoryService.clearCache();
 
         Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>());
