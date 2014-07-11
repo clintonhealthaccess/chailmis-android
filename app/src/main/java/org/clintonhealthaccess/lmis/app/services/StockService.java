@@ -53,7 +53,8 @@ public class StockService {
             dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
                 @Override
                 public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                    StockItem stockItem = new StockItem(commodity, nextStockLevel());
+                    // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
+                    StockItem stockItem = new StockItem(commodity, 10);
                     dao.create(stockItem);
                     return null;
                 }
@@ -76,18 +77,5 @@ public class StockService {
             throw new LmisException(e);
         }
 
-    }
-
-    private int previous = 0;
-
-    private int nextStockLevel() {
-        // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
-        if (previous == 0) {
-            previous = 10;
-            return previous;
-        } else {
-            previous = 0;
-            return previous;
-        }
     }
 }
