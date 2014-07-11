@@ -11,7 +11,6 @@ import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 
 public class StockService {
 
@@ -26,8 +25,6 @@ public class StockService {
             stockItem = getStockItem(commodity);
         } catch (SQLException e) {
             throw new LmisException(e);
-        } finally {
-            releaseHelper();
         }
 
         return stockItem.quantity();
@@ -82,13 +79,13 @@ public class StockService {
     }
 
     private int previous = 0;
+
     private int nextStockLevel() {
         // FIXME: Should fetch stock levels from 'Special Receive' screen or form DHIS2
-        if(previous == 0) {
+        if (previous == 0) {
             previous = 10;
             return previous;
-        }
-        else {
+        } else {
             previous = 0;
             return previous;
         }
