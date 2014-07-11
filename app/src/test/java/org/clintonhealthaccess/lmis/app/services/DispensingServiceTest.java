@@ -21,6 +21,8 @@ import static org.hamcrest.core.Is.is;
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispensingServiceTest {
     @Inject
+    private CategoryService categoryService;
+    @Inject
     private CommodityService commodityService;
     @Inject
     private DispensingService dispensingService;
@@ -33,6 +35,7 @@ public class DispensingServiceTest {
     public void setUp() throws SQLException {
         setUpInjection(this);
         commodityService.initialise();
+        categoryService.clearCache();
     }
 
 

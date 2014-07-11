@@ -8,12 +8,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +29,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.initialiseDefaultCommodities;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,13 +47,18 @@ import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
+    @Inject
+    private CategoryService categoryService;
+
     private DispenseActivity getActivity() {
         return buildActivity(DispenseActivity.class).create().get();
     }
 
     @Before
     public void setUp() throws Exception {
+        setUpInjection(this);
         initialiseDefaultCommodities(application);
+        categoryService.clearCache();
     }
 
     @Test

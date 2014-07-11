@@ -10,16 +10,24 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CategoryService {
+    private static List<Category> allCategories;
 
     @Inject
     private DbUtil dbUtil;
 
     public List<Category> all() {
-        return dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
-            @Override
-            public List<Category> operate(Dao<Category, String> dao) throws SQLException {
-                return dao.queryForAll();
-            }
-        });
+        if(allCategories == null) {
+            allCategories = dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
+                @Override
+                public List<Category> operate(Dao<Category, String> dao) throws SQLException {
+                    return dao.queryForAll();
+                }
+            });
+        }
+        return allCategories;
+    }
+
+    public void clearCache() {
+        allCategories = null;
     }
 }
