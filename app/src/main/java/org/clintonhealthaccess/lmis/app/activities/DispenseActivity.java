@@ -10,14 +10,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.common.base.Predicate;
-import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,9 +30,6 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 
 public class DispenseActivity extends CommoditySelectableActivity {
-    @Inject
-    private CategoryService categoriesService;
-
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
