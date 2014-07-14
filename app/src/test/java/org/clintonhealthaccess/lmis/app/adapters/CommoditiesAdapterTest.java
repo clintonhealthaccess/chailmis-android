@@ -103,5 +103,4 @@ public class CommoditiesAdapterTest {
 
         return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, checkBoxVisibilityStrategy);
     }
-
 }

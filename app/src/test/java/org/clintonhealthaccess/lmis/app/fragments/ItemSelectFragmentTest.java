@@ -4,13 +4,11 @@ import android.app.Dialog;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -29,8 +27,6 @@ import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest.fireCommodityToggledEvent;
-import static org.clintonhealthaccess.lmis.app.activities.DispenseActivityTest.getDispenseActivity;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -117,12 +113,13 @@ public class ItemSelectFragmentTest {
         assertFalse(itemSelectFragment.isVisible());
     }
 
-    @Ignore
     @Test
     public void shouldPreCheckCommoditiesInSelectedCommoditiesListPassedByDispenseActivity() {
-        DispenseActivityTest.CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
-        itemSelectFragment.dismiss();
-
+        Category antiMalarials = categoryService.all().get(0);
+        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        Commodity firstCommodity = commodityService.all().get(0);
+        commodities.add(new CommodityViewModel(firstCommodity));
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, true);
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
