@@ -7,6 +7,7 @@ import android.widget.ListView;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.ConfirmDispenseAdapter;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -19,6 +20,7 @@ import org.robolectric.shadows.ShadowDialog;
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
@@ -65,6 +67,7 @@ public class DispenseConfirmationFragmentTest {
         Dialog dialog = ShadowDialog.getLatestDialog();
         ListView listView = (ListView) dialog.findViewById(R.id.listViewConfirmItems);
         assertThat(listView, not(nullValue()));
+        assertThat(listView.getAdapter(), not(nullValue()));
 
     }
 
