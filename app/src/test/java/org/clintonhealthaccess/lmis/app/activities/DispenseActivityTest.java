@@ -212,6 +212,7 @@ public class DispenseActivityTest {
 
     @Test
     public void testThatIfAllDispensingItemsHaveQuantitiesNoToastIsMade() throws Exception {
+
         DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
