@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -297,5 +298,24 @@ public class DispenseActivityTest {
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
     }
 
+    @Test
+    public void testThatIfDispenseToAnotherFacilityCheckBox() throws Exception {
 
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
+
+        Dispensing dispensing = dispenseActivity.getDispensing();
+
+        assertTrue(dispensing.isDispenseToFacility());
+
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
+
+        dispensing = dispenseActivity.getDispensing();
+
+        assertFalse(dispensing.isDispenseToFacility());
+
+
+    }
 }
