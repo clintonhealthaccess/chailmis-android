@@ -38,6 +38,7 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         TextView textViewCommodityOutOfStock = (TextView) rowView.findViewById(R.id.textViewCommodityOutOfStock);
 
         if (commodityViewModel.stockIsFinished()) {
+//            rowView.setBackgroundColor(getContext().getResources().getColor(R.color.disabled));
             checkboxCommoditySelected.setVisibility(View.INVISIBLE);
             textViewCommodityOutOfStock.setVisibility(View.VISIBLE);
         }

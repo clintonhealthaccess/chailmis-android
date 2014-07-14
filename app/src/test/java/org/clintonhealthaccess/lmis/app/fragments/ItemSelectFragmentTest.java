@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -92,7 +93,7 @@ public class ItemSelectFragmentTest {
         Button secondCategoryButton = (Button) categoriesLayout.getChildAt(1);
         secondCategoryButton.performClick();
 
-        ListView commoditiesLayout = (ListView) dialog.findViewById(R.id.listViewCommodities);
+        GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
         assertThat(commoditiesLayout, not(nullValue()));
         assertThat(commoditiesLayout.getAdapter().getCount(), is(1));
 
@@ -124,7 +125,7 @@ public class ItemSelectFragmentTest {
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
-        ListView commoditiesLayout = (ListView) dialog.findViewById(R.id.listViewCommodities);
+        GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
         CommodityViewModel loadedCommodity = (CommodityViewModel)commoditiesLayout.getAdapter().getItem(0);
         assertTrue(loadedCommodity.isSelected());
     }

@@ -1,15 +1,14 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -39,7 +38,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     private Category category;
 
-    ListView listViewCommodities;
+    GridView gridViewCommodities;
 
 
     private LinearLayout categoriesLayout;
@@ -67,7 +66,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         final View overlayView = inflater.inflate(R.layout.fragment_item_select, container, false);
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
         setupCloseButton(overlayView);
-        listViewCommodities = (ListView) overlayView.findViewById(R.id.listViewCommodities);
+        gridViewCommodities = (GridView) overlayView.findViewById(R.id.gridViewCommodities);
         List<Category> categoryList = categoryService.all();
         adapterHashMap = new LinkedHashMap<>();
 
@@ -121,8 +120,8 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
     private void showCommodities(Category currentCategory) {
         final CommoditiesAdapter adapter = adapterHashMap.get(currentCategory);
-        listViewCommodities.setAdapter(adapter);
-        listViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewCommodities.setAdapter(adapter);
+        gridViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 CommodityViewModel commodityViewModel = adapter.getItem(i);

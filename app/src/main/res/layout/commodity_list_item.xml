@@ -7,7 +7,8 @@
     android:descendantFocusability="blocksDescendants"
     android:layout_height="match_parent"
     android:minWidth="100dp"
-    android:textAlignment="center">
+    android:textAlignment="center"
+    android:background="@drawable/card">
 
     <TextView
         android:id="@+id/textViewCommodityName"
@@ -20,8 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Not in Stock"
-        android:textColor="@color/white"
-        android:background="@color/blue"
+        android:textColor="@color/blue"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:visibility="gone"
