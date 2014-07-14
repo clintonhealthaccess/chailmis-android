@@ -309,7 +309,6 @@ public class DispenseActivityTest {
 
         assertTrue(dispensing.isDispenseToFacility());
 
-
         ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
 
         dispensing = dispenseActivity.getDispensing();
