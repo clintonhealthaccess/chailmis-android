@@ -3,7 +3,7 @@
 
     <string name="app_name">DHIS LMIS</string>
     <string name="title_activity_home">DHIS LMIS</string>
-    <string name="register_label">Please register with your DHIS2 credentials:</string>
+    <string name="register_label">Please register with your LMIS credentials:</string>
     <string name="action_settings">Settings</string>
     <string name="losses">Losses &amp; Expiries</string>
     <string name="reports">Reports</string>
@@ -34,8 +34,10 @@
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
-    <string name="dispense_submit_validation_message">Make sure all fields are filled</string>
+    <string name="dispense_submit_validation_message_zero">Please make all the quantities are greater than 0</string>
+    <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
     <string name="categories_header">CATEGORIES</string>
-    <string name="dispense_to_facility">Dispense To Facility</string>
+    <string name="dispense_to_facility">Dispense To Facility (Adjustments)</string>
+    <string name="go_back">Go Back</string>
 
 </resources>

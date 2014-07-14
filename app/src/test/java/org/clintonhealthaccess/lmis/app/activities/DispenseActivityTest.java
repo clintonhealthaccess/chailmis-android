@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -18,10 +19,12 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowToast;
 
 import de.greenrobot.event.EventBus;
 
@@ -43,7 +46,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
-import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
@@ -99,7 +101,7 @@ public class DispenseActivityTest {
     public void listViewShouldToggleCommodityWhenToggleEventIsTriggered() throws Exception {
         CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
-        CommodityViewModel commodityInList = (CommodityViewModel)eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
+        CommodityViewModel commodityInList = (CommodityViewModel) eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
 
         assertThat(commodityInList, is(eventDetails.commodityViewModel()));
 
@@ -157,7 +159,7 @@ public class DispenseActivityTest {
         }
 
         public CommodityViewModel commodityViewModel() {
-            return  this.commodityToggledEvent.getCommodity();
+            return this.commodityToggledEvent.getCommodity();
         }
     }
 
@@ -174,30 +176,6 @@ public class DispenseActivityTest {
         assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), not(is(VISIBLE)));
     }
 
-
-    @Test
-    public void testSubmitButtonLogicWhenDispensingIsInValid() throws Exception {
-        DispenseActivity dispenseActivity = getDispenseActivity();
-
-        ListView mockListView = mock(ListView.class);
-        View mockListItemView = mock(View.class);
-        EditText mockEditText = new EditText(application);
-
-
-        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
-
-        dispenseActivity.listViewSelectedCommodities = mockListView;
-
-        assertFalse(dispenseActivity.dispensingIsValid());
-
-        dispenseActivity.buttonSubmitDispense.callOnClick();
-
-        ShadowHandler.idleMainLooper();
-        assertThat(getTextOfLatestToast(), equalTo("Make sure all fields are filled"));
-
-    }
 
     @Test
     public void getDispensingShouldGetItemsInTheListView() throws Exception {
@@ -235,25 +213,33 @@ public class DispenseActivityTest {
     }
 
     @Test
-    public void testThatDispensingIsInvalidIfNoQuantitiesAreSet() throws Exception {
+    public void testThatIfAllDispensingItemsHaveQuantitiesNoToastIsMade() throws Exception {
+
         DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
+        SelectedCommoditiesAdapter mockCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
-
+        mockEditText.setText("12");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
         when(mockListView.getChildCount()).thenReturn(1);
+        when(mockCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockListView.getAdapter()).thenReturn(mockCommoditiesAdapter);
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        ShadowHandler.idleMainLooper();
 
-        assertFalse(dispenseActivity.dispensingIsValid());
+        assertThat(ShadowToast.getTextOfLatestToast(), is(Matchers.nullValue()));
+
+
     }
 
     @Test
-    public void testThatDispensingIsInvalidIfAnyFieldHasAnError() throws Exception {
+    public void testThatIfAnyOfTheDispensingItemsHaveErrorsAToastIsMade() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
@@ -268,26 +254,68 @@ public class DispenseActivityTest {
         when(mockListView.getChildCount()).thenReturn(1);
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        ShadowHandler.idleMainLooper();
 
-        assertFalse(dispenseActivity.dispensingIsValid());
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_errors)));
     }
 
     @Test
-    public void testThatDispensingIsValidIfQuantitiesAreSet() throws Exception {
+    public void testThatIfAllDispensingItemsHaveNoQuantitiesAToastIsMade() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
-        mockEditText.setText("12");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
         when(mockListView.getChildCount()).thenReturn(1);
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
+    }
 
-        assertTrue(dispenseActivity.dispensingIsValid());
+    @Test
+    public void testThatIfAllDispensingItemsHaveZeroQuantitiesAToastIsMade() throws Exception {
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ListView mockListView = mock(ListView.class);
+        View mockListItemView = mock(View.class);
+        EditText mockEditText = new EditText(application);
+
+        mockEditText.setText("0");
+
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getChildCount()).thenReturn(1);
+
+        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
+    }
+
+    @Test
+    public void testThatIfDispenseToAnotherFacilityCheckBox() throws Exception {
+
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
+
+        Dispensing dispensing = dispenseActivity.getDispensing();
+
+        assertTrue(dispensing.isDispenseToFacility());
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
+
+        dispensing = dispenseActivity.getDispensing();
+
+        assertFalse(dispensing.isDispenseToFacility());
+
+
     }
 }
