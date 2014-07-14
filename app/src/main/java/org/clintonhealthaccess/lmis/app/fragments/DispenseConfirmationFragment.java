@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.ConfirmDispenseAdapter;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
@@ -30,6 +31,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
     Button buttonDispenseConfirm;
     Button buttonDispenseGoBack;
     private ListView listViewConfirmItems;
+    private ConfirmDispenseAdapter confirmDispenseAdapter;
 
     public static DispenseConfirmationFragment newInstance(Dispensing dispensingList) {
         DispenseConfirmationFragment fragment = new DispenseConfirmationFragment();
@@ -58,8 +60,20 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         buttonDispenseConfirm = (Button) view.findViewById(R.id.buttonDispenseConfirm);
         buttonDispenseGoBack = (Button) view.findViewById(R.id.buttonDispenseGoBack);
         listViewConfirmItems = (ListView) view.findViewById(R.id.listViewConfirmItems);
+        setUpButtons();
+        setupDialog();
+        confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems());
+        listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header,container));
+        listViewConfirmItems.setAdapter(confirmDispenseAdapter);
+        return view;
+    }
 
+    private void setupDialog() {
+        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+    }
 
+    private void setUpButtons() {
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,9 +91,6 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
                 dismiss();
             }
         });
-        getDialog().setCanceledOnTouchOutside(false);
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        return view;
     }
 
 

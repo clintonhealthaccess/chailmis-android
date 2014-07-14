@@ -39,5 +39,8 @@
     <string name="categories_header">CATEGORIES</string>
     <string name="dispense_to_facility">Dispense To Facility (Adjustments)</string>
     <string name="go_back">Go Back</string>
+    <string name="commodity">Commodity</string>
+    <string name="adjusted_quantity">Adjusted Quantity</string>
+    <string name="new_soh">New SOH</string>
 
 </resources>
