@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -28,6 +29,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
 
     Button buttonDispenseConfirm;
     Button buttonDispenseGoBack;
+    private ListView listViewConfirmItems;
 
     public static DispenseConfirmationFragment newInstance(Dispensing dispensingList) {
         DispenseConfirmationFragment fragment = new DispenseConfirmationFragment();
@@ -55,6 +57,8 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         View view = inflater.inflate(R.layout.fragment_dispense_confirmation, container, false);
         buttonDispenseConfirm = (Button) view.findViewById(R.id.buttonDispenseConfirm);
         buttonDispenseGoBack = (Button) view.findViewById(R.id.buttonDispenseGoBack);
+        listViewConfirmItems = (ListView) view.findViewById(R.id.listViewConfirmItems);
+
 
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 
@@ -55,6 +56,15 @@ public class DispenseConfirmationFragmentTest {
         Dialog dialog = ShadowDialog.getLatestDialog();
         Button buttonClose = (Button) dialog.findViewById(R.id.buttonDispenseConfirm);
         assertThat(buttonClose, not(nullValue()));
+
+    }
+
+
+    @Test
+    public void testListViewExists() throws Exception {
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        ListView listView = (ListView) dialog.findViewById(R.id.listViewConfirmItems);
+        assertThat(listView, not(nullValue()));
 
     }
 
