@@ -56,14 +56,12 @@ apply plugin: 'pmd'
 check.dependsOn 'pmd'
 
 task pmd(type: Pmd) {
+    targetJdk = TargetJdk.VERSION_1_7
     ignoreFailures = true
 
-    ruleSets = [
-            "basic", "braces", "android", "junit", "codesize", "coupling", "design",
-            "naming", "unusedcode"
-    ]
+    ruleSetFiles = files('config/pmd/chai-rulesets.xml')
 
-    source 'src'
+    source 'src/main'
     include '**/*.java'
     exclude '**/gen/**'
 

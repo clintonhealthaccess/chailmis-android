@@ -25,6 +25,7 @@ import org.robolectric.shadows.ShadowHandler;
 
 import de.greenrobot.event.EventBus;
 
+import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
@@ -164,13 +165,13 @@ public class DispenseActivityTest {
     public void shouldToggleSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        assertFalse(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+        assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), not(is(VISIBLE)));
 
         CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
 
-        assertTrue(dispenseActivity.buttonSubmitDispense.getVisibility() == View.VISIBLE);
+        assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), not(is(VISIBLE)));
     }
 
 
