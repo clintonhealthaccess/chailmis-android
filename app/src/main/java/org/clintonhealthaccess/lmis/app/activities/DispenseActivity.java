@@ -44,25 +44,26 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        buttonSubmitDispense.setOnClickListener(new OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        if (!dispensingItemsHaveValidQuantities()) {
-                                                            showToastMessage(getString(R.string.dispense_submit_validation_message_zero));
-                                                            return;
-                                                        }
+        buttonSubmitDispense.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!dispensingItemsHaveValidQuantities()) {
+                            showToastMessage(getString(R.string.dispense_submit_validation_message_zero));
+                            return;
+                        }
 
-                                                        if (!dispensingItemsHaveNoErrors()) {
-                                                            showToastMessage(getString(R.string.dispense_submit_validation_message_errors));
-                                                            return;
-                                                        }
+                        if (!dispensingItemsHaveNoErrors()) {
+                            showToastMessage(getString(R.string.dispense_submit_validation_message_errors));
+                            return;
+                        }
 
-                                                        FragmentManager fm = getSupportFragmentManager();
-                                                        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
-                                                        dialog.show(fm, "confirmDispensing");
-                                                    }
+                        FragmentManager fm = getSupportFragmentManager();
+                        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
+                        dialog.show(fm, "confirmDispensing");
+                    }
 
-                                                }
+                }
         );
     }
 
