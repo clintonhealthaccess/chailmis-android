@@ -67,9 +67,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
         );
     }
 
-    private void showToastMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();
-    }
 
     @Override
     protected int getSelectedCommoditiesAdapterId() {

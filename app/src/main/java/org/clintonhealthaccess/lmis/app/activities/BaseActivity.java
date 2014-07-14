@@ -5,10 +5,13 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
 
 import roboguice.activity.RoboActionBarActivity;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class BaseActivity extends RoboActionBarActivity {
     TextView textFacilityName;
@@ -31,7 +34,7 @@ public class BaseActivity extends RoboActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             getMenuInflater().inflate(R.menu.home, menu);
-        } catch(Exception e) {
+        } catch (Exception e) {
             // FIXME: this is hacky...it breaks in ItemSelectFragmentTest but I don't know why...
         }
 
@@ -46,5 +49,10 @@ public class BaseActivity extends RoboActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+
+    void showToastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();
     }
 }
