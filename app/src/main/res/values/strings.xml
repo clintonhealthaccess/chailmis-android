@@ -34,7 +34,8 @@
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
-    <string name="dispense_submit_validation_message">Make sure all fields are filled</string>
+    <string name="dispense_submit_validation_message_zero">Please make all the quantities are greater than 0</string>
+    <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
     <string name="categories_header">CATEGORIES</string>
     <string name="dispense_to_facility">Dispense To Facility</string>
 

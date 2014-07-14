@@ -47,12 +47,18 @@ public class DispenseActivity extends CommoditySelectableActivity {
         buttonSubmitDispense.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dispensingIsValid()) {
+                if (dispensingItemsHaveNoErrors() && dispensingItemsHaveValidQuantities()) {
                     FragmentManager fm = getSupportFragmentManager();
                     DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
                     dialog.show(fm, "confirmDispensing");
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dispense_submit_validation_message), LENGTH_SHORT).show();
+                    if (!dispensingItemsHaveValidQuantities()) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.dispense_submit_validation_message_zero), LENGTH_SHORT).show();
+                    }
+
+                    if (!dispensingItemsHaveNoErrors()) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.dispense_submit_validation_message_errors), LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -72,13 +78,32 @@ public class DispenseActivity extends CommoditySelectableActivity {
         }
     }
 
-    // FIXME: These methods should be private. Can we find a better way to test them?
-    protected boolean dispensingIsValid() {
+    private boolean dispensingItemsHaveValidQuantities() {
         Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
             @Override
             public boolean apply(View view) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getText().toString().isEmpty() || editTextQuantity.getError() != null;
+                return editTextQuantity.getText().toString().isEmpty() || editTextHasNumberLessThanEqualToZero(editTextQuantity);
+            }
+        });
+        return commoditiesWithoutAmount.size() == 0;
+    }
+
+    private boolean editTextHasNumberLessThanEqualToZero(EditText editTextQuantity) {
+        try {
+            return Integer.parseInt(editTextQuantity.getText().toString()) <= 0;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+
+    }
+
+    private boolean dispensingItemsHaveNoErrors() {
+        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
+            @Override
+            public boolean apply(View view) {
+                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                return editTextQuantity.getError() != null;
             }
         });
         return commoditiesWithoutAmount.size() == 0;
