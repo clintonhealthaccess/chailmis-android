@@ -42,5 +42,6 @@
     <string name="commodity">Commodity</string>
     <string name="adjusted_quantity">Adjusted Quantity</string>
     <string name="new_soh">New SOH</string>
+    <string name="quantity">Quantity</string>
 
 </resources>

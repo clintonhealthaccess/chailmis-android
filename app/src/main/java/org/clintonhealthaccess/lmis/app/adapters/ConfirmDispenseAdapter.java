@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 
 import java.util.List;
@@ -17,9 +18,12 @@ import roboguice.RoboGuice;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class ConfirmDispenseAdapter extends ArrayAdapter<DispensingItem> {
-    public ConfirmDispenseAdapter(Context context, int resource, List<DispensingItem> items) {
+    private final Dispensing dispensing;
+
+    public ConfirmDispenseAdapter(Context context, int resource, List<DispensingItem> items, Dispensing dispensing) {
         super(context, resource, items);
         RoboGuice.getInjector(context).injectMembers(this);
+        this.dispensing = dispensing;
     }
 
     @Override
@@ -32,10 +36,15 @@ public class ConfirmDispenseAdapter extends ArrayAdapter<DispensingItem> {
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
 
         DispensingItem item = getItem(position);
-
-        textViewCommodityName.setText(item.getCommodity().getName());
-        textViewAdjustedQuantity.setText(item.getQuantity().toString());
-        textViewSOH.setText(String.valueOf(item.getCommodity().getStockItem().quantity() - item.getQuantity()));
+        if (dispensing.isDispenseToFacility()) {
+            textViewCommodityName.setText(item.getCommodity().getName());
+            textViewAdjustedQuantity.setText(item.getQuantity().toString());
+            textViewSOH.setText(String.valueOf(item.getCommodity().getStockItem().quantity() - item.getQuantity()));
+        } else {
+            textViewCommodityName.setText(item.getCommodity().getName());
+            textViewAdjustedQuantity.setVisibility(View.INVISIBLE);
+            textViewSOH.setText(String.valueOf(item.getQuantity()));
+        }
 
         return rowView;
     }

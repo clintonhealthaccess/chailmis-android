@@ -62,8 +62,13 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         listViewConfirmItems = (ListView) view.findViewById(R.id.listViewConfirmItems);
         setUpButtons();
         setupDialog();
-        confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems());
-        listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header,container));
+        confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems(),dispensing);
+        if (dispensing.isDispenseToFacility()) {
+            listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header_facility, container));
+        } else {
+            listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header, container));
+        }
+
         listViewConfirmItems.setAdapter(confirmDispenseAdapter);
         return view;
     }
