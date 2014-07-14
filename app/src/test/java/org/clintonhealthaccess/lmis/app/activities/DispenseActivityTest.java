@@ -173,7 +173,7 @@ public class DispenseActivityTest {
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
 
-        assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), not(is(VISIBLE)));
+        assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), is(VISIBLE));
     }
 
 
