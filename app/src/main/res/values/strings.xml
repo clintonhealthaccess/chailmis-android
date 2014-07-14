@@ -38,5 +38,6 @@
     <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
     <string name="categories_header">CATEGORIES</string>
     <string name="dispense_to_facility">Dispense To Facility (Adjustments)</string>
+    <string name="go_back">Go Back</string>
 
 </resources>

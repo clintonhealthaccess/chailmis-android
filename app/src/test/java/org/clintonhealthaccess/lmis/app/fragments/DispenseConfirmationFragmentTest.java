@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
@@ -57,6 +58,15 @@ public class DispenseConfirmationFragmentTest {
 
     }
 
+
+    @Test
+    public void testGoBackButtonExists() throws Exception {
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        Button buttonGoBack = (Button) dialog.findViewById(R.id.buttonDispenseGoBack);
+        assertThat(buttonGoBack, not(nullValue()));
+
+    }
+
     @Test
     public void testConfirmButtonLogic() throws Exception {
         Dialog dialog = ShadowDialog.getLatestDialog();
@@ -65,6 +75,17 @@ public class DispenseConfirmationFragmentTest {
 
         buttonClose.callOnClick();
         verify(mockDispensingService).addDispensing(Matchers.<Dispensing>anyObject());
+        assertFalse(dialog.isShowing());
+
+    }
+
+    @Test
+    public void testGoBackButtonLogic() throws Exception {
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        Button buttonGoBack = (Button) dialog.findViewById(R.id.buttonDispenseGoBack);
+        assertThat(dispenseConfirmationFragment.dispensing, not(nullValue()));
+        buttonGoBack.callOnClick();
+        verify(mockDispensingService, never()).addDispensing(Matchers.<Dispensing>anyObject());
         assertFalse(dialog.isShowing());
 
     }

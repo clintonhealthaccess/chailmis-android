@@ -2,7 +2,6 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
     DispensingService dispensingService;
 
     Button buttonDispenseConfirm;
+    Button buttonDispenseGoBack;
 
     public static DispenseConfirmationFragment newInstance(Dispensing dispensingList) {
         DispenseConfirmationFragment fragment = new DispenseConfirmationFragment();
@@ -54,6 +54,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dispense_confirmation, container, false);
         buttonDispenseConfirm = (Button) view.findViewById(R.id.buttonDispenseConfirm);
+        buttonDispenseGoBack = (Button) view.findViewById(R.id.buttonDispenseGoBack);
 
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +64,13 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
                 FragmentActivity activity = getActivity();
                 if (activity != null)
                     activity.finish();
+            }
+        });
+
+        buttonDispenseGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
             }
         });
         getDialog().setCanceledOnTouchOutside(false);
