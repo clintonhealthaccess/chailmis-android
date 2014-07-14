@@ -7,7 +7,6 @@ import android.widget.ListView;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.ConfirmDispenseAdapter;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -15,14 +14,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -58,9 +58,20 @@ public class DispenseConfirmationFragmentTest {
         Dialog dialog = ShadowDialog.getLatestDialog();
         Button buttonClose = (Button) dialog.findViewById(R.id.buttonDispenseConfirm);
         assertThat(buttonClose, not(nullValue()));
-
+        assertThat(buttonClose.getText().toString(), is(Robolectric.application.getString(R.string.confirm)));
     }
 
+    @Test
+    public void testConfirmButtonHasDifferentTextIfDispensingToFacility() throws Exception {
+        Dispensing dispensing = new Dispensing();
+        dispensing.setDispenseToFacility(true);
+        dispenseConfirmationFragment = DispenseConfirmationFragment.newInstance(dispensing);
+        startFragment(dispenseConfirmationFragment);
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        Button buttonClose = (Button) dialog.findViewById(R.id.buttonDispenseConfirm);
+        assertThat(buttonClose, not(nullValue()));
+        assertThat(buttonClose.getText().toString(), is(Robolectric.application.getString(R.string.confirm_facility)));
+    }
 
     @Test
     public void testListViewExists() throws Exception {
