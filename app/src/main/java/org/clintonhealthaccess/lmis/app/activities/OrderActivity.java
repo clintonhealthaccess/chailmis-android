@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 
 import java.util.List;
 
@@ -21,6 +21,11 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_order;
+    }
+
+    @Override
+    protected boolean getCheckboxVisibilityFlag() {
+        return true;
     }
 
     @Override

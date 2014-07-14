@@ -13,6 +13,7 @@ import com.google.common.base.Predicate;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
@@ -38,6 +39,11 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_dispense;
+    }
+
+    @Override
+    protected boolean getCheckboxVisibilityFlag() {
+        return false;
     }
 
     @Override

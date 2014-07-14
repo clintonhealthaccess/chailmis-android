@@ -61,8 +61,8 @@ public class CommoditiesAdapterTest {
     }
 
     @Test
-    public void shouldMarkCommoditiesWhoseStockIsZero() {
-        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities();
+    public void shouldMarkCommoditiesWhoseStockIsZeroGivenCheckboxVisibilityStrategyIs_DO_HIDE() {
+        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.DO_HIDE);
         View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
 
         View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
@@ -72,6 +72,17 @@ public class CommoditiesAdapterTest {
         assertThat(textView.getVisibility(), is(View.VISIBLE));
     }
 
+    @Test
+    public void shouldNotMarkCommoditiesWhoseStockIsZeroGivenCheckboxVisibilityStrategyIs_DO_NOTHING() {
+        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.DO_NOTHING);
+        View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
+
+        View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
+        assertThat(checkBox.getVisibility(), is(View.VISIBLE));
+
+        View textView = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.textViewCommodityOutOfStock);
+        assertThat(textView.getVisibility(), is(View.GONE));
+    }
 
     private CommoditiesAdapter makeAdapterWithCommodities() {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
@@ -84,13 +95,13 @@ public class CommoditiesAdapterTest {
         return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
     }
 
-    private CommoditiesAdapter makeAdapterWithOutOfStockCommodities() {
+    private CommoditiesAdapter makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.CheckBoxVisibilityStrategy checkBoxVisibilityStrategy) {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         CommodityViewModel commodity = mock(CommodityViewModel.class);
         when(commodity.stockIsFinished()).thenReturn(true);
         commodities.add(commodity);
 
-        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
+        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, checkBoxVisibilityStrategy);
     }
 
 }
