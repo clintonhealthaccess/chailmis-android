@@ -98,7 +98,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 return editTextQuantity.getText().toString().isEmpty();
             }
         });
-        return commoditiesWithoutAmount.size() == 0;
+        return commoditiesWithoutAmount.isEmpty();
     }
 
     private boolean dispensingItemsHaveNoZeroQuantities() {
@@ -109,7 +109,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 return editTextHasNumberLessThanEqualToZero(editTextQuantity);
             }
         });
-        return commoditiesWithoutAmount.size() == 0;
+        return commoditiesWithoutAmount.isEmpty();
     }
 
     private boolean editTextHasNumberLessThanEqualToZero(EditText editTextQuantity) {
@@ -129,7 +129,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 return editTextQuantity.getError() != null;
             }
         });
-        return commoditiesWithoutAmount.size() == 0;
+        return commoditiesWithoutAmount.isEmpty();
     }
 
     protected Dispensing getDispensing() {
