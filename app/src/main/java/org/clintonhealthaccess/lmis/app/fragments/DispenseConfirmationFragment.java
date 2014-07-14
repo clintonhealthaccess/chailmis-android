@@ -68,8 +68,10 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems(), dispensing);
         if (dispensing.isDispenseToFacility()) {
             listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header_facility, container));
+            buttonDispenseConfirm.setText(getString(R.string.confirm_facility));
         } else {
             listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header, container));
+            buttonDispenseConfirm.setText(getString(R.string.confirm));
         }
 
         listViewConfirmItems.setAdapter(confirmDispenseAdapter);
@@ -94,8 +96,10 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
                 }
                 dismiss();
                 FragmentActivity activity = getActivity();
-                if (activity != null)
+                if (activity != null) {
                     activity.finish();
+                    startActivity(activity.getIntent());
+                }
             }
         });
 
