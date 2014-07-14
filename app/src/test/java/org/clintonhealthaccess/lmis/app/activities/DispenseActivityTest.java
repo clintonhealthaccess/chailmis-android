@@ -276,7 +276,7 @@ public class DispenseActivityTest {
         dispenseActivity.listViewSelectedCommodities = mockListView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_filled)));
     }
 
     @Test

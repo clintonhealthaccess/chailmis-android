@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.common.base.Predicate;
 
@@ -24,7 +23,6 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
-import static android.widget.Toast.LENGTH_SHORT;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.parseInt;
@@ -48,8 +46,12 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!dispensingItemsHaveValidQuantities()) {
+                        if (!dispensingItemsHaveNoZeroQuantities()) {
                             showToastMessage(getString(R.string.dispense_submit_validation_message_zero));
+                            return;
+                        }
+                        if (!dispensingItemsHaveValidQuantities()) {
+                            showToastMessage(getString(R.string.dispense_submit_validation_message_filled));
                             return;
                         }
 
@@ -87,7 +89,18 @@ public class DispenseActivity extends CommoditySelectableActivity {
             @Override
             public boolean apply(View view) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getText().toString().isEmpty() || editTextHasNumberLessThanEqualToZero(editTextQuantity);
+                return editTextQuantity.getText().toString().isEmpty();
+            }
+        });
+        return commoditiesWithoutAmount.size() == 0;
+    }
+
+    private boolean dispensingItemsHaveNoZeroQuantities() {
+        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
+            @Override
+            public boolean apply(View view) {
+                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                return editTextHasNumberLessThanEqualToZero(editTextQuantity);
             }
         });
         return commoditiesWithoutAmount.size() == 0;
