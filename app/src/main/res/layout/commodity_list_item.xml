@@ -3,14 +3,29 @@
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:paddingLeft="10dp"
+    android:paddingRight="10dp"
     android:descendantFocusability="blocksDescendants"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:minWidth="100dp"
+    android:textAlignment="center">
 
     <TextView
         android:id="@+id/textViewCommodityName"
         android:layout_width="wrap_content"
         android:layout_centerVertical="true"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewCommodityOutOfStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Not in Stock"
+        android:textColor="@color/white"
+        android:background="@color/blue"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+/>
 
     <CheckBox
         android:id="@+id/checkboxCommoditySelected"

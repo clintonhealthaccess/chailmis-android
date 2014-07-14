@@ -11,6 +11,8 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRo
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommoditiesAdapterTest {
@@ -57,14 +61,15 @@ public class CommoditiesAdapterTest {
     }
 
     @Test
-    public void shouldDisableRowViewIfCommodityStockIsZero() {
-        CommoditiesAdapter adapter = makeAdapterWithCommodities();
-
+    public void shouldMarkCommoditiesWhoseStockIsZero() {
+        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities();
         View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
-//        assertThat(((ColorDrawable)listRow.getBackground()).getColor(), is(R.color.disabled));
 
         View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
         assertFalse(checkBox.isShown());
+
+        View textView = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.textViewCommodityOutOfStock);
+        assertThat(textView.getVisibility(), is(View.VISIBLE));
     }
 
 
@@ -73,7 +78,17 @@ public class CommoditiesAdapterTest {
         CommodityViewModel commodityOne = new CommodityViewModel(new Commodity("game"));
         commodityOne.toggleSelected();
         commodities.add(commodityOne);
+
         commodities.add(new CommodityViewModel(new Commodity("other game")));
+
+        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
+    }
+
+    private CommoditiesAdapter makeAdapterWithOutOfStockCommodities() {
+        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        CommodityViewModel commodity = mock(CommodityViewModel.class);
+        when(commodity.stockIsFinished()).thenReturn(true);
+        commodities.add(commodity);
 
         return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
     }

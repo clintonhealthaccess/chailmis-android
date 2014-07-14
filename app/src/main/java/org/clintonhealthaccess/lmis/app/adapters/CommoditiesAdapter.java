@@ -35,10 +35,11 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodityViewModel.getName());
 
-        if (commodityViewModel.stockIsFinished()) {
+        TextView textViewCommodityOutOfStock = (TextView) rowView.findViewById(R.id.textViewCommodityOutOfStock);
 
-            rowView.setBackgroundColor(getContext().getResources().getColor(R.color.disabled));
+        if (commodityViewModel.stockIsFinished()) {
             checkboxCommoditySelected.setVisibility(View.INVISIBLE);
+            textViewCommodityOutOfStock.setVisibility(View.VISIBLE);
         }
 
         return rowView;
