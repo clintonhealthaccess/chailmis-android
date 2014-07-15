@@ -19,9 +19,33 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
+    public static final CheckBoxVisibilityStrategy DO_HIDE = new CheckBoxVisibilityStrategy() {
+        @Override
+        public void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock) {
+            if (commodityViewModel.stockIsFinished()) {
+                checkboxCommoditySelected.setVisibility(View.INVISIBLE);
+                textViewCommodityOutOfStock.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+    public static final CheckBoxVisibilityStrategy DO_NOTHING = new CheckBoxVisibilityStrategy() {
+        @Override
+        public void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock) {
+            // do nothing;
+        }
+    };
+    private CheckBoxVisibilityStrategy checkBoxVisibilityStrategy;
 
     public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
         super(context, resource, commodities);
+        this.checkBoxVisibilityStrategy = DO_HIDE;
+        RoboGuice.getInjector(context).injectMembers(this);
+    }
+
+    public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, CheckBoxVisibilityStrategy checkBoxVisibilityStrategy) {
+        super(context, resource, commodities);
+        this.checkBoxVisibilityStrategy = checkBoxVisibilityStrategy;
         RoboGuice.getInjector(context).injectMembers(this);
     }
 
@@ -37,12 +61,12 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
         TextView textViewCommodityOutOfStock = (TextView) rowView.findViewById(R.id.textViewCommodityOutOfStock);
 
-        if (commodityViewModel.stockIsFinished()) {
-//            rowView.setBackgroundColor(getContext().getResources().getColor(R.color.disabled));
-            checkboxCommoditySelected.setVisibility(View.INVISIBLE);
-            textViewCommodityOutOfStock.setVisibility(View.VISIBLE);
-        }
+        checkBoxVisibilityStrategy.apply(commodityViewModel, checkboxCommoditySelected, textViewCommodityOutOfStock);
 
         return rowView;
+    }
+
+    abstract public interface CheckBoxVisibilityStrategy {
+        void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock);
     }
 }

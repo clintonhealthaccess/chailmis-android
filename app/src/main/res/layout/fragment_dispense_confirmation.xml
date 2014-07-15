@@ -4,26 +4,34 @@
     android:layout_height="match_parent"
     tools:context=".fragments.DispenseConfirmationFragment">
 
+
+    <RelativeLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonDispenseConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentRight="true"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/buttonDispenseGoBack"
+            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@id/buttonDispenseConfirm"
+            android:layout_height="wrap_content"
+            android:text="@string/go_back" />
+
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/listViewConfirmItems"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_above="@id/layoutButtons"
+        android:layout_height="fill_parent" />
 
-
-    <Button
-        android:id="@+id/buttonDispenseConfirm"
-        android:layout_width="wrap_content"
-
-        android:layout_height="wrap_content"
-        android:layout_below="@id/listViewConfirmItems"
-        android:layout_alignParentRight="true"
-        android:text="@string/confirm" />
-
-    <Button
-        android:id="@+id/buttonDispenseGoBack"
-        android:layout_width="wrap_content"
-        android:layout_toLeftOf="@id/buttonDispenseConfirm"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/listViewConfirmItems"
-        android:text="@string/go_back" />
 </RelativeLayout>

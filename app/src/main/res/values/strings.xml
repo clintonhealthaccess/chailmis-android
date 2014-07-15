@@ -38,7 +38,8 @@
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>
     <string name="close">Close</string>
-    <string name="dispense_submit_validation_message_zero">Please make all the quantities are greater than 0</string>
+    <string name="dispense_submit_validation_message_zero">Please make sure all the quantities are greater than 0</string>
+    <string name="dispense_submit_validation_message_filled">Please make sure all the quantities are filled</string>
     <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
     <string name="categories_header">CATEGORIES</string>
     <string name="dispense_to_facility">Dispense To Facility (Adjustments)</string>
@@ -47,5 +48,8 @@
     <string name="adjusted_quantity">Adjusted Quantity</string>
     <string name="new_soh">New SOH</string>
     <string name="quantity">Quantity</string>
+    <string name="dispense_to_facility_successful">Dispense to Facility Successful</string>
+    <string name="dispense_to_successful">Dispense Successful</string>
+    <string name="confirm_facility">Confirm Adjustment</string>
 
 </resources>

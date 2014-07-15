@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -18,6 +19,8 @@ import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 import roboguice.fragment.RoboDialogFragment;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 
 public class DispenseConfirmationFragment extends RoboDialogFragment {
@@ -62,11 +65,13 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         listViewConfirmItems = (ListView) view.findViewById(R.id.listViewConfirmItems);
         setUpButtons();
         setupDialog();
-        confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems(),dispensing);
+        confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems(), dispensing);
         if (dispensing.isDispenseToFacility()) {
             listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header_facility, container));
+            buttonDispenseConfirm.setText(getString(R.string.confirm_facility));
         } else {
             listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header, container));
+            buttonDispenseConfirm.setText(getString(R.string.confirm));
         }
 
         listViewConfirmItems.setAdapter(confirmDispenseAdapter);
@@ -83,10 +88,18 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
             @Override
             public void onClick(View view) {
                 dispensingService.addDispensing(dispensing);
+
+                if (dispensing.isDispenseToFacility()) {
+                    showToastMessage(getString(R.string.dispense_to_facility_successful));
+                } else {
+                    showToastMessage(getString(R.string.dispense_to_successful));
+                }
                 dismiss();
                 FragmentActivity activity = getActivity();
-                if (activity != null)
+                if (activity != null) {
                     activity.finish();
+                    startActivity(activity.getIntent());
+                }
             }
         });
 
@@ -98,5 +111,8 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         });
     }
 
+    private void showToastMessage(String message) {
+        Toast.makeText(getActivity(), message, LENGTH_SHORT).show();
+    }
 
 }

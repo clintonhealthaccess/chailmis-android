@@ -136,11 +136,11 @@ public class DispenseActivityTest {
         assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
     }
 
-    public static void refire(CommodityToggledEvent commodityToggledEvent) {
+    private void refire(CommodityToggledEvent commodityToggledEvent) {
         EventBus.getDefault().post(commodityToggledEvent);
     }
 
-    public static CommodityToggledEventDetails fireCommodityToggledEvent(DispenseActivity dispenseActivity) {
+    private CommodityToggledEventDetails fireCommodityToggledEvent(DispenseActivity dispenseActivity) {
         CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
 
@@ -149,7 +149,7 @@ public class DispenseActivityTest {
         return new CommodityToggledEventDetails(dispenseActivity, commodityToggledEvent);
     }
 
-    public static class CommodityToggledEventDetails {
+    private class CommodityToggledEventDetails {
         public DispenseActivity dispenseActivity;
         public CommodityToggledEvent commodityToggledEvent;
 
@@ -276,7 +276,7 @@ public class DispenseActivityTest {
         dispenseActivity.listViewSelectedCommodities = mockListView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_filled)));
     }
 
     @Test

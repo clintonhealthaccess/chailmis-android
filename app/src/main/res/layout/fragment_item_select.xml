@@ -1,61 +1,55 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".fragments.ItemSelectFragment">
+    android:minWidth="500dp"
+    android:minHeight="300dp"
+    android:layout_gravity="center_horizontal|top">
 
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemSelectOverlayHeader"
+        android:background="@color/blue"
+
+        android:layout_weight="3">
+
+        <Button
+            android:id="@+id/buttonClose"
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/close" />
+    </RelativeLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:layout_weight="6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="500dp"
-        android:minHeight="300dp"
-        android:layout_gravity="center_horizontal|top">
-
-        <RelativeLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/itemSelectOverlayHeader"
-            android:background="@drawable/title_bar"
-            android:layout_weight="3">
-
-            <Button
-                android:id="@+id/buttonClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/close" />
-        </RelativeLayout>
+        android:background="#eee"
+        android:id="@+id/itemSelectOverlayBody">
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_weight="6"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#eee"
-            android:id="@+id/itemSelectOverlayBody">
+            android:id="@+id/itemSelectOverlayCategories" />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/itemSelectOverlayCategories" />
-
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/gridViewCommodities"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:numColumns="2"
-                android:verticalSpacing="7dp"
-                android:horizontalSpacing="10dp"
-                android:stretchMode="columnWidth"
-                android:padding="7dp"
-                android:gravity="center"
-                />
-
-        </LinearLayout>
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/gridViewCommodities"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:numColumns="2"
+            android:verticalSpacing="7dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:padding="7dp"
+            android:gravity="center" />
 
     </LinearLayout>
-</FrameLayout>
+
+</LinearLayout>

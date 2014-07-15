@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ import roboguice.fragment.RoboDialogFragment;
 public class ItemSelectFragment extends RoboDialogFragment {
     private static final String CATEGORY = "param_category";
     private static final String SELECTED_COMMODITIES = "param_selected_commodities";
+    public static final String STRATEGY = "Adapter";
 
     @Inject
     private CategoryService categoryService;
@@ -45,6 +47,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private HashMap<Category, CommoditiesAdapter> adapterHashMap;
     private ArrayList<CommodityViewModel> selectedCommodities;
     private Button buttonClose;
+    private Boolean strategy;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -56,6 +59,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<CommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
+            strategy = (Boolean) getArguments().getSerializable(STRATEGY);
         }
     }
 
@@ -87,7 +91,12 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 }
             }
 
-            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities));
+            if (strategy) {
+                adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities, CommoditiesAdapter.DO_NOTHING));
+            } else {
+                adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities));
+            }
+
             categoriesLayout.addView(button);
         }
 
@@ -143,10 +152,11 @@ public class ItemSelectFragment extends RoboDialogFragment {
         }
     }
 
-    public static ItemSelectFragment newInstance(Category category, ArrayList<CommodityViewModel> selectedCommodities) {
+    public static ItemSelectFragment newInstance(Category category, ArrayList<CommodityViewModel> selectedCommodities, boolean checkboxVisibilityFlag) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(CATEGORY, category);
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
+        arguments.putSerializable(STRATEGY,  checkboxVisibilityFlag);
 
         ItemSelectFragment fragment = new ItemSelectFragment();
         fragment.setArguments(arguments);

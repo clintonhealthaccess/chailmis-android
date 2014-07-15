@@ -70,7 +70,7 @@ public class Commodity implements Serializable {
     public StockItem getStockItem() {
         try {
             return copyOf(stockItems).get(0);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new LmisException(String.format("Stock for commodity %s not found", name));
         }
     }
@@ -78,7 +78,7 @@ public class Commodity implements Serializable {
     public boolean stockIsFinished() {
         if (stockItems != null) {
             List<StockItem> items = ImmutableList.copyOf(stockItems);
-            if (items.size() > 0) return items.get(0).isFinished();
+            if (!items.isEmpty()) return items.get(0).isFinished();
         }
 
         return true;
