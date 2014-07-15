@@ -55,6 +55,6 @@ public class UserTest {
     @Test
     public void shouldEncodeUsernameAndPasswordForBasicAuth() throws Exception {
         User user = new User("username", "password");
-        assertThat(user.encodeCredentialsForBasicAuthorization(), is("Basic dXNlcm5hbWU6cGFzc3dvcmQ=\n"));
+        assertThat(user.encodeCredentialsForBasicAuthorization(), is("Basic dXNlcm5hbWU6cGFzc3dvcmQ="));
     }
 }

@@ -1,9 +1,10 @@
 package org.clintonhealthaccess.lmis.app.models;
 
-import android.util.Base64;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import static android.util.Base64.NO_WRAP;
+import static android.util.Base64.encodeToString;
 
 @DatabaseTable(tableName = "users")
 public class User {
@@ -51,8 +52,8 @@ public class User {
     }
 
     public String encodeCredentialsForBasicAuthorization() {
-        final String userAndPassword = username + ":" + password;
-        final int flags = 0;
-        return "Basic " + Base64.encodeToString(userAndPassword.getBytes(), flags);
+        String credentials = username + ":" + password;
+        String base64EncodedCredentials = encodeToString(credentials.getBytes(), NO_WRAP);
+        return "Basic " + base64EncodedCredentials;
     }
 }
