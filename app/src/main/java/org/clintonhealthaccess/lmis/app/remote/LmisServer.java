@@ -1,11 +1,16 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.User;
 
 import java.util.List;
 
 public interface LmisServer {
-    void validateLogin(String username, String password);
+    void validateLogin(User user);
 
     List<Category> fetchCommodities();
+
+    List<String> fetchOrderReasons(User user);
+
+
 }

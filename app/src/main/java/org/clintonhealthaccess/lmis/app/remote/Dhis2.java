@@ -12,16 +12,19 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
+import org.clintonhealthaccess.lmis.app.remote.interceptors.AuthInterceptor;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import retrofit.RestAdapter;
+import retrofit.client.ApacheClient;
 import roboguice.inject.InjectResource;
 
-import static android.util.Base64.NO_WRAP;
-import static android.util.Base64.encodeToString;
 import static android.util.Log.i;
 import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -40,11 +43,9 @@ public class Dhis2 implements LmisServer {
     private Context context;
 
     @Override
-    public void validateLogin(String username, String password) {
-        String credentials = username + ":" + password;
-        String base64EncodedCredentials = encodeToString(credentials.getBytes(), NO_WRAP);
+    public void validateLogin(User user) {
         HttpGet request = new HttpGet(dhis2BaseUrl + "/api/users");
-        request.addHeader("Authorization", "Basic " + base64EncodedCredentials);
+        request.addHeader("Authorization", user.encodeCredentialsForBasicAuthorization());
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpResponse response;
@@ -74,4 +75,23 @@ public class Dhis2 implements LmisServer {
         }
         return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
     }
+
+    @Override
+    public List<String> fetchOrderReasons(User user) {
+        RestAdapter restAdapter = makeRestAdapter(user);
+        Dhis2Endpoint service = restAdapter.create(Dhis2Endpoint.class);
+        return service.getReasonsForOrder();
+
+    }
+
+    private RestAdapter makeRestAdapter(User user) {
+        AuthInterceptor requestInterceptor = new AuthInterceptor(user);
+        return new RestAdapter.Builder()
+                .setRequestInterceptor(requestInterceptor)
+                .setEndpoint(context.getString(R.string.dhis2_base_url))
+                .setClient(new ApacheClient())
+                .build();
+    }
+
+
 }

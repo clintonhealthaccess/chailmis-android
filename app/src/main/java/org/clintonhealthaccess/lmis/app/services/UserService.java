@@ -33,7 +33,7 @@ public class UserService {
     }
 
     public User register(final String username, final String password) {
-        lmisServer.validateLogin(username, password);
+        lmisServer.validateLogin(new User(username, password));
         User user = saveUserToDatabase(username, password);
         syncManager.createSyncAccount(user);
         return user;
