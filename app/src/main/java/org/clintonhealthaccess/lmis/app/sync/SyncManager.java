@@ -2,7 +2,6 @@ package org.clintonhealthaccess.lmis.app.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.Context;
 import android.os.Bundle;
 
 import com.google.inject.Inject;
@@ -18,13 +17,12 @@ import static android.content.ContentResolver.SYNC_EXTRAS_MANUAL;
 import static android.content.ContentResolver.addPeriodicSync;
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
-import static android.content.Context.ACCOUNT_SERVICE;
 import static android.util.Log.i;
 import static java.lang.String.valueOf;
 
 public class SyncManager {
     @Inject
-    private Context context;
+    private AccountManager accountManager;
 
     @InjectResource(R.string.sync_content_authority)
     private String syncContentAuthority;
@@ -33,7 +31,7 @@ public class SyncManager {
     private String syncAccountType;
 
     public void kickOff() {
-        Account[] accounts = getAccountManager().getAccounts();
+        Account[] accounts = accountManager.getAccounts();
         i("###### amount of accounts : ", valueOf(accounts.length));
         if (accounts.length > 0) {
             Account account = accounts[0];
@@ -53,11 +51,8 @@ public class SyncManager {
 
     public void createSyncAccount(User user) {
         Account account = new Account(user.getUsername(), syncAccountType);
-        boolean success = getAccountManager().addAccountExplicitly(account, user.getPassword(), null);
+        boolean success = accountManager.addAccountExplicitly(account, user.getPassword(), null);
         i("==> Create Sync Account : ", valueOf(success));
     }
 
-    private AccountManager getAccountManager() {
-        return (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-    }
 }
