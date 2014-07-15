@@ -6,9 +6,6 @@ import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -21,10 +18,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.client.ApacheClient;
+import retrofit.client.Header;
 import roboguice.inject.InjectResource;
 
+import static android.util.Log.e;
 import static android.util.Log.i;
 import static java.util.Arrays.asList;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -44,23 +45,9 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public void validateLogin(User user) {
-        HttpGet request = new HttpGet(dhis2BaseUrl + "/api/users");
-        request.addHeader("Authorization", user.encodeCredentialsForBasicAuthorization());
-
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpResponse response;
-        try {
-            response = httpClient.execute(request);
-        } catch (IOException e) {
-            i("Failed to connect DHIS2 server.", e.getMessage());
-            throw new LmisException(messageNetworkError);
-        }
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != SC_OK) {
-            i("Failed attempt to login.", "Response code : " + statusCode);
-            throw new LmisException(messageInvalidLoginCredential);
-        }
+        RestAdapter restAdapter = makeRestAdapter(user);
+        Dhis2Endpoint service = restAdapter.create(Dhis2Endpoint.class);
+        service.getUsers();
     }
 
     @Override
@@ -88,10 +75,32 @@ public class Dhis2 implements LmisServer {
         AuthInterceptor requestInterceptor = new AuthInterceptor(user);
         return new RestAdapter.Builder()
                 .setRequestInterceptor(requestInterceptor)
+                .setErrorHandler(new Dhis2ErrorHandler())
                 .setEndpoint(context.getString(R.string.dhis2_base_url))
                 .setClient(new ApacheClient())
                 .build();
     }
 
 
+    private class Dhis2ErrorHandler implements ErrorHandler {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            e("Error DHIS2 reason", cause.getResponse().getReason());
+            e("Error DHIS2 url", cause.getResponse().getUrl());
+            for (Header header : cause.getResponse().getHeaders()) {
+                e("Error DHIS2 header", String.format("%s : %s", header.getName(), header.getValue()));
+            }
+            if (cause.isNetworkError()) {
+                i("Failed to connect DHIS2 server.", cause.getMessage());
+                return new LmisException(messageNetworkError);
+            }
+
+            int statusCode = cause.getResponse().getStatus();
+            if (statusCode != SC_OK) {
+                i("Failed attempt to login.", "Response code : " + statusCode);
+                return new LmisException(messageInvalidLoginCredential);
+            }
+            return new LmisException(cause.getMessage());
+        }
+    }
 }
