@@ -6,7 +6,9 @@ import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,14 +24,17 @@ import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class HomeActivityTest {
-    private void setRegistrationStatus(boolean b) {
-        final UserService mockUserService = mock(UserService.class);
-        when(mockUserService.userRegistered()).thenReturn(b);
+    private UserService mockUserService;
 
+    @Before
+    public void setUp() {
+        mockUserService = mock(UserService.class);
+        final SyncManager mockSyncManager = mock(SyncManager.class);
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(mockUserService);
+                bind(SyncManager.class).toInstance(mockSyncManager);
             }
         });
     }
@@ -38,12 +43,15 @@ public class HomeActivityTest {
         return buildActivity(HomeActivity.class).create().get();
     }
 
+    private void setRegistrationStatus(boolean registered) {
+        when(mockUserService.userRegistered()).thenReturn(registered);
+    }
+
     @Test
     public void testBuildActivity() throws Exception {
         HomeActivity homeActivity = getHomeActivity();
         assertThat(homeActivity, not(nullValue()));
     }
-
 
     @Test
     public void testDispenseButtonIsConnectedToView() throws Exception {
@@ -81,12 +89,9 @@ public class HomeActivityTest {
         assertThat(homeActivity.buttonMessages, not(nullValue()));
     }
 
-
     @Test
     public void testTextViewFacilityNameIsConnectedToView() throws Exception {
-
         HomeActivity homeActivity = getHomeActivity();
-
         assertThat(homeActivity.textFacilityName, not(nullValue()));
     }
 

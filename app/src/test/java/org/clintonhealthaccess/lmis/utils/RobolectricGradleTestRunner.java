@@ -1,11 +1,9 @@
 package org.clintonhealthaccess.lmis.utils;
 
 import org.junit.runners.model.InitializationError;
-import org.mockito.MockitoAnnotations;
 import org.robolectric.AndroidManifest;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.res.Fs;
 
 import static java.lang.System.getProperty;
 import static org.robolectric.annotation.Config.DEFAULT;

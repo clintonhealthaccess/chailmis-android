@@ -20,6 +20,7 @@ public class TestInjectionUtil {
         if (mockedModule != null) {
             customisedModule = override(customisedModule).with(mockedModule);
         }
+
         setBaseApplicationInjector(application, DEFAULT_STAGE, customisedModule);
         RoboInjector injector = getInjector(application);
         injector.injectMembersWithoutViews(testCase);

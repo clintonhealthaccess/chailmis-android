@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 
 import java.util.List;
 
@@ -53,6 +54,9 @@ public class HomeActivity extends BaseActivity {
     @Inject
     private UserService userService;
 
+    @Inject
+    private SyncManager syncManager;
+
     private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
             new SparseArray<Class<? extends BaseActivity>>() {
                 {
@@ -75,9 +79,13 @@ public class HomeActivity extends BaseActivity {
         }
 
         setupButtonEvents();
-
         setupGraph();
         setupAlerts();
+        setupAutoSync();
+    }
+
+    private void setupAutoSync() {
+        syncManager.kickOff();
     }
 
     private void setupButtonEvents() {

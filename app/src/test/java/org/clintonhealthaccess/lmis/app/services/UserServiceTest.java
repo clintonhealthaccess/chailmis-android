@@ -1,10 +1,12 @@
 package org.clintonhealthaccess.lmis.app.services;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.apache.http.client.methods.HttpUriRequest;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -21,6 +23,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.robolectric.Robolectric.addPendingHttpResponse;
 import static org.robolectric.Robolectric.getSentHttpRequest;
 
@@ -31,7 +34,14 @@ public class UserServiceTest {
 
     @Before
     public void setUp() throws SQLException {
-        setUpInjection(this);
+        final SyncManager mockSyncManager = mock(SyncManager.class);
+        AbstractModule moduleForMockSyncManager = new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(SyncManager.class).toInstance(mockSyncManager);
+            }
+        };
+        setUpInjection(this, moduleForMockSyncManager);
     }
 
     @After

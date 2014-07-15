@@ -20,9 +20,12 @@ public class LmisApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setBaseApplicationInjector(this, DEFAULT_STAGE, newDefaultRoboModule(this), new GuiceConfigurationModule());
-
-        // load all categories to warm up
         getInjector(this).injectMembersWithoutViews(this);
+
+        loadAllCommoditiesToCache();
+    }
+
+    private void loadAllCommoditiesToCache() {
         categoryService.all();
     }
 }

@@ -2,7 +2,9 @@ package org.clintonhealthaccess.lmis.app.activities.viewModels;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
-public class CommodityViewModel {
+import java.io.Serializable;
+
+public class CommodityViewModel implements Serializable {
 
     private boolean selected;
     private int quantityToDispense;

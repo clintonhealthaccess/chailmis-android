@@ -2,6 +2,10 @@
 <resources>
 
     <string name="app_name">DHIS LMIS</string>
+
+    <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
+    <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
+
     <string name="title_activity_home">DHIS LMIS</string>
     <string name="register_label">Please register with your LMIS credentials:</string>
     <string name="action_settings">Settings</string>
