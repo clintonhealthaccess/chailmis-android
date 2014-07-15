@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -21,6 +20,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
+import static com.google.common.collect.ImmutableList.of;
 
 @ContentView(R.layout.activity_home)
 public class HomeActivity extends BaseActivity {
@@ -92,14 +92,11 @@ public class HomeActivity extends BaseActivity {
         OnClickListener onClickListener = new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Class<? extends BaseActivity> activityClass = navigationRoutes.get(view.getId());
-                Intent intent = new Intent(getApplicationContext(), activityClass);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), navigationRoutes.get(view.getId())));
             }
         };
 
-        List<Button> navigationButtons = ImmutableList.of(
-                buttonDispense, buttonOrder, buttonReceive,
+        List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
                 buttonLosses, buttonMessages, buttonReports);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);

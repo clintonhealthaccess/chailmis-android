@@ -54,21 +54,24 @@ public class RegisterActivity extends RoboActionBarActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = textUsername.getText().toString();
-                String password = textPassword.getText().toString();
-                if (isBlank(username)) {
-                    textUsername.setError(getString(R.string.username_error));
-                    return;
-                }
-
-                if (isBlank(password)) {
-                    textPassword.setError(getString(R.string.password_error));
-                    return;
-                }
-
-                doRegister(username, password);
+                validateAndRegister();
             }
         });
+    }
+
+    private void validateAndRegister() {
+        String username = textUsername.getText().toString();
+        String password = textPassword.getText().toString();
+        if (isBlank(username)) {
+            textUsername.setError(getString(R.string.username_error));
+            return;
+        }
+        if (isBlank(password)) {
+            textPassword.setError(getString(R.string.password_error));
+            return;
+        }
+
+        doRegister(username, password);
     }
 
     protected void doRegister(final String username, final String password) {
