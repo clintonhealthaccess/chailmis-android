@@ -18,19 +18,83 @@ import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 
-import java.util.Collection;
 import java.util.List;
 
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class DispenseActivity extends CommoditySelectableActivity {
+    private class QuantityValidator {
+        private final String toastMessage;
+        private final Predicate<EditText> predicate;
+
+        public QuantityValidator(int stringId, Predicate<EditText> predicate) {
+            toastMessage = getString(stringId);
+            this.predicate = predicate;
+        }
+
+        private boolean isValid() {
+            return filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
+                @Override
+                public boolean apply(View view) {
+                    EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                    return predicate.apply(editTextQuantity);
+                }
+            }).isEmpty();
+        }
+
+        private List<View> wrap(ListView listView) {
+            List<View> result = newArrayList();
+            for (int i = 0; i < listView.getChildCount(); i++) {
+                result.add(listView.getChildAt(i));
+            }
+            return result;
+        }
+    }
+
+    private final QuantityValidator INVALID_AMOUNT = new QuantityValidator(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            try {
+                return Integer.parseInt(editTextQuantity.getText().toString()) <= 0;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+
+        }
+    });
+
+    private final QuantityValidator EMPTY = new QuantityValidator(R.string.dispense_submit_validation_message_filled, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            return editTextQuantity.getText().toString().isEmpty();
+        }
+    });
+
+    private final QuantityValidator HAS_ERROR = new QuantityValidator(R.string.dispense_submit_validation_message_errors, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            return editTextQuantity.getError() != null;
+        }
+    });
+
+    private boolean hasInvalidField(List<QuantityValidator> validators) {
+        for (final QuantityValidator validator : validators) {
+            if (!validator.isValid()) {
+                showToastMessage(validator.toastMessage);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
@@ -53,29 +117,15 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!dispensingItemsHaveNoZeroQuantities()) {
-                            showToastMessage(getString(R.string.dispense_submit_validation_message_zero));
-                            return;
-                        }
-                        if (!dispensingItemsHaveValidQuantities()) {
-                            showToastMessage(getString(R.string.dispense_submit_validation_message_filled));
-                            return;
-                        }
-
-                        if (!dispensingItemsHaveNoErrors()) {
-                            showToastMessage(getString(R.string.dispense_submit_validation_message_errors));
-                            return;
-                        }
+                        if (hasInvalidField(of(INVALID_AMOUNT, EMPTY, HAS_ERROR))) return;
 
                         FragmentManager fm = getSupportFragmentManager();
                         DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
                         dialog.show(fm, "confirmDispensing");
                     }
-
                 }
         );
     }
-
 
     @Override
     protected int getSelectedCommoditiesAdapterId() {
@@ -91,49 +141,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
         }
     }
 
-    private boolean dispensingItemsHaveValidQuantities() {
-        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
-            @Override
-            public boolean apply(View view) {
-                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getText().toString().isEmpty();
-            }
-        });
-        return commoditiesWithoutAmount.isEmpty();
-    }
-
-    private boolean dispensingItemsHaveNoZeroQuantities() {
-        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
-            @Override
-            public boolean apply(View view) {
-                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextHasNumberLessThanEqualToZero(editTextQuantity);
-            }
-        });
-        return commoditiesWithoutAmount.isEmpty();
-    }
-
-    private boolean editTextHasNumberLessThanEqualToZero(EditText editTextQuantity) {
-        try {
-            return Integer.parseInt(editTextQuantity.getText().toString()) <= 0;
-        } catch (NumberFormatException ex) {
-            return false;
-        }
-
-    }
-
-    private boolean dispensingItemsHaveNoErrors() {
-        Collection<View> commoditiesWithoutAmount = filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
-            @Override
-            public boolean apply(View view) {
-                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                return editTextQuantity.getError() != null;
-            }
-        });
-        return commoditiesWithoutAmount.isEmpty();
-    }
-
-    protected Dispensing getDispensing() {
+    Dispensing getDispensing() {
         final Dispensing dispensing = new Dispensing();
         dispensing.setDispenseToFacility(checkboxCommoditySelected.isChecked());
         onEachSelectedCommodity(new SelectedCommodityHandler() {
@@ -146,13 +154,5 @@ public class DispenseActivity extends CommoditySelectableActivity {
         });
         Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
-    }
-
-    private List<View> wrap(ListView listView) {
-        List<View> result = newArrayList();
-        for (int i = 0; i < listView.getChildCount(); i++) {
-            result.add(listView.getChildAt(i));
-        }
-        return result;
     }
 }

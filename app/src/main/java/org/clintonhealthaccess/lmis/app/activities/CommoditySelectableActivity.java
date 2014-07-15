@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -26,8 +27,6 @@ import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.Lists.newArrayList;
-
-import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
     @Inject
@@ -45,16 +44,13 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(getLayoutId());
-
         setupCategories();
 
         selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(
                 this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
-
         listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
 
         afterCreate(savedInstanceState);
-
         EventBus.getDefault().register(this);
     }
 
