@@ -5,20 +5,20 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getRowFromListView;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -43,7 +43,7 @@ public class CommoditiesAdapterTest {
         String commodityName = "game";
         Commodity commodity = new Commodity(commodityName);
         commodities.add(new CommodityViewModel(commodity));
-        CommoditiesAdapter adapter = new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
+        CommoditiesAdapter adapter = new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
 
         TextView textViewCommodityName = (TextView) getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.textViewCommodityName);
         assertThat(textViewCommodityName.getText().toString(), is(commodityName));
@@ -62,7 +62,7 @@ public class CommoditiesAdapterTest {
 
     @Test
     public void shouldMarkCommoditiesWhoseStockIsZeroGivenCheckboxVisibilityStrategyIs_DO_HIDE() {
-        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.DO_HIDE);
+        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
         View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
 
         View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
@@ -74,7 +74,7 @@ public class CommoditiesAdapterTest {
 
     @Test
     public void shouldNotMarkCommoditiesWhoseStockIsZeroGivenCheckboxVisibilityStrategyIs_DO_NOTHING() {
-        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.DO_NOTHING);
+        CommoditiesAdapter adapter = makeAdapterWithOutOfStockCommodities(CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK);
         View listRow = getRowFromListView(adapter, R.layout.commodity_list_item);
 
         View checkBox = getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.checkboxCommoditySelected);
@@ -92,15 +92,15 @@ public class CommoditiesAdapterTest {
 
         commodities.add(new CommodityViewModel(new Commodity("other game")));
 
-        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities);
+        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
     }
 
-    private CommoditiesAdapter makeAdapterWithOutOfStockCommodities(CommoditiesAdapter.CheckBoxVisibilityStrategy checkBoxVisibilityStrategy) {
+    private CommoditiesAdapter makeAdapterWithOutOfStockCommodities(CommodityDisplayStrategy commodityDisplayStrategy) {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         CommodityViewModel commodity = mock(CommodityViewModel.class);
         when(commodity.stockIsFinished()).thenReturn(true);
         commodities.add(commodity);
 
-        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, checkBoxVisibilityStrategy);
+        return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, commodityDisplayStrategy);
     }
 }

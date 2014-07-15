@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 import com.google.inject.AbstractModule;
 
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;

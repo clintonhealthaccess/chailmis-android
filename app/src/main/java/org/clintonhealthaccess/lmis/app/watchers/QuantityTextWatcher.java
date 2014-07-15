@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import roboguice.RoboGuice;

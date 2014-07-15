@@ -12,8 +12,8 @@ import android.widget.ListView;
 import com.google.common.base.Predicate;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
@@ -28,6 +28,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.buttonSubmitDispense)
@@ -42,8 +43,8 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected boolean allowCheckboxVisibility() {
-        return false;
+    protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
+        return DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
     }
 
     @Override

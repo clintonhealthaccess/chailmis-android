@@ -4,48 +4,31 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.GridView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static android.widget.AdapterView.OnItemClickListener;
 
 public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
+    private CommodityDisplayStrategy commodityDisplayStrategy;
 
-    public static final CheckBoxVisibilityStrategy DO_HIDE = new CheckBoxVisibilityStrategy() {
-        @Override
-        public void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock) {
-            if (commodityViewModel.stockIsFinished()) {
-                checkboxCommoditySelected.setVisibility(View.INVISIBLE);
-                textViewCommodityOutOfStock.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-
-    public static final CheckBoxVisibilityStrategy DO_NOTHING = new CheckBoxVisibilityStrategy() {
-        @Override
-        public void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock) {
-            // do nothing;
-        }
-    };
-    private CheckBoxVisibilityStrategy checkBoxVisibilityStrategy;
-
-    public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
+    public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, CommodityDisplayStrategy commodityDisplayStrategy) {
         super(context, resource, commodities);
-        this.checkBoxVisibilityStrategy = DO_HIDE;
-        RoboGuice.getInjector(context).injectMembers(this);
-    }
-
-    public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, CheckBoxVisibilityStrategy checkBoxVisibilityStrategy) {
-        super(context, resource, commodities);
-        this.checkBoxVisibilityStrategy = checkBoxVisibilityStrategy;
+        this.commodityDisplayStrategy = commodityDisplayStrategy;
         RoboGuice.getInjector(context).injectMembers(this);
     }
 
@@ -61,12 +44,23 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
         TextView textViewCommodityOutOfStock = (TextView) rowView.findViewById(R.id.textViewCommodityOutOfStock);
 
-        checkBoxVisibilityStrategy.apply(commodityViewModel, checkboxCommoditySelected, textViewCommodityOutOfStock);
+        commodityDisplayStrategy.apply(commodityViewModel, checkboxCommoditySelected, textViewCommodityOutOfStock);
 
         return rowView;
     }
 
-    abstract public interface CheckBoxVisibilityStrategy {
-        void apply(CommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView textViewCommodityOutOfStock);
+    public void adaptGridViewCommodities(GridView gridViewCommodities, final CommodityDisplayStrategy commodityDisplayStrategy) {
+        gridViewCommodities.setAdapter(this);
+        gridViewCommodities.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                CommodityViewModel commodityViewModel = getItem(i);
+                if (commodityDisplayStrategy.allowClick(commodityViewModel)) {
+                    commodityViewModel.toggleSelected();
+                    EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel));
+                    notifyDataSetChanged();
+                }
+            }
+        });
     }
 }

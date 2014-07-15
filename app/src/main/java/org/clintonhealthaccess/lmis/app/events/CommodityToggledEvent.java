@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.app.events;
 
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 
 public class CommodityToggledEvent {
     private final CommodityViewModel commodity;

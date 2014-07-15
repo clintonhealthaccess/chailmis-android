@@ -9,8 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
@@ -18,16 +17,16 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
 import org.robolectric.shadows.ShadowDialog;
 
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -64,7 +63,7 @@ public class ItemSelectFragmentTest {
         commodityService.initialise();
 
         Category antiMalarialCategory = categoryService.all().get(0);
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>(), false);
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
         startFragment(itemSelectFragment);
     }
 
@@ -121,7 +120,7 @@ public class ItemSelectFragmentTest {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         Commodity firstCommodity = commodityService.all().get(0);
         commodities.add(new CommodityViewModel(firstCommodity));
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, false);
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
@@ -141,7 +140,7 @@ public class ItemSelectFragmentTest {
         ArrayList<CommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
         currentlySelectedCommodities.add(new CommodityViewModel(spyFirstCommodity));
 
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, true);
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK);
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();

@@ -3,10 +3,12 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.Bundle;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 
 import java.util.List;
+
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class OrderActivity extends CommoditySelectableActivity {
     // FIXME: id need change here
@@ -23,9 +25,13 @@ public class OrderActivity extends CommoditySelectableActivity {
         return R.layout.activity_order;
     }
 
-    @Override
     protected boolean allowCheckboxVisibility() {
         return true;
+    }
+
+    @Override
+    protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
+        return ALLOW_CLICK_WHEN_OUT_OF_STOCK;
     }
 
     @Override

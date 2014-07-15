@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
@@ -26,6 +26,8 @@ import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.Lists.newArrayList;
+
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
     @Inject
@@ -83,7 +85,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected int getLayoutId();
 
-    abstract protected boolean allowCheckboxVisibility();
+    abstract protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
@@ -111,7 +113,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,  allowCheckboxVisibility());
+                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities, getCheckBoxVisibilityStrategy());
                 dialog.show(fm, "selectCommodities");
             }
         });

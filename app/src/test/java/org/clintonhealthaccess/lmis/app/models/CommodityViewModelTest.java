@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.activities.viewModels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;
