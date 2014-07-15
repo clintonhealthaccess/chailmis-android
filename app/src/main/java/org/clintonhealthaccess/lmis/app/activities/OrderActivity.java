@@ -24,7 +24,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected boolean getCheckboxVisibilityFlag() {
+    protected boolean allowCheckboxVisibility() {
         return true;
     }
 

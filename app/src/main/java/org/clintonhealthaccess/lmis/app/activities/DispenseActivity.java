@@ -42,7 +42,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected boolean getCheckboxVisibilityFlag() {
+    protected boolean allowCheckboxVisibility() {
         return false;
     }
 

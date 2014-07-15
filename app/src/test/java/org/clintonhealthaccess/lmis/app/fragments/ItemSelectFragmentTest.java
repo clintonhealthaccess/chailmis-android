@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Spy;
 import org.robolectric.shadows.ShadowDialog;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
@@ -119,7 +121,27 @@ public class ItemSelectFragmentTest {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         Commodity firstCommodity = commodityService.all().get(0);
         commodities.add(new CommodityViewModel(firstCommodity));
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, true);
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, false);
+        startFragment(itemSelectFragment);
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
+        CommodityViewModel loadedCommodity = (CommodityViewModel)commoditiesLayout.getAdapter().getItem(0);
+        assertTrue(loadedCommodity.isSelected());
+    }
+
+    @Test
+    public void testThatCheckboxIsCheckedWhenOrderingCommoditiesWithZeroStock() throws Exception {
+        Category antiMalarials = categoryService.all().get(0);
+
+        Commodity firstCommodity = commodityService.all().get(0);
+        Commodity spyFirstCommodity = spy(firstCommodity);
+        when(spyFirstCommodity.stockIsFinished()).thenReturn(true);
+
+        ArrayList<CommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
+        currentlySelectedCommodities.add(new CommodityViewModel(spyFirstCommodity));
+
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, true);
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();

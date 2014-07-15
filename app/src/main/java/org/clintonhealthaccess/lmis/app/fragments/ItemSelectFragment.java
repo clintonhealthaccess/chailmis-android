@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -47,7 +46,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private HashMap<Category, CommoditiesAdapter> adapterHashMap;
     private ArrayList<CommodityViewModel> selectedCommodities;
     private Button buttonClose;
-    private Boolean strategy;
+    private Boolean allowCheckboxVisibility;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -59,7 +58,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<CommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
-            strategy = (Boolean) getArguments().getSerializable(STRATEGY);
+            allowCheckboxVisibility = (Boolean) getArguments().getSerializable(STRATEGY);
         }
     }
 
@@ -91,7 +90,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 }
             }
 
-            if (strategy) {
+            if (allowCheckboxVisibility) {
                 adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities, CommoditiesAdapter.DO_NOTHING));
             } else {
                 adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities));
@@ -134,7 +133,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 CommodityViewModel commodityViewModel = adapter.getItem(i);
-                if (!commodityViewModel.getCommodity().stockIsFinished()) {
+                if ( allowCheckboxVisibility || !commodityViewModel.stockIsFinished()) {
                     commodityViewModel.toggleSelected();
                     EventBus.getDefault().post(new CommodityToggledEvent(adapter.getItem(i)));
                     adapter.notifyDataSetChanged();

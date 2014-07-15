@@ -83,7 +83,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected int getLayoutId();
 
-    abstract protected boolean getCheckboxVisibilityFlag();
+    abstract protected boolean allowCheckboxVisibility();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
@@ -111,7 +111,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FragmentManager fm = getSupportFragmentManager();
-                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,  getCheckboxVisibilityFlag());
+                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,  allowCheckboxVisibility());
                 dialog.show(fm, "selectCommodities");
             }
         });

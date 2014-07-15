@@ -32,6 +32,6 @@ public class OrderActivityTest {
 
     @Test
     public void shouldReturnTrueForCheckboxVisibility() throws Exception {
-        assertTrue(orderActivity.getCheckboxVisibilityFlag());
+        assertTrue(orderActivity.allowCheckboxVisibility());
     }
 }
