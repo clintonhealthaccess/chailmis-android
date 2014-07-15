@@ -9,6 +9,7 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
@@ -45,6 +46,16 @@ public class UserService {
                 User user = new User(username, password);
                 dao.create(user);
                 return user;
+            }
+        });
+    }
+
+    public User getRegisteredUser() throws IndexOutOfBoundsException {
+        return dbUtil.withDao(User.class, new Operation<User, User>() {
+            @Override
+            public User operate(Dao<User, String> dao) throws SQLException {
+                List<User> users = dao.queryForAll();
+                return users.get(0);
             }
         });
     }

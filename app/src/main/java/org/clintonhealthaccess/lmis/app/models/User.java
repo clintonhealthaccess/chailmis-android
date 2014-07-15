@@ -1,5 +1,7 @@
 package org.clintonhealthaccess.lmis.app.models;
 
+import android.util.Base64;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -29,5 +31,28 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    public String encodeCredentialsForBasicAuthorization() {
+        final String userAndPassword = username + ":" + password;
+        final int flags = 0;
+        return "Basic " + Base64.encodeToString(userAndPassword.getBytes(), flags);
     }
 }

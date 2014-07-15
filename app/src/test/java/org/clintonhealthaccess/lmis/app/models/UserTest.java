@@ -51,4 +51,10 @@ public class UserTest {
         assertThat(newUserId, is(1));
         assertThat(userDao.countOf(), is(1l));
     }
+
+    @Test
+    public void shouldEncodeUsernameAndPasswordForBasicAuth() throws Exception {
+        User user = new User("username", "password");
+        assertThat(user.encodeCredentialsForBasicAuthorization(), is("Basic dXNlcm5hbWU6cGFzc3dvcmQ=\n"));
+    }
 }

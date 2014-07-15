@@ -18,10 +18,10 @@ android {
 
     productFlavors {
         development {
-            packageName 'org.clintonhealthaccess.lmis.app'
+            applicationId 'org.clintonhealthaccess.lmis.app'
         }
         production {
-            packageName 'org.clintonhealthaccess.lmis.app'
+            applicationId 'org.clintonhealthaccess.lmis.app'
         }
     }
 
@@ -85,7 +85,8 @@ dependencies {
             'org.apache.commons:commons-lang3:3.3.2',
             'com.google.code.gson:gson:2.2.4',
             'com.j256.ormlite:ormlite-android:4.48',
-            'com.android.support:appcompat-v7:19.1.+'
+            'com.android.support:appcompat-v7:19.1.+',
+            'de.greenrobot:eventbus:2.2.1',
+            'com.squareup.retrofit:retrofit:1.6.1'
     compile files('libs/GraphView-3.1.2.jar')
-    compile 'de.greenrobot:eventbus:2.2.1'
 }
