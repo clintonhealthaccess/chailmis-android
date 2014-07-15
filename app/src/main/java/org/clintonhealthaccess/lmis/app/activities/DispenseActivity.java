@@ -32,11 +32,11 @@ import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisp
 
 public class DispenseActivity extends CommoditySelectableActivity {
     private class QuantityValidator {
-        private final String toastMessage;
         private final Predicate<EditText> predicate;
+        private int toastMessageStringId;
 
         public QuantityValidator(int stringId, Predicate<EditText> predicate) {
-            toastMessage = getString(stringId);
+            toastMessageStringId = stringId;
             this.predicate = predicate;
         }
 
@@ -56,6 +56,10 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 result.add(listView.getChildAt(i));
             }
             return result;
+        }
+
+        public String toastMessage() {
+            return getString(toastMessageStringId);
         }
     }
 
@@ -88,7 +92,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
     private boolean hasInvalidField(List<QuantityValidator> validators) {
         for (final QuantityValidator validator : validators) {
             if (!validator.isValid()) {
-                showToastMessage(validator.toastMessage);
+                showToastMessage(validator.toastMessage());
                 return true;
             }
         }
