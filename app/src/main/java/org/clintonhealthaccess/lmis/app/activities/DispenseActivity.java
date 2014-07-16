@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,10 +15,12 @@ import com.google.common.base.Predicate;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -115,6 +118,12 @@ public class DispenseActivity extends CommoditySelectableActivity {
         return DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
     }
 
+    protected ArrayAdapter getArrayAdapter() {
+        return new SelectedCommoditiesAdapter(
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
+    }
+
+
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         buttonSubmitDispense.setOnClickListener(
@@ -133,7 +142,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     @Override
     protected int getSelectedCommoditiesAdapterId() {
-        return R.layout.commodity_list_item;
+        return R.layout.selected_commodity_list_item;
     }
 
     @Override

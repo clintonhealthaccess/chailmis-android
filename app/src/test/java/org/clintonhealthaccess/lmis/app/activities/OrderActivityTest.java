@@ -29,9 +29,4 @@ public class OrderActivityTest {
     public void testBuildActivity() throws Exception {
         assertThat(orderActivity, not(nullValue()));
     }
-
-    @Test
-    public void shouldReturnTrueForCheckboxVisibility() throws Exception {
-        assertTrue(orderActivity.allowCheckboxVisibility());
-    }
 }

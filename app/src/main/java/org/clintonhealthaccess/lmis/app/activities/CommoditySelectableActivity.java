@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -12,7 +13,6 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
@@ -35,8 +35,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     @InjectView(R.id.listViewSelectedCommodities)
     ListView listViewSelectedCommodities;
 
-    // FIXME: These methods should be private. Can we find a better way to test them?
-    SelectedCommoditiesAdapter selectedCommoditiesAdapter;
+    ArrayAdapter arrayAdapter;
     ArrayList<CommodityViewModel> selectedCommodities = newArrayList();
 
     @Override
@@ -46,9 +45,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         setContentView(getLayoutId());
         setupCategories();
 
-        selectedCommoditiesAdapter = new SelectedCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
-        listViewSelectedCommodities.setAdapter(selectedCommoditiesAdapter);
+        arrayAdapter = getArrayAdapter();
+        listViewSelectedCommodities.setAdapter(arrayAdapter);
 
         afterCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -58,12 +56,12 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         CommodityViewModel commodity = event.getCommodity();
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
-            selectedCommoditiesAdapter.remove(commodity);
+            arrayAdapter.remove(commodity);
         } else {
-            selectedCommoditiesAdapter.add(commodity);
+            arrayAdapter.add(commodity);
             selectedCommodities.add(commodity);
         }
-        selectedCommoditiesAdapter.notifyDataSetChanged();
+        arrayAdapter.notifyDataSetChanged();
         onCommoditySelectionChanged(selectedCommodities);
     }
 
@@ -82,6 +80,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     abstract protected int getLayoutId();
 
     abstract protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy();
+
+    abstract protected ArrayAdapter getArrayAdapter ();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 

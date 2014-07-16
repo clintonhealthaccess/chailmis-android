@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewCommodityName"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/editTextStartDate"
+        android:layout_width="150dp"
+        android:inputType="number"
+        android:layout_height="wrap_content"
+        android:onClick="showDateDialog"
+        android:layout_toLeftOf="@+id/editTextEndDate"
+        android:hint="@string/hint_start_date"
+        android:clickable="true" />
+
+    <EditText
+        android:id="@+id/editTextEndDate"
+        android:layout_width="150dp"
+        android:inputType="number"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/editTextOrderQuantity"
+        android:hint="@string/hint_end_date"
+        android:clickable="true" />
+
+    <EditText
+        android:id="@+id/editTextOrderQuantity"
+        android:layout_width="150dp"
+        android:inputType="number"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/imageButtonCancel"
+        android:hint="@string/hint_quantity"
+        android:clickable="true" />
+
+    <ImageButton
+        android:id="@+id/imageButtonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:layout_alignParentRight="true"
+        android:padding="2dp"
+        android:clickable="false" />
+
+</RelativeLayout>

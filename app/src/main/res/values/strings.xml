@@ -51,5 +51,8 @@
     <string name="dispense_to_facility_successful">Dispense to Facility Successful</string>
     <string name="dispense_to_successful">Dispense Successful</string>
     <string name="confirm_facility">Confirm Adjustment</string>
+    <string name="hint_end_date">end date</string>
+    <string name="hint_quantity">quantity</string>
+    <string name="hint_start_date">start date</string>
 
 </resources>

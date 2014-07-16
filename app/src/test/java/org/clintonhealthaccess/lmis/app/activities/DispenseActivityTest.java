@@ -114,7 +114,7 @@ public class DispenseActivityTest {
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
         CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
-        SelectedCommoditiesAdapter adapter = eventDetails.dispenseActivity.selectedCommoditiesAdapter;
+        SelectedCommoditiesAdapter adapter = (SelectedCommoditiesAdapter) eventDetails.dispenseActivity.arrayAdapter;
 
         ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_commodity_list_item, R.id.imageButtonCancel);
 

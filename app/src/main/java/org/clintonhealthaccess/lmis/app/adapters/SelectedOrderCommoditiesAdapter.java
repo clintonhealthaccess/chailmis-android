@@ -1,11 +1,12 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -13,37 +14,41 @@ import android.widget.TextView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
-import org.clintonhealthaccess.lmis.app.watchers.QuantityTextWatcher;
 
+import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class SelectedCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
+public class SelectedOrderCommoditiesAdapter  extends ArrayAdapter<CommodityViewModel> {
 
-    private int resource;
-
-    public SelectedCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
+    public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
         super(context, resource, commodities);
-        this.resource = resource;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(resource, parent, false);
+        View rowView = inflater.inflate(R.layout.selected_order_commodity_list_item, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
-        final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
 
         final CommodityViewModel commodityViewModel = getItem(position);
         textViewCommodityName.setText(commodityViewModel.getName());
 
-        TextWatcher watcher = new QuantityTextWatcher(editTextQuantity,commodityViewModel);
-        editTextQuantity.addTextChangedListener(watcher);
-        int quantity = commodityViewModel.getQuantityToDispense();
-        if(quantity > 0) editTextQuantity.setText(Integer.toString(quantity));
+        final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.editTextStartDate);
+        final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.editTextEndDate);
+
+        View.OnClickListener openDateDialog = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDateDialog(view);
+            }
+        };
+        textViewStartDate.setOnClickListener(openDateDialog);
+        textViewEndDate.setOnClickListener(openDateDialog);
+
         activateCancelButton(imageButtonCancel, commodityViewModel);
 
         return rowView;
@@ -56,6 +61,23 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<CommodityViewModel>
                 EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel));
             }
         });
+    }
+
+    private void showDateDialog (View view) {
+        final EditText editText = (EditText) view;
+        final Calendar calendar = Calendar.getInstance();
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                editText.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+            }
+        }, mYear, mMonth, mDay);
+
+        datePickerDialog.show();
     }
 
 }
