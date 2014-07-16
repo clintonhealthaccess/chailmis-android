@@ -24,6 +24,9 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false)
     private String name;
 
+    @DatabaseField(canBeNull = false)
+    private int orderDuration;
+
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
@@ -41,6 +44,10 @@ public class Commodity implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public int getOrderDuration() {
+        return orderDuration;
     }
 
     @Override

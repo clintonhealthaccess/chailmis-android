@@ -5,27 +5,33 @@
         "commodities": [
             {
                 "lmisId": "2",
-                "name": "Coartem"
+                "name": "Coartem",
+                "orderDuration": 30
             },
             {
                 "lmisId": "3",
-                "name": "Choloquine"
+                "name": "Choloquine",
+                "orderDuration": 90
             },
             {
                 "lmisId": "4",
-                "name": "Quinine"
+                "name": "Quinine",
+                "orderDuration": 180
             },
             {
                 "lmisId": "5",
-                "name": "Fansida"
+                "name": "Fansida",
+                "orderDuration": 360
             },
             {
                 "lmisId": "6",
-                "name": "Hedex"
+                "name": "Hedex",
+                "orderDuration": 60
             },
             {
                 "lmisId": "7",
-                "name": "Septrin"
+                "name": "Septrin",
+                "orderDuration": 60
             }
         ]
     },
@@ -35,7 +41,8 @@
         "commodities": [
             {
                 "lmisId": "9",
-                "name": "Condom"
+                "name": "Condom",
+                "orderDuration": 14
             }
         ]
     },
