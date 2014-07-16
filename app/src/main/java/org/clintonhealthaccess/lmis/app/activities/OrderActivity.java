@@ -3,10 +3,13 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,10 @@ import java.util.List;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class OrderActivity extends CommoditySelectableActivity {
+
+    @Inject
+    OrderService orderService;
+
     // FIXME: id need change here
     @Override
     protected int getSelectedCommoditiesAdapterId() {
@@ -30,8 +37,9 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected ArrayAdapter getArrayAdapter() {
+//        orderService.
         return new SelectedOrderCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>(), null);
     }
 
     @Override

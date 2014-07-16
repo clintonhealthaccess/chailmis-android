@@ -43,4 +43,12 @@ public class OrderReason {
         result = 31 * result + type.hashCode();
         return result;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getReason() {
+        return reason;
+    }
 }
