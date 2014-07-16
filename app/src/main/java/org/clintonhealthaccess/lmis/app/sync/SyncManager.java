@@ -34,19 +34,24 @@ public class SyncManager {
         Account[] accounts = accountManager.getAccounts();
         i("###### amount of accounts : ", valueOf(accounts.length));
         if (accounts.length > 0) {
-            Account account = accounts[0];
-            setIsSyncable(account, syncContentAuthority, 1);
-            setSyncAutomatically(account, syncContentAuthority, true);
-
-            Bundle extras = new Bundle();
-            extras.putBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false);
-            extras.putBoolean(SYNC_EXTRAS_EXPEDITED, false);
-            extras.putBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false);
-            extras.putBoolean(SYNC_EXTRAS_MANUAL, false);
-            addPeriodicSync(account, syncContentAuthority, extras, 60);
-
-            i("==> auto sync enabled to : ", account.name);
+            kickOffFor(accounts[0]);
         }
+    }
+
+    private void kickOffFor(Account account) {
+        setIsSyncable(account, syncContentAuthority, 1);
+        setSyncAutomatically(account, syncContentAuthority, true);
+        addPeriodicSync(account, syncContentAuthority, periodicSyncParams(), 60);
+        i("==> auto sync enabled to : ", account.name);
+    }
+
+    private Bundle periodicSyncParams() {
+        Bundle extras = new Bundle();
+        extras.putBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false);
+        extras.putBoolean(SYNC_EXTRAS_EXPEDITED, false);
+        extras.putBoolean(SYNC_EXTRAS_DO_NOT_RETRY, false);
+        extras.putBoolean(SYNC_EXTRAS_MANUAL, false);
+        return extras;
     }
 
     public void createSyncAccount(User user) {
