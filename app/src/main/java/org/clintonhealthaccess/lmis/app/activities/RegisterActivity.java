@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class RegisterActivity extends RoboActionBarActivity {
     @InjectResource(R.string.registration_successful_message)
     private String registrationSuccessfulMessage;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,16 @@ public class RegisterActivity extends RoboActionBarActivity {
         AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
             private LmisException failureCause;
 
+            private ProgressDialog dialog;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                this.dialog = new ProgressDialog(RegisterActivity.this);
+                this.dialog.setMessage("Registering");
+                this.dialog.show();
+            }
+
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
@@ -97,6 +109,9 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean succeeded) {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
                 if (succeeded) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finish();

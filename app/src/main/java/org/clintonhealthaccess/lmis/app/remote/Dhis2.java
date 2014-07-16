@@ -2,20 +2,23 @@ package org.clintonhealthaccess.lmis.app.remote;
 
 import android.content.Context;
 
-import com.google.common.io.CharStreams;
-import com.google.gson.Gson;
+import com.google.common.base.Function;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.CategoryCombo;
+import org.clintonhealthaccess.lmis.app.models.CategoryOptionCombos;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.DataElement;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.interceptors.AuthInterceptor;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +31,7 @@ import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Collections2.transform;
 import static org.apache.http.HttpStatus.SC_OK;
 
 public class Dhis2 implements LmisServer {
@@ -53,15 +56,29 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<Category> fetchCommodities() {
-        // FIXME: should fetch from DHIS2 and populate JSON
-        String defaultCommoditiesAsJson;
-        try {
-            InputStream src = context.getAssets().open("default_commodities.json");
-            defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
-        } catch (IOException e) {
-            throw new LmisException("Doesn't matter, we will change this anyway.", e);
+
+        RestAdapter restAdapter = makeRestAdapter(new User("tw_test", "Secret123"));
+        Dhis2Endpoint service = restAdapter.create(Dhis2Endpoint.class);
+        DataSet dataSet = service.getDataSet("wXidpxeF08C");
+        List<DataElement> elements = new ArrayList<>();
+        for (DataElement element : dataSet.getDataElements()) {
+            i("Element", element.getName());
+            element = service.getDataElement(element.getId());
+            element.setCategoryCombo(service.getCategoryCombo(element.getCategoryCombo().getId()));
+            elements.add(element);
         }
-        return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
+        Collection<Category> cats =
+                transform(elements, new Function<DataElement, Category>() {
+                    @Override
+                    public Category apply(DataElement element) {
+                        Category cat = new Category(element.getName());
+                        for (CategoryOptionCombos option : element.getCategoryCombo().getCategoryOptionCombos()) {
+                            cat.addCommodity(new Commodity(option.getId(), option.getName()));
+                        }
+                        return cat;
+                    }
+                });
+        return new ArrayList<>(cats);
     }
 
     @Override

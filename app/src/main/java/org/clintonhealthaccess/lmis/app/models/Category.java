@@ -7,6 +7,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -25,7 +26,7 @@ public class Category implements Serializable {
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<Commodity> commoditiesCollection;
 
-    private List<Commodity> commodities;
+    private List<Commodity> commodities = new ArrayList<>();
 
     public Category() {
         // ormlite likes it
@@ -65,5 +66,9 @@ public class Category implements Serializable {
     @Override
     public int hashCode() {
         return 31 * (name != null ? name.hashCode() : 0);
+    }
+
+    public void addCommodity(Commodity commodity) {
+        commodities.add(commodity);
     }
 }
