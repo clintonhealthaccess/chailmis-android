@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.ActionBar;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +42,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setContentView(getLayoutId());
         setupCategories();

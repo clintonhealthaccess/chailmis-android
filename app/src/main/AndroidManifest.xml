@@ -25,27 +25,33 @@
         <activity
             android:name=".activities.DispenseActivity"
             android:label="@string/title_activity_dispense"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.ReceiveActivity"
             android:label="@string/title_activity_receive"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.LossesActivity"
             android:label="@string/title_activity_losses"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.OrderActivity"
             android:label="@string/title_activity_order"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.MessagesActivity"
             android:label="@string/title_activity_messages"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.ReportsActivity"
             android:label="@string/title_activity_reports"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:parentActivityName=".activities.HomeActivity" />
 
         <service
             android:name="org.clintonhealthaccess.lmis.app.sync.AuthenticatorService">
