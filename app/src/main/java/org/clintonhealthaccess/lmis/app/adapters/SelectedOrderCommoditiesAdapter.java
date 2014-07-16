@@ -15,12 +15,13 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class SelectedOrderCommoditiesAdapter  extends ArrayAdapter<CommodityViewModel> {
+public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
         super(context, resource, commodities);
@@ -63,12 +64,20 @@ public class SelectedOrderCommoditiesAdapter  extends ArrayAdapter<CommodityView
         });
     }
 
-    private void showDateDialog (View view) {
+    private void showDateDialog(View view) {
         final EditText editText = (EditText) view;
-        final Calendar calendar = Calendar.getInstance();
-        int mYear = calendar.get(Calendar.YEAR);
-        int mMonth = calendar.get(Calendar.MONTH);
-        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        String date = editText.getText().toString();
+
+        if (date.isEmpty()) {
+            final Calendar calendar = Calendar.getInstance();
+            openDialog(editText, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        } else {
+            String[] dates = date.split("-");
+            openDialog(editText, Integer.parseInt(dates[2]), (Integer.parseInt(dates[1]) - 1), Integer.parseInt(dates[0]));
+        }
+    }
+
+    private void openDialog(final EditText editText, int mYear, int mMonth, int mDay) {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -79,5 +88,6 @@ public class SelectedOrderCommoditiesAdapter  extends ArrayAdapter<CommodityView
 
         datePickerDialog.show();
     }
+
 
 }
