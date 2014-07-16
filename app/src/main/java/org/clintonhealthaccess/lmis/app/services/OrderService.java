@@ -13,15 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 public class OrderService {
+    List<OrderReason> orderReasons;
     @Inject
     private UserService userService;
-
     @Inject
     private LmisServer lmisServer;
-
     @Inject
     private DbUtil dbUtil;
-
 
     public List<OrderReason> syncReasons() {
         final ArrayList<OrderReason> savedReasons = new ArrayList<>();
@@ -43,5 +41,17 @@ public class OrderService {
             }
         });
         return savedReasons;
+    }
+
+    public List<OrderReason> all() {
+        if (orderReasons == null) {
+            orderReasons = dbUtil.withDao(OrderReason.class, new DbUtil.Operation<OrderReason, List<OrderReason>>() {
+                @Override
+                public List<OrderReason> operate(Dao<OrderReason, String> dao) throws SQLException {
+                    return dao.queryForAll();
+                }
+            });
+        }
+        return orderReasons;
     }
 }

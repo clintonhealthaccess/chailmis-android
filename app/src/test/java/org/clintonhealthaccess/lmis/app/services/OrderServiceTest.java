@@ -24,6 +24,7 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -44,7 +45,12 @@ public class OrderServiceTest {
     private LmisSqliteOpenHelper openHelper;
     private AndroidConnectionSource connectionSource;
     private Dao<OrderReason, ?> reasonDao;
+
     private String responseBody = "{\"order_reasons\":[\"Emergency\",\"Routine\"],\"unexpected_quantity_reasons\":[\"High Demand\",\"Losses\"]}";
+    private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
+    private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
+    private OrderReason highDemand = new OrderReason("High Demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+    private OrderReason losses = new OrderReason("Losses", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
 
     @Before
     public void setUp() throws SQLException {
@@ -72,10 +78,7 @@ public class OrderServiceTest {
         queryParams.put("type", OrderReason.ORDER_REASONS_JSON_KEY);
         List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
 
-        OrderReason emergencyReason = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
-        OrderReason routineReason = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
-
-        assertThat(orderReasons, contains(emergencyReason, routineReason));
+        assertThat(orderReasons, contains(emergency, routine));
     }
 
     @Test
@@ -87,9 +90,6 @@ public class OrderServiceTest {
         HashMap<String, Object> queryParams = new HashMap<>();
         queryParams.put("type", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
         List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
-
-        OrderReason highDemand = new OrderReason("High Demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
-        OrderReason losses = new OrderReason("Losses", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
 
         assertThat(orderReasons, contains(highDemand, losses));
     }
@@ -103,6 +103,15 @@ public class OrderServiceTest {
         addPendingHttpResponse(200, responseBody);
         orderService.syncReasons();
         assertThat(reasonDao.countOf(), is(4L));
+    }
+
+    @Test
+    public void shouldProvideAllReasonsForOrders() {
+        addPendingHttpResponse(200, responseBody);
+        orderService.syncReasons();
+
+        List<OrderReason> reasons = orderService.all();
+        assertThat(reasons, containsInAnyOrder(emergency, routine, losses, highDemand));
     }
 
     @After
