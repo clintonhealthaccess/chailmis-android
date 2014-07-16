@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
@@ -64,7 +65,7 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<String> fetchOrderReasons(User user) {
+    public Map<String, List<String>> fetchOrderReasons(User user) {
         RestAdapter restAdapter = makeRestAdapter(user);
         Dhis2Endpoint service = restAdapter.create(Dhis2Endpoint.class);
         return service.getReasonsForOrder();

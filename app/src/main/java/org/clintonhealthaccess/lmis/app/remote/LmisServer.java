@@ -10,7 +10,7 @@ public interface LmisServer {
 
     List<Category> fetchCommodities();
 
-    List<String> fetchOrderReasons(User user);
+    java.util.Map<String, List<String>> fetchOrderReasons(User user);
 
 
 }

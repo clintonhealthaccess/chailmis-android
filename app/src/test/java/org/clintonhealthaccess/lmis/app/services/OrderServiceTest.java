@@ -16,12 +16,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -41,6 +44,7 @@ public class OrderServiceTest {
     private LmisSqliteOpenHelper openHelper;
     private AndroidConnectionSource connectionSource;
     private Dao<OrderReason, ?> reasonDao;
+    private String responseBody = "{\"order_reasons\":[\"Emergency\",\"Routine\"],\"unexpected_quantity_reasons\":[\"High Demand\",\"Losses\"]}";
 
     @Before
     public void setUp() throws SQLException {
@@ -60,19 +64,46 @@ public class OrderServiceTest {
 
     @Test
     public void shouldGetReasonsForOrderFromDHIS2AndSaveThem() throws Exception {
-        addPendingHttpResponse(200, "['reason 1','reason 2']");
+        addPendingHttpResponse(200, responseBody);
 
         orderService.syncReasons();
 
-        assertThat(reasonDao.countOf(), is(2L));
+        HashMap<String, Object> queryParams = new HashMap<>();
+        queryParams.put("type", OrderReason.ORDER_REASONS_JSON_KEY);
+        List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
 
-        addPendingHttpResponse(200, "['reason 1','reason 2']");
+        OrderReason emergencyReason = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
+        OrderReason routineReason = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
 
-        orderService.syncReasons();
-
-        assertThat(reasonDao.countOf(), is(2L));
+        assertThat(orderReasons, contains(emergencyReason, routineReason));
     }
 
+    @Test
+    public void shouldGetReasonsForUnexpectedOrderQuantitiesFromDHIS2AndSaveThem() throws Exception {
+        addPendingHttpResponse(200, responseBody);
+
+        orderService.syncReasons();
+
+        HashMap<String, Object> queryParams = new HashMap<>();
+        queryParams.put("type", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+        List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
+
+        OrderReason highDemand = new OrderReason("High Demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+        OrderReason losses = new OrderReason("Losses", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+
+        assertThat(orderReasons, contains(highDemand, losses));
+    }
+
+    @Test
+    public void shouldReplaceAllReasonsInDatabaseAfterFetch() throws Exception {
+        addPendingHttpResponse(200, responseBody);
+        orderService.syncReasons();
+        assertThat(reasonDao.countOf(), is(4L));
+
+        addPendingHttpResponse(200, responseBody);
+        orderService.syncReasons();
+        assertThat(reasonDao.countOf(), is(4L));
+    }
 
     @After
     public void tearDown() throws Exception {
