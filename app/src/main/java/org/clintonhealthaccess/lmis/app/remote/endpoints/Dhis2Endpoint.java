@@ -14,5 +14,7 @@ public interface Dhis2Endpoint {
 
     @GET("/api/users")
     Object getUsers() throws LmisException;
+
+    
 }
   
