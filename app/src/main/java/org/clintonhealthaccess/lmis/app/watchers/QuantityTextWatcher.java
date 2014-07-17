@@ -40,7 +40,6 @@ public class QuantityTextWatcher implements TextWatcher {
         if (!value.isEmpty()) {
             int quantity = Integer.parseInt(value);
             int stock_level = stockService.getStockLevelFor(commodityViewModel.getCommodity());
-            commodityViewModel.setQuantityToDispense(quantity);
             if (quantity > stock_level) {
                 editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
             }

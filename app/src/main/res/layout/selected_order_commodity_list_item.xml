@@ -54,7 +54,7 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </LinearLayout>
 

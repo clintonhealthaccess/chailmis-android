@@ -6,8 +6,9 @@ import java.io.Serializable;
 
 public class CommodityViewModel implements Serializable {
     private boolean selected;
-    private int quantityToDispense;
+    private int quantityEntered;
     private Commodity commodity;
+    private int quantityPopulated;
 
     public CommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
@@ -21,12 +22,12 @@ public class CommodityViewModel implements Serializable {
         selected = !selected;
     }
 
-    public int getQuantityToDispense() {
-        return quantityToDispense;
+    public int getQuantityEntered() {
+        return quantityEntered;
     }
 
-    public void setQuantityToDispense(int quantityToDispense) {
-        this.quantityToDispense = quantityToDispense;
+    public void setQuantityEntered(int quantityEntered) {
+        this.quantityEntered = quantityEntered;
     }
 
     public Commodity getCommodity() {
@@ -54,5 +55,17 @@ public class CommodityViewModel implements Serializable {
     @Override
     public int hashCode() {
         return commodity.hashCode();
+    }
+
+    public boolean quantityIsUnexpected(int quantityEntered) {
+        return (quantityEntered > 1.1 * this.quantityPopulated);
+    }
+
+    public int getQuantityPopulated() {
+        return quantityPopulated;
+    }
+
+    public void setQuantityPopulated(int quantityPopulated) {
+        this.quantityPopulated = quantityPopulated;
     }
 }

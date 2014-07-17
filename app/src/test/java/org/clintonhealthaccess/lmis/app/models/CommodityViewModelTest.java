@@ -15,4 +15,16 @@ public class CommodityViewModelTest {
         commodity.toggleSelected();
         assertTrue(commodity.isSelected());
     }
+
+    @Test
+    public void testQuantityIsUnexpected() throws Exception {
+
+        CommodityViewModel commodity = new CommodityViewModel(new Commodity("Some commodity"));
+        commodity.setQuantityPopulated(10);
+        assertFalse(commodity.quantityIsUnexpected(9));
+        assertFalse(commodity.quantityIsUnexpected(0));
+        assertTrue(commodity.quantityIsUnexpected(12));
+        assertTrue(commodity.quantityIsUnexpected(15));
+
+    }
 }

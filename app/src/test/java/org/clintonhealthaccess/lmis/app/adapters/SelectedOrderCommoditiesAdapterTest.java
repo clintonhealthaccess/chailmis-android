@@ -1,11 +1,13 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.app.Dialog;
+import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.events.OrderQuantityChangedEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
@@ -21,9 +23,11 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +76,33 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldPutOrderReasonsIntoOrderReasonsSpinnerAdapter() {
         Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
-        String reasonName = (String)spinner.getAdapter().getItem(0);
+        String reasonName = (String) spinner.getAdapter().getItem(0);
         assertThat(reasonName, is(emergency.getReason()));
+    }
+
+    @Test
+    public void shouldShowUnExpectedReasonsSpinnerIfDataIsUnexpected() throws Exception {
+
+
+        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        commodities.add(new CommodityViewModel(new Commodity("food")));
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+
+        Spinner spinnerUnexpectedQuantityReasons = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerUnexpectedQuantityReasons);
+
+        assertThat(spinnerUnexpectedQuantityReasons, is(notNullValue()));
+
+        CommodityViewModel mockViewModel = mock(CommodityViewModel.class);
+        when(mockViewModel.quantityIsUnexpected(anyInt())).thenReturn(true);
+        adapter.onEvent(new OrderQuantityChangedEvent(12, mockViewModel));
+
+        assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.VISIBLE));
+
+        CommodityViewModel otherMock = mock(CommodityViewModel.class);
+        when(otherMock.quantityIsUnexpected(anyInt())).thenReturn(false);
+        adapter.onEvent(new OrderQuantityChangedEvent(12, otherMock));
+
+        assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.INVISIBLE));
+
     }
 }
