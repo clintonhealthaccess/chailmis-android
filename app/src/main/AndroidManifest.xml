@@ -78,6 +78,7 @@
             android:name="org.clintonhealthaccess.lmis.app.sync.StubContentProvider"
             android:authorities="@string/sync_content_authority"
             android:syncable="true"/>
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="c314ce4bd4a176a66c8f54992b47d15ef325df77"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

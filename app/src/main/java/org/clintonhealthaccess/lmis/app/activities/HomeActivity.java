@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -72,6 +73,7 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
 
         if (!userService.userRegistered()) {
             startActivity(new Intent(getApplicationContext(), RegisterActivity.class));

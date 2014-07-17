@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 apply plugin: 'android-test'
 
 android {
@@ -89,4 +104,5 @@ dependencies {
             'de.greenrobot:eventbus:2.2.1',
             'com.squareup.retrofit:retrofit:1.6.1'
     compile files('libs/GraphView-3.1.2.jar')
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }
