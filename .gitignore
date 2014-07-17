@@ -6,3 +6,4 @@ build
 .DS_Store
 lmis_test_db.sqlite
 app/src/main/assets/crashlytics-build.properties
+*com_crashlytics_export_strings.xml
