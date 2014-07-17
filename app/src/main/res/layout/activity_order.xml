@@ -8,30 +8,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.clintonhealthaccess.lmis.app.activities.OrderActivity">
 
-    <LinearLayout
-        android:id="@+id/layoutCategories"
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:orientation="vertical"
-        android:paddingLeft="10dp">
+        android:id="@+id/scrollCategories"
+        android:layout_alignParentLeft="true">
 
-        <TextView
-            android:layout_width="fill_parent"
+        <LinearLayout
+            android:id="@+id/layoutCategories"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/gray_header"
-            android:padding="10dp"
-            android:text="@string/categories"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_header"
+                android:padding="10dp"
+                android:text="@string/categories"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
 
     <LinearLayout
         android:id="@+id/layoutSelectedItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/layoutCategories"
+        android:layout_toRightOf="@id/scrollCategories"
         android:orientation="vertical"
         android:paddingLeft="10dp">
 

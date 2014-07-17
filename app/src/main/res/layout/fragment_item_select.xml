@@ -2,10 +2,9 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minWidth="500dp"
+    android:minWidth="790dp"
     android:minHeight="300dp"
     android:layout_gravity="center_horizontal|top">
-
 
     <RelativeLayout
         android:orientation="horizontal"
@@ -33,11 +32,17 @@
         android:background="#eee"
         android:id="@+id/itemSelectOverlayBody">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/itemSelectOverlayCategories" />
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/itemSelectOverlayCategories" />
+        </ScrollView>
+
 
         <GridView xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/gridViewCommodities"

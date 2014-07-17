@@ -24,8 +24,7 @@
         android:textColor="@color/blue"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
-/>
+        android:visibility="gone" />
 
     <CheckBox
         android:id="@+id/checkboxCommoditySelected"
