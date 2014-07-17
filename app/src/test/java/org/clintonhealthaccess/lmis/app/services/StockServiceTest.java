@@ -15,14 +15,14 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
-import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
+import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class StockServiceTest {
-
     @Inject
     StockService stockService;
     @Inject
@@ -34,8 +34,8 @@ public class StockServiceTest {
     private Dao<StockItem, String> stockDao;
 
     @Before
-    public void setUp() throws SQLException {
-        setUpInjection(this);
+    public void setUp() throws Exception {
+        setUpInjectionWithMockLmisServer(application, this);
 
         dbUtil.withDao(Commodity.class, new DbUtil.Operation<Commodity, Void>() {
             @Override

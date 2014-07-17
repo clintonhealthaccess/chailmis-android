@@ -33,7 +33,6 @@ public class CommoditiesAdapterTest {
 
     @Before
     public void setUp() {
-
         setUpInjection(this);
     }
 

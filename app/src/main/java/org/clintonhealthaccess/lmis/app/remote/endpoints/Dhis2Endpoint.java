@@ -12,6 +12,7 @@ import retrofit.http.GET;
 import retrofit.http.Path;
 
 public interface Dhis2Endpoint {
+
     @GET("/api/systemSettings/reasons_for_order")
     Map<String, List<String>> getReasonsForOrder();
 

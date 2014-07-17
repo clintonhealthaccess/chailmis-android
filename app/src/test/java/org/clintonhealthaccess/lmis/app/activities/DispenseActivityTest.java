@@ -32,7 +32,7 @@ import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
-import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,7 +59,7 @@ public class DispenseActivityTest {
 
     @Before
     public void setUp() throws Exception {
-        setUpInjection(this);
+        setUpInjectionWithMockLmisServer(application, this);
         commodityService.initialise();
     }
 
