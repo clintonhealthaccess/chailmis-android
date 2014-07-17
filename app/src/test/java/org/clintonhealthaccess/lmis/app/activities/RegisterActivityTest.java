@@ -10,6 +10,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -40,6 +41,7 @@ public class RegisterActivityTest {
     private RegisterActivity registerActivity;
     private UserService mockUserService;
     private CommodityService mockCommodityService;
+    private OrderService mockOrderService;
     private StockService mockStockService;
 
     @Before
@@ -47,6 +49,7 @@ public class RegisterActivityTest {
         mockUserService = mock(UserService.class);
         mockCommodityService = mock(CommodityService.class);
         mockStockService = mock(StockService.class);
+        mockOrderService = mock(OrderService.class);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -54,6 +57,7 @@ public class RegisterActivityTest {
                 bind(UserService.class).toInstance(mockUserService);
                 bind(CommodityService.class).toInstance(mockCommodityService);
                 bind(StockService.class).toInstance(mockStockService);
+                bind(OrderService.class).toInstance(mockOrderService);
             }
         });
 
@@ -80,6 +84,12 @@ public class RegisterActivityTest {
     public void shouldCallInitialiseForCommoditiesOnSuccessfulRegistration() {
         performSuccessfulRegistration();
         verify(mockCommodityService, times(1)).initialise();
+    }
+
+    @Test
+    public void shouldInitialiseOrderReasonsOnSuccessfulRegistration() {
+        performSuccessfulRegistration();
+        verify(mockOrderService, times(1)).syncReasons();
     }
 
     private void performSuccessfulRegistration() {

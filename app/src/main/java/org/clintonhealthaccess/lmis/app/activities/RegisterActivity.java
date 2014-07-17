@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
@@ -35,6 +36,9 @@ public class RegisterActivity extends RoboActionBarActivity {
 
     @Inject
     private StockService stockService;
+
+    @Inject
+    private OrderService orderService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -87,6 +91,7 @@ public class RegisterActivity extends RoboActionBarActivity {
                     return false;
                 }
                 commodityService.initialise();
+                orderService.syncReasons();
                 return true;
             }
 
