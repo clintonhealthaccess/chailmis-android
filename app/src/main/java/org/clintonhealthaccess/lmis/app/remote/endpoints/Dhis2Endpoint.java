@@ -12,9 +12,7 @@ public interface Dhis2Endpoint {
     @GET("/api/systemSettings/reasons_for_order")
     Map<String,List<String>> getReasonsForOrder();
 
-    @GET("/api/users")
-    Object getUsers() throws LmisException;
-
-    
+    @GET("/api/dataSets") // login is valid once it can access data without exception
+    Object validateLogin() throws LmisException;
 }
   

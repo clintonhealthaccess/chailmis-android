@@ -48,7 +48,7 @@ public class Dhis2 implements LmisServer {
     public void validateLogin(User user) {
         RestAdapter restAdapter = makeRestAdapter(user);
         Dhis2Endpoint service = restAdapter.create(Dhis2Endpoint.class);
-        service.getUsers();
+        service.validateLogin();
     }
 
     @Override
