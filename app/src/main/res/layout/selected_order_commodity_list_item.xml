@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clickable="true"
+            android:focusableInTouchMode="true"
             android:hint="@string/hint_quantity"
             android:inputType="number" />
 
@@ -54,7 +55,7 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
     </LinearLayout>
 

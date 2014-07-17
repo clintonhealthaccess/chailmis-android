@@ -57,7 +57,7 @@ public class CommodityViewModel implements Serializable {
         return commodity.hashCode();
     }
 
-    public boolean quantityIsUnexpected(int quantityEntered) {
+    public boolean quantityIsUnexpected() {
         return (quantityEntered > 1.1 * this.quantityPopulated);
     }
 

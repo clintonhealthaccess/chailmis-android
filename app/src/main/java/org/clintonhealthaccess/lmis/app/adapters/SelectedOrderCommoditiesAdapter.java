@@ -34,11 +34,9 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-import static android.util.Log.i;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
-import static org.apache.commons.lang3.time.DateUtils.parseDate;
 import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
@@ -71,6 +69,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         orderItemViewModel.setQuantityPopulated(12);
         editTextOrderQuantity.setText(String.format("%d", orderItemViewModel.getQuantityEntered()));
         textViewCommodityName.setText(orderItemViewModel.getName());
+        if (orderItemViewModel.quantityIsUnexpected()) {
+            spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
+        } else {
+            spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
+        }
 
         setupDateControls(rowView);
 
@@ -79,7 +82,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         setupReasonsSpinner(OrderReason.UNEXPECTED_QUANTITY_JSON_KEY, spinnerUnexpectedQuantityReasons);
         setupReasonsSpinner(OrderReason.ORDER_REASONS_JSON_KEY, spinnerOrderReasons, rowView);
 
-        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderItemViewModel);
+        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(getContext(), orderItemViewModel);
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
 
         return rowView;
@@ -104,8 +107,10 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 doUpdateEndDate(spinnerOrderReasons, rowView);
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         setupReasonsSpinner(jsonKey, spinner);
@@ -131,7 +136,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         try {
             Date date = simpleDateFormat.parse(startDate);
             endDate = simpleDateFormat.format(addDays(date, addDays));
-        } catch (ParseException ignored) {}
+        } catch (ParseException ignored) {
+        }
         return endDate;
     }
 
@@ -176,7 +182,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         if (!date.isEmpty()) {
             try {
                 calendar = toCalendar(simpleDateFormat.parse(date));
-            } catch (ParseException ignored) {}
+            } catch (ParseException ignored) {
+            }
         }
         openDialog(editText, calendar);
     }
@@ -194,17 +201,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     public void onEvent(OrderQuantityChangedEvent event) {
-
-        i("Event", "quantity changed" + event.getQuantity());
-        boolean quantityIsUnexpected = event.getCommodityViewModel().quantityIsUnexpected(event.getQuantity());
-        i("Event", String.format("quantity is unexpected %s", quantityIsUnexpected));
-        if (quantityIsUnexpected) {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
-        } else {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
-        }
-
+        notifyDataSetChanged();
     }
+
     private String getDateString(int year, int monthOfYear, int dayOfMonth) {
         Calendar setCalender = Calendar.getInstance();
         setCalender.set(year, monthOfYear, dayOfMonth);

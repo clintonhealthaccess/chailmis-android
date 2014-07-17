@@ -21,10 +21,12 @@ public class CommodityViewModelTest {
 
         CommodityViewModel commodity = new CommodityViewModel(new Commodity("Some commodity"));
         commodity.setQuantityPopulated(10);
-        assertFalse(commodity.quantityIsUnexpected(9));
-        assertFalse(commodity.quantityIsUnexpected(0));
-        assertTrue(commodity.quantityIsUnexpected(12));
-        assertTrue(commodity.quantityIsUnexpected(15));
+        commodity.setQuantityEntered(9);
+        assertFalse(commodity.quantityIsUnexpected());
+        commodity.setQuantityEntered(12);
+        assertTrue(commodity.quantityIsUnexpected());
+        commodity.setQuantityEntered(15);
+        assertTrue(commodity.quantityIsUnexpected());
 
     }
 }
