@@ -13,6 +13,7 @@ import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -38,6 +39,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     private int list_item_layout = R.layout.selected_order_commodity_list_item;
     private List<OrderReason> orderReasons = new ArrayList<>();
     private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
+    private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);;
 
     @Before
     public void setUp() {
@@ -50,6 +52,7 @@ public class SelectedOrderCommoditiesAdapterTest {
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
         commodities.add(new CommodityViewModel(commodity));
 
+        orderReasons.add(routine);
         orderReasons.add(emergency);
 
         adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
@@ -76,8 +79,8 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldPutOrderReasonsIntoOrderReasonsSpinnerAdapter() {
         Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
-        String reasonName = (String) spinner.getAdapter().getItem(0);
-        assertThat(reasonName, is(emergency.getReason()));
+        String reasonName = (String)spinner.getAdapter().getItem(0);
+        assertThat(reasonName, is(routine.getReason()));
     }
 
     @Test
@@ -104,5 +107,17 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.INVISIBLE));
 
+    }
+
+    @Ignore("Failing to select item in spinner")
+    @Test
+     public void shouldSetEndDateGivenStartDateAndTheOrderReasonIsRoutine() throws Exception {
+        ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextStartDate)).setText("10-10-2013");
+        Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
+        ((Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons)).setSelection(0);
+
+        Robolectric.shadowOf(spinner).performItemClick(0);
+        String endDate = ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextEndDate)).getText().toString();
+        assertThat(endDate, is("31-01-2013"));
     }
 }

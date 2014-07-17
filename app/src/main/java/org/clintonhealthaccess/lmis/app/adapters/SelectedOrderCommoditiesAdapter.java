@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -23,9 +24,12 @@ import org.clintonhealthaccess.lmis.app.events.OrderQuantityChangedEvent;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.watchers.OrderQuantityTextWatcher;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -33,13 +37,19 @@ import de.greenrobot.event.EventBus;
 import static android.util.Log.i;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Collections2.transform;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
+import static org.apache.commons.lang3.time.DateUtils.parseDate;
+import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
+    public static final String DATE_FORMAT = "dd-MM-yyyy";
+    public static final String ROUTINE = "Routine";
     private List<OrderReason> reasons;
     private EditText editTextOrderQuantity;
     private Spinner spinnerOrderReasons;
     private Spinner spinnerUnexpectedQuantityReasons;
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
@@ -67,7 +77,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderItemViewModel);
 
         setupReasonsSpinner(OrderReason.UNEXPECTED_QUANTITY_JSON_KEY, spinnerUnexpectedQuantityReasons);
-        setupReasonsSpinner(OrderReason.ORDER_REASONS_JSON_KEY, spinnerOrderReasons);
+        setupReasonsSpinner(OrderReason.ORDER_REASONS_JSON_KEY, spinnerOrderReasons, rowView);
 
         TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderItemViewModel);
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
@@ -75,9 +85,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return rowView;
     }
 
-    private void setupReasonsSpinner(String unexpectedQuantityJsonKey, Spinner spinnerUnexpectedQuantityReasons1) {
-        List<OrderReason> orderReasons = filterReasonsWithType(reasons, unexpectedQuantityJsonKey);
-
+    private void setupReasonsSpinner(String jsonKey, Spinner spinner) {
+        List<OrderReason> orderReasons = filterReasonsWithType(reasons, jsonKey);
         List<String> strings = new ArrayList<>(transform(orderReasons, new Function<OrderReason, String>() {
             @Override
             public String apply(OrderReason reason) {
@@ -86,7 +95,44 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, strings);
-        spinnerUnexpectedQuantityReasons1.setAdapter(adapter);
+        spinner.setAdapter(adapter);
+    }
+
+    private void setupReasonsSpinner(String jsonKey, Spinner spinner, final View rowView) {
+        spinnerOrderReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                doUpdateEndDate(spinnerOrderReasons, rowView);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        setupReasonsSpinner(jsonKey, spinner);
+    }
+
+    private void doUpdateEndDate(Spinner spinner, View rowView) {
+        String item = spinner.getSelectedItem().toString();
+        if (item.equalsIgnoreCase(ROUTINE)) {
+            String startDate = ((TextView) rowView.findViewById(R.id.editTextStartDate)).getText().toString();
+            populateEndDate(rowView, startDate);
+        }
+    }
+
+    private void populateEndDate(View rowView, String startDate) {
+        if (!startDate.isEmpty()) {
+            TextView textViewEndDate = (TextView) rowView.findViewById(R.id.editTextEndDate);
+            textViewEndDate.setText(computeEndDate(startDate, 30));
+        }
+    }
+
+    private String computeEndDate(String startDate, int addDays) {
+        String endDate = null;
+        try {
+            Date date = simpleDateFormat.parse(startDate);
+            endDate = simpleDateFormat.format(addDays(date, addDays));
+        } catch (ParseException ignored) {}
+        return endDate;
     }
 
     private void setupDateControls(View rowView) {
@@ -125,24 +171,24 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     private void showDateDialog(View view) {
         final EditText editText = (EditText) view;
         String date = editText.getText().toString();
+        Calendar calendar = Calendar.getInstance();
 
-        if (date.isEmpty()) {
-            final Calendar calendar = Calendar.getInstance();
-            openDialog(editText, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        } else {
-            String[] dates = date.split("-");
-            openDialog(editText, Integer.parseInt(dates[2]), (Integer.parseInt(dates[1]) - 1), Integer.parseInt(dates[0]));
+        if (!date.isEmpty()) {
+            try {
+                calendar = toCalendar(simpleDateFormat.parse(date));
+            } catch (ParseException ignored) {}
         }
+        openDialog(editText, calendar);
     }
 
-    private void openDialog(final EditText editText, int mYear, int mMonth, int mDay) {
+    private void openDialog(final EditText editText, Calendar calendar) {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                editText.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                editText.setText(getDateString(year, monthOfYear, dayOfMonth));
             }
-        }, mYear, mMonth, mDay);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         datePickerDialog.show();
     }
@@ -159,5 +205,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
 
     }
-
+    private String getDateString(int year, int monthOfYear, int dayOfMonth) {
+        Calendar setCalender = Calendar.getInstance();
+        setCalender.set(year, monthOfYear, dayOfMonth);
+        return simpleDateFormat.format(setCalender.getTime());
+    }
 }
