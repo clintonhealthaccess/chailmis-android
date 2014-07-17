@@ -110,7 +110,7 @@ public class OrderServiceTest {
         addPendingHttpResponse(200, responseBody);
         orderService.syncReasons();
 
-        List<OrderReason> reasons = orderService.all();
+        List<OrderReason> reasons = orderService.allOrderReasons();
         assertThat(reasons, containsInAnyOrder(emergency, routine, losses, highDemand));
     }
 

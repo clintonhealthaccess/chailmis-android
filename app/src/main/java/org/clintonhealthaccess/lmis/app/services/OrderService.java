@@ -43,7 +43,7 @@ public class OrderService {
         return savedReasons;
     }
 
-    public List<OrderReason> all() {
+    public List<OrderReason> allOrderReasons() {
         if (orderReasons == null) {
             orderReasons = dbUtil.withDao(OrderReason.class, new DbUtil.Operation<OrderReason, List<OrderReason>>() {
                 @Override
