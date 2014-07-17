@@ -9,6 +9,7 @@ import com.google.inject.Module;
 
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ import roboguice.inject.RoboInjector;
 
 import static com.google.inject.util.Modules.override;
 import static java.util.Arrays.asList;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
@@ -46,7 +48,7 @@ public class TestInjectionUtil {
 
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase, Module anotherMockedModule) throws IOException {
         final LmisServer mockLmisServer = mock(LmisServer.class);
-        when(mockLmisServer.fetchCommodities()).thenReturn(defaultCategories(context));
+        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(context));
         Module mockedModule = new AbstractModule() {
             @Override
             protected void configure() {

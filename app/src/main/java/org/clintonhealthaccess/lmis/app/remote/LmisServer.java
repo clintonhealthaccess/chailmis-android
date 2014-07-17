@@ -8,7 +8,7 @@ import java.util.List;
 public interface LmisServer {
     void validateLogin(User user);
 
-    List<Category> fetchCommodities();
+    List<Category> fetchCommodities(User user);
 
     java.util.Map<String, List<String>> fetchOrderReasons(User user);
 }

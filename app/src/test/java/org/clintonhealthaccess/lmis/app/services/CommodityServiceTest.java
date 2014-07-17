@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
@@ -36,7 +38,7 @@ public class CommodityServiceTest {
     @Before
     public void setUp() throws Exception {
         final LmisServer mockLmisServer = mock(LmisServer.class);
-        when(mockLmisServer.fetchCommodities()).thenReturn(defaultCategories(application));
+        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -48,13 +50,13 @@ public class CommodityServiceTest {
 
     @Test
     public void testShouldLoadAllCommodityCategories() throws Exception {
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
         verifyAllCommodityCategories();
     }
 
     @Test
     public void shouldLoadAllCommodities() throws IOException {
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
         List<Commodity> expectedCommodities = getDefaultCommodities(application);
 
         List<Commodity> commodities = commodityService.all();
@@ -67,7 +69,7 @@ public class CommodityServiceTest {
 
     @Test
     public void testShouldPrepareDefaultCommodities() throws Exception {
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
         verifyAllCommodityCategories();
     }
 

@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -35,7 +36,7 @@ public class DispensingServiceTest {
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
     }
 
     @Test

@@ -12,6 +12,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -61,7 +62,7 @@ public class ItemSelectFragmentTest {
         });
         when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(10);
 
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
 
         Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory, new ArrayList<CommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK);

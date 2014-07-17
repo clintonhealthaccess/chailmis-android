@@ -17,6 +17,7 @@ import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.Matchers;
@@ -60,7 +61,7 @@ public class DispenseActivityTest {
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
     }
 
     @Test

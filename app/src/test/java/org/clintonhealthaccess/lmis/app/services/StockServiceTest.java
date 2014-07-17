@@ -7,6 +7,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -70,18 +71,17 @@ public class StockServiceTest {
         stockDao.delete(stockItem);
 
         assertThat(stockLevel, is(100));
-
     }
 
     @Test(expected = LmisException.class)
     public void shouldThrowExceptionWhenAskedForStockLevelForNonPersistedCommodity() {
-        Commodity inexistentCommodity = new Commodity("Some Inexistent Commodity");
-        stockService.getStockLevelFor(inexistentCommodity);
+        Commodity notExistCommodity = new Commodity("Some Non-exist Commodity");
+        stockService.getStockLevelFor(notExistCommodity);
     }
 
     @Test
     public void shouldCreateAStockItemRowForEachCommodityOnInitialise() throws SQLException {
-        commodityService.initialise();
+        commodityService.initialise(new User("test", "pass"));
 
         for (Commodity commodity : commodityService.all()) {
             assertThat(stockService.getStockLevelFor(commodity), greaterThanOrEqualTo(0));

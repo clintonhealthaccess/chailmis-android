@@ -13,6 +13,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -96,13 +97,14 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             @Override
             protected Boolean doInBackground(Void... params) {
+                User user;
                 try {
-                    userService.register(username, password);
+                    user = userService.register(username, password);
                 } catch (LmisException e) {
                     this.failureCause = e;
                     return false;
                 }
-                commodityService.initialise();
+                commodityService.initialise(user);
                 orderService.syncReasons();
                 return true;
             }

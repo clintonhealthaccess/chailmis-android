@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
@@ -25,8 +26,8 @@ public class CommodityService {
     @Inject
     private DbUtil dbUtil;
 
-    public void initialise() {
-        List<Category> allCommodities = lmisServer.fetchCommodities();
+    public void initialise(User user) {
+        List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
         categoryService.clearCache();
     }

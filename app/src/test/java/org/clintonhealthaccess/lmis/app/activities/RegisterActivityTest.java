@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -83,7 +84,7 @@ public class RegisterActivityTest {
     @Test
     public void shouldCallInitialiseForCommoditiesOnSuccessfulRegistration() {
         performSuccessfulRegistration();
-        verify(mockCommodityService, times(1)).initialise();
+        verify(mockCommodityService, times(1)).initialise((User) anyObject());
     }
 
     @Test

@@ -31,8 +31,8 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<Category> fetchCommodities() {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(new User("android_1", "Password1"));
+    public List<Category> fetchCommodities(User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
 
         DataSet dataSet = service.getDataSet("wXidpxeF08C");
         List<DataElement> elements = new ArrayList<>();
