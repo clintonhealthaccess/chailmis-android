@@ -1,0 +1,31 @@
+{"name": "Anelgesics", "created": "2014-07-09T16:50:11.583+0000", "lastUpdated": "2014-07-09T16:50:11.599+0000", "categories": [
+    {
+        "name": "Anelgesics",
+        "created": "2014-07-09T16:39:21.238+0000",
+        "lastUpdated": "2014-07-09T17:35:21.573+0000",
+        "href": "http://104.131.225.22:8888/dhis2/api/dimensions/dieijrH2cyl",
+        "id": "dieijrH2cyl"
+    }
+], "dimensionType": "disaggregation", "skipTotal": false, "access": {
+    "manage": true,
+    "externalize": false,
+    "write": true,
+    "read": true,
+    "update": true,
+    "delete": true
+}, "href": "http://104.131.225.22:8888/dhis2/api/categoryCombos/c4pX5PGlfRV", "id": "c4pX5PGlfRV", "categoryOptionCombos": [
+    {
+        "name": "(Paracetamol_Tablet_125g)",
+        "created": "2014-07-09T16:50:11.597+0000",
+        "lastUpdated": "2014-07-09T16:50:11.597+0000",
+        "href": "http://104.131.225.22:8888/dhis2/api/categoryOptionCombos/zHjomGPzUvl",
+        "id": "zHjomGPzUvl"
+    },
+    {
+        "name": "(Paracetamol_Drops_15ml)",
+        "created": "2014-07-09T16:50:11.593+0000",
+        "lastUpdated": "2014-07-09T16:50:11.593+0000",
+        "href": "http://104.131.225.22:8888/dhis2/api/categoryOptionCombos/eE74UyzYNBs",
+        "id": "eE74UyzYNBs"
+    }
+]}

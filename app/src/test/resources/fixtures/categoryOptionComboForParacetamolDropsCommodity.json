@@ -1,0 +1,22 @@
+{"name": "(Paracetamol_Drops_15ml)", "created": "2014-07-09T16:50:11.593+0000", "lastUpdated": "2014-07-09T16:50:11.593+0000", "categoryCombo": {
+    "name": "Anelgesics",
+    "created": "2014-07-09T16:50:11.583+0000",
+    "lastUpdated": "2014-07-09T16:50:11.599+0000",
+    "href": "http://104.131.225.22:8888/dhis2/api/categoryCombos/c4pX5PGlfRV",
+    "id": "c4pX5PGlfRV"
+}, "categoryOptions": [
+    {
+        "name": "Paracetamol_Drops_15ml",
+        "created": "2014-07-09T16:37:06.815+0000",
+        "lastUpdated": "2014-07-10T19:29:58.034+0000",
+        "href": "http://104.131.225.22:8888/dhis2/api/categoryOptions/qFdIKM28bdu",
+        "id": "qFdIKM28bdu"
+    }
+], "access": {
+    "manage": false,
+    "externalize": false,
+    "write": true,
+    "read": true,
+    "update": true,
+    "delete": true
+}, "href": "http://104.131.225.22:8888/dhis2/api/categoryOptionCombos/eE74UyzYNBs", "id": "eE74UyzYNBs"}

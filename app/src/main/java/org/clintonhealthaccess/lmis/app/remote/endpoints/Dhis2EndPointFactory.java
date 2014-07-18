@@ -27,6 +27,9 @@ public class Dhis2EndPointFactory {
     @InjectResource(R.string.message_network_error)
     private String messageNetworkError;
 
+    @InjectResource(R.string.dhis2_base_url)
+    private String dhis2BaseUrl;
+
     @Inject
     private Context context;
 
@@ -40,15 +43,18 @@ public class Dhis2EndPointFactory {
         return new RestAdapter.Builder()
                 .setRequestInterceptor(requestInterceptor)
                 .setErrorHandler(new Dhis2ErrorHandler())
-                .setEndpoint(context.getString(R.string.dhis2_base_url))
+                .setEndpoint(dhis2BaseUrl)
                 .setClient(new ApacheClient())
                 .build();
     }
 
-
     private class Dhis2ErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError cause) {
+            if(cause.getResponse() == null) {
+                return new LmisException(cause);
+            }
+
             e("Error DHIS2 reason", cause.getResponse().getReason());
             e("Error DHIS2 url", cause.getResponse().getUrl());
             for (Header header : cause.getResponse().getHeaders()) {
