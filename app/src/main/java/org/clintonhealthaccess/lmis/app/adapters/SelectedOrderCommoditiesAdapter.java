@@ -267,7 +267,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         CommodityViewModel commodityViewModel = event.getCommodityViewModel();
         if (commodityViewModel.quantityIsUnexpected()) {
             String commodityName = commodityViewModel.getName();
-            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityName);
+            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityViewModel.getQuantityPopulated(), commodityName);
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
         notifyDataSetChanged();
