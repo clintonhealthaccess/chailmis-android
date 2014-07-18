@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.watchers;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 
 import com.google.inject.Inject;
@@ -39,13 +40,14 @@ public class QuantityTextWatcher implements TextWatcher {
         String value = editable.toString();
         if (!value.isEmpty()) {
             int quantity = Integer.parseInt(value);
+            Log.i("Entered", String.format("%d", quantity));
+            Log.i("Entered", String.format("%s", value));
             int stock_level = stockService.getStockLevelFor(commodityViewModel.getCommodity());
             commodityViewModel.setQuantityEntered(quantity);
             if (quantity > stock_level) {
                 editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
             }
         } else {
-            commodityViewModel.setQuantityEntered(0);
         }
     }
 }

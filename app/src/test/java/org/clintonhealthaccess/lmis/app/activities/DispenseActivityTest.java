@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -20,6 +21,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -55,13 +57,21 @@ public class DispenseActivityTest {
     @Inject
     private CommodityService commodityService;
 
+    private StockService stockService;
+
     public static DispenseActivity getDispenseActivity() {
         return buildActivity(DispenseActivity.class).create().get();
     }
 
     @Before
     public void setUp() throws Exception {
-        setUpInjectionWithMockLmisServer(application, this);
+        stockService = mock(StockService.class);
+        setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(StockService.class).toInstance(stockService);
+            }
+        });
         commodityService.initialise(new User("test", "pass"));
     }
 
