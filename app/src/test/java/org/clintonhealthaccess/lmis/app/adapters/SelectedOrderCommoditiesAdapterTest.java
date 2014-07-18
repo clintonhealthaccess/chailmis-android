@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.app.Dialog;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -60,8 +61,8 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldShowDateDialogWhenStartDateTextFieldIsClicked() {
-        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextStartDate);
-        textViewStartDate.performClick();
+        EditText editTextStartDate = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextStartDate);
+        editTextStartDate.requestFocus();
 
         Dialog dateDialog = ShadowDialog.getLatestDialog();
         assertNotNull(dateDialog);
@@ -69,8 +70,8 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldShowDateDialogWhenEndDateEditTextIsClicked() throws Exception {
-        TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextEndDate);
-        textViewEndDate.performClick();
+        EditText editTextEndDate = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextEndDate);
+        editTextEndDate.requestFocus();
 
         Dialog dateDialog = ShadowDialog.getLatestDialog();
         assertNotNull(dateDialog);
