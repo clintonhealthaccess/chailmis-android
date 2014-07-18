@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.google.common.base.Predicate;
@@ -44,7 +45,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
         }
 
         private boolean isValid() {
-            return filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
+            return filter(wrap(gridViewSelectedCommodities), new Predicate<View>() {
                 @Override
                 public boolean apply(View view) {
                     EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
@@ -53,10 +54,10 @@ public class DispenseActivity extends CommoditySelectableActivity {
             }).isEmpty();
         }
 
-        private List<View> wrap(ListView listView) {
+        private List<View> wrap(GridView gridView) {
             List<View> result = newArrayList();
-            for (int i = 0; i < listView.getChildCount(); i++) {
-                result.add(listView.getChildAt(i));
+            for (int i = 0; i < gridView.getChildCount(); i++) {
+                result.add(gridView.getChildAt(i));
             }
             return result;
         }

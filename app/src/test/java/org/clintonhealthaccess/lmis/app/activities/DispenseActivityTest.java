@@ -4,9 +4,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -102,13 +102,13 @@ public class DispenseActivityTest {
     public void listViewShouldToggleCommodityWhenToggleEventIsTriggered() throws Exception {
         CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
-        CommodityViewModel commodityInList = (CommodityViewModel) eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getItem(0);
+        CommodityViewModel commodityInList = (CommodityViewModel) eventDetails.dispenseActivity.gridViewSelectedCommodities.getAdapter().getItem(0);
 
         assertThat(commodityInList, is(eventDetails.commodityViewModel()));
 
         refire(eventDetails.commodityToggledEvent);
 
-        assertThat(eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+        assertThat(eventDetails.dispenseActivity.gridViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 
     @Test
@@ -122,7 +122,7 @@ public class DispenseActivityTest {
         cancelButton.performClick();
 
         assertFalse(eventDetails.dispenseActivity.selectedCommodities.contains(eventDetails.commodityViewModel()));
-        assertThat(eventDetails.dispenseActivity.listViewSelectedCommodities.getAdapter().getCount(), is(0));
+        assertThat(eventDetails.dispenseActivity.gridViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 
     @Test
@@ -150,20 +150,6 @@ public class DispenseActivityTest {
         return new CommodityToggledEventDetails(dispenseActivity, commodityToggledEvent);
     }
 
-    private class CommodityToggledEventDetails {
-        public DispenseActivity dispenseActivity;
-        public CommodityToggledEvent commodityToggledEvent;
-
-        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
-            this.dispenseActivity = dispenseActivity;
-            this.commodityToggledEvent = commodityToggledEvent;
-        }
-
-        public CommodityViewModel commodityViewModel() {
-            return this.commodityToggledEvent.getCommodity();
-        }
-    }
-
     @Test
     public void shouldToggleSubmitButtonVisibility() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
@@ -177,7 +163,6 @@ public class DispenseActivityTest {
         assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), is(VISIBLE));
     }
 
-
     @Test
     public void getDispensingShouldGetItemsInTheListView() throws Exception {
         String commodityName = "food";
@@ -186,7 +171,7 @@ public class DispenseActivityTest {
 
         dispenseActivity.checkboxCommoditySelected.setChecked(true);
 
-        ListView mockListView = mock(ListView.class);
+        GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
@@ -197,11 +182,11 @@ public class DispenseActivityTest {
         Commodity commodity = new Commodity(commodityName);
         when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(commodity));
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
-        when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
+        when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
 
-        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
 
 
         Dispensing dispensing = dispenseActivity.getDispensing();
@@ -218,19 +203,19 @@ public class DispenseActivityTest {
 
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        ListView mockListView = mock(ListView.class);
+        GridView mockGridView = mock(GridView.class);
         SelectedCommoditiesAdapter mockCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
         mockEditText.setText("12");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
         when(mockCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
-        when(mockListView.getAdapter()).thenReturn(mockCommoditiesAdapter);
+        when(mockGridView.getAdapter()).thenReturn(mockCommoditiesAdapter);
 
-        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
 
@@ -243,7 +228,7 @@ public class DispenseActivityTest {
     public void testThatIfAnyOfTheDispensingItemsHaveErrorsAToastIsMade() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        ListView mockListView = mock(ListView.class);
+        GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
@@ -251,10 +236,10 @@ public class DispenseActivityTest {
         mockEditText.setError("error");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
 
-        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
 
@@ -265,16 +250,16 @@ public class DispenseActivityTest {
     public void testThatIfAllDispensingItemsHaveNoQuantitiesAToastIsMade() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        ListView mockListView = mock(ListView.class);
+        GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
 
-        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_filled)));
@@ -284,17 +269,17 @@ public class DispenseActivityTest {
     public void testThatIfAllDispensingItemsHaveZeroQuantitiesAToastIsMade() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        ListView mockListView = mock(ListView.class);
+        GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
 
         mockEditText.setText("0");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
 
-        dispenseActivity.listViewSelectedCommodities = mockListView;
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
@@ -318,5 +303,19 @@ public class DispenseActivityTest {
         assertFalse(dispensing.isDispenseToFacility());
 
 
+    }
+
+    private class CommodityToggledEventDetails {
+        public DispenseActivity dispenseActivity;
+        public CommodityToggledEvent commodityToggledEvent;
+
+        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
+            this.dispenseActivity = dispenseActivity;
+            this.commodityToggledEvent = commodityToggledEvent;
+        }
+
+        public CommodityViewModel commodityViewModel() {
+            return this.commodityToggledEvent.getCommodity();
+        }
     }
 }

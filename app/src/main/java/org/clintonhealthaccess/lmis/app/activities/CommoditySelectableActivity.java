@@ -1,14 +1,13 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.app.ActionBar;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -33,8 +32,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     @Inject
     private CategoryService categoryService;
 
-    @InjectView(R.id.listViewSelectedCommodities)
-    ListView listViewSelectedCommodities;
+    @InjectView(R.id.gridViewSelectedCommodities)
+    GridView gridViewSelectedCommodities;
 
     ArrayAdapter arrayAdapter;
     ArrayList<CommodityViewModel> selectedCommodities = newArrayList();
@@ -48,7 +47,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         setupCategories();
 
         arrayAdapter = getArrayAdapter();
-        listViewSelectedCommodities.setAdapter(arrayAdapter);
+        gridViewSelectedCommodities.setAdapter(arrayAdapter);
 
         afterCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -68,9 +67,9 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
-        for (int i = 0; i < listViewSelectedCommodities.getChildCount(); i++) {
-            View view = listViewSelectedCommodities.getChildAt(i);
-            CommodityViewModel commodityViewModel = (CommodityViewModel) listViewSelectedCommodities.getAdapter().getItem(i);
+        for (int i = 0; i < gridViewSelectedCommodities.getChildCount(); i++) {
+            View view = gridViewSelectedCommodities.getChildAt(i);
+            CommodityViewModel commodityViewModel = (CommodityViewModel) gridViewSelectedCommodities.getAdapter().getItem(i);
             handler.operate(view, commodityViewModel);
         }
     }
