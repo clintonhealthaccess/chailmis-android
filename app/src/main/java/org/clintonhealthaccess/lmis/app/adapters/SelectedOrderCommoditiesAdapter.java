@@ -64,10 +64,10 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
         spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
-
         final CommodityViewModel orderItemViewModel = getItem(position);
         orderItemViewModel.setQuantityPopulated(12);
         editTextOrderQuantity.setText(String.format("%d", orderItemViewModel.getQuantityEntered()));
+
         textViewCommodityName.setText(orderItemViewModel.getName());
         if (orderItemViewModel.quantityIsUnexpected()) {
             spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
@@ -82,7 +82,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         setupReasonsSpinner(OrderReason.UNEXPECTED_QUANTITY_JSON_KEY, spinnerUnexpectedQuantityReasons);
         setupReasonsSpinner(OrderReason.ORDER_REASONS_JSON_KEY, spinnerOrderReasons, rowView);
 
-        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(getContext(), orderItemViewModel);
+        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderItemViewModel);
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
 
         return rowView;
@@ -200,7 +200,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         datePickerDialog.show();
     }
 
-    public void onEvent(OrderQuantityChangedEvent event) {
+    public void onEventMainThread(OrderQuantityChangedEvent event) {
         notifyDataSetChanged();
     }
 

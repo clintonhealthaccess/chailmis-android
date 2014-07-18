@@ -98,13 +98,13 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         CommodityViewModel mockViewModel = mock(CommodityViewModel.class);
         when(mockViewModel.quantityIsUnexpected()).thenReturn(true);
-        adapter.onEvent(new OrderQuantityChangedEvent(12, mockViewModel));
+        adapter.onEventMainThread(new OrderQuantityChangedEvent(12, mockViewModel));
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.VISIBLE));
 
         CommodityViewModel otherMock = mock(CommodityViewModel.class);
         when(otherMock.quantityIsUnexpected()).thenReturn(false);
-        adapter.onEvent(new OrderQuantityChangedEvent(12, otherMock));
+        adapter.onEventMainThread(new OrderQuantityChangedEvent(12, otherMock));
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.INVISIBLE));
 
