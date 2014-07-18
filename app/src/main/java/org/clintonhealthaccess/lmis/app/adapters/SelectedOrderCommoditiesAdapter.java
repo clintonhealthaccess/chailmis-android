@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -201,6 +202,12 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     public void onEventMainThread(OrderQuantityChangedEvent event) {
+        CommodityViewModel commodityViewModel = event.getCommodityViewModel();
+        if (commodityViewModel.quantityIsUnexpected()) {
+            String commodityName = commodityViewModel.getName();
+            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityName);
+            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        }
         notifyDataSetChanged();
     }
 

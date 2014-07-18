@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="50dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_toLeftOf="@id/imageButtonCancel"
         android:orientation="horizontal">
 
@@ -13,6 +13,8 @@
             android:id="@+id/textViewCommodityName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:text="ajslkdkjladsjklaslkjdaklsd"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1" />
 
         <EditText
@@ -23,7 +25,8 @@
             android:clickable="true"
             android:hint="@string/hint_start_date"
             android:inputType="number"
-            android:onClick="showDateDialog" />
+            android:onClick="showDateDialog"
+            android:layout_gravity="center_vertical" />
 
         <EditText
             android:id="@+id/editTextEndDate"
@@ -32,7 +35,8 @@
             android:layout_weight="1"
             android:clickable="true"
             android:hint="@string/hint_end_date"
-            android:inputType="number" />
+            android:inputType="number"
+            android:layout_gravity="center_vertical" />
 
         <EditText
             android:id="@+id/editTextOrderQuantity"
@@ -42,19 +46,22 @@
             android:clickable="true"
             android:focusableInTouchMode="true"
             android:hint="@string/hint_quantity"
-            android:inputType="number" />
+            android:inputType="number"
+            android:layout_gravity="center_vertical" />
 
         <Spinner
             android:id="@+id/spinnerOrderReasons"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical" />
 
         <Spinner
             android:id="@+id/spinnerUnexpectedQuantityReasons"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:visibility="gone" />
 
     </LinearLayout>
