@@ -19,10 +19,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import roboguice.inject.InjectResource;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -71,6 +73,17 @@ public class Dhis2Test {
         assertThat(allCommodities.size(), equalTo(2));
         assertThat(allCommodities.get(0).getName(), equalTo("(Paracetamol_Tablet_125g)"));
         assertThat(allCommodities.get(1).getName(), equalTo("(Paracetamol_Drops_15ml)"));
+    }
+
+    @Test
+    public void testShouldFetchReasonsForOrder() throws Exception {
+        setUpSuccessHttpGetRequest("/api/systemSettings/reasons_for_order", "systemSettingForReasonsForOrder.json");
+
+        Map<String, List<String>> reasons = dhis2.fetchOrderReasons(new User("test", "pass"));
+
+        assertThat(reasons.size(), is(2));
+        assertThat(reasons.get("order_reasons"), contains("Emergency", "Routine"));
+        assertThat(reasons.get("unexpected_quantity_reasons"), contains("High Demand", "Losses", "Expirations", "Adjustments"));
     }
 
     private void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {
