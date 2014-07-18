@@ -55,8 +55,8 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
         private List<View> wrap(ListView listView) {
             List<View> result = newArrayList();
-            for (int i = 0; i < listView.getChildCount(); i++) {
-                result.add(listView.getChildAt(i));
+            for (int i = 0; i < listView.getAdapter().getCount(); i++) {
+                result.add(listView.getAdapter().getView(i, null, listView));
             }
             return result;
         }

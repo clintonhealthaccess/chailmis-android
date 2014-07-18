@@ -44,6 +44,8 @@ public class QuantityTextWatcher implements TextWatcher {
             if (quantity > stock_level) {
                 editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
             }
+        } else {
+            commodityViewModel.setQuantityEntered(0);
         }
     }
 }

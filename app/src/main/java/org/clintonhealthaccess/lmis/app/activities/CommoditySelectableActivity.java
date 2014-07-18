@@ -1,6 +1,5 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.app.ActionBar;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -68,8 +67,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
-        for (int i = 0; i < listViewSelectedCommodities.getChildCount(); i++) {
-            View view = listViewSelectedCommodities.getChildAt(i);
+        for (int i = 0; i < listViewSelectedCommodities.getAdapter().getCount(); i++) {
+            View view = listViewSelectedCommodities.getAdapter().getView(i, null, listViewSelectedCommodities);
             CommodityViewModel commodityViewModel = (CommodityViewModel) listViewSelectedCommodities.getAdapter().getItem(i);
             handler.operate(view, commodityViewModel);
         }
@@ -83,7 +82,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy();
 
-    abstract protected ArrayAdapter getArrayAdapter ();
+    abstract protected ArrayAdapter getArrayAdapter();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 

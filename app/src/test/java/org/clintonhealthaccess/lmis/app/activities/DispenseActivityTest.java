@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -196,9 +197,10 @@ public class DispenseActivityTest {
 
         Commodity commodity = new Commodity(commodityName);
         when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(commodity));
+        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
+        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
+
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockListView.getChildCount()).thenReturn(1);
         when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
@@ -249,10 +251,16 @@ public class DispenseActivityTest {
 
         mockEditText.setText("12");
         mockEditText.setError("error");
+        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
         when(mockListView.getChildCount()).thenReturn(1);
+
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
+        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
+
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
@@ -268,11 +276,16 @@ public class DispenseActivityTest {
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
-
+        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
         when(mockListView.getChildCount()).thenReturn(1);
+
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
+        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
+
 
         dispenseActivity.listViewSelectedCommodities = mockListView;
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
@@ -286,16 +299,24 @@ public class DispenseActivityTest {
 
         ListView mockListView = mock(ListView.class);
         View mockListItemView = mock(View.class);
+        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
         EditText mockEditText = new EditText(application);
 
         mockEditText.setText("0");
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockListView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockListView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
         when(mockListView.getChildCount()).thenReturn(1);
 
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
+        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
+
+
         dispenseActivity.listViewSelectedCommodities = mockListView;
+
         dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
     }
