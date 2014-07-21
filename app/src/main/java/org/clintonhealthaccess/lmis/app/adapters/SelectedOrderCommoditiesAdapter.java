@@ -5,7 +5,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,7 +43,7 @@ import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
-    public static final String DATE_FORMAT = "dd-MM-yy";
+    public static final String DATE_FORMAT = "dd MMMM yyyy";
     public static final String ROUTINE = "Routine";
     private List<OrderReason> reasons;
     private EditText editTextOrderQuantity;
@@ -91,7 +90,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return rowView;
     }
 
-    private TextWatcher getEditTextStartDateWatcher(final View rowView, final EditText editTextStartDate, final CommodityViewModel orderItemViewModel) {
+    private TextWatcher getEditTextStartDateWatcher(final View rowView, final TextView textViewStartDate, final CommodityViewModel orderItemViewModel) {
 
         return new TextWatcher() {
             @Override
@@ -106,14 +105,14 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             public void afterTextChanged(Editable s) {
                 doUpdateEndDate(spinnerOrderReasons, rowView, orderItemViewModel);
                 try {
-                    orderItemViewModel.setOrderPeriodStartDate(simpleDateFormat.parse(editTextStartDate.getText().toString()));
+                    orderItemViewModel.setOrderPeriodStartDate(simpleDateFormat.parse(textViewStartDate.getText().toString()));
                 } catch (ParseException ignored) {
                 }
             }
         };
     }
 
-    private TextWatcher getEditTextEndDateWatcher(final EditText editTextEndDate, final CommodityViewModel orderItemViewModel) {
+    private TextWatcher getEditTextEndDateWatcher(final TextView textViewEndDate, final CommodityViewModel orderItemViewModel) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -126,7 +125,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    orderItemViewModel.setOrderPeriodEndDate(simpleDateFormat.parse(editTextEndDate.getText().toString()));
+                    orderItemViewModel.setOrderPeriodEndDate(simpleDateFormat.parse(textViewEndDate.getText().toString()));
                 } catch (ParseException ignored) {
                 }
             }
@@ -164,11 +163,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
     private void doUpdateEndDate(Spinner spinner, View rowView, CommodityViewModel orderCommodityViewModel) {
         String item = spinner.getItemAtPosition(orderCommodityViewModel.getOrderReasonPosition()).toString();
-        EditText editTextEndDate = (EditText) rowView.findViewById(R.id.editTextEndDate);
+        TextView editTextEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         if (item.equalsIgnoreCase(ROUTINE)) {
-            String startDate = ((TextView) rowView.findViewById(R.id.editTextStartDate)).getText().toString();
-            populateEndDate(rowView, startDate, orderCommodityViewModel.getOrderDuration());
+            String startDate = ((TextView) rowView.findViewById(R.id.textViewStartDate)).getText().toString();
+            populateEndDate(rowView, startDate, 30);
             editTextEndDate.setEnabled(false);
         } else {
             editTextEndDate.setEnabled(true);
@@ -177,7 +176,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
     private void populateEndDate(View rowView, String startDate, Integer orderDuration) {
         if (!startDate.isEmpty()) {
-            EditText editTextEndDate = (EditText) rowView.findViewById(R.id.editTextEndDate);
+            TextView editTextEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
             editTextEndDate.setText(computeEndDate(startDate, orderDuration));
         }
     }
@@ -193,27 +192,26 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private void setupDateControls(View rowView, CommodityViewModel orderCommodityViewModel) {
-        final EditText editTextStartDate = (EditText) rowView.findViewById(R.id.editTextStartDate);
-        final EditText editTextEndDate = (EditText) rowView.findViewById(R.id.editTextEndDate);
+        final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+        final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         if (orderCommodityViewModel.getOrderPeriodStartDate() != null)
-            editTextStartDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodStartDate()));
+            textViewStartDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodStartDate()));
 
         if (orderCommodityViewModel.getOrderPeriodEndDate() != null)
-            editTextEndDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodEndDate()));
+            textViewEndDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodEndDate()));
 
-        editTextStartDate.addTextChangedListener(getEditTextStartDateWatcher(rowView, editTextStartDate, orderCommodityViewModel));
-        editTextEndDate.addTextChangedListener(getEditTextEndDateWatcher(editTextEndDate, orderCommodityViewModel));
-        editTextStartDate.setOnFocusChangeListener(getOpenDialogListener());
-        editTextEndDate.setOnFocusChangeListener(getOpenDialogListener());
+        textViewStartDate.addTextChangedListener(getEditTextStartDateWatcher(rowView, textViewStartDate, orderCommodityViewModel));
+        textViewEndDate.addTextChangedListener(getEditTextEndDateWatcher(textViewEndDate, orderCommodityViewModel));
+        textViewStartDate.setOnClickListener(getOpenDialogListener());
+        textViewEndDate.setOnClickListener(getOpenDialogListener());
     }
 
-    private View.OnFocusChangeListener getOpenDialogListener() {
-        return new View.OnFocusChangeListener() {
+    private View.OnClickListener getOpenDialogListener() {
+        return new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    showDateDialog(v);
+            public void onClick(View v) {
+                showDateDialog(v);
             }
         };
     }
@@ -238,8 +236,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private void showDateDialog(View view) {
-        final EditText editText = (EditText) view;
-        String date = editText.getText().toString();
+        final TextView textViewDate = (TextView) view;
+        String date = textViewDate.getText().toString();
         Calendar calendar = Calendar.getInstance();
 
         if (!date.isEmpty()) {
@@ -248,15 +246,14 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             } catch (ParseException ignored) {
             }
         }
-        openDialog(editText, calendar);
+        openDialog(textViewDate, calendar);
     }
 
-    private void openDialog(final EditText editText, Calendar calendar) {
-
+    private void openDialog(final TextView textViewDate, Calendar calendar) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                editText.setText(getDateString(year, monthOfYear, dayOfMonth));
+                textViewDate.setText(getDateString(year, monthOfYear, dayOfMonth));
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 

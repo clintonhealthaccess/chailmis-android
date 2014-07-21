@@ -61,8 +61,8 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldShowDateDialogWhenStartDateTextFieldIsClicked() {
-        EditText editTextStartDate = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextStartDate);
-        editTextStartDate.requestFocus();
+        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
+        textViewStartDate.performClick();
 
         Dialog dateDialog = ShadowDialog.getLatestDialog();
         assertNotNull(dateDialog);
@@ -70,8 +70,8 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldShowDateDialogWhenEndDateEditTextIsClicked() throws Exception {
-        EditText editTextEndDate = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextEndDate);
-        editTextEndDate.requestFocus();
+        TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate);
+        textViewEndDate.performClick();
 
         Dialog dateDialog = ShadowDialog.getLatestDialog();
         assertNotNull(dateDialog);
@@ -114,12 +114,12 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Ignore("Failing to select item in spinner")
     @Test
     public void shouldSetEndDateGivenStartDateAndTheOrderReasonIsRoutine() throws Exception {
-        ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextStartDate)).setText("10-10-2013");
+        ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate)).setText("10-10-2013");
         Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
         ((Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons)).setSelection(0);
 
         Robolectric.shadowOf(spinner).performItemClick(0);
-        String endDate = ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.editTextEndDate)).getText().toString();
+        String endDate = ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate)).getText().toString();
         assertThat(endDate, is("31-01-2013"));
     }
 }

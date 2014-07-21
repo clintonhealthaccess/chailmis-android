@@ -17,8 +17,8 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1" />
 
-        <EditText
-            android:id="@+id/editTextStartDate"
+        <TextView
+            android:id="@+id/textViewStartDate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,8 +28,8 @@
             android:onClick="showDateDialog"
             android:layout_gravity="center_vertical" />
 
-        <EditText
-            android:id="@+id/editTextEndDate"
+        <TextView
+            android:id="@+id/textViewEndDate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
