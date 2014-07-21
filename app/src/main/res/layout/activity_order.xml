@@ -9,9 +9,9 @@
     tools:context="org.clintonhealthaccess.lmis.app.activities.OrderActivity">
 
     <ScrollView
+        android:id="@+id/scrollCategories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollCategories"
         android:layout_alignParentLeft="true">
 
         <LinearLayout
@@ -51,12 +51,15 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ListView
-            android:id="@+id/listViewSelectedCommodities"
-            android:layout_width="wrap_content"
+        <GridView
+            android:id="@+id/gridViewSelectedCommodities"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/layoutCategories"
-            android:paddingLeft="10dp" />
+            android:gravity="center"
+            android:numColumns="1"
+            android:padding="7dp"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="7dp" />
     </LinearLayout>
 
 </RelativeLayout>

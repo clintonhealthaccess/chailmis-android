@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import com.google.common.base.Predicate;
 
@@ -34,38 +34,6 @@ import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class DispenseActivity extends CommoditySelectableActivity {
-    private class QuantityValidator {
-        private final Predicate<EditText> predicate;
-        private int toastMessageStringId;
-
-        public QuantityValidator(int stringId, Predicate<EditText> predicate) {
-            toastMessageStringId = stringId;
-            this.predicate = predicate;
-        }
-
-        private boolean isValid() {
-            return filter(wrap(listViewSelectedCommodities), new Predicate<View>() {
-                @Override
-                public boolean apply(View view) {
-                    EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                    return predicate.apply(editTextQuantity);
-                }
-            }).isEmpty();
-        }
-
-        private List<View> wrap(ListView listView) {
-            List<View> result = newArrayList();
-            for (int i = 0; i < listView.getAdapter().getCount(); i++) {
-                result.add(listView.getAdapter().getView(i, null, listView));
-            }
-            return result;
-        }
-
-        public String toastMessage() {
-            return getString(toastMessageStringId);
-        }
-    }
-
     private final QuantityValidator INVALID_AMOUNT = new QuantityValidator(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
@@ -77,20 +45,22 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
         }
     });
-
     private final QuantityValidator EMPTY = new QuantityValidator(R.string.dispense_submit_validation_message_filled, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
             return editTextQuantity.getText().toString().isEmpty();
         }
     });
-
     private final QuantityValidator HAS_ERROR = new QuantityValidator(R.string.dispense_submit_validation_message_errors, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
             return editTextQuantity.getError() != null;
         }
     });
+    @InjectView(R.id.buttonSubmitDispense)
+    Button buttonSubmitDispense;
+    @InjectView(R.id.checkboxDispenseToFacility)
+    CheckBox checkboxCommoditySelected;
 
     private boolean hasInvalidField(List<QuantityValidator> validators) {
         for (final QuantityValidator validator : validators) {
@@ -101,12 +71,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
         }
         return false;
     }
-
-    @InjectView(R.id.buttonSubmitDispense)
-    Button buttonSubmitDispense;
-
-    @InjectView(R.id.checkboxDispenseToFacility)
-    CheckBox checkboxCommoditySelected;
 
     @Override
     protected int getLayoutId() {
@@ -122,7 +86,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
         return new SelectedCommoditiesAdapter(
                 this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
     }
-
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
@@ -167,5 +130,37 @@ public class DispenseActivity extends CommoditySelectableActivity {
         });
         Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
+    }
+
+    private class QuantityValidator {
+        private final Predicate<EditText> predicate;
+        private int toastMessageStringId;
+
+        public QuantityValidator(int stringId, Predicate<EditText> predicate) {
+            toastMessageStringId = stringId;
+            this.predicate = predicate;
+        }
+
+        private boolean isValid() {
+            return filter(wrap(gridViewSelectedCommodities), new Predicate<View>() {
+                @Override
+                public boolean apply(View view) {
+                    EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
+                    return predicate.apply(editTextQuantity);
+                }
+            }).isEmpty();
+        }
+
+        private List<View> wrap(GridView gridView) {
+            List<View> result = newArrayList();
+            for (int i = 0; i < gridView.getChildCount(); i++) {
+                result.add(gridView.getChildAt(i));
+            }
+            return result;
+        }
+
+        public String toastMessage() {
+            return getString(toastMessageStringId);
+        }
     }
 }

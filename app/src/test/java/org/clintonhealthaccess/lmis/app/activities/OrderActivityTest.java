@@ -64,7 +64,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldPassOrderReasonsFromOrderServiceToAdapter() {
-        SelectedOrderCommoditiesAdapter adapter = (SelectedOrderCommoditiesAdapter) orderActivity.listViewSelectedCommodities.getAdapter();
+        SelectedOrderCommoditiesAdapter adapter = (SelectedOrderCommoditiesAdapter) orderActivity.gridViewSelectedCommodities.getAdapter();
 
         CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);

@@ -157,7 +157,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
                 return reason.getReason();
             }
         }));
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, strings);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, strings);
         spinner.setAdapter(adapter);
 
         if (orderReasonPosition != null) spinner.setSelection(orderReasonPosition);

@@ -6,8 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.inject.Inject;
 
@@ -29,14 +29,12 @@ import static android.view.View.OnClickListener;
 import static com.google.common.collect.Lists.newArrayList;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
-    @Inject
-    private CategoryService categoryService;
-
-    @InjectView(R.id.listViewSelectedCommodities)
-    ListView listViewSelectedCommodities;
-
+    @InjectView(R.id.gridViewSelectedCommodities)
+    GridView gridViewSelectedCommodities;
     ArrayAdapter arrayAdapter;
     ArrayList<CommodityViewModel> selectedCommodities = newArrayList();
+    @Inject
+    private CategoryService categoryService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         setupCategories();
 
         arrayAdapter = getArrayAdapter();
-        listViewSelectedCommodities.setAdapter(arrayAdapter);
+        gridViewSelectedCommodities.setAdapter(arrayAdapter);
 
         afterCreate(savedInstanceState);
         EventBus.getDefault().register(this);
@@ -67,9 +65,9 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
-        for (int i = 0; i < listViewSelectedCommodities.getAdapter().getCount(); i++) {
-            View view = listViewSelectedCommodities.getAdapter().getView(i, null, listViewSelectedCommodities);
-            CommodityViewModel commodityViewModel = (CommodityViewModel) listViewSelectedCommodities.getAdapter().getItem(i);
+        for (int i = 0; i < gridViewSelectedCommodities.getChildCount(); i++) {
+            View view = gridViewSelectedCommodities.getChildAt(i);
+            CommodityViewModel commodityViewModel = (CommodityViewModel) gridViewSelectedCommodities.getAdapter().getItem(i);
             handler.operate(view, commodityViewModel);
         }
     }

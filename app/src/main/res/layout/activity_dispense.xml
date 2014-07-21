@@ -75,12 +75,15 @@
                 android:visibility="invisible"
                 android:text="@string/submit" />
 
-            <ListView
-                android:id="@+id/listViewSelectedCommodities"
-                android:layout_width="wrap_content"
+            <GridView
+                android:id="@+id/gridViewSelectedCommodities"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/checkboxDispenseToFacility"
-                android:layout_above="@id/buttonSubmitDispense" />
+                android:gravity="center"
+                android:numColumns="1"
+                android:padding="7dp"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="7dp" />
 
         </RelativeLayout>
     </LinearLayout>
