@@ -1,7 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">0dp</dimen>
-    <dimen name="activity_vertical_margin">15dp</dimen>
+    <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="header_text_size">18sp</dimen>
     <dimen name="confirm_item_text_size">15sp</dimen>
     <dimen name="confirm_middle_right_margin">70dp</dimen>
