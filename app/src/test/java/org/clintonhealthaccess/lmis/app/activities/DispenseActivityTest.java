@@ -21,6 +21,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.Matchers;
@@ -32,6 +33,7 @@ import org.robolectric.shadows.ShadowToast;
 
 import de.greenrobot.event.EventBus;
 
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -58,6 +60,7 @@ public class DispenseActivityTest {
     private CommodityService commodityService;
 
     private StockService stockService;
+    private DispensingService dispenseService;
 
     public static DispenseActivity getDispenseActivity() {
         return buildActivity(DispenseActivity.class).create().get();
@@ -66,10 +69,12 @@ public class DispenseActivityTest {
     @Before
     public void setUp() throws Exception {
         stockService = mock(StockService.class);
+        dispenseService = mock(DispensingService.class);
         setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(StockService.class).toInstance(stockService);
+                bind(DispensingService.class).toInstance(dispenseService);
             }
         });
         commodityService.initialise(new User("test", "pass"));
@@ -145,7 +150,7 @@ public class DispenseActivityTest {
     @Test
     public void testThatDispenseToFacilityExists() throws Exception {
         DispenseActivity activity = getDispenseActivity();
-        assertThat(activity.checkboxCommoditySelected, is(notNullValue()));
+        assertThat(activity.checkboxDispenseToFacility, is(notNullValue()));
     }
 
     private void refire(CommodityToggledEvent commodityToggledEvent) {
@@ -180,7 +185,7 @@ public class DispenseActivityTest {
 
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        dispenseActivity.checkboxCommoditySelected.setChecked(true);
+        dispenseActivity.checkboxDispenseToFacility.setChecked(true);
 
         GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
@@ -346,5 +351,36 @@ public class DispenseActivityTest {
         public CommodityViewModel commodityViewModel() {
             return this.commodityToggledEvent.getCommodity();
         }
+    }
+
+    @Test
+    public void whenYouDispenseToAFacilityYouShouldNotSeeAPrescriptionId() throws Exception {
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
+
+        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionId).getVisibility(), is(INVISIBLE));
+        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionText).getVisibility(), is(INVISIBLE));
+    }
+
+    @Test
+    public void whenYouDispenseToaPatientYouShouldSeeAPrescriptionId() throws Exception {
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
+
+        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionId).getVisibility(), is(VISIBLE));
+        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionText).getVisibility(), is(VISIBLE));
+    }
+
+    @Test
+    public void prescriptionIdShouldBeShownOnTheDispenseActivity() throws Exception {
+        String resultExpected = "0003-Jul";
+        when(dispenseService.getNextPrescriptionId()).thenReturn(resultExpected);
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
+
+        assertThat(((TextView) dispenseActivity.findViewById(R.id.textViewPrescriptionId)).getText().toString(), is(resultExpected));
     }
 }

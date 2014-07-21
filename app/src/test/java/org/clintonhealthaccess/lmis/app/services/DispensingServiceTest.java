@@ -14,8 +14,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
@@ -72,5 +75,20 @@ public class DispensingServiceTest {
 
         stockLevel = stockService.getStockLevelFor(commodity);
         assertThat(stockLevel, is(9));
+    }
+
+    @Test
+    public void shouldGeneratePrescriptionIdForEachDispensingToPatient() throws Exception {
+        assertThat(dispensingService.getNextPrescriptionId(), is(notNullValue()));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
+        String currentMonth = simpleDateFormat.format(new Date());
+        assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0001-%s", currentMonth)));
+        for (int i = 0; i < 20; i++) {
+            Dispensing dispensing = new Dispensing();
+            dispensing.setDispenseToFacility(false);
+            dispensingService.addDispensing(dispensing);
+        }
+        assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0021-%s", currentMonth)));
+
     }
 }

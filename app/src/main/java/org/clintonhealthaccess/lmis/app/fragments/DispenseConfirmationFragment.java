@@ -20,8 +20,6 @@ import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 import roboguice.fragment.RoboDialogFragment;
 
-import static android.widget.Toast.LENGTH_SHORT;
-
 
 public class DispenseConfirmationFragment extends RoboDialogFragment {
 
@@ -112,7 +110,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
     }
 
     private void showToastMessage(String message) {
-        Toast.makeText(getActivity(), message, LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
     }
 
 }

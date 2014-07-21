@@ -7,10 +7,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.google.common.base.Predicate;
+import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
@@ -19,6 +22,7 @@ import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStra
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,19 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
+
 public class DispenseActivity extends CommoditySelectableActivity {
+    @InjectView(R.id.buttonSubmitDispense)
+    Button buttonSubmitDispense;
+    @InjectView(R.id.checkboxDispenseToFacility)
+    CheckBox checkboxDispenseToFacility;
+    @InjectView(R.id.textViewPrescriptionId)
+    TextView textViewPrescriptionId;
+    @InjectView(R.id.textViewPrescriptionText)
+    TextView textViewPrescriptionText;
+    @Inject
+    DispensingService dispensingService;
+
     private final QuantityValidator INVALID_AMOUNT = new QuantityValidator(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
@@ -57,10 +73,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
             return editTextQuantity.getError() != null;
         }
     });
-    @InjectView(R.id.buttonSubmitDispense)
-    Button buttonSubmitDispense;
-    @InjectView(R.id.checkboxDispenseToFacility)
-    CheckBox checkboxCommoditySelected;
 
     private boolean hasInvalidField(List<QuantityValidator> validators) {
         for (final QuantityValidator validator : validators) {
@@ -101,6 +113,21 @@ public class DispenseActivity extends CommoditySelectableActivity {
                     }
                 }
         );
+
+        checkboxDispenseToFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    textViewPrescriptionId.setVisibility(View.INVISIBLE);
+                    textViewPrescriptionText.setVisibility(View.INVISIBLE);
+                } else {
+                    textViewPrescriptionId.setVisibility(View.VISIBLE);
+                    textViewPrescriptionText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
     }
 
     @Override
@@ -119,7 +146,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     Dispensing getDispensing() {
         final Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(checkboxCommoditySelected.isChecked());
+        dispensing.setDispenseToFacility(checkboxDispenseToFacility.isChecked());
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
             public void operate(View view, CommodityViewModel commodityViewModel) {
