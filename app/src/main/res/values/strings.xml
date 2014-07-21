@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DHIS LMIS</string>
+    <string name="app_name">LMIS</string>
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
