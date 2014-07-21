@@ -19,6 +19,9 @@ public class Dispensing implements Serializable {
     @DatabaseField
     private boolean dispenseToFacility;
 
+    @DatabaseField
+    private String prescriptionId;
+
     @DatabaseField(dataType = DataType.DATE_LONG)
     private Date created;
 
@@ -41,5 +44,13 @@ public class Dispensing implements Serializable {
 
     public boolean isDispenseToFacility() {
         return dispenseToFacility;
+    }
+
+    public void setPrescriptionId(String prescriptionId) {
+        this.prescriptionId = prescriptionId;
+    }
+
+    public String getPrescriptionId() {
+        return prescriptionId;
     }
 }

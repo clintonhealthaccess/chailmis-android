@@ -383,4 +383,16 @@ public class DispenseActivityTest {
 
         assertThat(((TextView) dispenseActivity.findViewById(R.id.textViewPrescriptionId)).getText().toString(), is(resultExpected));
     }
+
+    @Test
+    public void getDispensingShouldHaveThePrescriptionId() throws Exception {
+        String resultExpected = "0003-Jul";
+        when(dispenseService.getNextPrescriptionId()).thenReturn(resultExpected);
+        DispenseActivity dispenseActivity = getDispenseActivity();
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
+        assertThat(dispenseActivity.getDispensing().getPrescriptionId(), is(resultExpected));
+
+        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
+        assertThat(dispenseActivity.getDispensing().getPrescriptionId(), is(Matchers.nullValue()));
+    }
 }

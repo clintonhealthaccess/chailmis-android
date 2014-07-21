@@ -146,7 +146,11 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     Dispensing getDispensing() {
         final Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(checkboxDispenseToFacility.isChecked());
+        boolean dispenseToFacility = checkboxDispenseToFacility.isChecked();
+        dispensing.setDispenseToFacility(dispenseToFacility);
+        if (!dispenseToFacility) {
+            dispensing.setPrescriptionId(textViewPrescriptionId.getText().toString());
+        }
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
             public void operate(View view, CommodityViewModel commodityViewModel) {
