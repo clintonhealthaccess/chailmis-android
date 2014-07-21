@@ -2,7 +2,6 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.app.Dialog;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,16 +19,22 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -40,7 +45,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     private List<OrderReason> orderReasons = new ArrayList<>();
     private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
     private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
-    ;
+    private CommodityViewModel commodityViewModel;
 
     @Before
     public void setUp() {
@@ -51,7 +56,10 @@ public class SelectedOrderCommoditiesAdapterTest {
         when(commodity.getStockItem()).thenReturn(new StockItem(commodity, 20));
 
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
-        commodities.add(new CommodityViewModel(commodity));
+        commodityViewModel = mock(CommodityViewModel.class);
+        when(commodityViewModel.getCommodity()).thenReturn(commodity);
+        when(commodityViewModel.getOrderReasonPosition()).thenReturn(0);
+        commodities.add(commodityViewModel);
 
         orderReasons.add(routine);
         orderReasons.add(emergency);
@@ -75,6 +83,53 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         Dialog dateDialog = ShadowDialog.getLatestDialog();
         assertNotNull(dateDialog);
+    }
+
+    @Test
+    public void endDateShouldAlwaysBeGreaterThanStartDateWhenEndDateChanges() throws Exception {
+        TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate);
+        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
+        adapter.spinnerOrderReasons = mock(Spinner.class);
+        when(adapter.spinnerOrderReasons.getItemAtPosition(anyInt())).thenReturn("Emergency");
+        Date startDate = new Date(2014, 1, 1);
+        Date endDate = new Date(2013, 1, 1);
+
+        SimpleDateFormat simpleDateFormat = SelectedOrderCommoditiesAdapter.simpleDateFormat;
+
+        TextView spiedEndDateTextView = spy(textViewEndDate);
+
+        adapter.textViewEndDate = spiedEndDateTextView;
+
+        textViewStartDate.setText(simpleDateFormat.format(startDate));
+
+        spiedEndDateTextView.setText(simpleDateFormat.format(endDate));
+
+        verify(spiedEndDateTextView).setError(Robolectric.application.getString(R.string.end_date_error));
+
+    }
+
+    @Test
+    public void endDateShouldAlwaysBeGreaterThanStartDateWhenStartDateChanges() throws Exception {
+        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
+        adapter.spinnerOrderReasons = mock(Spinner.class);
+        when(adapter.spinnerOrderReasons.getItemAtPosition(anyInt())).thenReturn("Emergency");
+        Date startDate = new Date(2014, 1, 1);
+        Date endDate = new Date(2013, 1, 1);
+
+        SimpleDateFormat simpleDateFormat = SelectedOrderCommoditiesAdapter.simpleDateFormat;
+
+        TextView spiedStartDateTextView = spy(textViewStartDate);
+
+        adapter.textViewStartDate = spiedStartDateTextView;
+
+        adapter.textViewEndDate.setText(simpleDateFormat.format(endDate));
+
+        assertFalse(adapter.textViewEndDate.getText().toString().isEmpty());
+
+        spiedStartDateTextView.setText(simpleDateFormat.format(startDate));
+
+        verify(spiedStartDateTextView).setError(Robolectric.application.getString(R.string.end_date_error));
+
     }
 
     @Test

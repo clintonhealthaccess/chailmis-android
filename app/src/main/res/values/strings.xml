@@ -55,5 +55,6 @@
     <string name="hint_quantity">Quantity</string>
     <string name="hint_start_date">Start Date</string>
     <string name="unexpected_order_quantity_error" formatted="false">Unexpected quantity (%d) entered  for %s. Please give a reason.</string>
+    <string name="end_date_error">End date should be after the start date.</string>
 
 </resources>

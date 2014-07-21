@@ -47,9 +47,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     public static final String ROUTINE = "Routine";
     private List<OrderReason> reasons;
     private EditText editTextOrderQuantity;
-    private Spinner spinnerOrderReasons;
-    private Spinner spinnerUnexpectedQuantityReasons;
-    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    protected Spinner spinnerOrderReasons;
+    protected Spinner spinnerUnexpectedQuantityReasons;
+    public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    protected TextView textViewStartDate;
+    protected TextView textViewEndDate;
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
@@ -90,7 +92,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return rowView;
     }
 
-    private TextWatcher getEditTextStartDateWatcher(final View rowView, final TextView textViewStartDate, final CommodityViewModel orderItemViewModel) {
+    protected TextWatcher getEditTextStartDateWatcher(final CommodityViewModel orderItemViewModel) {
 
         return new TextWatcher() {
             @Override
@@ -103,16 +105,23 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
             @Override
             public void afterTextChanged(Editable s) {
-                doUpdateEndDate(spinnerOrderReasons, rowView, orderItemViewModel);
+                doUpdateEndDate(spinnerOrderReasons, orderItemViewModel);
                 try {
-                    orderItemViewModel.setOrderPeriodStartDate(simpleDateFormat.parse(textViewStartDate.getText().toString()));
+                    String startDate = s.toString();
+                    orderItemViewModel.setOrderPeriodStartDate(simpleDateFormat.parse(startDate));
+
+                    String endDate = textViewEndDate.getText().toString();
+                    if (!endDate.isEmpty()) {
+                        if (simpleDateFormat.parse(endDate).before(simpleDateFormat.parse(startDate)))
+                            textViewStartDate.setError(getContext().getString(R.string.end_date_error));
+                    }
                 } catch (ParseException ignored) {
                 }
             }
         };
     }
 
-    private TextWatcher getEditTextEndDateWatcher(final TextView textViewEndDate, final CommodityViewModel orderItemViewModel) {
+    protected TextWatcher getEditTextEndDateWatcher(final CommodityViewModel orderItemViewModel) {
         return new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -125,7 +134,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    orderItemViewModel.setOrderPeriodEndDate(simpleDateFormat.parse(textViewEndDate.getText().toString()));
+                    String endDate = s.toString();
+                    orderItemViewModel.setOrderPeriodEndDate(simpleDateFormat.parse(endDate));
+
+                    String startDate = textViewStartDate.getText().toString();
+                    if (!startDate.isEmpty()) {
+                        if (simpleDateFormat.parse(endDate).before(simpleDateFormat.parse(startDate)))
+                            textViewEndDate.setError(getContext().getString(R.string.end_date_error));
+                    }
+
                 } catch (ParseException ignored) {
                 }
             }
@@ -151,7 +168,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 orderCommodityViewModel.setOrderReasonPosition(position);
-                doUpdateEndDate(spinnerOrderReasons, rowView, orderCommodityViewModel);
+                doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel);
             }
 
             @Override
@@ -161,23 +178,22 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         setupReasonsSpinner(jsonKey, spinner, orderCommodityViewModel.getOrderReasonPosition());
     }
 
-    private void doUpdateEndDate(Spinner spinner, View rowView, CommodityViewModel orderCommodityViewModel) {
-        String item = spinner.getItemAtPosition(orderCommodityViewModel.getOrderReasonPosition()).toString();
-        TextView editTextEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
-
+    private void doUpdateEndDate(Spinner spinner, CommodityViewModel orderCommodityViewModel) {
+        Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
+        String item = spinner.getItemAtPosition(orderReasonPosition).toString();
         if (item.equalsIgnoreCase(ROUTINE)) {
-            String startDate = ((TextView) rowView.findViewById(R.id.textViewStartDate)).getText().toString();
-            populateEndDate(rowView, startDate, 30);
-            editTextEndDate.setEnabled(false);
+            String startDate = textViewStartDate.getText().toString();
+            populateEndDate(startDate, 30);
+            textViewEndDate.setEnabled(false);
         } else {
-            editTextEndDate.setEnabled(true);
+            textViewEndDate.setEnabled(true);
         }
     }
 
-    private void populateEndDate(View rowView, String startDate, Integer orderDuration) {
+    private void populateEndDate(String startDate, Integer orderDuration) {
         if (!startDate.isEmpty()) {
-            TextView editTextEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
-            editTextEndDate.setText(computeEndDate(startDate, orderDuration));
+
+            textViewEndDate.setText(computeEndDate(startDate, orderDuration));
         }
     }
 
@@ -192,8 +208,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private void setupDateControls(View rowView, CommodityViewModel orderCommodityViewModel) {
-        final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
-        final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+        textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+        textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         if (orderCommodityViewModel.getOrderPeriodStartDate() != null)
             textViewStartDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodStartDate()));
@@ -201,8 +217,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         if (orderCommodityViewModel.getOrderPeriodEndDate() != null)
             textViewEndDate.setText(simpleDateFormat.format(orderCommodityViewModel.getOrderPeriodEndDate()));
 
-        textViewStartDate.addTextChangedListener(getEditTextStartDateWatcher(rowView, textViewStartDate, orderCommodityViewModel));
-        textViewEndDate.addTextChangedListener(getEditTextEndDateWatcher(textViewEndDate, orderCommodityViewModel));
+        textViewStartDate.addTextChangedListener(getEditTextStartDateWatcher(orderCommodityViewModel));
+        textViewEndDate.addTextChangedListener(getEditTextEndDateWatcher(orderCommodityViewModel));
         textViewStartDate.setOnClickListener(getOpenDialogListener());
         textViewEndDate.setOnClickListener(getOpenDialogListener());
     }
