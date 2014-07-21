@@ -74,8 +74,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         }
     }
 
-    abstract protected int getSelectedCommoditiesAdapterId();
-
     abstract protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities);
 
     abstract protected int getLayoutId();

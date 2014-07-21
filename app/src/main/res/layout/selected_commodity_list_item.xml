@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/card"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/textViewCommodityName"
         android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true" />
 
     <EditText
         android:id="@+id/editTextQuantity"
         android:layout_width="150dp"
-        android:inputType="number"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageButtonCancel" />
+        android:layout_toLeftOf="@+id/imageButtonCancel"
+        android:inputType="number"
+        android:textSize="14sp"/>
 
     <ImageButton
         android:id="@+id/imageButtonCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
         android:layout_alignParentRight="true"
         android:padding="2dp"
-        />
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 </RelativeLayout>

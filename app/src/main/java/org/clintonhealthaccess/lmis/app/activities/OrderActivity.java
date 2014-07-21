@@ -22,8 +22,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     OrderService orderService;
 
     // FIXME: id need change here
-    @Override
-    protected int getSelectedCommoditiesAdapterId() {
+    private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_order_commodity_list_item;
     }
 

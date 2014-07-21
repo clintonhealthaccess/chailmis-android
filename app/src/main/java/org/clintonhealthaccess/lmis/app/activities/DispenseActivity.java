@@ -130,8 +130,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
         textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
     }
 
-    @Override
-    protected int getSelectedCommoditiesAdapterId() {
+    private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_commodity_list_item;
     }
 
