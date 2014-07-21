@@ -56,6 +56,7 @@ public class RegisterActivity extends RoboActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(layout.activity_register);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
 
         Button registerButton = (Button) findViewById(id.buttonRegister);
         registerButton.setOnClickListener(new OnClickListener() {
