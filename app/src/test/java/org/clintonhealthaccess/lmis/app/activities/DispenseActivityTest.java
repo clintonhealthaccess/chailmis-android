@@ -85,8 +85,6 @@ public class DispenseActivityTest {
         DispenseActivity activity = getDispenseActivity();
         assertThat(activity, not(nullValue()));
         TextView textViewAppName = (TextView) activity.getActionBar().getCustomView().findViewById(R.id.textAppName);
-        assertThat(textViewAppName, is(notNullValue()));
-        assertThat(textViewAppName.getText().toString(), is(activity.getResources().getString(R.string.app_name)));
     }
 
     @Test
