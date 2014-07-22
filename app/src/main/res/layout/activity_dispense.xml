@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/submit"
                 android:visibility="invisible" />
 
@@ -103,6 +103,7 @@
                 android:id="@+id/gridViewSelectedCommodities"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_above="@id/buttonSubmitDispense"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:numColumns="1"
