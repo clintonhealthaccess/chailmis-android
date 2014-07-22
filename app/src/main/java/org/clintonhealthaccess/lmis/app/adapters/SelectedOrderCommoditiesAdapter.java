@@ -43,7 +43,7 @@ import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
-    public static final String DATE_FORMAT = "dd MMMM yyyy";
+    public static final String DATE_FORMAT = "dd-MMM-yy";
     public static final String ROUTINE = "Routine";
     private List<OrderReason> reasons;
     private EditText editTextOrderQuantity;
@@ -53,6 +53,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     protected TextView textViewStartDate;
     protected TextView textViewEndDate;
 
+    private View rowView;
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
         this.reasons = reasons;
@@ -63,7 +64,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View rowView = inflater.inflate(R.layout.selected_order_commodity_list_item, parent, false);
+        rowView = inflater.inflate(R.layout.selected_order_commodity_list_item, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
         spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
@@ -79,7 +80,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
         }
 
-        setupDateControls(rowView, orderCommodityViewModel);
+        setupDateControls(orderCommodityViewModel);
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         setupReasonsSpinner(OrderReason.UNEXPECTED_QUANTITY_JSON_KEY, spinnerUnexpectedQuantityReasons, orderCommodityViewModel.getOrderReasonPosition());
@@ -193,7 +194,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
     private void populateEndDate(String startDate, Integer orderDuration) {
         if (!startDate.isEmpty()) {
-
             textViewEndDate.setText(computeEndDate(startDate, orderDuration));
         }
     }
@@ -208,7 +208,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return endDate;
     }
 
-    private void setupDateControls(View rowView, CommodityViewModel orderCommodityViewModel) {
+    private void setupDateControls(CommodityViewModel orderCommodityViewModel) {
         textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
@@ -263,10 +263,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             } catch (ParseException ignored) {
             }
         }
-        openDialog(textViewDate, calendar);
+
+        Calendar calendarMinDate = Calendar.getInstance();
+        if(textViewDate.getId() == textViewEndDate.getId()){
+            calendarMinDate.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        openDialog(textViewDate, calendar, calendarMinDate);
     }
 
-    private void openDialog(final TextView textViewDate, Calendar calendar) {
+    private void openDialog(final TextView textViewDate, Calendar calendar, Calendar calendarMindate) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -274,6 +279,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
+        DatePicker datePicker = datePickerDialog.getDatePicker();
+
+        datePicker.setMinDate(calendarMindate.getTimeInMillis());
         datePickerDialog.show();
     }
 
