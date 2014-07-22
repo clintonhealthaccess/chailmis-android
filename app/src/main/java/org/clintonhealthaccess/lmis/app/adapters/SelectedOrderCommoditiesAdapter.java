@@ -54,6 +54,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     protected TextView textViewEndDate;
 
     private View rowView;
+
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
         this.reasons = reasons;
@@ -110,12 +111,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
                 try {
                     String startDate = s.toString();
                     orderItemViewModel.setOrderPeriodStartDate(simpleDateFormat.parse(startDate));
-
-                    String endDate = textViewEndDate.getText().toString();
-                    if (!endDate.isEmpty()) {
-                        if (simpleDateFormat.parse(endDate).before(simpleDateFormat.parse(startDate)))
-                            textViewStartDate.setError(getContext().getString(R.string.end_date_error));
-                    }
                 } catch (ParseException ignored) {
                 }
             }
@@ -137,13 +132,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
                 try {
                     String endDate = s.toString();
                     orderItemViewModel.setOrderPeriodEndDate(simpleDateFormat.parse(endDate));
-
-                    String startDate = textViewStartDate.getText().toString();
-                    if (!startDate.isEmpty()) {
-                        if (simpleDateFormat.parse(endDate).before(simpleDateFormat.parse(startDate)))
-                            textViewEndDate.setError(getContext().getString(R.string.end_date_error));
-                    }
-
                 } catch (ParseException ignored) {
                 }
             }
@@ -265,13 +253,50 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
 
         Calendar calendarMinDate = Calendar.getInstance();
-        if(textViewDate.getId() == textViewEndDate.getId()){
-            calendarMinDate.add(Calendar.DAY_OF_MONTH, 1);
+        Calendar calendarMaxDate = null;
+
+        if (textViewDate.getId() == textViewEndDate.getId()) {
+            calendarMinDate = getMinEndDate(calendarMinDate);
         }
-        openDialog(textViewDate, calendar, calendarMinDate);
+
+        if (textViewDate.getId() == textViewStartDate.getId()) {
+            calendarMaxDate = getMaxStartDate(calendarMaxDate);
+        }
+
+        openDialog(textViewDate, calendar, calendarMinDate, calendarMaxDate);
     }
 
-    private void openDialog(final TextView textViewDate, Calendar calendar, Calendar calendarMindate) {
+    private Calendar getMaxStartDate(Calendar calendarMaxDate) {
+        String endDateText = textViewEndDate.getText().toString();
+        if (!endDateText.isEmpty()) {
+            calendarMaxDate = Calendar.getInstance();
+            try {
+                calendarMaxDate.setTime(simpleDateFormat.parse(endDateText));
+                calendarMaxDate.add(Calendar.DAY_OF_MONTH, -1);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return calendarMaxDate;
+    }
+
+    private Calendar getMinEndDate(Calendar calendarMinDate) {
+        String startDateText = textViewStartDate.getText().toString();
+        if (!startDateText.isEmpty()) {
+            calendarMinDate = Calendar.getInstance();
+            try {
+                calendarMinDate.setTime(simpleDateFormat.parse(startDateText));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        calendarMinDate.add(Calendar.DAY_OF_MONTH, 1);
+        return calendarMinDate;
+    }
+
+    private void openDialog(final TextView textViewDate, Calendar calendar, Calendar calendarMindate, Calendar calendarMaxDate) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -280,7 +305,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         DatePicker datePicker = datePickerDialog.getDatePicker();
-
+        if (calendarMaxDate != null) {
+            datePicker.setMaxDate(calendarMaxDate.getTimeInMillis());
+        }
         datePicker.setMinDate(calendarMindate.getTimeInMillis());
         datePickerDialog.show();
     }

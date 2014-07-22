@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Spinner;
@@ -17,24 +18,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowDatePickerDialog;
 import org.robolectric.shadows.ShadowDialog;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -86,49 +84,53 @@ public class SelectedOrderCommoditiesAdapterTest {
     }
 
     @Test
-    public void endDateShouldAlwaysBeGreaterThanStartDateWhenEndDateChanges() throws Exception {
+    public void shouldNotBeAbleToSetTheEndDateEarlierThanStartDate() throws Exception {
         TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate);
-        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
-        adapter.spinnerOrderReasons = mock(Spinner.class);
-        when(adapter.spinnerOrderReasons.getItemAtPosition(anyInt())).thenReturn("Emergency");
-        Date startDate = new Date(2014, 1, 1);
-        Date endDate = new Date(2013, 1, 1);
 
-        SimpleDateFormat simpleDateFormat = SelectedOrderCommoditiesAdapter.simpleDateFormat;
+        Calendar calendarStartDate = Calendar.getInstance();
 
-        TextView spiedEndDateTextView = spy(textViewEndDate);
+        calendarStartDate.add(Calendar.DAY_OF_MONTH, 10);
 
-        adapter.textViewEndDate = spiedEndDateTextView;
+        adapter.textViewStartDate.setText(SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarStartDate.getTime()));
 
-        textViewStartDate.setText(simpleDateFormat.format(startDate));
+        textViewEndDate.performClick();
 
-        spiedEndDateTextView.setText(simpleDateFormat.format(endDate));
+        DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        verify(spiedEndDateTextView).setError(Robolectric.application.getString(R.string.end_date_error));
+        calendarStartDate.add(Calendar.DAY_OF_MONTH, 1);
 
+        Date minDate = new Date(dateDialog.getDatePicker().getMinDate());
+
+        String minEndDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(minDate);
+
+        String startDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarStartDate.getTime());
+
+        assertThat(minEndDateAsText, is(startDateAsText));
     }
 
     @Test
-    public void endDateShouldAlwaysBeGreaterThanStartDateWhenStartDateChanges() throws Exception {
+    public void shouldNotBeAbleToSetStartDateGreaterThanEndDate() throws Exception {
         TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
-        adapter.spinnerOrderReasons = mock(Spinner.class);
-        when(adapter.spinnerOrderReasons.getItemAtPosition(anyInt())).thenReturn("Emergency");
-        Date startDate = new Date(2014, 1, 1);
-        Date endDate = new Date(2013, 1, 1);
 
-        SimpleDateFormat simpleDateFormat = SelectedOrderCommoditiesAdapter.simpleDateFormat;
+        Calendar calendarEndDate = Calendar.getInstance();
 
-        TextView spiedStartDateTextView = spy(textViewStartDate);
+        calendarEndDate.add(Calendar.DAY_OF_MONTH, 10);
 
-        adapter.textViewStartDate = spiedStartDateTextView;
+        adapter.textViewEndDate.setText(SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarEndDate.getTime()));
 
-        adapter.textViewEndDate.setText(simpleDateFormat.format(endDate));
+        textViewStartDate.performClick();
 
-        assertFalse(adapter.textViewEndDate.getText().toString().isEmpty());
+        DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        spiedStartDateTextView.setText(simpleDateFormat.format(startDate));
+        calendarEndDate.add(Calendar.DAY_OF_MONTH, -1);
 
-        verify(spiedStartDateTextView).setError(Robolectric.application.getString(R.string.end_date_error));
+        Date maxDate = new Date(dateDialog.getDatePicker().getMaxDate());
+
+        String maxStartDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(maxDate);
+
+        String endDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarEndDate.getTime());
+
+        assertThat(maxStartDateAsText, is(endDateAsText));
 
     }
 
