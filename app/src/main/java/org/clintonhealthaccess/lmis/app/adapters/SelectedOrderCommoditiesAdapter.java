@@ -72,7 +72,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
 
         final CommodityViewModel orderCommodityViewModel = getItem(position);
-        orderCommodityViewModel.setQuantityPopulated(12);
+        orderCommodityViewModel.setExpectedOrderQuantity(12);
         editTextOrderQuantity.setText(String.format("%d", orderCommodityViewModel.getQuantityEntered()));
         textViewCommodityName.setText(orderCommodityViewModel.getName());
         if (orderCommodityViewModel.quantityIsUnexpected()) {
@@ -316,7 +316,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         CommodityViewModel commodityViewModel = event.getCommodityViewModel();
         if (commodityViewModel.quantityIsUnexpected()) {
             String commodityName = commodityViewModel.getName();
-            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityViewModel.getQuantityPopulated(), commodityName);
+            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityViewModel.getExpectedOrderQuantity(), commodityName);
             Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
         }
         notifyDataSetChanged();

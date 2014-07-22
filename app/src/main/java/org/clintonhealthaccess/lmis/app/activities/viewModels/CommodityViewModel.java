@@ -1,23 +1,26 @@
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.OrderReason;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 public class CommodityViewModel implements Serializable {
     private boolean selected;
     private int quantityEntered;
     private Commodity commodity;
-    private int quantityPopulated;
+    private int expectedOrderQuantity;
 
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
 
     public CommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
+    }
+
+    public CommodityViewModel(Commodity commodity, int quantityEntered) {
+        this(commodity);
+        this.quantityEntered = quantityEntered;
     }
 
     public boolean isSelected() {
@@ -68,15 +71,15 @@ public class CommodityViewModel implements Serializable {
     }
 
     public boolean quantityIsUnexpected() {
-        return (quantityEntered > 1.1 * this.quantityPopulated);
+        return (quantityEntered > 1.1 * this.expectedOrderQuantity);
     }
 
-    public int getQuantityPopulated() {
-        return quantityPopulated;
+    public int getExpectedOrderQuantity() {
+        return expectedOrderQuantity;
     }
 
-    public void setQuantityPopulated(int quantityPopulated) {
-        this.quantityPopulated = quantityPopulated;
+    public void setExpectedOrderQuantity(int expectedOrderQuantity) {
+        this.expectedOrderQuantity = expectedOrderQuantity;
     }
 
     public Date getOrderPeriodEndDate() {

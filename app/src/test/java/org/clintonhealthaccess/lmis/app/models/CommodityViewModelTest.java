@@ -20,7 +20,7 @@ public class CommodityViewModelTest {
     public void testQuantityIsUnexpected() throws Exception {
 
         CommodityViewModel commodity = new CommodityViewModel(new Commodity("Some commodity"));
-        commodity.setQuantityPopulated(10);
+        commodity.setExpectedOrderQuantity(10);
         commodity.setQuantityEntered(9);
         assertFalse(commodity.quantityIsUnexpected());
         commodity.setQuantityEntered(12);
