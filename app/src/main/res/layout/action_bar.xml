@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/imageDhis2logo"
-        android:layout_width="145dp"
-        android:src="@drawable/lmis_logo"
+        android:layout_width="160dp"
+        android:src="@drawable/lmis_logo_2"
         android:layout_height="match_parent"
         android:paddingLeft="10dp"
         android:adjustViewBounds="false" />
