@@ -40,7 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/scrollCategories"
         android:orientation="vertical"
-        android:paddingLeft="10dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
         <TextView
             android:layout_width="fill_parent"
@@ -54,6 +55,7 @@
         <GridView
             android:id="@+id/gridViewSelectedCommodities"
             android:layout_width="fill_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:numColumns="1"

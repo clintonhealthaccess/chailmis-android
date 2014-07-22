@@ -28,7 +28,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-
         </LinearLayout>
     </ScrollView>
 
@@ -78,8 +77,8 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:paddingTop="10dp">
 
 
             <CheckBox
@@ -104,7 +103,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/buttonSubmitDispense"
-                android:layout_marginTop="40dp"
+                android:layout_below="@id/checkboxDispenseToFacility"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:numColumns="1"
                 android:stretchMode="columnWidth"
