@@ -16,7 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -38,7 +37,6 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Collections2.transform;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
@@ -46,22 +44,16 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
     public static final String DATE_FORMAT = "dd-MMM-yy";
     public static final String ROUTINE = "Routine";
-    public static final int MIN_DIFFERENCE = 7;
-    private List<OrderReason> reasons;
-    private EditText editTextOrderQuantity;
-    protected Spinner spinnerOrderReasons;
-    protected Spinner spinnerUnexpectedQuantityReasons;
+    public static final int MIN_DIFFERENCE_BETWEEN_START_END = 7;
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
-    protected TextView textViewStartDate;
-    protected TextView textViewEndDate;
+    private List<OrderReason> unexpectedOrderReasons;
+    private List<OrderReason> orderReasons;
 
-    private View rowView;
-    private CommodityViewModel orderCommodityViewModel;
-    private TextView textViewCommodityName;
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
-        this.reasons = reasons;
+        unexpectedOrderReasons = filterReasonsWithType(reasons, OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+        orderReasons = filterReasonsWithType(reasons, OrderReason.ORDER_REASONS_JSON_KEY);
         EventBus.getDefault().register(this);
     }
 
@@ -69,46 +61,78 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        rowView = inflater.inflate(R.layout.selected_order_commodity_list_item, parent, false);
-        orderCommodityViewModel = getItem(position);
-        initialiseViews();
-        if (orderCommodityViewModel.quantityIsUnexpected()) {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
-        } else {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
-        }
-        setupDateControls();
-        activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel));
-        setupReasonsSpinner(OrderReason.UNEXPECTED_QUANTITY_JSON_KEY, spinnerUnexpectedQuantityReasons);
-        setupReasonsSpinner(OrderReason.ORDER_REASONS_JSON_KEY, spinnerOrderReasons, rowView);
+        View rowView = inflater.inflate(R.layout.selected_order_commodity_list_item, parent, false);
+        final CommodityViewModel orderCommodityViewModel = getItem(position);
+        //FIXME when order is pre-populated
+        orderCommodityViewModel.setExpectedOrderQuantity(12);
+
+        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
+        final Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
+        Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
+        final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+        final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+
+        editTextOrderQuantity.setText(String.format("%d", orderCommodityViewModel.getQuantityEntered()));
+
+        textViewCommodityName.setText(orderCommodityViewModel.getName());
+        setupUnexpectedReasonsSpinnerVisibility(orderCommodityViewModel, spinnerUnexpectedQuantityReasons);
+        initialiseDates(orderCommodityViewModel, textViewStartDate, textViewEndDate);
+
+        textViewStartDate.addTextChangedListener(getStartDateTextWatcher(orderCommodityViewModel, spinnerOrderReasons, textViewStartDate, textViewEndDate));
+        textViewEndDate.addTextChangedListener(getEditTextEndDateWatcher(orderCommodityViewModel));
+        setDateTextClickListeners(textViewStartDate, textViewEndDate);
+        activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
+        setupOrderReasonsSpinner(spinnerOrderReasons, textViewStartDate, orderCommodityViewModel, textViewEndDate);
+        setupUnexpectedReasonsSpinner(spinnerUnexpectedQuantityReasons, orderCommodityViewModel);
         TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel);
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
         return rowView;
     }
 
-    private void initialiseViews() {
-        textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-        spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
-        editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
-        //FIXME when order is pre-populated
-        orderCommodityViewModel.setExpectedOrderQuantity(12);
-        editTextOrderQuantity.setText(String.format("%d", orderCommodityViewModel.getQuantityEntered()));
-        textViewCommodityName.setText(orderCommodityViewModel.getName());
+    private void setDateTextClickListeners(TextView textViewStartDate, TextView textViewEndDate) {
+        View.OnClickListener onClickListener = getOnDateTextViewClickListener(textViewStartDate, textViewEndDate);
+        textViewStartDate.setOnClickListener(onClickListener);
+        textViewEndDate.setOnClickListener(onClickListener);
     }
 
-    protected TextWatcher getEditTextStartDateWatcher(final CommodityViewModel orderItemViewModel) {
+    private View.OnClickListener getOnDateTextViewClickListener(final TextView textViewStartDate, final TextView textViewEndDate) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateDialog(v, textViewEndDate, textViewStartDate);
+            }
+        };
+    }
+
+    private LmisTextWatcher getStartDateTextWatcher(final CommodityViewModel orderCommodityViewModel, final Spinner spinnerOrderReasons, final TextView textViewStartDate, final TextView textViewEndDate) {
         return new LmisTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                doUpdateEndDate(spinnerOrderReasons, orderItemViewModel);
+                doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel, textViewStartDate, textViewEndDate);
                 try {
                     String startDate = s.toString();
-                    orderItemViewModel.setOrderPeriodStartDate(SIMPLE_DATE_FORMAT.parse(startDate));
+                    orderCommodityViewModel.setOrderPeriodStartDate(SIMPLE_DATE_FORMAT.parse(startDate));
                 } catch (ParseException ignored) {
                 }
             }
         };
+    }
+
+    private void initialiseDates(CommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
+        if (orderCommodityViewModel.getOrderPeriodStartDate() != null)
+            textViewStartDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodStartDate()));
+
+        if (orderCommodityViewModel.getOrderPeriodEndDate() != null)
+            textViewEndDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodEndDate()));
+    }
+
+    private void setupUnexpectedReasonsSpinnerVisibility(CommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedQuantityReasons) {
+        if (orderCommodityViewModel.quantityIsUnexpected()) {
+            spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
+        } else {
+            spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
+        }
     }
 
     protected TextWatcher getEditTextEndDateWatcher(final CommodityViewModel orderItemViewModel) {
@@ -124,50 +148,61 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         };
     }
 
-    private void setupReasonsSpinner(String jsonKey, Spinner spinner) {
-        Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
-        List<OrderReason> orderReasons = filterReasonsWithType(reasons, jsonKey);
-        List<String> strings = new ArrayList<>(transform(orderReasons, new Function<OrderReason, String>() {
-            @Override
-            public String apply(OrderReason reason) {
-                return reason.getReason();
-            }
-        }));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, strings);
-        spinner.setAdapter(adapter);
-
-        if (orderReasonPosition != null) spinner.setSelection(orderReasonPosition);
-    }
-
-    private void setupReasonsSpinner(String jsonKey, Spinner spinner, final View rowView) {
-        spinnerOrderReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedQuantityReasons, final CommodityViewModel orderCommodityViewModel) {
+        spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                orderCommodityViewModel.setOrderReasonPosition(position);
-                doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel);
+
+                orderCommodityViewModel.setUnexpectedReasonPosition(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        setupReasonsSpinner(jsonKey, spinner);
+        Integer unexpectedReasonPosition = orderCommodityViewModel.getUnexpectedReasonPosition();
+        ArrayAdapter<OrderReason> adapter = new ReasonAdapter(getContext(), R.layout.spinner_item, unexpectedOrderReasons);
+        spinnerUnexpectedQuantityReasons.setAdapter(adapter);
+
+        if (unexpectedReasonPosition != null)
+            spinnerUnexpectedQuantityReasons.setSelection(unexpectedReasonPosition);
     }
 
-    private void doUpdateEndDate(Spinner spinner, CommodityViewModel orderCommodityViewModel) {
+    private void setupOrderReasonsSpinner(final Spinner spinnerOrderReasons, final TextView textViewStartDate, final CommodityViewModel orderCommodityViewModel, final TextView textViewEndDate) {
+        spinnerOrderReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                orderCommodityViewModel.setOrderReasonPosition(position);
+                doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel, textViewStartDate, textViewEndDate);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
+
+        ArrayAdapter<OrderReason> adapter = new ReasonAdapter(getContext(), R.layout.spinner_item, orderReasons);
+        spinnerOrderReasons.setAdapter(adapter);
+
+        if (orderReasonPosition != null) spinnerOrderReasons.setSelection(orderReasonPosition);
+
+    }
+
+    private void doUpdateEndDate(Spinner spinner, CommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
         Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
         String item = spinner.getItemAtPosition(orderReasonPosition).toString();
         if (item.equalsIgnoreCase(ROUTINE)) {
             String startDate = textViewStartDate.getText().toString();
-            populateEndDate(startDate, 30);
+            populateEndDate(startDate, 30, textViewEndDate);
             textViewEndDate.setEnabled(false);
         } else {
             textViewEndDate.setEnabled(true);
         }
     }
 
-    private void populateEndDate(String startDate, Integer orderDuration) {
+    private void populateEndDate(String startDate, Integer orderDuration, TextView textViewEndDate) {
         if (!startDate.isEmpty()) {
             textViewEndDate.setText(computeEndDate(startDate, orderDuration));
         }
@@ -183,31 +218,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return endDate;
     }
 
-    private void setupDateControls() {
-        textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
-        textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
-
-        if (orderCommodityViewModel.getOrderPeriodStartDate() != null)
-            textViewStartDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodStartDate()));
-
-        if (orderCommodityViewModel.getOrderPeriodEndDate() != null)
-            textViewEndDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodEndDate()));
-
-        textViewStartDate.addTextChangedListener(getEditTextStartDateWatcher(orderCommodityViewModel));
-        textViewEndDate.addTextChangedListener(getEditTextEndDateWatcher(orderCommodityViewModel));
-        textViewStartDate.setOnClickListener(getOpenDialogListener());
-        textViewEndDate.setOnClickListener(getOpenDialogListener());
-    }
-
-    private View.OnClickListener getOpenDialogListener() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDateDialog(v);
-            }
-        };
-    }
-
     private List<OrderReason> filterReasonsWithType(List<OrderReason> reasons, final String type) {
         Collection<OrderReason> reasonsCollection = filter(reasons, new Predicate<OrderReason>() {
             @Override
@@ -218,7 +228,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return new ArrayList<>(reasonsCollection);
     }
 
-    private void activateCancelButton(ImageButton imageButtonCancel) {
+    private void activateCancelButton(ImageButton imageButtonCancel, final CommodityViewModel orderCommodityViewModel) {
         imageButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,7 +237,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         });
     }
 
-    private void showDateDialog(View view) {
+    private void showDateDialog(View view, TextView textViewEndDate, TextView textViewStartDate) {
         final TextView textViewDate = (TextView) view;
         String date = textViewDate.getText().toString();
         Calendar calendar = Calendar.getInstance();
@@ -242,12 +252,12 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         Calendar calendarMinDate = Calendar.getInstance();
         Calendar calendarMaxDate = null;
 
-        if (textViewDate.getId() == textViewEndDate.getId()) {
-            calendarMinDate = getMinEndDate(calendarMinDate);
+        if (textViewDate.getId() == R.id.textViewEndDate) {
+            calendarMinDate = getMinEndDate(calendarMinDate, textViewStartDate);
         }
 
-        if (textViewDate.getId() == textViewStartDate.getId()) {
-            calendarMaxDate = getMaxStartDate(calendarMaxDate);
+        if (textViewDate.getId() == R.id.textViewStartDate) {
+            calendarMaxDate = getMaxStartDate(calendarMaxDate, textViewEndDate);
             setTimeFieldsOnMaxStartDate(calendarMinDate, calendarMaxDate);
         }
 
@@ -265,13 +275,13 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
     }
 
-    private Calendar getMaxStartDate(Calendar calendarMaxDate) {
+    private Calendar getMaxStartDate(Calendar calendarMaxDate, TextView textViewEndDate) {
         String endDateText = textViewEndDate.getText().toString();
         if (!endDateText.isEmpty()) {
             calendarMaxDate = Calendar.getInstance();
             try {
                 calendarMaxDate.setTime(SIMPLE_DATE_FORMAT.parse(endDateText));
-                calendarMaxDate.add(Calendar.DAY_OF_MONTH, -MIN_DIFFERENCE);
+                calendarMaxDate.add(Calendar.DAY_OF_MONTH, -MIN_DIFFERENCE_BETWEEN_START_END);
                 return calendarMaxDate;
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -280,7 +290,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         return null;
     }
 
-    private Calendar getMinEndDate(Calendar calendarMinDate) {
+    private Calendar getMinEndDate(Calendar calendarMinDate, TextView textViewStartDate) {
         String startDateText = textViewStartDate.getText().toString();
         if (!startDateText.isEmpty()) {
             calendarMinDate = Calendar.getInstance();
@@ -292,7 +302,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             }
         }
 
-        calendarMinDate.add(Calendar.DAY_OF_MONTH, MIN_DIFFERENCE);
+        calendarMinDate.add(Calendar.DAY_OF_MONTH, MIN_DIFFERENCE_BETWEEN_START_END);
         return calendarMinDate;
     }
 

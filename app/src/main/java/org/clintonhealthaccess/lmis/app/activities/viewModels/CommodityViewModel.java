@@ -13,6 +13,7 @@ public class CommodityViewModel implements Serializable {
 
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
+    private int unexpectedReasonPosition;
 
     public CommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
@@ -104,5 +105,13 @@ public class CommodityViewModel implements Serializable {
 
     public void setOrderReasonPosition(Integer orderReasonPosition) {
         this.orderReasonPosition = orderReasonPosition;
+    }
+
+    public void setUnexpectedReasonPosition(int unexpectedReasonPosition) {
+        this.unexpectedReasonPosition = unexpectedReasonPosition;
+    }
+
+    public int getUnexpectedReasonPosition() {
+        return unexpectedReasonPosition;
     }
 }

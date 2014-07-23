@@ -77,7 +77,7 @@ public class OrderActivityTest {
 
         Spinner orderReasonsSpinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_order_commodity_list_item, R.id.spinnerOrderReasons);
         assertThat(orderReasonsSpinner.getAdapter().getCount(), is(1));
-        assertThat(orderReasonsSpinner.getItemAtPosition(0).toString(), is("Emergency"));
+        assertThat(((OrderReason) orderReasonsSpinner.getItemAtPosition(0)).getReason(), is("Emergency"));
     }
 
     @Test

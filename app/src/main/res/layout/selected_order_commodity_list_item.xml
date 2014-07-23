@@ -27,7 +27,6 @@
             android:layout_weight="1"
             android:clickable="true"
             android:hint="@string/hint_start_date"
-            android:inputType="number"
             android:onClick="showDateDialog"
             android:textSize="16sp" />
 
@@ -39,7 +38,6 @@
             android:layout_weight="1"
             android:clickable="true"
             android:hint="@string/hint_end_date"
-            android:inputType="number"
             android:textSize="16sp" />
 
         <EditText
@@ -48,8 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:clickable="true"
-            android:focusableInTouchMode="true"
             android:hint="@string/hint_quantity"
             android:inputType="number"
             android:textSize="16sp" />

@@ -63,7 +63,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             arrayAdapter.add(commodity);
             selectedCommodities.add(commodity);
         }
-        arrayAdapter.notifyDataSetChanged();
         onCommoditySelectionChanged(selectedCommodities);
     }
 
