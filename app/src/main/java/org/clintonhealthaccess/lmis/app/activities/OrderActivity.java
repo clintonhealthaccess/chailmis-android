@@ -76,9 +76,9 @@ public class OrderActivity extends CommoditySelectableActivity {
 
         for (int i = 0; i < numberOfItems; i++) {
             CommodityViewModel commodityViewModel = (CommodityViewModel) arrayAdapter.getItem(i);
-            OrderItem orderItem = new OrderItem(commodityViewModel);
-            order.addItem(orderItem);
+            order.addItem(new OrderItem(commodityViewModel));
         }
+
         return order;
     }
 }

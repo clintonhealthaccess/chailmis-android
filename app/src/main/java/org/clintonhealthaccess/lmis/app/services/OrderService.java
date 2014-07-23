@@ -3,16 +3,14 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
-import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Order;
+import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +42,7 @@ public class OrderService {
                 return null;
             }
         });
+
         return savedReasons;
     }
 
@@ -61,11 +60,11 @@ public class OrderService {
 
     public List<Order> all() {
         List<Order> allOrders = dbUtil.withDao(Order.class, new DbUtil.Operation<Order, List<Order>>() {
-                @Override
-                public List<Order> operate(Dao<Order, String> dao) throws SQLException {
-                    return dao.queryForAll();
-                }
-            });
+            @Override
+            public List<Order> operate(Dao<Order, String> dao) throws SQLException {
+                return dao.queryForAll();
+            }
+        });
 
         return allOrders;
     }
@@ -85,6 +84,41 @@ public class OrderService {
             for (int i = 0; i < 4 - length; i++)
                 stringOfZeros += "0";
         }
-        return String.format("%s-%s%d", facilityCode, stringOfZeros, numberOfOrders+1);
+        return String.format("%s-%s%d", facilityCode, stringOfZeros, numberOfOrders + 1);
+    }
+
+    public void saveOrder(final Order order) {
+        dbUtil.withDao(Order.class, new DbUtil.Operation<Order, Void>() {
+            @Override
+            public Void operate(Dao<Order, String> dao) throws SQLException {
+                dao.create(order);
+                return null;
+            }
+        });
+
+        saveOrderItems(order);
+    }
+
+    private void saveOrderItems(Order order) {
+        order.saveOrderItems(new OrderItemSaver() {
+            @Override
+            public void saveOrderItem(final OrderItem item) {
+                OrderService.this.saveItem(item);
+            }
+        });
+    }
+
+    private void saveItem(final OrderItem item) {
+        dbUtil.withDao(OrderItem.class, new DbUtil.Operation<OrderItem, Void>() {
+            @Override
+            public Void operate(Dao<OrderItem, String> dao) throws SQLException {
+                dao.create(item);
+                return null;
+            }
+        });
+    }
+
+    public interface OrderItemSaver {
+        void saveOrderItem(OrderItem item);
     }
 }

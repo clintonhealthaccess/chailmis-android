@@ -2,6 +2,8 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import org.clintonhealthaccess.lmis.app.services.OrderService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +50,16 @@ public class Order {
         int result = srvNumber != null ? srvNumber.hashCode() : 0;
         result = 31 * result + items.hashCode();
         return result;
+    }
+
+    public String getSrvNumber() {
+        return srvNumber;
+    }
+
+    public void saveOrderItems(OrderService.OrderItemSaver saver) {
+        for(OrderItem item : items) {
+            item.setOrder(this);
+            saver.saveOrderItem(item);
+        }
     }
 }

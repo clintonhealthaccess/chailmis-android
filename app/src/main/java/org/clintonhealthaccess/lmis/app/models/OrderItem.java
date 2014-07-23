@@ -23,6 +23,9 @@ public class OrderItem {
     @DatabaseField(canBeNull = false)
     private int quantity;
 
+    @DatabaseField(foreign = true, canBeNull = false)
+    private Order order;
+
     @DatabaseField(canBeNull = false, foreign = true)
     private OrderReason reasonForOrder;
 
@@ -36,6 +39,8 @@ public class OrderItem {
         this.startDate = commodityViewModel.getOrderPeriodStartDate();
         this.endDate = commodityViewModel.getOrderPeriodEndDate();
         this.quantity = commodityViewModel.getQuantityEntered();
+        this.reasonForOrder = commodityViewModel.getReasonForOrder();
+        this.reasonForUnexpectedQuantity = commodityViewModel.getReasonForUnexpectedOrderQuantity();
     }
 
     @Override
@@ -69,5 +74,17 @@ public class OrderItem {
         result = 31 * result + (reasonForOrder != null ? reasonForOrder.hashCode() : 0);
         result = 31 * result + (reasonForUnexpectedQuantity != null ? reasonForUnexpectedQuantity.hashCode() : 0);
         return result;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public String getLmisId() {
+        return commodity.getLmisId();
     }
 }

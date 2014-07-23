@@ -119,4 +119,9 @@ public class OrderActivityTest {
         assertThat(orderActivity.textViewSRVNo, is(notNullValue()));
         assertThat(orderActivity.textViewSRVNo.getText().toString(), is(TEST_SRV_NUMBER));
     }
+
+    @Test
+    public void shouldPersistOrderAndOrderItemsOnSubmit() {
+        orderActivity.buttonSubmitOrder.performClick();
+    }
 }

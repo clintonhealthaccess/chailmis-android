@@ -47,6 +47,11 @@ public class Commodity implements Serializable {
         this.name = name;
     }
 
+    public Commodity(String name, Category category) {
+        this(name);
+        this.category = category;
+    }
+
     public String getName() {
         return name;
     }

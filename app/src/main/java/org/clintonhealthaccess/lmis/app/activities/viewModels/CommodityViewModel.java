@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.OrderReason;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +15,8 @@ public class CommodityViewModel implements Serializable {
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
     private int unexpectedReasonPosition;
+    private OrderReason reasonForOrder;
+    private OrderReason reasonForUnexpectedOrderQuantity;
 
     public CommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
@@ -52,7 +55,7 @@ public class CommodityViewModel implements Serializable {
         return commodity.stockIsFinished();
     }
 
-    public int getOrderDuration(){
+    public int getOrderDuration() {
         return commodity.getOrderDuration();
     }
 
@@ -107,11 +110,27 @@ public class CommodityViewModel implements Serializable {
         this.orderReasonPosition = orderReasonPosition;
     }
 
+    public int getUnexpectedReasonPosition() {
+        return unexpectedReasonPosition;
+    }
+
     public void setUnexpectedReasonPosition(int unexpectedReasonPosition) {
         this.unexpectedReasonPosition = unexpectedReasonPosition;
     }
 
-    public int getUnexpectedReasonPosition() {
-        return unexpectedReasonPosition;
+    public OrderReason getReasonForOrder() {
+        return reasonForOrder;
+    }
+
+    public void setReasonForOrder(OrderReason reasonForOrder) {
+        this.reasonForOrder = reasonForOrder;
+    }
+
+    public OrderReason getReasonForUnexpectedOrderQuantity() {
+        return reasonForUnexpectedOrderQuantity;
+    }
+
+    public void setReasonForUnexpectedOrderQuantity(OrderReason reasonForUnexpectedOrderQuantity) {
+        this.reasonForUnexpectedOrderQuantity = reasonForUnexpectedOrderQuantity;
     }
 }
