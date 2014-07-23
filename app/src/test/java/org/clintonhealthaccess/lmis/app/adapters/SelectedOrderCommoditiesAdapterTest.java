@@ -89,21 +89,21 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         Calendar calendarStartDate = Calendar.getInstance();
 
-        calendarStartDate.add(Calendar.DAY_OF_MONTH, 10);
+        calendarStartDate.add(Calendar.DAY_OF_MONTH, 50);
 
-        adapter.textViewStartDate.setText(SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarStartDate.getTime()));
+        adapter.textViewStartDate.setText(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(calendarStartDate.getTime()));
 
         textViewEndDate.performClick();
 
         DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        calendarStartDate.add(Calendar.DAY_OF_MONTH, 1);
+        calendarStartDate.add(Calendar.DAY_OF_MONTH, SelectedOrderCommoditiesAdapter.MIN_DIFFERENCE);
 
         Date minDate = new Date(dateDialog.getDatePicker().getMinDate());
 
-        String minEndDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(minDate);
+        String minEndDateAsText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(minDate);
 
-        String startDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarStartDate.getTime());
+        String startDateAsText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(calendarStartDate.getTime());
 
         assertThat(minEndDateAsText, is(startDateAsText));
     }
@@ -114,25 +114,26 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         Calendar calendarEndDate = Calendar.getInstance();
 
-        calendarEndDate.add(Calendar.DAY_OF_MONTH, 10);
+        calendarEndDate.add(Calendar.DAY_OF_MONTH, 30);
 
-        adapter.textViewEndDate.setText(SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarEndDate.getTime()));
+        adapter.textViewEndDate.setText(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(calendarEndDate.getTime()));
 
         textViewStartDate.performClick();
 
         DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        calendarEndDate.add(Calendar.DAY_OF_MONTH, -1);
+        calendarEndDate.add(Calendar.DAY_OF_MONTH, -SelectedOrderCommoditiesAdapter.MIN_DIFFERENCE);
 
         Date maxDate = new Date(dateDialog.getDatePicker().getMaxDate());
 
-        String maxStartDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(maxDate);
+        String maxStartDateAsText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(maxDate);
 
-        String endDateAsText = SelectedOrderCommoditiesAdapter.simpleDateFormat.format(calendarEndDate.getTime());
+        String endDateAsText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(calendarEndDate.getTime());
 
         assertThat(maxStartDateAsText, is(endDateAsText));
 
     }
+
 
     @Test
     public void shouldPutOrderReasonsIntoOrderReasonsSpinnerAdapter() {
