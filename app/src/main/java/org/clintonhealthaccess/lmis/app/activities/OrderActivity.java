@@ -1,6 +1,8 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,6 +14,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
@@ -33,6 +36,7 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.textViewSRVNo)
     TextView textViewSRVNo;
+    private String nextSRVNumber;
 
 
     // FIXME: id need change here
@@ -67,11 +71,14 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        textViewSRVNo.setText(orderService.getNextSRVNumber());
+        nextSRVNumber = orderService.getNextSRVNumber();
+        textViewSRVNo.setText(nextSRVNumber);
         buttonSubmitOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                orderService.saveOrder(generateOrder());
+                FragmentManager fm = getSupportFragmentManager();
+                OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
+                dialog.show(fm, "confirmOrder");
             }
         });
     }
@@ -82,9 +89,11 @@ public class OrderActivity extends CommoditySelectableActivity {
 
         for (int i = 0; i < numberOfItems; i++) {
             CommodityViewModel commodityViewModel = (CommodityViewModel) arrayAdapter.getItem(i);
-            order.addItem(new OrderItem(commodityViewModel));
+            OrderItem orderItem = new OrderItem(commodityViewModel);
+            orderItem.setOrder(order);
+            order.addItem(orderItem);
         }
-
+        order.setSrvNumber(nextSRVNumber);
         return order;
     }
 }

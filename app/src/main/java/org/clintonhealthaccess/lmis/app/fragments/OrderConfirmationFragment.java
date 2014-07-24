@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -55,7 +56,8 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
         Button buttonOrderGoBack = (Button) view.findViewById(R.id.buttonOrderGoBack);
         ListView listViewOrderItems = (ListView) view.findViewById(R.id.listViewConfirmOrderItems);
 
-
+        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         buttonOrderConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:orientation="horizontal"
     android:background="@color/blue"
     android:padding="@dimen/confirm_items_padding"
@@ -8,7 +8,7 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:layout_height="wrap_content"
         android:text="@string/serial_number"
         android:textStyle="bold"
@@ -28,12 +28,12 @@
         android:id="@+id/textViewHeaderCommodityName" />
 
 
-
     <TextView
         android:layout_width="fill_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:layout_height="wrap_content"
         android:textStyle="bold"
+        android:gravity="right"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:textSize="@dimen/header_text_size"

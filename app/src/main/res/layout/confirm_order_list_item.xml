@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:orientation="horizontal"
     android:padding="@dimen/confirm_items_padding"
     android:layout_height="match_parent">
@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:textSize="@dimen/confirm_item_text_size"
         android:id="@+id/textViewSerialNumber" />
 
@@ -24,8 +24,9 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:textSize="@dimen/confirm_item_text_size"
+        android:gravity="right"
         android:id="@+id/textViewQuantityOrdered" />
 
 

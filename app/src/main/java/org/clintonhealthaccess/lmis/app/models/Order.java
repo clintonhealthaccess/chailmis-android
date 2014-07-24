@@ -70,4 +70,8 @@ public class Order implements Serializable {
         return orderItems;
 
     }
+
+    public void setSrvNumber(String srvNumber) {
+        this.srvNumber = srvNumber;
+    }
 }

@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.Dialog;
 import android.view.View;
 import android.widget.Spinner;
 
@@ -19,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class OrderActivityTest {
@@ -47,7 +50,7 @@ public class OrderActivityTest {
     private OrderService orderServiceMock;
 
     private OrderActivity getOrderActivity() {
-        return buildActivity(OrderActivity.class).create().get();
+        return setupActivity(OrderActivity.class);
     }
 
     @Before
@@ -123,8 +126,9 @@ public class OrderActivityTest {
     }
 
     @Test
-    public void shouldPersistOrderAndOrderItemsOnSubmit() {
+    public void shouldConfirmOrderAndOrderItemsOnSubmit() {
         orderActivity.buttonSubmitOrder.performClick();
-        verify(orderServiceMock).saveOrder(any(Order.class));
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        assertThat(dialog, is(notNullValue()));
     }
 }
