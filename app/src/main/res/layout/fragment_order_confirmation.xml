@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.OrderConfirmationFragment">
+
+
+    <RelativeLayout
+        android:id="@+id/layoutButtons"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/buttonOrderConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentRight="true"
+            android:text="@string/confirm" />
+
+        <Button
+            android:id="@+id/buttonOrderGoBack"
+            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@id/buttonOrderConfirm"
+            android:layout_height="wrap_content"
+            android:text="@string/go_back" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listViewConfirmOrderItems"
+        android:layout_width="fill_parent"
+        android:layout_above="@id/layoutButtons"
+        android:layout_height="fill_parent" />
+
+</RelativeLayout>

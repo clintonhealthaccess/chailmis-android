@@ -4,11 +4,12 @@ import com.j256.ormlite.field.DatabaseField;
 
 import org.clintonhealthaccess.lmis.app.services.OrderItemSaver;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class Order {
+public class Order implements Serializable {
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
@@ -53,6 +54,7 @@ public class Order {
         return result;
     }
 
+
     public String getSrvNumber() {
         return srvNumber;
     }
@@ -62,5 +64,10 @@ public class Order {
             item.setOrder(this);
             saver.saveOrderItem(item);
         }
+    }
+
+    public List<OrderItem> getItems() {
+        return orderItems;
+
     }
 }

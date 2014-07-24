@@ -32,7 +32,8 @@ public class OrderItem {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private OrderReason reasonForUnexpectedQuantity;
 
-    public OrderItem() {}
+    public OrderItem() {
+    }
 
     public OrderItem(CommodityViewModel commodityViewModel) {
         this.commodity = commodityViewModel.getCommodity();
@@ -76,11 +77,24 @@ public class OrderItem {
         return result;
     }
 
+
     public void setOrder(Order order) {
         this.order = order;
     }
 
     public Order getOrder() {
         return order;
+    }
+
+    public String getCommodtyName() {
+        return commodity.getName();
+    }
+
+    public String getSRVNumber() {
+        return order.getSrvNumber();
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }

@@ -59,5 +59,9 @@
     <string name="prescription">Prescription No:</string>
     <string name="commodityName">Commodity Name</string>
     <string name="srv">SRV :</string>
+    <string name="serial_number">Serial No.</string>
+    <string name="unit">Unit</string>
+    <string name="quantity_ordered">Quantity Ordered</string>
+    <string name="order_successful">Order Successful</string>
 
 </resources>
