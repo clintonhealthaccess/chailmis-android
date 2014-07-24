@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.Dialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowToast;
 
@@ -52,7 +54,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
-import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispenseActivityTest {
@@ -65,7 +67,7 @@ public class DispenseActivityTest {
     private UserService userService;
 
     public static DispenseActivity getDispenseActivity() {
-        return buildActivity(DispenseActivity.class).create().get();
+        return setupActivity(DispenseActivity.class);
     }
 
     @Before
@@ -397,5 +399,33 @@ public class DispenseActivityTest {
 
         ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
         assertThat(dispenseActivity.getDispensing().getPrescriptionId(), is(Matchers.nullValue()));
+    }
+
+    @Test
+    public void shouldShowConfirmButtonIfDispensingIsValid() throws Exception {
+
+        DispenseActivity dispenseActivity = getDispenseActivity();
+
+        GridView mockGridView = mock(GridView.class);
+        View mockListItemView = mock(View.class);
+        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
+        EditText mockEditText = new EditText(application);
+
+        mockEditText.setText("12");
+
+        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
+        when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
+        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
+        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
+        when(mockGridView.getChildCount()).thenReturn(1);
+
+        dispenseActivity.gridViewSelectedCommodities = mockGridView;
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        assertThat(dialog, is(notNullValue()));
+
     }
 }

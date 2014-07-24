@@ -59,6 +59,18 @@ public class UserServiceTest {
         assertThat(userService.userRegistered(), is(true));
     }
 
+    @Test
+    public void shouldSaveTheOrgUnitIfAvailable() throws Exception {
+
+        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
+
+        User newUser = userService.register("admin", "district");
+
+        assertThat(newUser.getFacilityName(), is("cr Abi LGA Staff Clinic"));
+        assertThat(newUser.getFacilityCode(), is("U5Zz9lIqxpt"));
+    }
+
+
     @Test(expected = LmisException.class)
     public void testShouldDisallowRegisteringWithInvalidDHISCredentials() throws Exception {
         assertThat(userService.userRegistered(), is(false));
