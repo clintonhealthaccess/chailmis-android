@@ -43,7 +43,7 @@ public class UserService {
         return dbUtil.withDao(User.class, new Operation<User, User>() {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
-                User user = new User(username, password);
+                User user = new User(username, password, "KB");
                 dao.create(user);
                 return user;
             }
