@@ -2,20 +2,21 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
-import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.services.OrderItemSaver;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 public class Order {
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @DatabaseField
+    @DatabaseField(canBeNull = false)
     private String srvNumber = "DUMMY ORDER ID NUMBER";
 
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrderItem> orderItems = newArrayList();
 
     public Order() {
     }
@@ -25,11 +26,11 @@ public class Order {
     }
 
     public void addItem(OrderItem orderItem) {
-        items.add(orderItem);
+        orderItems.add(orderItem);
     }
 
     public boolean has(OrderItem item) {
-        return items.contains(item);
+        return orderItems.contains(item);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class Order {
         if (this == otherOrder) return true;
         if (otherOrder == null || getClass() != otherOrder.getClass()) return false;
 
-        for (OrderItem item : this.items) {
+        for (OrderItem item : this.orderItems) {
             if (!((Order) otherOrder).has(item)) {
                 return false;
             }
@@ -48,7 +49,7 @@ public class Order {
     @Override
     public int hashCode() {
         int result = srvNumber != null ? srvNumber.hashCode() : 0;
-        result = 31 * result + items.hashCode();
+        result = 31 * result + orderItems.hashCode();
         return result;
     }
 
@@ -56,8 +57,8 @@ public class Order {
         return srvNumber;
     }
 
-    public void saveOrderItems(OrderService.OrderItemSaver saver) {
-        for(OrderItem item : items) {
+    public void saveOrderItems(OrderItemSaver saver) {
+        for (OrderItem item : orderItems) {
             item.setOrder(this);
             saver.saveOrderItem(item);
         }

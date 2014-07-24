@@ -138,12 +138,15 @@ public class OrderServiceTest {
 
         Commodity commodity = new Commodity("Commodity 1", category);
         commodityDao.create(commodity);
+
         CommodityViewModel commodityViewModel = new CommodityViewModel(commodity, 10);
         commodityViewModel.setOrderPeriodStartDate(new Date());
         commodityViewModel.setOrderPeriodEndDate(new Date());
+
         OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
         reasonDao.create(emergency);
         commodityViewModel.setReasonForOrder(emergency);
+
         OrderReason highDemand = new OrderReason("High demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
         reasonDao.create(highDemand);
         commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
@@ -158,13 +161,7 @@ public class OrderServiceTest {
         assertThat(orderDao.countOf(), is(1L));
         assertThat(returnedOrder.getSrvNumber(), is(order.getSrvNumber()));
 
-        List<OrderItem> persistedOrderItems = orderItemDao.queryForAll();
-
-        for (OrderItem item : persistedOrderItems) {
-            System.err.println(item.getLmisId());
-        }
-
-        assertThat(persistedOrderItems, contains(orderItem));
+        assertThat(orderItemDao.queryForAll().get(0), is(orderItem));
     }
 
     @Test

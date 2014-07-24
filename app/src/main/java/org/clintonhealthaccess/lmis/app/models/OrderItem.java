@@ -11,7 +11,7 @@ public class OrderItem {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private Commodity commodity;
 
     @DatabaseField(canBeNull = false)
@@ -26,10 +26,10 @@ public class OrderItem {
     @DatabaseField(foreign = true, canBeNull = false)
     private Order order;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private OrderReason reasonForOrder;
 
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private OrderReason reasonForUnexpectedQuantity;
 
     public OrderItem() {}
@@ -82,9 +82,5 @@ public class OrderItem {
 
     public Order getOrder() {
         return order;
-    }
-
-    public String getLmisId() {
-        return commodity.getLmisId();
     }
 }

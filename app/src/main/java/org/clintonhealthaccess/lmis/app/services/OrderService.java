@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class OrderService {
+public class OrderService implements OrderItemSaver {
     List<OrderReason> orderReasons;
     @Inject
     private UserService userService;
@@ -96,29 +96,18 @@ public class OrderService {
             }
         });
 
-        saveOrderItems(order);
+        order.saveOrderItems(this);
     }
 
-    private void saveOrderItems(Order order) {
-        order.saveOrderItems(new OrderItemSaver() {
-            @Override
-            public void saveOrderItem(final OrderItem item) {
-                OrderService.this.saveItem(item);
-            }
-        });
-    }
 
-    private void saveItem(final OrderItem item) {
-        dbUtil.withDao(OrderItem.class, new DbUtil.Operation<OrderItem, Void>() {
+    @Override
+    public void saveOrderItem(final OrderItem orderItem) {
+        dbUtil.withDao(OrderItem.class, new DbUtil.Operation<OrderItem, String>() {
             @Override
-            public Void operate(Dao<OrderItem, String> dao) throws SQLException {
-                dao.create(item);
+            public String operate(Dao<OrderItem, String> dao) throws SQLException {
+                dao.create(orderItem);
                 return null;
             }
         });
-    }
-
-    public interface OrderItemSaver {
-        void saveOrderItem(OrderItem item);
     }
 }
