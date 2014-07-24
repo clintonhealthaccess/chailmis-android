@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.app.Dialog;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.google.inject.AbstractModule;
@@ -23,9 +24,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
+import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -39,6 +42,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -130,8 +134,28 @@ public class OrderActivityTest {
 
     @Test
     public void shouldConfirmOrderAndOrderItemsOnSubmit() {
-        orderActivity.buttonSubmitOrder.performClick();
+        CommodityViewModel commodityViewModel1 = new CommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        commodityViewModel1.setOrderPeriodEndDate(new Date());
+        commodityViewModel1.setOrderPeriodStartDate(new Date());
+
+        EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel1));
+
+        Button buttonSubmitOrder = orderActivity.buttonSubmitOrder;
+
+        assertThat(buttonSubmitOrder.getVisibility(), is(View.VISIBLE));
+        buttonSubmitOrder.performClick();
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertThat(dialog, is(notNullValue()));
+    }
+
+    @Test
+    public void shouldShowInvalidFieldsToastGivenSubmitWithEmptyFields() {
+        CommodityViewModel commodityViewModel1 = new CommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel1));
+
+        orderActivity.buttonSubmitOrder.performClick();
+
+        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.fillInAllOrderItemValues)));
+        assertThat(ShadowDialog.getLatestDialog(), is(nullValue()));
     }
 }

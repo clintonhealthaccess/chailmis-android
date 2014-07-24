@@ -82,10 +82,6 @@ public class CommodityViewModel implements Serializable {
         return (quantityEntered > (1.1 * this.expectedOrderQuantity));
     }
 
-    public boolean quantityIsValid() {
-        return quantityEntered > 0;
-    }
-
     public int getExpectedOrderQuantity() {
         return expectedOrderQuantity;
     }
@@ -140,5 +136,9 @@ public class CommodityViewModel implements Serializable {
 
     public void setReasonForUnexpectedOrderQuantity(OrderReason reasonForUnexpectedOrderQuantity) {
         this.reasonForUnexpectedOrderQuantity = reasonForUnexpectedOrderQuantity;
+    }
+
+    public boolean isValidAsOrderItem() {
+        return orderPeriodEndDate != null && orderPeriodStartDate != null && quantityEntered > 0;
     }
 }

@@ -2,11 +2,11 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -75,12 +75,27 @@ public class OrderActivity extends CommoditySelectableActivity {
         textViewSRVNo.setText(nextSRVNumber);
         buttonSubmitOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
-                dialog.show(fragmentManager, "confirmOrder");
+            public void onClick(View v) {
+                if (isOrderValid()) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
+                    dialog.show(fm, "confirmOrder");
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private boolean isOrderValid() {
+        int numberOfItems = arrayAdapter.getCount();
+        for (int i = 0; i < numberOfItems; i++) {
+            CommodityViewModel commodityViewModel = (CommodityViewModel) arrayAdapter.getItem(i);
+            if (!commodityViewModel.isValidAsOrderItem()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected Order generateOrder() {
