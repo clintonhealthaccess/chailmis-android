@@ -56,11 +56,6 @@ public class BaseActivity extends RoboActionBarActivity {
         return android.text.format.DateFormat.format(DATE_FORMAT, new java.util.Date()).toString();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
 
     void showToastMessage(String message) {
         Toast.makeText(getApplicationContext(), message, LENGTH_SHORT).show();

@@ -60,11 +60,15 @@ public class CommodityViewModel implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
 
-        CommodityViewModel that = (CommodityViewModel) o;
+        CommodityViewModel that = (CommodityViewModel) object;
 
         return commodity.equals(that.commodity);
     }
@@ -75,7 +79,7 @@ public class CommodityViewModel implements Serializable {
     }
 
     public boolean quantityIsUnexpected() {
-        return (quantityEntered > 1.1 * this.expectedOrderQuantity);
+        return (quantityEntered > (1.1 * this.expectedOrderQuantity));
     }
 
     public boolean quantityIsValid() {

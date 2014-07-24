@@ -84,9 +84,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         setupOrderReasonsSpinner(spinnerOrderReasons, textViewStartDate, orderCommodityViewModel, textViewEndDate);
         setupUnexpectedReasonsSpinner(spinnerUnexpectedQuantityReasons, orderCommodityViewModel);
 
-        final CommodityViewModel commodityViewModel1 = orderCommodityViewModel;
         TextWatcher orderCommodityQuantityTextWatcher = new LmisTextWatcher() {
-            private final CommodityViewModel commodityViewModel = commodityViewModel1;
+            private final CommodityViewModel commodityViewModel = orderCommodityViewModel;
 
             @Override
             public void afterTextChanged(final Editable editable) {
@@ -156,11 +155,13 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private void initialiseDates(CommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
-        if (orderCommodityViewModel.getOrderPeriodStartDate() != null)
+        if (orderCommodityViewModel.getOrderPeriodStartDate() != null) {
             textViewStartDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodStartDate()));
+        }
 
-        if (orderCommodityViewModel.getOrderPeriodEndDate() != null)
+        if (orderCommodityViewModel.getOrderPeriodEndDate() != null) {
             textViewEndDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getOrderPeriodEndDate()));
+        }
     }
 
     private void setupUnexpectedReasonsSpinnerVisibility(CommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedQuantityReasons) {
@@ -200,8 +201,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         ArrayAdapter<OrderReason> adapter = new ReasonAdapter(getContext(), R.layout.spinner_item, unexpectedOrderReasons);
         spinnerUnexpectedQuantityReasons.setAdapter(adapter);
 
-        if (unexpectedReasonPosition != null)
+        if (unexpectedReasonPosition != null) {
             spinnerUnexpectedQuantityReasons.setSelection(unexpectedReasonPosition);
+        }
     }
 
     private void setupOrderReasonsSpinner(final Spinner spinnerOrderReasons, final TextView textViewStartDate, final CommodityViewModel orderCommodityViewModel, final TextView textViewEndDate) {
@@ -224,7 +226,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         ArrayAdapter<OrderReason> adapter = new ReasonAdapter(getContext(), R.layout.spinner_item, orderReasons);
         spinnerOrderReasons.setAdapter(adapter);
 
-        if (orderReasonPosition != null) spinnerOrderReasons.setSelection(orderReasonPosition);
+        if (orderReasonPosition != null) {
+            spinnerOrderReasons.setSelection(orderReasonPosition);
+        }
 
     }
 
@@ -304,7 +308,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
 
         if (textViewDate.getId() == R.id.textViewStartDate) {
-            calendarMaxDate = getMaxStartDate(calendarMaxDate, textViewEndDate);
+            calendarMaxDate = getMaxStartDate(textViewEndDate);
             setTimeFieldsOnMaxStartDate(calendarMinDate, calendarMaxDate);
         }
 
@@ -322,10 +326,10 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
     }
 
-    private Calendar getMaxStartDate(Calendar calendarMaxDate, TextView textViewEndDate) {
+    private Calendar getMaxStartDate(TextView textViewEndDate) {
         String endDateText = textViewEndDate.getText().toString();
         if (!endDateText.isEmpty()) {
-            calendarMaxDate = Calendar.getInstance();
+            Calendar calendarMaxDate = Calendar.getInstance();
             try {
                 calendarMaxDate.setTime(SIMPLE_DATE_FORMAT.parse(endDateText));
                 calendarMaxDate.add(Calendar.DAY_OF_MONTH, -MIN_DIFFERENCE_BETWEEN_START_END);
@@ -364,8 +368,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         DatePicker datePicker = datePickerDialog.getDatePicker();
         if (calendarMaxDate != null) {
             datePicker.setMaxDate(calendarMaxDate.getTimeInMillis());
-            if (calendarMindate.before(calendarMaxDate))
+            if (calendarMindate.before(calendarMaxDate)) {
                 datePicker.setMinDate(calendarMindate.getTimeInMillis());
+            }
         } else {
             datePicker.setMinDate(calendarMindate.getTimeInMillis());
         }

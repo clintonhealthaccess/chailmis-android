@@ -75,10 +75,10 @@ public class OrderActivity extends CommoditySelectableActivity {
         textViewSRVNo.setText(nextSRVNumber);
         buttonSubmitOrder.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
                 OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
-                dialog.show(fm, "confirmOrder");
+                dialog.show(fragmentManager, "confirmOrder");
             }
         });
     }

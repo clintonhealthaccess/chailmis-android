@@ -53,8 +53,8 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         gridViewCommodities.setAdapter(this);
         gridViewCommodities.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CommodityViewModel commodityViewModel = getItem(i);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                CommodityViewModel commodityViewModel = getItem(position);
                 if (commodityDisplayStrategy.allowClick(commodityViewModel)) {
                     commodityViewModel.toggleSelected();
                     EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel));

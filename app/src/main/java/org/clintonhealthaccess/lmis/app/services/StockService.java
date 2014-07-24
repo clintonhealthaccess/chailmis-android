@@ -15,7 +15,7 @@ public class StockService {
     private DbUtil dbUtil;
 
     public int getStockLevelFor(Commodity commodity) {
-        return commodity.getStockItem().quantity();
+        return commodity.getStockItem().getQuantity();
     }
 
     public void updateStockLevelFor(final Commodity commodity, int quantity) {

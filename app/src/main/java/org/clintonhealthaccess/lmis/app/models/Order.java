@@ -20,6 +20,7 @@ public class Order implements Serializable {
     private List<OrderItem> orderItems = newArrayList();
 
     public Order() {
+        //Orm lite likes
     }
 
     public Order(String srvNumber) {
@@ -36,8 +37,12 @@ public class Order implements Serializable {
 
     @Override
     public boolean equals(Object otherOrder) {
-        if (this == otherOrder) return true;
-        if (otherOrder == null || getClass() != otherOrder.getClass()) return false;
+        if (this == otherOrder) {
+            return true;
+        }
+        if (otherOrder == null || getClass() != otherOrder.getClass()) {
+            return false;
+        }
 
         for (OrderItem item : this.orderItems) {
             if (!((Order) otherOrder).has(item)) {

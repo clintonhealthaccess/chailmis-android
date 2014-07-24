@@ -33,6 +33,7 @@ public class OrderItem {
     private OrderReason reasonForUnexpectedQuantity;
 
     public OrderItem() {
+        //Orm lite likes
     }
 
     public OrderItem(CommodityViewModel commodityViewModel) {
@@ -46,22 +47,33 @@ public class OrderItem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         OrderItem orderItem = (OrderItem) o;
 
-        if (quantity != orderItem.quantity) return false;
-        if (commodity != null ? !commodity.equals(orderItem.commodity) : orderItem.commodity != null)
+        if (quantity != orderItem.quantity) {
             return false;
-        if (endDate != null ? !endDate.equals(orderItem.endDate) : orderItem.endDate != null)
+        }
+        if (commodity != null ? !commodity.equals(orderItem.commodity) : orderItem.commodity != null) {
             return false;
-        if (reasonForOrder != null ? !reasonForOrder.equals(orderItem.reasonForOrder) : orderItem.reasonForOrder != null)
+        }
+        if (endDate != null ? !endDate.equals(orderItem.endDate) : orderItem.endDate != null) {
             return false;
-        if (reasonForUnexpectedQuantity != null ? !reasonForUnexpectedQuantity.equals(orderItem.reasonForUnexpectedQuantity) : orderItem.reasonForUnexpectedQuantity != null)
+        }
+        if (reasonForOrder != null ? !reasonForOrder.equals(orderItem.reasonForOrder) : orderItem.reasonForOrder != null) {
             return false;
-        if (startDate != null ? !startDate.equals(orderItem.startDate) : orderItem.startDate != null)
+        }
+        if (reasonForUnexpectedQuantity != null ? !reasonForUnexpectedQuantity.equals(orderItem.reasonForUnexpectedQuantity) : orderItem.reasonForUnexpectedQuantity != null) {
             return false;
+        }
+        if (startDate != null ? !startDate.equals(orderItem.startDate) : orderItem.startDate != null) {
+            return false;
+        }
 
         return true;
     }

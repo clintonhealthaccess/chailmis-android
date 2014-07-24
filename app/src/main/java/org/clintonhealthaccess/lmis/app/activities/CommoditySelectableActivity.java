@@ -106,10 +106,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         button.setText(category.getName());
         button.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
                 ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities, getCheckBoxVisibilityStrategy());
-                dialog.show(fm, "selectCommodities");
+                dialog.show(fragmentManager, "selectCommodities");
             }
         });
         return button;

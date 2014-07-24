@@ -105,11 +105,13 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (hasInvalidField(of(INVALID_AMOUNT, EMPTY, HAS_ERROR))) return;
+                        if (hasInvalidField(of(INVALID_AMOUNT, EMPTY, HAS_ERROR))) {
+                            return;
+                        }
 
-                        FragmentManager fm = getSupportFragmentManager();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
                         DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
-                        dialog.show(fm, "confirmDispensing");
+                        dialog.show(fragmentManager, "confirmDispensing");
                     }
                 }
         );

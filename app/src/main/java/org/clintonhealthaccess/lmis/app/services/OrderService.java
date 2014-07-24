@@ -59,14 +59,13 @@ public class OrderService implements OrderItemSaver {
     }
 
     public List<Order> all() {
-        List<Order> allOrders = dbUtil.withDao(Order.class, new DbUtil.Operation<Order, List<Order>>() {
+
+        return dbUtil.withDao(Order.class, new DbUtil.Operation<Order, List<Order>>() {
             @Override
             public List<Order> operate(Dao<Order, String> dao) throws SQLException {
                 return dao.queryForAll();
             }
         });
-
-        return allOrders;
     }
 
     public String getNextSRVNumber() {
@@ -80,8 +79,9 @@ public class OrderService implements OrderItemSaver {
 
         int length = String.valueOf(numberOfOrders).length();
         if (length < 4) {
-            for (int i = 0; i < 4 - length; i++)
+            for (int i = 0; i < 4 - length; i++) {
                 stringOfZeros += "0";
+            }
         }
         return String.format("%s-%s%d", facilityCode, stringOfZeros, numberOfOrders + 1);
     }

@@ -26,8 +26,6 @@ import static org.robolectric.Robolectric.application;
 @RunWith(RobolectricGradleTestRunner.class)
 public class DispensingServiceTest {
     @Inject
-    private CategoryService categoryService;
-    @Inject
     private CommodityService commodityService;
     @Inject
     private DispensingService dispensingService;

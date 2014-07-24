@@ -62,8 +62,12 @@ public class Commodity implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Commodity)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Commodity)) {
+            return false;
+        }
 
         Commodity commodity = (Commodity) o;
 
@@ -95,7 +99,9 @@ public class Commodity implements Serializable {
     public boolean stockIsFinished() {
         if (stockItems != null) {
             List<StockItem> items = ImmutableList.copyOf(stockItems);
-            if (!items.isEmpty()) return items.get(0).isFinished();
+            if (!items.isEmpty()) {
+                return items.get(0).isFinished();
+            }
         }
 
         return true;

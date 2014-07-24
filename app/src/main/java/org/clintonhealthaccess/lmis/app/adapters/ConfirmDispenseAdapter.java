@@ -39,7 +39,7 @@ public class ConfirmDispenseAdapter extends ArrayAdapter<DispensingItem> {
         if (dispensing.isDispenseToFacility()) {
             textViewCommodityName.setText(item.getCommodity().getName());
             textViewAdjustedQuantity.setText(item.getQuantity().toString());
-            textViewSOH.setText(String.valueOf(item.getCommodity().getStockItem().quantity() - item.getQuantity()));
+            textViewSOH.setText(String.valueOf(item.getCommodity().getStockItem().getQuantity() - item.getQuantity()));
         } else {
             textViewCommodityName.setText(item.getCommodity().getName());
             textViewAdjustedQuantity.setVisibility(View.INVISIBLE);

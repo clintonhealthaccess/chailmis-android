@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 
 public class DispensingService {
-    @Inject
-    private Context context;
 
     @Inject
     private DbUtil dbUtil;
@@ -68,14 +66,15 @@ public class DispensingService {
 
         int length = String.valueOf(numberOfDispensingsToPatientsThisMonth).length();
         if (length < 4) {
-            for (int i = 0; i < 4 - length; i++)
+            for (int i = 0; i < 4 - length; i++) {
                 stringOfZeros += "0";
+            }
         }
         return String.format("%s%d-%s", stringOfZeros, numberOfDispensingsToPatientsThisMonth + 1, currentMonth);
     }
 
     private int getDispensingsToPatientsThisMonth() {
-        Integer count = dbUtil.withDao(Dispensing.class, new DbUtil.Operation<Dispensing, Integer>() {
+        return dbUtil.withDao(Dispensing.class, new DbUtil.Operation<Dispensing, Integer>() {
             @Override
             public Integer operate(Dao<Dispensing, String> dao) throws SQLException {
                 QueryBuilder<Dispensing, String> dispensingStringQueryBuilder = dao.queryBuilder();
@@ -89,7 +88,6 @@ public class DispensingService {
 
 
         });
-        return count;
     }
 
     private Date lastDayOfThisMonth() {

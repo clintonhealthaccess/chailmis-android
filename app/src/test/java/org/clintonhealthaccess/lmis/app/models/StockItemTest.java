@@ -13,7 +13,7 @@ public class StockItemTest {
     public void testReduceQuantityBy() throws Exception {
         StockItem item = new StockItem(new Commodity("item"), 10);
         item.reduceQuantityBy(5);
-        assertThat(item.quantity(), is(5));
+        assertThat(item.getQuantity(), is(5));
     }
 
     @Test

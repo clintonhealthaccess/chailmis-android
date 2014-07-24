@@ -91,7 +91,6 @@ public class DispenseActivityTest {
     public void testBuildActivity() throws Exception {
         DispenseActivity activity = getDispenseActivity();
         assertThat(activity, not(nullValue()));
-        TextView textViewAppName = (TextView) activity.getActionBar().getCustomView().findViewById(R.id.textAppName);
     }
 
     @Test

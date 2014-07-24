@@ -25,7 +25,7 @@ public class StockItem implements Serializable {
         this.quantity = quantity;
     }
 
-    public int quantity() {
+    public int getQuantity() {
         return quantity;
     }
 

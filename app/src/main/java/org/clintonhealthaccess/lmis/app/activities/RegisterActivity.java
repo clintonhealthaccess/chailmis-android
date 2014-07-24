@@ -61,7 +61,7 @@ public class RegisterActivity extends RoboActionBarActivity {
         Button registerButton = (Button) findViewById(id.buttonRegister);
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 validateAndRegister();
             }
         });

@@ -28,12 +28,12 @@ public class ReasonAdapter extends ArrayAdapter<OrderReason> {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        TextView v = (TextView) super.getView(position, convertView, parent);
+        TextView view = (TextView) super.getView(position, convertView, parent);
 
-        if (v == null) {
-            v = new TextView(getContext());
+        if (view == null) {
+            view = new TextView(getContext());
         }
-        v.setText(getItem(position).getReason());
-        return v;
+        view.setText(getItem(position).getReason());
+        return view;
     }
 }
