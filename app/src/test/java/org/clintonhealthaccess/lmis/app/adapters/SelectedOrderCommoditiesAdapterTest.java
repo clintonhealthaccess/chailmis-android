@@ -18,7 +18,6 @@ import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -204,16 +203,33 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     }
 
-    @Ignore("Failing to select item in spinner")
     @Test
     public void shouldSetEndDateGivenStartDateAndTheOrderReasonIsRoutine() throws Exception {
-        ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate)).setText("10-10-2013");
-        Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
-        ((Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons)).setSelection(0);
+        orderReasons = new ArrayList<>();
+        orderReasons.add(routine);
+        orderReasons.add(emergency);
 
-        Robolectric.shadowOf(spinner).performItemClick(0);
-        String endDate = ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate)).getText().toString();
-        assertThat(endDate, is("31-01-2013"));
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        TextView startDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+
+        startDate.setText("01-Jan-14");
+
+        Spinner spinner = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
+
+        spinner.setSelection(0);
+
+        TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+
+        String endDate = textViewEndDate.getText().toString();
+
+        assertThat(endDate, is("31-Jan-14"));
     }
 
     @Test
