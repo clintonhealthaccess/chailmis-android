@@ -33,7 +33,9 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
 
@@ -123,5 +125,6 @@ public class OrderActivityTest {
     @Test
     public void shouldPersistOrderAndOrderItemsOnSubmit() {
         orderActivity.buttonSubmitOrder.performClick();
+        verify(orderServiceMock).saveOrder(any(Order.class));
     }
 }

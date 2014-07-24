@@ -35,9 +35,7 @@ public class OrderQuantityTextWatcherTest {
     public void testAfterTextChanged() throws Exception {
         OrderQuantityTextWatcher watcher = new OrderQuantityTextWatcher(new CommodityViewModel(new Commodity("lunch")));
         watcher.afterTextChanged(new Editable.Factory().newEditable("12"));
-        System.err.printf("Before sleep%d%n", System.currentTimeMillis());
         Thread.sleep(2000);
-        System.err.printf("After sleep%d%n", System.currentTimeMillis());
         assertTrue(eventFired);
         assertThat(quantity, is(12));
     }

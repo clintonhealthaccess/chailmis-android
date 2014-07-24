@@ -173,6 +173,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 orderCommodityViewModel.setOrderReasonPosition(position);
+                OrderReason orderReason = getReason(spinnerOrderReasons.getAdapter().getItem(position).toString());
+                orderCommodityViewModel.setReasonForOrder(orderReason);
                 doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel, textViewStartDate, textViewEndDate);
             }
 
@@ -190,8 +192,16 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
 
     }
 
-    private void doUpdateEndDate(Spinner spinner, CommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
+    OrderReason getReason(String reasonName) {
+        for(OrderReason reason: orderReasons) {
+            if(reason.getReason().equals(reasonName)) {
+                return reason;
+            }
+        }
+        return null;
+    }
 
+    private void doUpdateEndDate(Spinner spinner, CommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
         Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
         String item = ((OrderReason) spinner.getItemAtPosition(orderReasonPosition)).getReason();
         if (item.equalsIgnoreCase(ROUTINE)) {

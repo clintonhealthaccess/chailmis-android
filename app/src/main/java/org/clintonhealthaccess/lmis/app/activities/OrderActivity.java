@@ -68,6 +68,12 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         textViewSRVNo.setText(orderService.getNextSRVNumber());
+        buttonSubmitOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orderService.saveOrder(generateOrder());
+            }
+        });
     }
 
     protected Order generateOrder() {
