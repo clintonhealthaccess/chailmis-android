@@ -23,6 +23,7 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -61,6 +62,7 @@ public class DispenseActivityTest {
 
     private StockService stockService;
     private DispensingService dispenseService;
+    private UserService userService;
 
     public static DispenseActivity getDispenseActivity() {
         return buildActivity(DispenseActivity.class).create().get();
@@ -70,11 +72,14 @@ public class DispenseActivityTest {
     public void setUp() throws Exception {
         stockService = mock(StockService.class);
         dispenseService = mock(DispensingService.class);
+        userService = mock(UserService.class);
+        when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(StockService.class).toInstance(stockService);
                 bind(DispensingService.class).toInstance(dispenseService);
+                bind(UserService.class).toInstance(userService);
             }
         });
         commodityService.initialise(new User("test", "pass"));

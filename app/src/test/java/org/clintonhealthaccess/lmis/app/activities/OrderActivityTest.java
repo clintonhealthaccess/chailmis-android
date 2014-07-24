@@ -14,7 +14,9 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +37,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.robolectric.Robolectric.buildActivity;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -48,6 +47,7 @@ public class OrderActivityTest {
     public static final String TEST_SRV_NUMBER = "AU-0009";
     private OrderActivity orderActivity;
     private OrderService orderServiceMock;
+    private UserService userService;
 
     private OrderActivity getOrderActivity() {
         return setupActivity(OrderActivity.class);
@@ -59,10 +59,13 @@ public class OrderActivityTest {
         List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY));
         when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
         when(orderServiceMock.getNextSRVNumber()).thenReturn(TEST_SRV_NUMBER);
+        userService = mock(UserService.class);
+        when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(OrderService.class).toInstance(orderServiceMock);
+                bind(UserService.class).toInstance(userService);
             }
         });
 

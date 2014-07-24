@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -30,6 +31,7 @@ public class HomeActivityTest {
     public void setUp() {
         mockUserService = mock(UserService.class);
         final SyncManager mockSyncManager = mock(SyncManager.class);
+        when(mockUserService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
@@ -110,7 +112,7 @@ public class HomeActivityTest {
     }
 
     @Test
-    public  void testClickReceiveButtonNavigatesToReceiveActivity(){
+    public void testClickReceiveButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();
@@ -123,7 +125,7 @@ public class HomeActivityTest {
     }
 
     @Test
-    public  void testClickOrderButtonNavigatesToReceiveActivity(){
+    public void testClickOrderButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();
@@ -136,7 +138,7 @@ public class HomeActivityTest {
     }
 
     @Test
-    public  void testClickLossesButtonNavigatesToReceiveActivity(){
+    public void testClickLossesButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();
@@ -149,7 +151,7 @@ public class HomeActivityTest {
     }
 
     @Test
-    public  void testClickReportsButtonNavigatesToReceiveActivity(){
+    public void testClickReportsButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();
@@ -162,7 +164,7 @@ public class HomeActivityTest {
     }
 
     @Test
-    public  void testClickMessagesButtonNavigatesToReceiveActivity(){
+    public void testClickMessagesButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();

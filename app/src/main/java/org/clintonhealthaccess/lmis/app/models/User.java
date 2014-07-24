@@ -20,6 +20,9 @@ public class User {
     @DatabaseField()
     private String facilityCode;
 
+    @DatabaseField()
+    private String facilityName;
+
     public User() {
         // ormlite likes it
     }
@@ -68,5 +71,17 @@ public class User {
 
     public String getFacilityCode() {
         return facilityCode;
+    }
+
+    public void setFacilityCode(String facilityCode) {
+        this.facilityCode = facilityCode;
+    }
+
+    public String getFacilityName() {
+        return facilityName;
+    }
+
+    public void setFacilityName(String facilityName) {
+        this.facilityName = facilityName;
     }
 }

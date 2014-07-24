@@ -9,6 +9,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.DataElement;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 
@@ -24,9 +25,9 @@ public class Dhis2 implements LmisServer {
     private Dhis2EndPointFactory dhis2EndPointFactory;
 
     @Override
-    public void validateLogin(User user) {
+    public UserProfile validateLogin(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        service.validateLogin();
+        return service.validateLogin();
     }
 
     @Override

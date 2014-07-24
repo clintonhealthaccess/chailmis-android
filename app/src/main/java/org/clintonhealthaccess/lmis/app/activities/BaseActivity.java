@@ -7,13 +7,20 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
 public class BaseActivity extends RoboActionBarActivity {
+    @Inject
+    UserService userService;
+
     TextView textFacilityName;
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
@@ -28,7 +35,9 @@ public class BaseActivity extends RoboActionBarActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        setFacilityName("Kabira Health Center");
+        User user = userService.getRegisteredUser();
+
+        setFacilityName(user.getFacilityName());
     }
 
     @Override

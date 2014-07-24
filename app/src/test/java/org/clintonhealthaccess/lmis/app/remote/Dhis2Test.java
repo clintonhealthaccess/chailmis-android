@@ -13,6 +13,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
 import java.io.IOException;
@@ -49,13 +50,13 @@ public class Dhis2Test {
 
     @Test
     public void testShouldValidateUserLogin() throws Exception {
-        addPendingHttpResponse(200, "OK");
+        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
 
         User user = new User("test", "pass");
         dhis2.validateLogin(user);
 
         HttpRequest lastSentHttpRequest = getSentHttpRequest(0);
-        assertThat(lastSentHttpRequest.getRequestLine().getUri(), equalTo(dhis2BaseUrl + "/api/dataSets"));
+        assertThat(lastSentHttpRequest.getRequestLine().getUri(), equalTo(dhis2BaseUrl + "/api/me"));
         Header authorizationHeader = lastSentHttpRequest.getFirstHeader("Authorization");
         assertThat(authorizationHeader.getValue(), equalTo("Basic dGVzdDpwYXNz"));
     }

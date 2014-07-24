@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -11,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
 
@@ -49,7 +51,7 @@ public class UserServiceTest {
     public void testShouldKnowIfThereIsUserRegistered() throws Exception {
         assertThat(userService.userRegistered(), is(false));
 
-        addPendingHttpResponse(200, "OK");
+        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
 
         User newUser = userService.register("admin", "district");
 

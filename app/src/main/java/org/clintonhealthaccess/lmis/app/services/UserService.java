@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
@@ -33,18 +34,35 @@ public class UserService {
     }
 
     public User register(final String username, final String password) {
-        lmisServer.validateLogin(new User(username, password));
+        UserProfile profile = lmisServer.validateLogin(new User(username, password));
+
         User user = saveUserToDatabase(username, password);
+        if (profile.getOrganisationUnits().size() > 0) {
+            user.setFacilityCode(profile.getOrganisationUnits().get(0).getId());
+            user.setFacilityName(profile.getOrganisationUnits().get(0).getName());
+            updateUser(user);
+        }
+
         syncManager.createSyncAccount(user);
         return user;
     }
 
-    private User saveUserToDatabase(final String username, final String password) {
+    public User saveUserToDatabase(final String username, final String password) {
         return dbUtil.withDao(User.class, new Operation<User, User>() {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
                 User user = new User(username, password, "KB");
                 dao.create(user);
+                return user;
+            }
+        });
+    }
+
+    public User updateUser(final User user) {
+        return dbUtil.withDao(User.class, new Operation<User, User>() {
+            @Override
+            public User operate(Dao<User, String> dao) throws SQLException {
+                dao.update(user);
                 return user;
             }
         });
