@@ -21,10 +21,8 @@ import com.google.common.base.Predicate;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
-import org.clintonhealthaccess.lmis.app.events.OrderQuantityChangedEvent;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
-import org.clintonhealthaccess.lmis.app.watchers.OrderQuantityTextWatcher;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,7 +53,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         super(context, resource, commodities);
         unexpectedOrderReasons = filterReasonsWithType(reasons, OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
         orderReasons = filterReasonsWithType(reasons, OrderReason.ORDER_REASONS_JSON_KEY);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -70,7 +67,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
         final Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-        Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
+        final Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
@@ -86,9 +83,47 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         setupOrderReasonsSpinner(spinnerOrderReasons, textViewStartDate, orderCommodityViewModel, textViewEndDate);
         setupUnexpectedReasonsSpinner(spinnerUnexpectedQuantityReasons, orderCommodityViewModel);
-        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel, editTextOrderQuantity, getContext());
+
+        final CommodityViewModel commodityViewModel1 = orderCommodityViewModel;
+        TextWatcher orderCommodityQuantityTextWatcher = new LmisTextWatcher() {
+            private final CommodityViewModel commodityViewModel = commodityViewModel1;
+
+            @Override
+            public void afterTextChanged(final Editable editable) {
+
+                String quantityString = editable.toString();
+                int quantityInt = 0;
+                try {
+                    quantityInt = Integer.parseInt(quantityString);
+                } catch (NumberFormatException ex) {
+                    quantityInt = 0;
+                }
+                commodityViewModel.setQuantityEntered(quantityInt);
+                if (commodityViewModel.quantityIsUnexpected()) {
+                    String commodityName = commodityViewModel.getName();
+                    String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityViewModel.getExpectedOrderQuantity(), commodityName);
+                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+
+                }
+                int orderQuantity = getOrderQuantity(editable);
+                setupUnexpectedReasonsSpinnerVisibility(orderCommodityViewModel, spinnerUnexpectedQuantityReasons);
+                if (orderQuantity <= 0) {
+                    editTextOrderQuantity.setError(getContext().getString(R.string.orderQuantityMustBeGreaterThanZero));
+                }
+            }
+        };
+
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
         return rowView;
+    }
+
+    private int getOrderQuantity(Editable e) {
+        final String quantityString = e.toString();
+        try {
+            return Integer.parseInt(quantityString);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
     }
 
     private void setDateTextClickListeners(TextView textViewStartDate, TextView textViewEndDate) {
@@ -339,15 +374,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         datePickerDialog.show();
     }
 
-    public void onEventMainThread(OrderQuantityChangedEvent event) {
-        CommodityViewModel commodityViewModel = event.getCommodityViewModel();
-        if (commodityViewModel.quantityIsUnexpected()) {
-            String commodityName = commodityViewModel.getName();
-            String message = String.format(getContext().getString(R.string.unexpected_order_quantity_error), commodityViewModel.getExpectedOrderQuantity(), commodityName);
-            Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-        }
-        notifyDataSetChanged();
-    }
 
     private String getDateString(int year, int monthOfYear, int dayOfMonth) {
         Calendar setCalender = Calendar.getInstance();

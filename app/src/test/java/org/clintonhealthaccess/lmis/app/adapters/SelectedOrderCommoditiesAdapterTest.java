@@ -5,17 +5,18 @@ import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
-import org.clintonhealthaccess.lmis.app.events.OrderQuantityChangedEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,6 +24,8 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDatePickerDialog;
 import org.robolectric.shadows.ShadowDialog;
+import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +39,7 @@ import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRo
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -169,28 +173,32 @@ public class SelectedOrderCommoditiesAdapterTest {
         assertThat(reasonName, is(emergency.getReason()));
     }
 
-    @Ignore("Work in Progress")
     @Test
     public void shouldShowUnExpectedReasonsSpinnerIfDataIsUnexpected() throws Exception {
-
-
         ArrayList<CommodityViewModel> commodities = new ArrayList<>();
-        commodities.add(new CommodityViewModel(new Commodity("food")));
+        commodities.add(new CommodityViewModel(new Commodity("item")));
         adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
 
-        Spinner spinnerUnexpectedQuantityReasons = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerUnexpectedQuantityReasons);
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
+
+        Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
 
         assertThat(spinnerUnexpectedQuantityReasons, is(notNullValue()));
 
-        CommodityViewModel mockViewModel = mock(CommodityViewModel.class);
-        when(mockViewModel.quantityIsUnexpected()).thenReturn(true);
-        adapter.onEventMainThread(new OrderQuantityChangedEvent(12, mockViewModel));
+        editTextOrderQuantity.setText("20");
+
+        ShadowHandler.idleMainLooper();
+
+        MatcherAssert.assertThat(ShadowToast.getTextOfLatestToast(), equalTo("Unexpected quantity (12) entered  for item. Please give a reason."));
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.VISIBLE));
 
-        CommodityViewModel otherMock = mock(CommodityViewModel.class);
-        when(otherMock.quantityIsUnexpected()).thenReturn(false);
-        adapter.onEventMainThread(new OrderQuantityChangedEvent(12, otherMock));
+        editTextOrderQuantity.setText("2");
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.INVISIBLE));
 
