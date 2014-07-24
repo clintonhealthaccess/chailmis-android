@@ -66,8 +66,8 @@ public class SelectedOrderCommoditiesAdapterTest {
         when(commodityViewModel.getOrderReasonPosition()).thenReturn(0);
         commodities.add(commodityViewModel);
 
-        orderReasons.add(routine);
         orderReasons.add(emergency);
+        orderReasons.add(routine);
 
         adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
     }
@@ -166,7 +166,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     public void shouldPutOrderReasonsIntoOrderReasonsSpinnerAdapter() {
         Spinner spinner = (Spinner) getViewFromListRow(adapter, list_item_layout, R.id.spinnerOrderReasons);
         String reasonName = ((OrderReason) spinner.getAdapter().getItem(0)).getReason();
-        assertThat(reasonName, is(routine.getReason()));
+        assertThat(reasonName, is(emergency.getReason()));
     }
 
     @Ignore("Work in Progress")
@@ -206,5 +206,30 @@ public class SelectedOrderCommoditiesAdapterTest {
         Robolectric.shadowOf(spinner).performItemClick(0);
         String endDate = ((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate)).getText().toString();
         assertThat(endDate, is("31-01-2013"));
+    }
+
+    @Test
+    public void shouldDisableEndDateWhenOrderReasonIsRoutine() throws Exception {
+        orderReasons = new ArrayList<>();
+        orderReasons.add(routine);
+        orderReasons.add(emergency);
+
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
+
+        spinnerOrderReasons.setSelection(0);
+
+        TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+
+        assertThat(textViewEndDate.isEnabled(), is(false));
+
+
     }
 }
