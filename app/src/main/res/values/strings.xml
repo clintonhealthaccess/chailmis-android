@@ -58,5 +58,6 @@
     <string name="end_date_error">End date should be after the start date.</string>
     <string name="prescription">Prescription No:</string>
     <string name="commodityName">Commodity Name</string>
+    <string name="srv">SRV :</string>
 
 </resources>

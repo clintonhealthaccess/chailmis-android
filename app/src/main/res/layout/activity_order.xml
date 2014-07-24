@@ -41,14 +41,39 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <TextView
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_header"
-            android:padding="10dp"
-            android:text="@string/order"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gray_header"
+                android:padding="10dp"
+                android:text="@string/order"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewSRVNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textViewSRVText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/textViewSRVNo"
+                android:padding="10dp"
+                android:text="@string/srv"
+                android:textSize="18sp" />
+
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="fill_parent"

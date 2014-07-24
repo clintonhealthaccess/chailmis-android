@@ -28,6 +28,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -39,6 +40,7 @@ import static org.robolectric.Robolectric.buildActivity;
 @RunWith(RobolectricGradleTestRunner.class)
 public class OrderActivityTest {
 
+    public static final String TEST_SRV_NUMBER = "AU-0009";
     private OrderActivity orderActivity;
     private OrderService orderServiceMock;
 
@@ -51,6 +53,7 @@ public class OrderActivityTest {
         orderServiceMock = mock(OrderService.class);
         List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY));
         when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
+        when(orderServiceMock.getNextSRVNumber()).thenReturn(TEST_SRV_NUMBER);
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
@@ -109,5 +112,11 @@ public class OrderActivityTest {
         expectedOrder.addItem(orderItem2);
 
         assertThat(expectedOrder, is(orderActivity.generateOrder()));
+    }
+
+    @Test
+    public void shouldDisplaySRVNumber() throws Exception {
+        assertThat(orderActivity.textViewSRVNo, is(notNullValue()));
+        assertThat(orderActivity.textViewSRVNo.getText().toString(), is(TEST_SRV_NUMBER));
     }
 }

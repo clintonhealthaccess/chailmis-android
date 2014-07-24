@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -55,7 +56,7 @@ public class OrderServiceTest {
     @Before
     public void setUp() throws SQLException {
         mockUserService = mock(UserService.class);
-        when(mockUserService.getRegisteredUser()).thenReturn(new User("", ""));
+        when(mockUserService.getRegisteredUser()).thenReturn(new User("", "", "AU"));
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
@@ -112,6 +113,22 @@ public class OrderServiceTest {
 
         List<OrderReason> reasons = orderService.allOrderReasons();
         assertThat(reasons, containsInAnyOrder(emergency, routine, losses, highDemand));
+    }
+
+    @Test
+    public void shouldGenerateSRVNumber() throws Exception {
+
+        assertThat(orderService.getNextSRVNumber(), is("AU-0001"));
+        final Order order = new Order("AU-0001");
+        dbUtil.withDao(Order.class, new DbUtil.Operation<Order, Order>() {
+            @Override
+            public Order operate(Dao<Order, String> dao) throws SQLException {
+                dao.create(order);
+                return order;
+            }
+        });
+        assertThat(orderService.getNextSRVNumber(), is("AU-0002"));
+
     }
 
     @After

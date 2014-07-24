@@ -1,8 +1,6 @@
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +13,13 @@ public class Order {
     @DatabaseField
     private String srvNumber = "DUMMY ORDER ID NUMBER";
 
-    @ForeignCollectionField(eager = true)
-    private ForeignCollection<OrderItem> orderItems;
-
     private List<OrderItem> items = new ArrayList<>();
 
     public Order() {
+    }
+
+    public Order(String srvNumber) {
+        this.srvNumber = srvNumber;
     }
 
     public void addItem(OrderItem orderItem) {
@@ -36,8 +35,8 @@ public class Order {
         if (this == otherOrder) return true;
         if (otherOrder == null || getClass() != otherOrder.getClass()) return false;
 
-        for(OrderItem item : this.items) {
-            if(!((Order)otherOrder).has(item)) {
+        for (OrderItem item : this.items) {
+            if (!((Order) otherOrder).has(item)) {
                 return false;
             }
         }

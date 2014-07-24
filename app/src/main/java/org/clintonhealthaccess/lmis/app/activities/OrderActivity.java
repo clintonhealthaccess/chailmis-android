@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.inject.Inject;
 
@@ -29,6 +30,10 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.buttonSubmitOrder)
     Button buttonSubmitOrder;
+
+    @InjectView(R.id.textViewSRVNo)
+    TextView textViewSRVNo;
+
 
     // FIXME: id need change here
     private int getSelectedCommoditiesAdapterId() {
@@ -62,7 +67,7 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-
+        textViewSRVNo.setText(orderService.getNextSRVNumber());
     }
 
     protected Order generateOrder() {

@@ -17,6 +17,9 @@ public class User {
     @DatabaseField(canBeNull = false)
     private String password;
 
+    @DatabaseField()
+    private String facilityCode;
+
     public User() {
         // ormlite likes it
     }
@@ -24,6 +27,12 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(String username, String password, String facilityCode) {
+        this.username = username;
+        this.password = password;
+        this.facilityCode = facilityCode;
     }
 
     public String getUsername() {
@@ -55,5 +64,9 @@ public class User {
         String credentials = username + ":" + password;
         String base64EncodedCredentials = encodeToString(credentials.getBytes(), NO_WRAP);
         return "Basic " + base64EncodedCredentials;
+    }
+
+    public String getFacilityCode() {
+        return facilityCode;
     }
 }
