@@ -2,7 +2,10 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -87,10 +90,17 @@ public class SelectedOrderCommoditiesAdapterTest {
         assertNotNull(dateDialog);
     }
 
-    @Ignore
     @Test
     public void shouldNotBeAbleToSetTheEndDateEarlierThanStartDate() throws Exception {
-        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+
+        TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         Calendar calendarStartDate = Calendar.getInstance();
 
@@ -100,9 +110,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         textViewStartDate.setText(startDateAsText);
 
-        assertThat(((TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate)).getText().toString(), is(startDateAsText));
-
-        TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate);
+        assertThat(((TextView) rowView.findViewById(R.id.textViewStartDate)).getText().toString(), is(startDateAsText));
 
         textViewEndDate.performClick();
 
@@ -119,12 +127,17 @@ public class SelectedOrderCommoditiesAdapterTest {
         assertThat(minEndDateAsText, is(startDateAsText));
     }
 
-    @Ignore
     @Test
     public void shouldNotBeAbleToSetStartDateGreaterThanEndDate() throws Exception {
-        TextView textViewStartDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewStartDate);
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
 
-        TextView textViewEndDate = (TextView) getViewFromListRow(adapter, list_item_layout, R.id.textViewEndDate);
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+
+        TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         Calendar calendarEndDate = Calendar.getInstance();
 
