@@ -78,6 +78,10 @@ public class CommodityViewModel implements Serializable {
         return (quantityEntered > 1.1 * this.expectedOrderQuantity);
     }
 
+    public boolean quantityIsValid() {
+        return quantityEntered > 0;
+    }
+
     public int getExpectedOrderQuantity() {
         return expectedOrderQuantity;
     }

@@ -43,11 +43,12 @@ import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
 
     public static final String DATE_FORMAT = "dd-MMM-yy";
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
     public static final String ROUTINE = "Routine";
     public static final int MIN_DIFFERENCE_BETWEEN_START_END = 7;
-    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
     private List<OrderReason> unexpectedOrderReasons;
     private List<OrderReason> orderReasons;
+    private EditText editTextOrderQuantity;
 
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, List<OrderReason> reasons) {
@@ -67,7 +68,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         orderCommodityViewModel.setExpectedOrderQuantity(12);
 
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
+        editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
         final Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
         Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
@@ -85,7 +86,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         setupOrderReasonsSpinner(spinnerOrderReasons, textViewStartDate, orderCommodityViewModel, textViewEndDate);
         setupUnexpectedReasonsSpinner(spinnerUnexpectedQuantityReasons, orderCommodityViewModel);
-        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel);
+        TextWatcher orderCommodityQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel, editTextOrderQuantity, getContext());
         editTextOrderQuantity.addTextChangedListener(orderCommodityQuantityTextWatcher);
         return rowView;
     }
@@ -193,8 +194,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     OrderReason getReason(String reasonName) {
-        for(OrderReason reason: orderReasons) {
-            if(reason.getReason().equals(reasonName)) {
+        for (OrderReason reason : orderReasons) {
+            if (reason.getReason().equals(reasonName)) {
                 return reason;
             }
         }

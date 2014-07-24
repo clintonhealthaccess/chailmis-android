@@ -63,5 +63,6 @@
     <string name="unit">Unit</string>
     <string name="quantity_ordered">Quantity Ordered</string>
     <string name="order_successful">Order Successful</string>
+    <string name="orderQuantityMustBeGreaterThanZero">Order quantity must be greater than 0</string>
 
 </resources>

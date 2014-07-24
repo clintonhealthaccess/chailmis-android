@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -27,13 +28,12 @@ public class OrderQuantityTextWatcherTest {
     public void setUp() throws Exception {
         EventBus.getDefault().register(this);
         eventFired = false;
-
     }
 
     @Ignore("Work in Progress")
     @Test
     public void testAfterTextChanged() throws Exception {
-        OrderQuantityTextWatcher watcher = new OrderQuantityTextWatcher(new CommodityViewModel(new Commodity("lunch")));
+        OrderQuantityTextWatcher watcher = new OrderQuantityTextWatcher(new CommodityViewModel(new Commodity("lunch")), null, null);
         watcher.afterTextChanged(new Editable.Factory().newEditable("12"));
         Thread.sleep(2000);
         assertTrue(eventFired);

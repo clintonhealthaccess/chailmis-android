@@ -69,7 +69,6 @@ public class OrderService implements OrderItemSaver {
         return allOrders;
     }
 
-
     public String getNextSRVNumber() {
         String facilityCode = userService.getRegisteredUser().getFacilityCode();
         List<Order> orders = all();
@@ -98,7 +97,6 @@ public class OrderService implements OrderItemSaver {
 
         order.saveOrderItems(this);
     }
-
 
     @Override
     public void saveOrderItem(final OrderItem orderItem) {

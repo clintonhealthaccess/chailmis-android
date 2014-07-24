@@ -1,8 +1,11 @@
 package org.clintonhealthaccess.lmis.app.watchers;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.EditText;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.OrderQuantityChangedEvent;
 
@@ -13,13 +16,16 @@ import de.greenrobot.event.EventBus;
 
 public class OrderQuantityTextWatcher implements TextWatcher {
     private final CommodityViewModel commodityViewModel;
-
-    public OrderQuantityTextWatcher(CommodityViewModel commodityViewModel1) {
-        this.commodityViewModel = commodityViewModel1;
-    }
-
-    private Timer timer = new Timer();
+    private final EditText editTextQuantity;
+    private final Context context;
     public long DELAY = 1000;
+    private Timer timer = new Timer();
+
+    public OrderQuantityTextWatcher(CommodityViewModel commodityViewModel, EditText editTextQuantity, Context context) {
+        this.commodityViewModel = commodityViewModel;
+        this.editTextQuantity = editTextQuantity;
+        this.context = context;
+    }
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
@@ -33,24 +39,30 @@ public class OrderQuantityTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(final Editable editable) {
+        final int orderQuantity = getOrderQuantity(editable);
         timer.cancel();
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                String quantityString = editable.toString();
-                int quantityInt = 0;
-                try {
-                    quantityInt = Integer.parseInt(quantityString);
-                } catch (NumberFormatException ex) {
-                    quantityInt = 0;
+                commodityViewModel.setQuantityEntered(orderQuantity);
+                if (orderQuantity > 0) {
+                    EventBus.getDefault().post(new OrderQuantityChangedEvent(orderQuantity, commodityViewModel));
                 }
-                commodityViewModel.setQuantityEntered(quantityInt);
-                EventBus.getDefault().post(new OrderQuantityChangedEvent(quantityInt, commodityViewModel));
-
             }
-
-
         }, DELAY);
+
+        if (orderQuantity <= 0) {
+            editTextQuantity.setError(context.getResources().getString(R.string.orderQuantityMustBeGreaterThanZero));
+        }
+    }
+
+    private int getOrderQuantity(Editable e) {
+        final String quantityString = e.toString();
+        try {
+            return Integer.parseInt(quantityString);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
     }
 }
