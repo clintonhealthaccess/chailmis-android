@@ -27,7 +27,6 @@
             android:layout_weight="1"
             android:clickable="true"
             android:hint="@string/hint_start_date"
-            android:onClick="showDateDialog"
             android:textSize="16sp" />
 
         <TextView
