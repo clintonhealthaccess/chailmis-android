@@ -160,15 +160,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedQuantityReasons, final CommodityViewModel orderCommodityViewModel) {
-        spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new LmisOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //FIXME Unexpected reason not being set here.
                 orderCommodityViewModel.setUnexpectedReasonPosition(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         setupSpinnerData(spinnerUnexpectedQuantityReasons, unexpectedOrderReasons, orderCommodityViewModel.getUnexpectedReasonPosition());
@@ -190,15 +186,12 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
     }
 
     private class LmisOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-
         }
     }
 
@@ -212,7 +205,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         }
     }
 
-    OrderReason getReason(String reasonName) {
+    private OrderReason getReason(String reasonName) {
         for (OrderReason reason : orderReasons) {
             if (reason.getReason().equals(reasonName)) {
                 return reason;
@@ -358,7 +351,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             datePicker.setMinDate(calendarMinDate.getTimeInMillis());
         }
     }
-
 
     private String getDateString(int year, int monthOfYear, int dayOfMonth) {
         Calendar setCalender = Calendar.getInstance();
