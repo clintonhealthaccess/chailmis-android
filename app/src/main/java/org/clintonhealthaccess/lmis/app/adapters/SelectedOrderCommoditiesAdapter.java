@@ -163,7 +163,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
         spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                //FIXME Unexpected reason not being set here.
                 orderCommodityViewModel.setUnexpectedReasonPosition(position);
             }
 
@@ -180,7 +180,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<CommodityViewM
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 orderCommodityViewModel.setOrderReasonPosition(position);
-                OrderReason orderReason = getReason(spinnerOrderReasons.getAdapter().getItem(position).toString());
+                OrderReason orderReason = getReason(((OrderReason)spinnerOrderReasons.getSelectedItem()).getReason());
                 orderCommodityViewModel.setReasonForOrder(orderReason);
                 doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel, textViewStartDate, textViewEndDate);
             }
