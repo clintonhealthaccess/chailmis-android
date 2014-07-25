@@ -12,7 +12,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 
 import java.util.List;
@@ -53,9 +52,6 @@ public class HomeActivity extends BaseActivity {
     Button buttonMessages;
 
     @Inject
-    private UserService userService;
-
-    @Inject
     private SyncManager syncManager;
 
     private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
@@ -74,12 +70,6 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Crashlytics.start(this);
-
-        if (!userService.userRegistered()) {
-            startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
-            finish();
-        }
-
         setupButtonEvents();
         setupGraph();
         setupAlerts();

@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -25,7 +26,7 @@ public class BaseActivity extends RoboActionBarActivity {
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
     protected void setFacilityName(String text) {
-        textFacilityName = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.textFacilityName);
+
         textFacilityName.setText(text);
     }
 
@@ -35,9 +36,16 @@ public class BaseActivity extends RoboActionBarActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.action_bar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        User user = userService.getRegisteredUser();
+        textFacilityName = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.textFacilityName);
+        if (!userService.userRegistered()) {
+            startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+            finish();
+        } else {
+            User user = userService.getRegisteredUser();
+            setFacilityName(user.getFacilityName());
+        }
 
-        setFacilityName(user.getFacilityName());
+
     }
 
     @Override
