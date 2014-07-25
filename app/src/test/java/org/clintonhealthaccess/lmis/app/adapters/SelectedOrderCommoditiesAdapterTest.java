@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import static java.util.Calendar.DAY_OF_MONTH;
-import static org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter.MIN_DIFFERENCE_BETWEEN_START_END;
+import static org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter.MIN_ORDER_PERIOD;
 import static org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -119,7 +119,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        calendarStartDate.add(DAY_OF_MONTH, MIN_DIFFERENCE_BETWEEN_START_END);
+        calendarStartDate.add(DAY_OF_MONTH, MIN_ORDER_PERIOD);
 
         Date minDate = new Date(dateDialog.getDatePicker().getMinDate());
 
@@ -152,7 +152,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         DatePickerDialog dateDialog = (DatePickerDialog) ShadowDatePickerDialog.getLatestDialog();
 
-        calendarEndDate.add(DAY_OF_MONTH, -MIN_DIFFERENCE_BETWEEN_START_END);
+        calendarEndDate.add(DAY_OF_MONTH, -MIN_ORDER_PERIOD);
 
         Date maxDate = new Date(dateDialog.getDatePicker().getMaxDate());
 
@@ -200,7 +200,6 @@ public class SelectedOrderCommoditiesAdapterTest {
         editTextOrderQuantity.setText("2");
 
         assertThat(spinnerUnexpectedQuantityReasons.getVisibility(), is(View.INVISIBLE));
-
     }
 
     @Test
@@ -253,7 +252,5 @@ public class SelectedOrderCommoditiesAdapterTest {
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         assertThat(textViewEndDate.isEnabled(), is(false));
-
-
     }
 }

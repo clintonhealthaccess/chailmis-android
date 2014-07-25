@@ -12,6 +12,8 @@ import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import roboguice.RoboGuice;
 
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
+
 public class QuantityTextWatcher implements TextWatcher {
     private final EditText editTextQuantity;
     private final CommodityViewModel commodityViewModel;
@@ -39,7 +41,7 @@ public class QuantityTextWatcher implements TextWatcher {
     public void afterTextChanged(Editable editable) {
         String value = editable.toString();
         if (!value.isEmpty()) {
-            int quantity = Integer.parseInt(value);
+            int quantity = getIntFromString(value);
             Log.i("Entered", String.format("%d", quantity));
             Log.i("Entered", String.format("%s", value));
             int stock_level = stockService.getStockLevelFor(commodityViewModel.getCommodity());

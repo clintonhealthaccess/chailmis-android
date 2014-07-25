@@ -33,9 +33,9 @@ import static android.view.View.OnClickListener;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
 
 public class DispenseActivity extends CommoditySelectableActivity {
@@ -156,7 +156,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
             @Override
             public void operate(View view, CommodityViewModel commodityViewModel) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                int quantity = parseInt(editTextQuantity.getText().toString());
+                int quantity = getIntFromString(editTextQuantity.getText().toString());
                 dispensing.getDispensingItems().add(new DispensingItem(commodityViewModel.getCommodity(), quantity));
             }
         });

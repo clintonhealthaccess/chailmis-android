@@ -17,6 +17,7 @@ import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
 
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -92,8 +93,8 @@ public class ConfirmDispenseAdapterTest {
         View view = this.adapter.getView(0, null, parent);
         TextView adjustment = (TextView) view.findViewById(R.id.textViewAdjustedQuantity);
         TextView soh = (TextView) view.findViewById(R.id.textViewSOH);
-        assertThat(Integer.parseInt(soh.getText().toString()), is(15));
-        assertThat(Integer.parseInt(adjustment.getText().toString()), is(quantity));
+        assertThat(getIntFromString(soh.getText().toString()), is(15));
+        assertThat(getIntFromString(adjustment.getText().toString()), is(quantity));
 
     }
 
@@ -110,7 +111,7 @@ public class ConfirmDispenseAdapterTest {
         View view = this.adapter.getView(0, null, parent);
 
         TextView soh = (TextView) view.findViewById(R.id.textViewSOH);
-        assertThat(Integer.parseInt(soh.getText().toString()), is(quantity));
+        assertThat(getIntFromString(soh.getText().toString()), is(quantity));
 
     }
 
