@@ -100,6 +100,11 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected Button getSubmitButton() {
+        return buttonSubmitDispense;
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         buttonSubmitDispense.setOnClickListener(
                 new OnClickListener() {
@@ -134,15 +139,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_commodity_list_item;
-    }
-
-    @Override
-    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
-        if (selectedCommodities.size() > 0) {
-            buttonSubmitDispense.setVisibility(View.VISIBLE);
-        } else {
-            buttonSubmitDispense.setVisibility(View.INVISIBLE);
-        }
     }
 
     Dispensing getDispensing() {

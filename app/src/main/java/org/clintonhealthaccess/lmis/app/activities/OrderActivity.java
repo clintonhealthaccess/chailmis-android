@@ -45,17 +45,13 @@ public class OrderActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
-        if (selectedCommodities.size() > 0) {
-            buttonSubmitOrder.setVisibility(View.VISIBLE);
-        } else {
-            buttonSubmitOrder.setVisibility(View.INVISIBLE);
-        }
+    protected int getLayoutId() {
+        return R.layout.activity_order;
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_order;
+    protected Button getSubmitButton() {
+        return buttonSubmitOrder;
     }
 
     @Override

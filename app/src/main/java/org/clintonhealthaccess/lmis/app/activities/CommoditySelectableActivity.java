@@ -74,7 +74,16 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         }
     }
 
-    abstract protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities);
+    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
+        Button submitButton = getSubmitButton();
+        if (selectedCommodities.size() > 0) {
+            submitButton.setVisibility(View.VISIBLE);
+        } else {
+            submitButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    abstract protected Button getSubmitButton();
 
     abstract protected int getLayoutId();
 
