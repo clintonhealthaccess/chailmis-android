@@ -7,4 +7,5 @@
     <color name="disabled">#D3D3D3</color>
     <color name="gray_header">#CACACA</color>
     <color name="white">#FFFFFF</color>
+    <color name="losses_header">#F3ACBD</color>
 </resources>
