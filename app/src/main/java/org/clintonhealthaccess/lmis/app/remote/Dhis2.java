@@ -7,7 +7,6 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -36,21 +35,27 @@ public class Dhis2 implements LmisServer {
         String groupSetId = service.getDateElementGroupSetId();
         DataElementGroupSet groupSet = service.getDataElementGroupSet(groupSetId);
         List<DataElementGroup> groups = groupSet.getDataElementGroups();
-        List<DataElementGroup> fetchedGroups = new ArrayList<>();
+        List<DataElementGroup> detailedElementGroups = new ArrayList<>();
         for (DataElementGroup group : groups) {
-            DataElementGroup fetchedGroup = service.getDataElementGroup(group.getId());
-            List<DataElement> fetchedElements = new ArrayList<>();
-            for (DataElement element : fetchedGroup.getDataElements()) {
-                DataElement fetchedElement = service.getDataElement(element.getId());
-                CategoryCombo combo = service.getCategoryCombo(fetchedElement.getCategoryCombo().getId());
-                fetchedElement.setCategoryCombo(combo);
-                fetchedElements.add(fetchedElement);
-            }
-            fetchedGroup.getDataElements().clear();
-            fetchedGroup.getDataElements().addAll(fetchedElements);
-            fetchedGroups.add(fetchedGroup);
+            detailedElementGroups.add(getDataElementGroupDetails(service, group));
         }
-        return transformDataElementGroupsToCategories(fetchedGroups);
+        return transformDataElementGroupsToCategories(detailedElementGroups);
+    }
+
+    private DataElementGroup getDataElementGroupDetails(Dhis2Endpoint service, DataElementGroup group) {
+        List<DataElement> fetchedElements = new ArrayList<>();
+        DataElementGroup fetchedGroup = service.getDataElementGroup(group.getId());
+        for (DataElement element : fetchedGroup.getDataElements()) {
+            fetchedElements.add(getDataElementDetails(service, element));
+        }
+        fetchedGroup.getDataElements().clear();
+        fetchedGroup.getDataElements().addAll(fetchedElements);
+        return fetchedGroup;
+    }
+
+    private DataElement getDataElementDetails(Dhis2Endpoint service, DataElement element) {
+        DataElement dataElementDetail = service.getDataElement(element.getId());
+        return dataElementDetail;
     }
 
     @Override
@@ -63,12 +68,12 @@ public class Dhis2 implements LmisServer {
         return transform(groups, new Function<DataElementGroup, Category>() {
             @Override
             public Category apply(DataElementGroup group) {
-                Category cat = new Category(group.getName());
+                Category category = new Category(group.getName());
                 for (DataElement element : group.getDataElements()) {
-                    cat.addCommodity(new Commodity(element.getId(), element.getName()));
-                    //FIXME store the combo options
+                    Commodity commodity = new Commodity(element.getId(), element.getName());
+                    category.addCommodity(commodity);
                 }
-                return cat;
+                return category;
             }
         });
     }
