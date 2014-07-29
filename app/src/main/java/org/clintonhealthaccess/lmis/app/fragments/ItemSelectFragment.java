@@ -12,11 +12,11 @@ import android.widget.LinearLayout;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.views.CategoryButton;
 
@@ -28,26 +28,35 @@ import java.util.List;
 import roboguice.fragment.RoboDialogFragment;
 
 public class ItemSelectFragment extends RoboDialogFragment {
+    public static final String COMMODITY_DISPLAY_STRATEGY = "Adapter";
+    public static final String COMMODITIES_TO_VIEW_MODELS_CONVERTER = "param_view_model_generator";
     private static final String CATEGORY = "param_category";
     private static final String SELECTED_COMMODITIES = "param_selected_commodities";
-    public static final String STRATEGY = "Adapter";
-
+    GridView gridViewCommodities;
     @Inject
     private CategoryService categoryService;
-
     private Category category;
-
-    GridView gridViewCommodities;
-
-
     private LinearLayout categoriesLayout;
     private HashMap<Category, CommoditiesAdapter> adapterHashMap;
-    private ArrayList<CommodityViewModel> selectedCommodities;
-    private Button buttonClose;
+    private ArrayList<? extends BaseCommodityViewModel> selectedCommodities;
     private CommodityDisplayStrategy commodityDisplayStrategy;
+    private CommoditiesToViewModelsConverter viewModelsConverter;
 
     public ItemSelectFragment() {
         // Required empty public constructor
+    }
+
+    public static ItemSelectFragment newInstance(Category category, ArrayList<?> selectedCommodities,
+                                                 CommodityDisplayStrategy commodityDisplayStrategy, CommoditiesToViewModelsConverter generator) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(CATEGORY, category);
+        arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
+        arguments.putSerializable(COMMODITY_DISPLAY_STRATEGY, commodityDisplayStrategy);
+        arguments.putSerializable(COMMODITIES_TO_VIEW_MODELS_CONVERTER, generator);
+
+        ItemSelectFragment fragment = new ItemSelectFragment();
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @Override
@@ -55,8 +64,9 @@ public class ItemSelectFragment extends RoboDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
-            selectedCommodities = (ArrayList<CommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
-            commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(STRATEGY);
+            selectedCommodities = (ArrayList<? extends BaseCommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
+            commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(COMMODITY_DISPLAY_STRATEGY);
+            viewModelsConverter = (CommoditiesToViewModelsConverter) getArguments().getSerializable(COMMODITIES_TO_VIEW_MODELS_CONVERTER);
         }
     }
 
@@ -80,15 +90,15 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 }
             });
 
-            List<CommodityViewModel> commodities = convertToViewModelsList(category.getCommodities());
+            List<? extends BaseCommodityViewModel> commodities = viewModelsConverter.execute(category.getCommodities());
 
-            for (CommodityViewModel commodityViewModel : commodities) {
-                if (selectedCommodities.contains(commodityViewModel)) {
-                    commodityViewModel.toggleSelected();
+            for (BaseCommodityViewModel viewModel : commodities) {
+                if (selectedCommodities.contains(viewModel)) {
+                    viewModel.toggleSelected();
                 }
             }
 
-            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, commodities, commodityDisplayStrategy));
+            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, (List<BaseCommodityViewModel>) commodities, commodityDisplayStrategy));
             categoriesLayout.addView(button);
         }
 
@@ -96,16 +106,8 @@ public class ItemSelectFragment extends RoboDialogFragment {
         return overlayView;
     }
 
-    private List<CommodityViewModel> convertToViewModelsList(List<Commodity> commodities) {
-        List<CommodityViewModel> listToReturn = new ArrayList<>();
-        for (Commodity commodity : commodities) {
-            listToReturn.add(new CommodityViewModel(commodity));
-        }
-        return listToReturn;
-    }
-
     private void setupCloseButton(View overlayView) {
-        buttonClose = (Button) overlayView.findViewById(R.id.buttonClose);
+        Button buttonClose = (Button) overlayView.findViewById(R.id.buttonClose);
         buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -131,17 +133,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 button.setSelected(false);
             }
         }
-    }
-
-    public static ItemSelectFragment newInstance(Category category, ArrayList<CommodityViewModel> selectedCommodities, CommodityDisplayStrategy commodityDisplayStrategy) {
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(CATEGORY, category);
-        arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
-        arguments.putSerializable(STRATEGY, commodityDisplayStrategy);
-
-        ItemSelectFragment fragment = new ItemSelectFragment();
-        fragment.setArguments(arguments);
-        return fragment;
     }
 
 }

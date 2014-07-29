@@ -15,6 +15,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -352,7 +353,7 @@ public class DispenseActivityTest {
             this.commodityToggledEvent = commodityToggledEvent;
         }
 
-        public CommodityViewModel commodityViewModel() {
+        public BaseCommodityViewModel commodityViewModel() {
             return this.commodityToggledEvent.getCommodity();
         }
     }

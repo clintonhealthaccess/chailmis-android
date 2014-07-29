@@ -5,16 +5,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.LossesCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.inject.InjectView;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class LossesActivity extends CommoditySelectableActivity {
@@ -23,7 +26,7 @@ public class LossesActivity extends CommoditySelectableActivity {
     Button buttonSubmitLosses;
 
     @Override
-    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
+    protected void onCommoditySelectionChanged(List<BaseCommodityViewModel> selectedCommodities) {
 
     }
 
@@ -45,6 +48,20 @@ public class LossesActivity extends CommoditySelectableActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         //Do submit stuff here.
+    }
+
+    @Override
+    protected CommoditiesToViewModelsConverter getViewModelConverter() {
+        return new CommoditiesToViewModelsConverter() {
+            @Override
+            public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
+                List<BaseCommodityViewModel> viewModels = newArrayList();
+                for (Commodity commodity : commodities) {
+                    viewModels.add(new LossesCommodityViewModel(commodity));
+                }
+                return viewModels;
+            }
+        };
     }
 
     @Override

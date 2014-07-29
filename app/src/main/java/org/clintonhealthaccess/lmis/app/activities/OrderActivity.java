@@ -11,10 +11,13 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
@@ -24,6 +27,7 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class OrderActivity extends CommoditySelectableActivity {
@@ -81,6 +85,20 @@ public class OrderActivity extends CommoditySelectableActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected CommoditiesToViewModelsConverter getViewModelConverter() {
+        return new CommoditiesToViewModelsConverter() {
+            @Override
+            public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
+                List<BaseCommodityViewModel> viewModels = newArrayList();
+                for (Commodity commodity : commodities) {
+                    viewModels.add(new CommodityViewModel(commodity));
+                }
+                return viewModels;
+            }
+        };
     }
 
     private boolean isOrderValid() {

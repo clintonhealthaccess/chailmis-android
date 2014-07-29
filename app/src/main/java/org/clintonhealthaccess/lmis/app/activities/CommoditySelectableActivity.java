@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -33,7 +35,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     @InjectView(R.id.gridViewSelectedCommodities)
     GridView gridViewSelectedCommodities;
     ArrayAdapter arrayAdapter;
-    ArrayList<CommodityViewModel> selectedCommodities = newArrayList();
+    ArrayList<BaseCommodityViewModel> selectedCommodities = newArrayList();
     @Inject
     private CategoryService categoryService;
 
@@ -55,7 +57,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     public void onEvent(CommodityToggledEvent event) {
-        CommodityViewModel commodity = event.getCommodity();
+        BaseCommodityViewModel commodity = event.getCommodity();
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
             arrayAdapter.remove(commodity);
@@ -74,7 +76,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         }
     }
 
-    protected void onCommoditySelectionChanged(List<CommodityViewModel> selectedCommodities) {
+    protected void onCommoditySelectionChanged(List<BaseCommodityViewModel> selectedCommodities) {
         Button submitButton = getSubmitButton();
         if (selectedCommodities.size() > 0) {
             submitButton.setVisibility(View.VISIBLE);
@@ -92,6 +94,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     abstract protected ArrayAdapter getArrayAdapter();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
+
+    abstract protected CommoditiesToViewModelsConverter getViewModelConverter();
 
     private void setupCategories() {
         Drawable commodityButtonBackground = createCommodityButtonBackground();
@@ -117,7 +121,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities, getCheckBoxVisibilityStrategy());
+                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,
+                        getCheckBoxVisibilityStrategy(), getViewModelConverter());
                 dialog.show(fragmentManager, "selectCommodities");
             }
         });

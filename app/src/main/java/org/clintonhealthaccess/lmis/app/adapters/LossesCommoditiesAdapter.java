@@ -7,13 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesViewModelCommands;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewModel> {
 
@@ -21,6 +26,7 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
 
     public LossesCommoditiesAdapter(Context context, int resource, List<LossesCommodityViewModel> commodities) {
         super(context, resource, commodities);
+
         this.resource = resource;
     }
 
@@ -40,6 +46,8 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         setupTextWatcher(editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
         setupTextWatcher(editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
 
+        ImageButton imageButtonCancel = (ImageButton)rowView.findViewById(R.id.imageButtonCancel);
+        activateCancelButton(imageButtonCancel, viewModel);
         return rowView;
     }
 
@@ -48,6 +56,15 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
             @Override
             public void afterTextChanged(Editable editable) {
                 command.execute(viewModel, editable);
+            }
+        });
+    }
+
+    private void activateCancelButton(ImageButton imageButtonCancel, final LossesCommodityViewModel viewModel) {
+        imageButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
             }
         });
     }

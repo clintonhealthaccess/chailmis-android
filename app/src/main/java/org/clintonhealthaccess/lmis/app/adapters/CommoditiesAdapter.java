@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 
@@ -23,10 +23,10 @@ import roboguice.RoboGuice;
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.widget.AdapterView.OnItemClickListener;
 
-public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
+public class CommoditiesAdapter extends ArrayAdapter<BaseCommodityViewModel> {
     private CommodityDisplayStrategy commodityDisplayStrategy;
 
-    public CommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities, CommodityDisplayStrategy commodityDisplayStrategy) {
+    public CommoditiesAdapter(Context context, int resource, List<BaseCommodityViewModel> commodities, CommodityDisplayStrategy commodityDisplayStrategy) {
         super(context, resource, commodities);
         this.commodityDisplayStrategy = commodityDisplayStrategy;
         RoboGuice.getInjector(context).injectMembers(this);
@@ -37,7 +37,7 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.commodity_list_item, parent, false);
         CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
-        CommodityViewModel commodityViewModel = getItem(position);
+        BaseCommodityViewModel commodityViewModel = getItem(position);
         checkboxCommoditySelected.setChecked(commodityViewModel.isSelected());
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodityViewModel.getName());
@@ -54,7 +54,7 @@ public class CommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
         gridViewCommodities.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                CommodityViewModel commodityViewModel = getItem(position);
+                BaseCommodityViewModel commodityViewModel = getItem(position);
                 if (commodityDisplayStrategy.allowClick(commodityViewModel)) {
                     commodityViewModel.toggleSelected();
                     EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel));

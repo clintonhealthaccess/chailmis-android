@@ -5,6 +5,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -38,7 +39,7 @@ public class CommoditiesAdapterTest {
 
     @Test
     public void shouldPopulateTextViewWithCommodityName() {
-        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         String commodityName = "game";
         Commodity commodity = new Commodity(commodityName);
         commodities.add(new CommodityViewModel(commodity));
@@ -84,7 +85,7 @@ public class CommoditiesAdapterTest {
     }
 
     private CommoditiesAdapter makeAdapterWithCommodities() {
-        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         CommodityViewModel commodityOne = new CommodityViewModel(new Commodity("game"));
         commodityOne.toggleSelected();
         commodities.add(commodityOne);
@@ -95,7 +96,7 @@ public class CommoditiesAdapterTest {
     }
 
     private CommoditiesAdapter makeAdapterWithOutOfStockCommodities(CommodityDisplayStrategy commodityDisplayStrategy) {
-        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         CommodityViewModel commodity = mock(CommodityViewModel.class);
         when(commodity.stockIsFinished()).thenReturn(true);
         commodities.add(commodity);

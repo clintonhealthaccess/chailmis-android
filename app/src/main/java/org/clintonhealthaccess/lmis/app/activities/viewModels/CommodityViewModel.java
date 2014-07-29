@@ -6,12 +6,10 @@ import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CommodityViewModel implements Serializable {
-    private boolean selected;
+public class CommodityViewModel extends BaseCommodityViewModel implements Serializable {
     private int quantityEntered;
-    private Commodity commodity;
-    private int expectedOrderQuantity;
 
+    private int expectedOrderQuantity;
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
     private int unexpectedReasonPosition;
@@ -19,20 +17,12 @@ public class CommodityViewModel implements Serializable {
     private OrderReason reasonForUnexpectedOrderQuantity;
 
     public CommodityViewModel(Commodity commodity) {
-        this.commodity = commodity;
+        super(commodity);
     }
 
     public CommodityViewModel(Commodity commodity, int quantityEntered) {
         this(commodity);
         this.quantityEntered = quantityEntered;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void toggleSelected() {
-        selected = !selected;
     }
 
     public int getQuantityEntered() {
@@ -43,40 +33,6 @@ public class CommodityViewModel implements Serializable {
         this.quantityEntered = quantityEntered;
     }
 
-    public Commodity getCommodity() {
-        return commodity;
-    }
-
-    public String getName() {
-        return commodity.getName();
-    }
-
-    public boolean stockIsFinished() {
-        return commodity.stockIsFinished();
-    }
-
-    public int getOrderDuration() {
-        return commodity.getOrderDuration();
-    }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-
-        CommodityViewModel that = (CommodityViewModel) object;
-
-        return commodity.equals(that.commodity);
-    }
-
-    @Override
-    public int hashCode() {
-        return commodity.hashCode();
-    }
 
     public boolean quantityIsUnexpected() {
         return (quantityEntered > (1.1 * this.expectedOrderQuantity));

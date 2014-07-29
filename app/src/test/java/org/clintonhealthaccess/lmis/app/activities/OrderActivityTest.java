@@ -8,6 +8,7 @@ import android.widget.Spinner;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -97,7 +99,8 @@ public class OrderActivityTest {
 
     @Test
     public void shouldToggleVisibilityOfSubmitButton() {
-        List<CommodityViewModel> selectedCommodities = Arrays.asList(new CommodityViewModel(new Commodity("id", "name")));
+        List<BaseCommodityViewModel> selectedCommodities = newArrayList();
+        selectedCommodities.add(new CommodityViewModel(new Commodity("id", "name")));
         orderActivity.onCommoditySelectionChanged(selectedCommodities);
         assertThat(orderActivity.buttonSubmitOrder.getVisibility(), is(View.VISIBLE));
 

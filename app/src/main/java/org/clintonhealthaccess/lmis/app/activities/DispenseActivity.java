@@ -2,7 +2,6 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -16,10 +15,13 @@ import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
@@ -39,17 +41,6 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 
 
 public class DispenseActivity extends CommoditySelectableActivity {
-    @InjectView(R.id.buttonSubmitDispense)
-    Button buttonSubmitDispense;
-    @InjectView(R.id.checkboxDispenseToFacility)
-    CheckBox checkboxDispenseToFacility;
-    @InjectView(R.id.textViewPrescriptionId)
-    TextView textViewPrescriptionId;
-    @InjectView(R.id.textViewPrescriptionText)
-    TextView textViewPrescriptionText;
-    @Inject
-    DispensingService dispensingService;
-
     private final QuantityValidator INVALID_AMOUNT = new QuantityValidator(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
@@ -73,6 +64,16 @@ public class DispenseActivity extends CommoditySelectableActivity {
             return editTextQuantity.getError() != null;
         }
     });
+    @InjectView(R.id.buttonSubmitDispense)
+    Button buttonSubmitDispense;
+    @InjectView(R.id.checkboxDispenseToFacility)
+    CheckBox checkboxDispenseToFacility;
+    @InjectView(R.id.textViewPrescriptionId)
+    TextView textViewPrescriptionId;
+    @InjectView(R.id.textViewPrescriptionText)
+    TextView textViewPrescriptionText;
+    @Inject
+    DispensingService dispensingService;
 
     private boolean hasInvalidField(List<QuantityValidator> validators) {
         for (final QuantityValidator validator : validators) {
@@ -137,6 +138,20 @@ public class DispenseActivity extends CommoditySelectableActivity {
         textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
     }
 
+    @Override
+    protected CommoditiesToViewModelsConverter getViewModelConverter() {
+        return new CommoditiesToViewModelsConverter() {
+            @Override
+            public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
+                List<BaseCommodityViewModel> viewModels = newArrayList();
+                for (Commodity commodity : commodities) {
+                    viewModels.add(new CommodityViewModel(commodity));
+                }
+                return viewModels;
+            }
+        };
+    }
+
     private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_commodity_list_item;
     }
@@ -156,7 +171,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 dispensing.getDispensingItems().add(new DispensingItem(commodityViewModel.getCommodity(), quantity));
             }
         });
-        Log.e("DDnn", format(" dispensing items %d", dispensing.getDispensingItems().size()));
         return dispensing;
     }
 
