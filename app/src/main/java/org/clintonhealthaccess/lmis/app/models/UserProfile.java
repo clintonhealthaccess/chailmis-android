@@ -1,5 +1,7 @@
 package org.clintonhealthaccess.lmis.app.models;
 
+import org.clintonhealthaccess.lmis.app.models.api.OrganisationUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,60 +33,8 @@ public class UserProfile {
         this.created = created;
     }
 
-    public String getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(String lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public UserCredentials getUserCredentials() {
-        return userCredentials;
-    }
-
-    public void setUserCredentials(UserCredentials userCredentials) {
-        this.userCredentials = userCredentials;
-    }
-
     public List<OrganisationUnit> getOrganisationUnits() {
         return organisationUnits;
-    }
-
-    public void setOrganisationUnits(List<OrganisationUnit> organisationUnits) {
-        this.organisationUnits = organisationUnits;
     }
 
     public String getId() {

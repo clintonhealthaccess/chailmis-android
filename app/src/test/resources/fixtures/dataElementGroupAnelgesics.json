@@ -1,0 +1,32 @@
+{
+name: "Commodities - Anelgesics ",
+created: "2014-07-21T16:05:30.133+0000",
+lastUpdated: "2014-07-22T08:59:01.770+0000",
+shortName: "Commodities - Anelgesics ",
+access: {
+manage: true,
+externalize: false,
+write: true,
+read: true,
+update: true,
+delete: true
+},
+href: "http://lmisdev.dhis2.org/api/dataElementGroups/gTRDFv2oqoQ",
+id: "gTRDFv2oqoQ",
+dataElements: [
+{
+name: "Paracetamol_Injection_100",
+created: "2014-07-21T16:31:45.500+0000",
+lastUpdated: "2014-07-21T16:31:45.503+0000",
+href: "http://lmisdev.dhis2.org/api/dimensions/gE5L6iZoOdh",
+id: "gE5L6iZoOdh"
+}
+],
+dataElementGroupSet: {
+name: "LMIS Commodities",
+created: "2014-07-22T11:58:01.934+0000",
+lastUpdated: "2014-07-22T11:58:01.934+0000",
+href: "http://lmisdev.dhis2.org/api/dimensions/OvBXLc9jKsE",
+id: "OvBXLc9jKsE"
+}
+}

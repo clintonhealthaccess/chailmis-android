@@ -1,0 +1,50 @@
+{
+name: "Paracetamol_Injection_100",
+created: "2014-07-21T16:31:45.500+0000",
+lastUpdated: "2014-07-21T16:31:45.503+0000",
+shortName: "Paracetamol_Injection_100",
+formName: "",
+active: true,
+domainType: "aggregate",
+type: "int",
+numberType: "number",
+aggregationOperator: "sum",
+categoryCombo: {
+name: "Consumption",
+created: "2014-07-21T16:04:40.763+0000",
+lastUpdated: "2014-07-21T16:04:40.773+0000",
+href: "http://lmisdev.dhis2.org/api/categoryCombos/fvmWKl1D5QJ",
+id: "fvmWKl1D5QJ"
+},
+url: "",
+dataSets: [
+{
+name: "LMIS_Commodities",
+created: "2014-07-21T16:36:35.288+0000",
+lastUpdated: "2014-07-23T11:53:08.870+0000",
+href: "http://lmisdev.dhis2.org/api/dataSets/tTxJRBbH4CO",
+id: "tTxJRBbH4CO"
+}
+],
+zeroIsSignificant: false,
+legendSet: null,
+access: {
+manage: true,
+externalize: false,
+write: true,
+read: true,
+update: true,
+delete: true
+},
+href: "http://lmisdev.dhis2.org/api/dimensions/gE5L6iZoOdh",
+id: "gE5L6iZoOdh",
+dataElementGroups: [
+{
+name: "Commodities - Anelgesics ",
+created: "2014-07-21T16:05:30.133+0000",
+lastUpdated: "2014-07-22T08:59:01.770+0000",
+href: "http://lmisdev.dhis2.org/api/dataElementGroups/gTRDFv2oqoQ",
+id: "gTRDFv2oqoQ"
+}
+]
+}

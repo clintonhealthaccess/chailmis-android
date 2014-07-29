@@ -7,7 +7,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -48,6 +47,7 @@ public class Dhis2Test {
         setUpInjection(this);
     }
 
+
     @Test
     public void testShouldValidateUserLogin() throws Exception {
         addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
@@ -59,23 +59,6 @@ public class Dhis2Test {
         assertThat(lastSentHttpRequest.getRequestLine().getUri(), equalTo(dhis2BaseUrl + "/api/me"));
         Header authorizationHeader = lastSentHttpRequest.getFirstHeader("Authorization");
         assertThat(authorizationHeader.getValue(), equalTo("Basic dGVzdDpwYXNz"));
-    }
-
-    @Test
-    public void testShouldFetchCommoditiesFromDhis2() throws Exception {
-        setUpSuccessHttpGetRequest("/api/dataSets/wXidpxeF08C", "dataSetForCommodities.json");
-        setUpSuccessHttpGetRequest("/api/dataElements/lojV8nnoRXA", "dataElementForAnelgesicsCategory.json");
-        setUpSuccessHttpGetRequest("/api/categoryCombos/c4pX5PGlfRV", "categoryComboForAnelgesicsCategory.json");
-
-        List<Category> categories = dhis2.fetchCommodities(new User("test", "pass"));
-
-        assertThat(categories.size(), is(1));
-        Category firstCategory = categories.get(0);
-        assertThat(firstCategory.getName(), equalTo("Anelgesics"));
-        List<Commodity> allCommodities = firstCategory.getNotSavedCommodities();
-        assertThat(allCommodities.size(), equalTo(2));
-        assertThat(allCommodities.get(0).getName(), equalTo("(Paracetamol_Tablet_125g)"));
-        assertThat(allCommodities.get(1).getName(), equalTo("(Paracetamol_Drops_15ml)"));
     }
 
     @Test
@@ -91,7 +74,7 @@ public class Dhis2Test {
 
     private void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {
         String rootDataSetJson = readFixtureFile(fixtureFile);
-        addHttpResponseRule("GET", dhis2BaseUrl + uri, new TestHttpResponse(200, rootDataSetJson));
+        addHttpResponseRule("GET", String.format("%s%s", dhis2BaseUrl, uri), new TestHttpResponse(200, rootDataSetJson));
     }
 
     private String readFixtureFile(String fileName) throws IOException {
@@ -100,5 +83,24 @@ public class Dhis2Test {
         String content = IOUtils.toString(src);
         src.close();
         return content;
+    }
+
+    @Test
+    public void shouldFetchCommoditiesFromAPIServiceEndPoint() throws Exception {
+        addHttpResponseRule("GET", String.format("%s/api/systemSettings/data_element_group_set_id", dhis2BaseUrl), new TestHttpResponse(200, "OvBXLc9jKsE"));
+        setUpSuccessHttpGetRequest("/api/dataElementGroupSets/OvBXLc9jKsE", "dataElementGroupSetCommodities.json");
+        setUpSuccessHttpGetRequest("/api/dataElementGroups/gTRDFv2oqoQ", "dataElementGroupAnelgesics.json");
+        setUpSuccessHttpGetRequest("/api/dataElements/gE5L6iZoOdh", "dataElementParacetamol_Injection_100.json");
+        setUpSuccessHttpGetRequest("/api/categoryCombos/fvmWKl1D5QJ", "categoryComboConsumption.json");
+
+        List<Category> categories = dhis2.fetchCommodities(new User());
+        String categoryName = "Commodities - Anelgesics ";
+        String commodityName = "Paracetamol_Injection_100";
+        assertThat(categories, contains(new Category(categoryName)));
+        assertThat(categories.size(), is(1));
+        assertThat(categories.get(0).getNotSavedCommodities().size(), is(1));
+        assertThat(categories.get(0).getNotSavedCommodities().get(0).getName(), is(commodityName));
+
+
     }
 }

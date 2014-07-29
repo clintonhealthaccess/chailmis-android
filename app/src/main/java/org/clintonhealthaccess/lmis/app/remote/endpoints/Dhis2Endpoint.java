@@ -1,10 +1,12 @@
 package org.clintonhealthaccess.lmis.app.remote.endpoints;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
-import org.clintonhealthaccess.lmis.app.models.CategoryCombo;
-import org.clintonhealthaccess.lmis.app.models.DataElement;
-import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
+import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
+import org.clintonhealthaccess.lmis.app.models.api.DataElement;
+import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
+import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataSet;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,9 @@ public interface Dhis2Endpoint {
     @GET("/api/systemSettings/reasons_for_order")
     Map<String, List<String>> getReasonsForOrder();
 
+    @GET("/api/systemSettings/data_element_group_set_id")
+    String getDateElementGroupSetId();
+
     @GET("/api/me")
     UserProfile validateLogin() throws LmisException;
 
@@ -28,5 +33,11 @@ public interface Dhis2Endpoint {
 
     @GET("/api/categoryCombos/{id}")
     CategoryCombo getCategoryCombo(@Path("id") String id);
+
+    @GET("/api/dataElementGroupSets/{id}")
+    DataElementGroupSet getDataElementGroupSet(@Path("id") String id);
+
+    @GET("/api/dataElementGroups/{id}")
+    DataElementGroup getDataElementGroup(@Path("id") String id);
 }
   

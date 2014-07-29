@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dhis2_base_url">http://104.131.225.22:8888/dhis2</string>
+    <string name="dhis2_base_url">http://lmisdev.dhis2.org</string>
 </resources>
