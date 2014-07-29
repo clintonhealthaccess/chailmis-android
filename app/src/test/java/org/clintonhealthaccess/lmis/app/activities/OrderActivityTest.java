@@ -9,7 +9,7 @@ import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -87,7 +87,7 @@ public class OrderActivityTest {
     public void shouldPassOrderReasonsFromOrderServiceToAdapter() {
         SelectedOrderCommoditiesAdapter adapter = (SelectedOrderCommoditiesAdapter) orderActivity.gridViewSelectedCommodities.getAdapter();
 
-        CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
+        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
 
         EventBus.getDefault().post(commodityToggledEvent);
@@ -100,7 +100,7 @@ public class OrderActivityTest {
     @Test
     public void shouldToggleVisibilityOfSubmitButton() {
         List<BaseCommodityViewModel> selectedCommodities = newArrayList();
-        selectedCommodities.add(new CommodityViewModel(new Commodity("id", "name")));
+        selectedCommodities.add(new OrderCommodityViewModel(new Commodity("id", "name")));
         orderActivity.onCommoditySelectionChanged(selectedCommodities);
         assertThat(orderActivity.buttonSubmitOrder.getVisibility(), is(View.VISIBLE));
 
@@ -111,11 +111,11 @@ public class OrderActivityTest {
 
     @Test
     public void shouldCreateOrderFromSelectedCommodities() {
-        CommodityViewModel commodityViewModel1 = new CommodityViewModel(new Commodity("id", "Commodity 1"), 10);
-        CommodityViewModel commodityViewModel2 = new CommodityViewModel(new Commodity("id", "Commodity 2"), 10);
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        OrderCommodityViewModel commodityViewModel2 = new OrderCommodityViewModel(new Commodity("id", "Commodity 2"), 10);
 
         List<OrderReason> orderReasons = Arrays.asList();
-        List<CommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1, commodityViewModel2);
+        List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1, commodityViewModel2);
 
         orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons);
 
@@ -137,7 +137,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldConfirmOrderAndOrderItemsOnSubmit() {
-        CommodityViewModel commodityViewModel1 = new CommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
         commodityViewModel1.setOrderPeriodEndDate(new Date());
         commodityViewModel1.setOrderPeriodStartDate(new Date());
 
@@ -153,7 +153,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldShowInvalidFieldsToastGivenSubmitWithEmptyFields() {
-        CommodityViewModel commodityViewModel1 = new CommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
         EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel1));
 
         orderActivity.buttonSubmitOrder.performClick();

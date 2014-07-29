@@ -13,7 +13,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
@@ -61,7 +61,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedOrderCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>(), orderService.allOrderReasons());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons());
     }
 
     @Override
@@ -94,7 +94,7 @@ public class OrderActivity extends CommoditySelectableActivity {
             public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
                 List<BaseCommodityViewModel> viewModels = newArrayList();
                 for (Commodity commodity : commodities) {
-                    viewModels.add(new CommodityViewModel(commodity));
+                    viewModels.add(new OrderCommodityViewModel(commodity));
                 }
                 return viewModels;
             }
@@ -104,7 +104,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     private boolean isOrderValid() {
         int numberOfItems = arrayAdapter.getCount();
         for (int i = 0; i < numberOfItems; i++) {
-            CommodityViewModel commodityViewModel = (CommodityViewModel) arrayAdapter.getItem(i);
+            OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);
             if (!commodityViewModel.isValidAsOrderItem()) {
                 return false;
             }
@@ -117,7 +117,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         Order order = new Order();
 
         for (int i = 0; i < numberOfItems; i++) {
-            CommodityViewModel commodityViewModel = (CommodityViewModel) arrayAdapter.getItem(i);
+            OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);
             OrderItem orderItem = new OrderItem(commodityViewModel);
             orderItem.setOrder(order);
             order.addItem(orderItem);

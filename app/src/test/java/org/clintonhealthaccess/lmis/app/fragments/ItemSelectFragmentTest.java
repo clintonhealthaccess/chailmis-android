@@ -11,7 +11,6 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -64,13 +63,13 @@ public class ItemSelectFragmentTest {
                 bind(StockService.class).toInstance(mockStockService);
             }
         });
-        when(mockStockService.getStockLevelFor((Commodity)anyObject())).thenReturn(10);
+        when(mockStockService.getStockLevelFor((Commodity) anyObject())).thenReturn(10);
 
         commodityService.initialise(new User("test", "pass"));
 
         Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory,
-                new ArrayList<CommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
+                new ArrayList<BaseCommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
         startFragment(itemSelectFragment);
     }
 
@@ -84,7 +83,7 @@ public class ItemSelectFragmentTest {
 
         assertThat(categoriesLayout.getChildCount(), is(6));
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
-            Button button = (Button)categoriesLayout.getChildAt(i);
+            Button button = (Button) categoriesLayout.getChildAt(i);
             Category currentCategory = categoryService.all().get(i);
             assertThat(button.getText().toString(), equalTo(currentCategory.getName()));
         }
@@ -124,15 +123,15 @@ public class ItemSelectFragmentTest {
     @Test
     public void shouldPreCheckCommoditiesInSelectedCommoditiesListPassedByDispenseActivity() {
         Category antiMalarials = categoryService.all().get(0);
-        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
+        ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         Commodity firstCommodity = commodityService.all().get(0);
-        commodities.add(new CommodityViewModel(firstCommodity));
+        commodities.add(new BaseCommodityViewModel(firstCommodity));
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
         GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
-        CommodityViewModel loadedCommodity = (CommodityViewModel)commoditiesLayout.getAdapter().getItem(0);
+        BaseCommodityViewModel loadedCommodity = (BaseCommodityViewModel) commoditiesLayout.getAdapter().getItem(0);
         assertTrue(loadedCommodity.isSelected());
     }
 
@@ -144,15 +143,15 @@ public class ItemSelectFragmentTest {
         Commodity spyFirstCommodity = spy(firstCommodity);
         when(spyFirstCommodity.stockIsFinished()).thenReturn(true);
 
-        ArrayList<CommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
-        currentlySelectedCommodities.add(new CommodityViewModel(spyFirstCommodity));
+        ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
+        currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
 
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
         GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
-        CommodityViewModel loadedCommodity = (CommodityViewModel)commoditiesLayout.getAdapter().getItem(0);
+        BaseCommodityViewModel loadedCommodity = (BaseCommodityViewModel) commoditiesLayout.getAdapter().getItem(0);
         assertTrue(loadedCommodity.isSelected());
     }
 
@@ -162,7 +161,7 @@ public class ItemSelectFragmentTest {
             public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
                 List<BaseCommodityViewModel> viewModels = newArrayList();
                 for (Commodity commodity : commodities) {
-                    viewModels.add(new CommodityViewModel(commodity));
+                    viewModels.add(new BaseCommodityViewModel(commodity));
                 }
                 return viewModels;
             }

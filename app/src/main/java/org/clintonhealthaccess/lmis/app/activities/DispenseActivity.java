@@ -17,7 +17,6 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
@@ -35,7 +34,6 @@ import static android.view.View.OnClickListener;
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
-import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
@@ -97,7 +95,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<CommodityViewModel>());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<BaseCommodityViewModel>());
     }
 
     @Override
@@ -145,7 +143,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
             public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
                 List<BaseCommodityViewModel> viewModels = newArrayList();
                 for (Commodity commodity : commodities) {
-                    viewModels.add(new CommodityViewModel(commodity));
+                    viewModels.add(new BaseCommodityViewModel(commodity));
                 }
                 return viewModels;
             }
@@ -165,7 +163,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
         }
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
-            public void operate(View view, CommodityViewModel commodityViewModel) {
+            public void operate(View view, BaseCommodityViewModel commodityViewModel) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
                 int quantity = getIntFromString(editTextQuantity.getText().toString());
                 dispensing.getDispensingItems().add(new DispensingItem(commodityViewModel.getCommodity(), quantity));

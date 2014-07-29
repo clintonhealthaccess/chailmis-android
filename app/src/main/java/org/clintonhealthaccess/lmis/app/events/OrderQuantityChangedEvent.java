@@ -1,12 +1,12 @@
 package org.clintonhealthaccess.lmis.app.events;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 
 public class OrderQuantityChangedEvent {
-    private CommodityViewModel commodityViewModel;
+    private OrderCommodityViewModel commodityViewModel;
     private int quantity;
 
-    public OrderQuantityChangedEvent(int quantity, CommodityViewModel commodityViewModel) {
+    public OrderQuantityChangedEvent(int quantity, OrderCommodityViewModel commodityViewModel) {
         this.commodityViewModel = commodityViewModel;
         this.quantity = quantity;
     }
@@ -16,7 +16,7 @@ public class OrderQuantityChangedEvent {
     }
 
 
-    public CommodityViewModel getCommodityViewModel() {
+    public OrderCommodityViewModel getCommodityViewModel() {
         return commodityViewModel;
     }
 }

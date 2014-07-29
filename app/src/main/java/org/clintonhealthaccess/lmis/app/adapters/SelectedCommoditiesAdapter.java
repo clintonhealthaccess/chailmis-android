@@ -11,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.watchers.QuantityTextWatcher;
 
@@ -19,11 +19,11 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-public class SelectedCommoditiesAdapter extends ArrayAdapter<CommodityViewModel> {
+public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewModel> {
 
     private int resource;
 
-    public SelectedCommoditiesAdapter(Context context, int resource, List<CommodityViewModel> commodities) {
+    public SelectedCommoditiesAdapter(Context context, int resource, List<BaseCommodityViewModel> commodities) {
         super(context, resource, commodities);
         this.resource = resource;
     }
@@ -37,13 +37,13 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<CommodityViewModel>
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
 
-        final CommodityViewModel commodityViewModel = getItem(position);
+        final BaseCommodityViewModel commodityViewModel = getItem(position);
         textViewCommodityName.setText(commodityViewModel.getName());
 
-        TextWatcher watcher = new QuantityTextWatcher(editTextQuantity,commodityViewModel);
+        TextWatcher watcher = new QuantityTextWatcher(editTextQuantity, commodityViewModel);
         editTextQuantity.addTextChangedListener(watcher);
         int quantity = commodityViewModel.getQuantityEntered();
-        if(quantity >= 0) {
+        if (quantity >= 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
         activateCancelButton(imageButtonCancel, commodityViewModel);
@@ -51,7 +51,7 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<CommodityViewModel>
         return rowView;
     }
 
-    private void activateCancelButton(ImageButton imageButtonCancel, final CommodityViewModel commodityViewModel) {
+    private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {
         imageButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

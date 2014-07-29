@@ -2,7 +2,7 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 
 import java.util.Date;
 
@@ -36,7 +36,7 @@ public class OrderItem {
         //Orm lite likes
     }
 
-    public OrderItem(CommodityViewModel commodityViewModel) {
+    public OrderItem(OrderCommodityViewModel commodityViewModel) {
         this.commodity = commodityViewModel.getCommodity();
         this.startDate = commodityViewModel.getOrderPeriodStartDate();
         this.endDate = commodityViewModel.getOrderPeriodEndDate();
@@ -89,13 +89,12 @@ public class OrderItem {
         return result;
     }
 
+    public Order getOrder() {
+        return order;
+    }
 
     public void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Order getOrder() {
-        return order;
     }
 
     public String getCommodtyName() {

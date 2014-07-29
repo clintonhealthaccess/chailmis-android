@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
@@ -71,7 +70,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
         for (int i = 0; i < gridViewSelectedCommodities.getChildCount(); i++) {
             View view = gridViewSelectedCommodities.getChildAt(i);
-            CommodityViewModel commodityViewModel = (CommodityViewModel) gridViewSelectedCommodities.getAdapter().getItem(i);
+            BaseCommodityViewModel commodityViewModel = (BaseCommodityViewModel) gridViewSelectedCommodities.getAdapter().getItem(i);
             handler.operate(view, commodityViewModel);
         }
     }
@@ -130,6 +129,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     protected interface SelectedCommodityHandler {
-        void operate(View view, CommodityViewModel commodityViewModel);
+        void operate(View view, BaseCommodityViewModel commodityViewModel);
     }
 }

@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 
 import roboguice.RoboGuice;
@@ -16,12 +16,12 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 
 public class QuantityTextWatcher implements TextWatcher {
     private final EditText editTextQuantity;
-    private final CommodityViewModel commodityViewModel;
+    private final BaseCommodityViewModel commodityViewModel;
 
     @Inject
     StockService stockService;
 
-    public QuantityTextWatcher(EditText editTextQuantity, CommodityViewModel commodityViewModel) {
+    public QuantityTextWatcher(EditText editTextQuantity, BaseCommodityViewModel commodityViewModel) {
         this.editTextQuantity = editTextQuantity;
         this.commodityViewModel = commodityViewModel;
         RoboGuice.getInjector(editTextQuantity.getContext()).injectMembers(this);

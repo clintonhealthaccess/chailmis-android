@@ -6,17 +6,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.utils.ViewHelpers;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 class OrderQuantityTextWatcher extends LmisTextWatcher {
-    private SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter;
-    private final CommodityViewModel orderCommodityViewModel;
+    private final OrderCommodityViewModel orderCommodityViewModel;
     private final Spinner spinnerUnexpectedQuantityReasons;
     private final EditText editTextOrderQuantity;
+    private SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter;
 
-    public OrderQuantityTextWatcher(SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter, CommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedQuantityReasons, EditText editTextOrderQuantity) {
+    public OrderQuantityTextWatcher(SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter, OrderCommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedQuantityReasons, EditText editTextOrderQuantity) {
         this.selectedOrderCommoditiesAdapter = selectedOrderCommoditiesAdapter;
         this.orderCommodityViewModel = orderCommodityViewModel;
         this.spinnerUnexpectedQuantityReasons = spinnerUnexpectedQuantityReasons;

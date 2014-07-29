@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
@@ -139,7 +139,7 @@ public class OrderServiceTest {
         Commodity commodity = new Commodity("Commodity 1", category);
         commodityDao.create(commodity);
 
-        CommodityViewModel commodityViewModel = new CommodityViewModel(commodity, 10);
+        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         commodityViewModel.setOrderPeriodStartDate(new Date());
         commodityViewModel.setOrderPeriodEndDate(new Date());
 

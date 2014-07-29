@@ -11,7 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
@@ -52,8 +52,8 @@ public class SelectedOrderCommoditiesAdapterTest {
     private List<OrderReason> orderReasons = new ArrayList<>();
     private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
     private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
-    private CommodityViewModel commodityViewModel;
-    private ArrayList<CommodityViewModel> commodities;
+    private OrderCommodityViewModel commodityViewModel;
+    private ArrayList<OrderCommodityViewModel> commodities;
 
     @Before
     public void setUp() {
@@ -64,7 +64,7 @@ public class SelectedOrderCommoditiesAdapterTest {
         when(commodity.getStockItem()).thenReturn(new StockItem(commodity, 20));
 
         commodities = new ArrayList<>();
-        commodityViewModel = mock(CommodityViewModel.class);
+        commodityViewModel = mock(OrderCommodityViewModel.class);
         when(commodityViewModel.getCommodity()).thenReturn(commodity);
         when(commodityViewModel.getOrderReasonPosition()).thenReturn(0);
         commodities.add(commodityViewModel);
@@ -174,8 +174,8 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldShowUnExpectedReasonsSpinnerIfDataIsUnexpected() throws Exception {
-        ArrayList<CommodityViewModel> commodities = new ArrayList<>();
-        commodities.add(new CommodityViewModel(new Commodity("item")));
+        ArrayList<OrderCommodityViewModel> commodities = new ArrayList<>();
+        commodities.add(new OrderCommodityViewModel(new Commodity("item")));
         adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
         ViewGroup genericLayout = new LinearLayout(Robolectric.application);
 

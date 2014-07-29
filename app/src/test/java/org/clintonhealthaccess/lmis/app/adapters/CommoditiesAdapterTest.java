@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -42,7 +41,7 @@ public class CommoditiesAdapterTest {
         ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         String commodityName = "game";
         Commodity commodity = new Commodity(commodityName);
-        commodities.add(new CommodityViewModel(commodity));
+        commodities.add(new BaseCommodityViewModel(commodity));
         CommoditiesAdapter adapter = new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
 
         TextView textViewCommodityName = (TextView) getViewFromListRow(adapter, R.layout.commodity_list_item, R.id.textViewCommodityName);
@@ -86,18 +85,18 @@ public class CommoditiesAdapterTest {
 
     private CommoditiesAdapter makeAdapterWithCommodities() {
         ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
-        CommodityViewModel commodityOne = new CommodityViewModel(new Commodity("game"));
+        BaseCommodityViewModel commodityOne = new BaseCommodityViewModel(new Commodity("game"));
         commodityOne.toggleSelected();
         commodities.add(commodityOne);
 
-        commodities.add(new CommodityViewModel(new Commodity("other game")));
+        commodities.add(new BaseCommodityViewModel(new Commodity("other game")));
 
         return new CommoditiesAdapter(Robolectric.application, R.layout.commodity_list_item, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK);
     }
 
     private CommoditiesAdapter makeAdapterWithOutOfStockCommodities(CommodityDisplayStrategy commodityDisplayStrategy) {
         ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
-        CommodityViewModel commodity = mock(CommodityViewModel.class);
+        BaseCommodityViewModel commodity = mock(BaseCommodityViewModel.class);
         when(commodity.stockIsFinished()).thenReturn(true);
         commodities.add(commodity);
 

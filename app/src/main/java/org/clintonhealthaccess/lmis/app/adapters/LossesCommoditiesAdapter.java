@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesViewModelCommands;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;

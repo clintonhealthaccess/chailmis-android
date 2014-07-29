@@ -16,7 +16,6 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -123,7 +122,7 @@ public class DispenseActivityTest {
     public void listViewShouldToggleCommodityWhenToggleEventIsTriggered() throws Exception {
         CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getDispenseActivity());
 
-        CommodityViewModel commodityInList = (CommodityViewModel) eventDetails.dispenseActivity.gridViewSelectedCommodities.getAdapter().getItem(0);
+        BaseCommodityViewModel commodityInList = (BaseCommodityViewModel) eventDetails.dispenseActivity.gridViewSelectedCommodities.getAdapter().getItem(0);
 
         assertThat(commodityInList, is(eventDetails.commodityViewModel()));
 
@@ -163,7 +162,7 @@ public class DispenseActivityTest {
     }
 
     private CommodityToggledEventDetails fireCommodityToggledEvent(DispenseActivity dispenseActivity) {
-        CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
+        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
 
         refire(commodityToggledEvent);
@@ -177,7 +176,7 @@ public class DispenseActivityTest {
 
         assertThat(dispenseActivity.buttonSubmitDispense.getVisibility(), not(is(VISIBLE)));
 
-        CommodityViewModel commodityViewModel = new CommodityViewModel(new Commodity("name"));
+        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
 
@@ -201,7 +200,7 @@ public class DispenseActivityTest {
         mockEditText.setText("12");
 
         Commodity commodity = new Commodity(commodityName);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(commodity));
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(commodity));
         when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
         when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
 
@@ -236,7 +235,7 @@ public class DispenseActivityTest {
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
         when(mockGridView.getChildCount()).thenReturn(1);
-        when(mockCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(new Commodity("food")));
         when(mockGridView.getAdapter()).thenReturn(mockCommoditiesAdapter);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
@@ -261,7 +260,7 @@ public class DispenseActivityTest {
         SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(new Commodity("food")));
         when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
         when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
         when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
@@ -286,7 +285,7 @@ public class DispenseActivityTest {
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(new Commodity("food")));
         when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
         when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
         when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
@@ -312,7 +311,7 @@ public class DispenseActivityTest {
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(new Commodity("food")));
         when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
         when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
         when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
@@ -342,20 +341,6 @@ public class DispenseActivityTest {
         assertFalse(dispensing.isDispenseToFacility());
 
 
-    }
-
-    private class CommodityToggledEventDetails {
-        public DispenseActivity dispenseActivity;
-        public CommodityToggledEvent commodityToggledEvent;
-
-        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
-            this.dispenseActivity = dispenseActivity;
-            this.commodityToggledEvent = commodityToggledEvent;
-        }
-
-        public BaseCommodityViewModel commodityViewModel() {
-            return this.commodityToggledEvent.getCommodity();
-        }
     }
 
     @Test
@@ -415,7 +400,7 @@ public class DispenseActivityTest {
 
         when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
         when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new CommodityViewModel(new Commodity("food")));
+        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(new Commodity("food")));
         when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
         when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
         when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
@@ -427,5 +412,19 @@ public class DispenseActivityTest {
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertThat(dialog, is(notNullValue()));
 
+    }
+
+    private class CommodityToggledEventDetails {
+        public DispenseActivity dispenseActivity;
+        public CommodityToggledEvent commodityToggledEvent;
+
+        public CommodityToggledEventDetails(DispenseActivity dispenseActivity, CommodityToggledEvent commodityToggledEvent) {
+            this.dispenseActivity = dispenseActivity;
+            this.commodityToggledEvent = commodityToggledEvent;
+        }
+
+        public BaseCommodityViewModel commodityViewModel() {
+            return this.commodityToggledEvent.getCommodity();
+        }
     }
 }

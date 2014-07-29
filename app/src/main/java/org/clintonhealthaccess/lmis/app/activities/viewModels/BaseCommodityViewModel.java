@@ -6,9 +6,15 @@ public class BaseCommodityViewModel {
 
     private boolean selected;
     private Commodity commodity;
+    protected int quantityEntered;
 
     public BaseCommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
+    }
+
+    public BaseCommodityViewModel(Commodity commodity, int quantityEntered) {
+        this(commodity);
+        this.quantityEntered = quantityEntered;
     }
 
     public void toggleSelected() {
@@ -29,6 +35,14 @@ public class BaseCommodityViewModel {
 
     public boolean stockIsFinished() {
         return commodity.stockIsFinished();
+    }
+
+    public int getQuantityEntered() {
+        return quantityEntered;
+    }
+
+    public void setQuantityEntered(int quantityEntered) {
+        this.quantityEntered = quantityEntered;
     }
 
     @Override

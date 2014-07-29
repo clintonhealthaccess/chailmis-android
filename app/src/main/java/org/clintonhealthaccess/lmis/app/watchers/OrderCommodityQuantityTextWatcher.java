@@ -7,16 +7,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 
 public class OrderCommodityQuantityTextWatcher implements TextWatcher {
 
-    private CommodityViewModel commodityViewModel;
+    private OrderCommodityViewModel commodityViewModel;
     private Context context;
     private EditText editTextOrderQuantity;
     private Handler handler;
 
-    public OrderCommodityQuantityTextWatcher(CommodityViewModel commodityViewModel, Context context, EditText editTextOrderQuantity, Handler handler) {
+    public OrderCommodityQuantityTextWatcher(OrderCommodityViewModel commodityViewModel, Context context, EditText editTextOrderQuantity, Handler handler) {
         this.commodityViewModel = commodityViewModel;
         this.context = context;
         this.editTextOrderQuantity = editTextOrderQuantity;

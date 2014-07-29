@@ -5,7 +5,7 @@ import android.widget.EditText;
 
 import com.google.inject.AbstractModule;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -18,7 +18,6 @@ import static android.text.Editable.Factory;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -30,9 +29,9 @@ import static org.robolectric.Robolectric.application;
 @RunWith(RobolectricGradleTestRunner.class)
 public class QuantityTextWatcherTest {
 
+    StockService mockStockService;
     private TextWatcher watcher;
     private EditText editText;
-    StockService mockStockService;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +43,7 @@ public class QuantityTextWatcherTest {
             }
         });
         editText = spy(new EditText(application));
-        watcher = new QuantityTextWatcher(editText, new CommodityViewModel(new Commodity("")));
+        watcher = new QuantityTextWatcher(editText, new BaseCommodityViewModel(new Commodity("")));
     }
 
     @Test
