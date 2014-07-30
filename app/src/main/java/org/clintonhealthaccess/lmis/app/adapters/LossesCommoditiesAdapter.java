@@ -22,11 +22,10 @@ import de.greenrobot.event.EventBus;
 
 public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewModel> {
 
-    private int resource;
+    private final int resource;
 
     public LossesCommoditiesAdapter(Context context, int resource, List<LossesCommodityViewModel> commodities) {
         super(context, resource, commodities);
-
         this.resource = resource;
     }
 
@@ -34,38 +33,36 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(resource, parent, false);
-
         final LossesCommodityViewModel viewModel = getItem(position);
-
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(viewModel.getName());
 
-        EditText editTextWastages = (EditText) rowView.findViewById(R.id.editTextWastages);
-        EditText editTextDamages = (EditText) rowView.findViewById(R.id.editTextDamages);
-        EditText editTextExpiries = (EditText) rowView.findViewById(R.id.editTextExpiries);
-        EditText editTextMissing = (EditText) rowView.findViewById(R.id.editTextMissing);
-
-        preloadDataInto(viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
-
-        syncChangesWithViewModelFrom(textViewCommodityName, viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
-
-        ImageButton imageButtonCancel = (ImageButton)rowView.findViewById(R.id.imageButtonCancel);
-        activateCancelButton(imageButtonCancel, viewModel);
+        setUpDamages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextDamages));
+        setUpWastages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextWastages));
+        setUpExpiries(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextExpiries));
+        setUpMissing(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextMissing));
+        activateCancelButton((ImageButton)rowView.findViewById(R.id.imageButtonCancel), viewModel);
         return rowView;
     }
 
-    private void syncChangesWithViewModelFrom(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
+    private void setUpWastages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages){
+        editTextWastages.setText(String.valueOf(viewModel.getWastage()));
         setupTextWatcher(textViewCommodityName, editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
-        setupTextWatcher(textViewCommodityName, editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
-        setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
-        setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
     }
 
-    private void preloadDataInto(LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
-        editTextWastages.setText(String.valueOf(viewModel.getWastage()));
+    private void setUpDamages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextDamages){
         editTextDamages.setText(String.valueOf(viewModel.getDamages()));
+        setupTextWatcher(textViewCommodityName, editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
+    }
+
+    private void setUpExpiries(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextExpiries){
         editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
+        setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
+    }
+
+    private void setUpMissing(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextMissing){
         editTextMissing.setText(String.valueOf(viewModel.getMissing()));
+        setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
     }
 
     private void setupTextWatcher(final TextView textViewCommodityName, final EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
