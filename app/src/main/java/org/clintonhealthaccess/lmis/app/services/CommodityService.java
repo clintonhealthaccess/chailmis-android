@@ -91,7 +91,7 @@ public class CommodityService {
             @Override
             public Void operate(Dao<Aggregation, String> dao) throws SQLException {
                 Aggregation aggregation = commodity.getAggregation();
-                dao.create(aggregation);
+                dao.createOrUpdate(aggregation);
                 saveAllAggregationFields(aggregation);
                 return null;
             }

@@ -94,25 +94,7 @@ public class CommodityServiceTest {
 
     @Test
     public void shouldSaveCommodityAggregations() {
-        List<Category> categories = new ArrayList<>();
-        Category category = new Category("named cat");
-        Commodity commodity = new Commodity("cat food");
-
-        Aggregation aggregation = new Aggregation();
-        aggregation.setId("id");
-        aggregation.setName("sum");
-
-        AggregationField field = new AggregationField();
-        field.setId("some id");
-        field.setName("stock lost");
-
-        aggregation.setAggregationFields(Arrays.asList(field));
-
-        commodity.setAggregation(aggregation);
-
-        category.addCommodity(commodity);
-
-        categories.add(category);
+        List<Category> categories = getTestCategories();
 
         commodityService.saveToDatabase(categories);
 
@@ -132,6 +114,33 @@ public class CommodityServiceTest {
 
         assertThat(numberOfAggregations, is(1L));
         assertThat(numberOfFields, is(1L));
+    }
 
+
+
+    private List<Category> getTestCategories() {
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("named cat");
+        Commodity commodity = new Commodity("cat food");
+        Commodity commodityDogFood = new Commodity("dog food");
+
+        Aggregation aggregation = new Aggregation();
+        aggregation.setId("id");
+        aggregation.setName("sum");
+
+        AggregationField field = new AggregationField();
+        field.setId("some id");
+        field.setName("stock lost");
+
+        aggregation.setAggregationFields(Arrays.asList(field));
+
+        commodity.setAggregation(aggregation);
+        commodityDogFood.setAggregation(aggregation);
+
+        category.addCommodity(commodity);
+        category.addCommodity(commodityDogFood);
+
+        categories.add(category);
+        return categories;
     }
 }
