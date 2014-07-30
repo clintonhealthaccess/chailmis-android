@@ -7,6 +7,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
@@ -32,11 +34,13 @@ public class LossesCommoditiesAdapterTest {
     boolean toggleEventFired = false;
     private int list_item_layout;
     private LossesCommoditiesAdapter adapter;
+    private Commodity mockCommodity;
 
     @Before
     public void setUp() {
-        Commodity commodity = new Commodity("Commodity");
-        List<LossesCommodityViewModel> commodities = Arrays.asList(new LossesCommodityViewModel(commodity));
+        mockCommodity = mock(Commodity.class);
+        when(mockCommodity.getStockOnHand()).thenReturn(10000);
+        List<LossesCommodityViewModel> commodities = Arrays.asList(new LossesCommodityViewModel(mockCommodity));
         list_item_layout = R.layout.losses_commodity_list_item;
         adapter = new LossesCommoditiesAdapter(Robolectric.application, list_item_layout, commodities);
         EventBus.getDefault().register(this);
@@ -87,11 +91,20 @@ public class LossesCommoditiesAdapterTest {
         assertThat(wastages, is(3));
         assertThat(expiries, is(4));
     }
-    
+
     @Test
-    public void shouldSetErrorsOnViewModelIfTotalLossesAreGreaterThanStockOnHand() {
-        Commodity commodity = mock(Commodity.class);
-        when(commodity.getStockOnHand()).thenReturn(10);
+    public void shouldSetErrorsOnCurrentEditTextIfTotalLossesAreGreaterThanStockOnHand() {
+        when(mockCommodity.getStockOnHand()).thenReturn(10);
+
+        EditText editTextMissing = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing);
+        editTextMissing.setText("8");
+
+        assertNull(editTextMissing.getError());
+
+        EditText editTextDamages = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextDamages);
+        editTextDamages.setText("10");
+
+        assertThat(editTextDamages.getError().toString(), is("Total quantity lost (18) is greater than stock at hand (10)"));
     }
 
     public void onEvent(CommodityToggledEvent event) {

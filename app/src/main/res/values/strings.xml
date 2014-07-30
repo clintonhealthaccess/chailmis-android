@@ -70,5 +70,6 @@
     <string name="expired">Expired</string>
     <string name="missing">Missing</string>
     <string name="damaged">Damaged</string>
+    <string name="totalLossesGreaterThanStockAtHand" formatted="false">Total quantity lost (%d) is greater than stock at hand (%d)</string>
 
 </resources>

@@ -64,12 +64,16 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         editTextMissing.setText(String.valueOf(viewModel.getMissing()));
     }
 
-    private void setupTextWatcher(EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
+    private void setupTextWatcher(final EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
         editText.addTextChangedListener(new LmisTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
                 command.execute(viewModel, editable);
-
+                int losses = viewModel.totalLosses();
+                int stockOnHand = viewModel.getStockOnHand();
+                if(losses > stockOnHand) {
+                    editText.setError(String.format(getContext().getString(R.string.totalLossesGreaterThanStockAtHand), losses, stockOnHand));
+                }
             }
         });
     }

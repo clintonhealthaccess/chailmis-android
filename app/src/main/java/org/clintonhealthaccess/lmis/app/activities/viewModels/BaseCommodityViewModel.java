@@ -4,9 +4,9 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 public class BaseCommodityViewModel {
 
+    protected int quantityEntered;
     private boolean selected;
     private Commodity commodity;
-    protected int quantityEntered;
 
     public BaseCommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
@@ -35,6 +35,10 @@ public class BaseCommodityViewModel {
 
     public boolean stockIsFinished() {
         return commodity.isOutOfStock();
+    }
+
+    public int getStockOnHand() {
+        return commodity.getStockOnHand();
     }
 
     public int getQuantityEntered() {
