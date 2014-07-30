@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.remote;
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -55,6 +56,8 @@ public class Dhis2 implements LmisServer {
 
     private DataElement getDataElementDetails(Dhis2Endpoint service, DataElement element) {
         DataElement dataElementDetail = service.getDataElement(element.getId());
+        Aggregation aggregationDetail = service.getCategoryCombo(dataElementDetail.getAggregation().getId());
+        dataElementDetail.setAggregation(aggregationDetail);
         return dataElementDetail;
     }
 
@@ -70,7 +73,8 @@ public class Dhis2 implements LmisServer {
             public Category apply(DataElementGroup group) {
                 Category category = new Category(group.getName());
                 for (DataElement element : group.getDataElements()) {
-                    Commodity commodity = new Commodity(element.getId(), element.getName());
+                    Aggregation aggregation = element.getAggregation();
+                    Commodity commodity = new Commodity(element.getId(), element.getName(), aggregation);
                     category.addCommodity(commodity);
                 }
                 return category;

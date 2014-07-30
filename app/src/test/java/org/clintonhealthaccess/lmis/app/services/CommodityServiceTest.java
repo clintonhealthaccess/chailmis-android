@@ -2,10 +2,14 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.models.Aggregation;
+import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -13,6 +17,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -34,6 +41,8 @@ public class CommodityServiceTest {
 
     @Inject
     private CommodityService commodityService;
+    @Inject
+    private DbUtil dbUtil;
 
     @Before
     public void setUp() throws Exception {
@@ -62,7 +71,7 @@ public class CommodityServiceTest {
         List<Commodity> commodities = commodityService.all();
 
         assertThat(commodities.size(), is(7));
-        for(Commodity commodity : expectedCommodities) {
+        for (Commodity commodity : expectedCommodities) {
             assertThat(expectedCommodities, contains(commodity));
         }
     }
@@ -81,5 +90,48 @@ public class CommodityServiceTest {
         assertThat(antiMalarialCategory.getName(), equalTo("Anti Malarials"));
         assertThat(antiMalarialCategory.getCommodities().size(), is(6));
         assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
+    }
+
+    @Test
+    public void shouldSaveCommodityAggregations() {
+        List<Category> categories = new ArrayList<>();
+        Category category = new Category("named cat");
+        Commodity commodity = new Commodity("cat food");
+
+        Aggregation aggregation = new Aggregation();
+        aggregation.setId("id");
+        aggregation.setName("sum");
+
+        AggregationField field = new AggregationField();
+        field.setId("some id");
+        field.setName("stock lost");
+
+        aggregation.setAggregationFields(Arrays.asList(field));
+
+        commodity.setAggregation(aggregation);
+
+        category.addCommodity(commodity);
+
+        categories.add(category);
+
+        commodityService.saveToDatabase(categories);
+
+        Long numberOfAggregations = dbUtil.withDao(Aggregation.class, new DbUtil.Operation<Aggregation, Long>() {
+            @Override
+            public Long operate(Dao<Aggregation, String> dao) throws SQLException {
+                return dao.countOf();
+            }
+        });
+
+        Long numberOfFields = dbUtil.withDao(AggregationField.class, new DbUtil.Operation<AggregationField, Long>() {
+            @Override
+            public Long operate(Dao<AggregationField, String> dao) throws SQLException {
+                return dao.countOf();
+            }
+        });
+
+        assertThat(numberOfAggregations, is(1L));
+        assertThat(numberOfFields, is(1L));
+
     }
 }

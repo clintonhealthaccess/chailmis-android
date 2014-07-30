@@ -7,6 +7,8 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.Aggregation;
+import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -38,6 +40,8 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             createTableIfNotExists(connectionSource, OrderReason.class);
             createTableIfNotExists(connectionSource, OrderItem.class);
             createTableIfNotExists(connectionSource, Order.class);
+            createTableIfNotExists(connectionSource, Aggregation.class);
+            createTableIfNotExists(connectionSource, AggregationField.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

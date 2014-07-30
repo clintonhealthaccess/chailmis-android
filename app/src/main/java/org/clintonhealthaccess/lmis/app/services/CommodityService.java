@@ -3,6 +3,8 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.models.Aggregation;
+import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
@@ -35,18 +37,18 @@ public class CommodityService {
     public List<Commodity> all() {
         List<Category> categories = categoryService.all();
         List<Commodity> commodities = new ArrayList<>();
-        for(Category category : categories) {
+        for (Category category : categories) {
             commodities.addAll(category.getCommodities());
         }
         return commodities;
     }
 
-    private void saveToDatabase(final List<Category> allCommodities) {
+    protected void saveToDatabase(final List<Category> allCommodities) {
         dbUtil.withDao(Category.class, new Operation<Category, Void>() {
             @Override
             public Void operate(Dao<Category, String> dao) throws SQLException {
                 for (Category category : allCommodities) {
-                    dao.create(category);
+                    dao.createOrUpdate(category);
                     saveAllCommodities(category);
                 }
                 return null;
@@ -60,13 +62,16 @@ public class CommodityService {
             public Void operate(Dao<Commodity, String> dao) throws SQLException {
                 for (Commodity commodity : category.getNotSavedCommodities()) {
                     commodity.setCategory(category);
-                    dao.create(commodity);
+                    dao.createOrUpdate(commodity);
                     createStock(commodity);
+                    if (commodity.getAggregation() != null)
+                        createAggregation(commodity);
                 }
                 return null;
             }
         });
     }
+
 
     private void createStock(final Commodity commodity) {
         dbUtil.withDao(StockItem.class, new Operation<StockItem, Void>() {
@@ -75,6 +80,32 @@ public class CommodityService {
                 // FIXME: Should fetch stock levels from 'Special Receive' screen or from DHIS2
                 StockItem stockItem = new StockItem(commodity, 10);
                 dao.create(stockItem);
+                return null;
+            }
+        });
+    }
+
+    private void createAggregation(final Commodity commodity) {
+
+        dbUtil.withDao(Aggregation.class, new Operation<Aggregation, Void>() {
+            @Override
+            public Void operate(Dao<Aggregation, String> dao) throws SQLException {
+                Aggregation aggregation = commodity.getAggregation();
+                dao.create(aggregation);
+                saveAllAggregationFields(aggregation);
+                return null;
+            }
+        });
+    }
+
+    private void saveAllAggregationFields(final Aggregation aggregation) {
+        dbUtil.withDao(AggregationField.class, new Operation<AggregationField, Void>() {
+            @Override
+            public Void operate(Dao<AggregationField, String> dao) throws SQLException {
+                for (AggregationField field : aggregation.getAggregationFields()) {
+                    field.setAggregation(aggregation);
+                    dao.createOrUpdate(field);
+                }
                 return null;
             }
         });

@@ -2,7 +2,7 @@ package org.clintonhealthaccess.lmis.app.remote.endpoints;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
+import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -32,7 +32,7 @@ public interface Dhis2Endpoint {
     DataElement getDataElement(@Path("id") String id);
 
     @GET("/api/categoryCombos/{id}")
-    CategoryCombo getCategoryCombo(@Path("id") String id);
+    Aggregation getCategoryCombo(@Path("id") String id);
 
     @GET("/api/dataElementGroupSets/{id}")
     DataElementGroupSet getDataElementGroupSet(@Path("id") String id);
