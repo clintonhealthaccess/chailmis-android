@@ -69,6 +69,7 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
             @Override
             public void afterTextChanged(Editable editable) {
                 command.execute(viewModel, editable);
+
             }
         });
     }

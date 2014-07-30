@@ -15,16 +15,15 @@ public class StockService {
     private DbUtil dbUtil;
 
     public int getStockLevelFor(Commodity commodity) {
-        return commodity.getStockItem().getQuantity();
+        return commodity.getStockOnHand();
     }
 
     public void updateStockLevelFor(final Commodity commodity, int quantity) {
-        final StockItem stockItem = commodity.getStockItem();
-        stockItem.reduceQuantityBy(quantity);
+        commodity.reduceStockOnHandBy(quantity);
         dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                dao.update(stockItem);
+                dao.update(commodity.getStockItem());
                 return null;
             }
         });

@@ -41,4 +41,8 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
     public void setExpiries(int expired) {
         this.expiries = expired;
     }
+
+    public int totalLosses() {
+        return wastage + damages + expiries + missing;
+    }
 }

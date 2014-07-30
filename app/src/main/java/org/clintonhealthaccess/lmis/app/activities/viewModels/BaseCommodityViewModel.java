@@ -34,7 +34,7 @@ public class BaseCommodityViewModel {
     }
 
     public boolean stockIsFinished() {
-        return commodity.stockIsFinished();
+        return commodity.isOutOfStock();
     }
 
     public int getQuantityEntered() {

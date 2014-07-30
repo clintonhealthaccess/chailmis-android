@@ -105,7 +105,7 @@ public class Commodity implements Serializable {
         }
     }
 
-    public boolean stockIsFinished() {
+    public boolean isOutOfStock() {
         if (stockItems != null) {
             List<StockItem> items = ImmutableList.copyOf(stockItems);
             if (!items.isEmpty()) {
@@ -122,5 +122,13 @@ public class Commodity implements Serializable {
 
     public void setAggregation(Aggregation aggregation) {
         this.aggregation = aggregation;
+    }
+    
+    public int getStockOnHand() {
+        return getStockItem().getQuantity();
+    }
+
+    public void reduceStockOnHandBy(int quantity) {
+        getStockItem().reduceQuantityBy(quantity);
     }
 }

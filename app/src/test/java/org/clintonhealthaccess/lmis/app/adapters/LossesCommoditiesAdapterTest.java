@@ -23,6 +23,8 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class LossesCommoditiesAdapterTest {
@@ -84,6 +86,12 @@ public class LossesCommoditiesAdapterTest {
         assertThat(damages, is(2));
         assertThat(wastages, is(3));
         assertThat(expiries, is(4));
+    }
+    
+    @Test
+    public void shouldSetErrorsOnViewModelIfTotalLossesAreGreaterThanStockOnHand() {
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(10);
     }
 
     public void onEvent(CommodityToggledEvent event) {

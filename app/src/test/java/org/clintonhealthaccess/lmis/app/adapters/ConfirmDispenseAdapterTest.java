@@ -39,9 +39,7 @@ public class ConfirmDispenseAdapterTest {
         commodity = mock(Commodity.class);
 
         when(commodity.getName()).thenReturn(commodityName);
-        when(commodity.getStockItem()).thenReturn(new StockItem(commodity, 20));
-
-
+        when(commodity.getStockOnHand()).thenReturn(20);
     }
 
     @Test

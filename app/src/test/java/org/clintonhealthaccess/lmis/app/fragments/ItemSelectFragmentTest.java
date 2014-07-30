@@ -141,7 +141,7 @@ public class ItemSelectFragmentTest {
 
         Commodity firstCommodity = commodityService.all().get(0);
         Commodity spyFirstCommodity = spy(firstCommodity);
-        when(spyFirstCommodity.stockIsFinished()).thenReturn(true);
+        when(spyFirstCommodity.isOutOfStock()).thenReturn(true);
 
         ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
         currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
