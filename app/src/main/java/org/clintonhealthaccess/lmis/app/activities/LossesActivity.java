@@ -19,6 +19,7 @@ import roboguice.inject.InjectView;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class LossesActivity extends CommoditySelectableActivity {
 
@@ -66,7 +67,7 @@ public class LossesActivity extends CommoditySelectableActivity {
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
-        return ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+        return DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
     }
 
 }

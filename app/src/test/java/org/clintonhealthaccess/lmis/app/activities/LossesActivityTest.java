@@ -2,6 +2,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -44,5 +46,11 @@ public class LossesActivityTest {
     public void testBuildActivity() throws Exception {
         LossesActivity lossesActivity = getLossesActivity();
         assertThat(lossesActivity, not(nullValue()));
+    }
+
+    @Test
+    public void shouldNotAllowSelectionOfOutOfStockCommoditiesOnOverlay() {
+        LossesActivity activity = getLossesActivity();
+        assertThat(activity.getCheckBoxVisibilityStrategy(), is(CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK));
     }
 }
