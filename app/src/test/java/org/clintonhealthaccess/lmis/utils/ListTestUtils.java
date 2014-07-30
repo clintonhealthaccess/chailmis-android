@@ -4,8 +4,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.robolectric.Robolectric;
 
 public class ListTestUtils {

@@ -19,12 +19,13 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class LossCommoditiesAdapterTest {
+public class LossesCommoditiesAdapterTest {
 
     boolean toggleEventFired = false;
     private int list_item_layout;
@@ -60,6 +61,29 @@ public class LossCommoditiesAdapterTest {
         cancelButton.performClick();
 
         assertTrue(toggleEventFired);
+    }
+
+    @Test
+    public void shouldPreLoadEditTextsWithValuesInViewModels() {
+        Commodity commodity = new Commodity("Commodity");
+        LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(commodity);
+        lossesCommodityViewModel.setMissing(1);
+        lossesCommodityViewModel.setDamages(2);
+        lossesCommodityViewModel.setWastages(3);
+        lossesCommodityViewModel.setExpiries(4);
+        List<LossesCommodityViewModel> commodities = Arrays.asList(lossesCommodityViewModel);
+        list_item_layout = R.layout.losses_commodity_list_item;
+        adapter = new LossesCommoditiesAdapter(Robolectric.application, list_item_layout, commodities);
+
+        int missing = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).getText().toString());
+        int damages = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextDamages)).getText().toString());
+        int wastages = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextWastages)).getText().toString());
+        int expiries = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextExpiries)).getText().toString());
+
+        assertThat(missing, is(1));
+        assertThat(damages, is(2));
+        assertThat(wastages, is(3));
+        assertThat(expiries, is(4));
     }
 
     public void onEvent(CommodityToggledEvent event) {

@@ -33,21 +33,35 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(resource, parent, false);
+
+        final LossesCommodityViewModel viewModel = getItem(position);
+
         EditText editTextWastages = (EditText) rowView.findViewById(R.id.editTextWastages);
         EditText editTextDamages = (EditText) rowView.findViewById(R.id.editTextDamages);
         EditText editTextExpiries = (EditText) rowView.findViewById(R.id.editTextExpiries);
         EditText editTextMissing = (EditText) rowView.findViewById(R.id.editTextMissing);
 
-        final LossesCommodityViewModel viewModel = getItem(position);
+        preloadDataInto(viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
 
-        setupTextWatcher(editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
-        setupTextWatcher(editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
-        setupTextWatcher(editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
-        setupTextWatcher(editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
+        syncChangesWithViewModelFrom(viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
 
         ImageButton imageButtonCancel = (ImageButton)rowView.findViewById(R.id.imageButtonCancel);
         activateCancelButton(imageButtonCancel, viewModel);
         return rowView;
+    }
+
+    private void syncChangesWithViewModelFrom(LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
+        setupTextWatcher(editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
+        setupTextWatcher(editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
+        setupTextWatcher(editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
+        setupTextWatcher(editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
+    }
+
+    private void preloadDataInto(LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
+        editTextWastages.setText(String.valueOf(viewModel.getWastage()));
+        editTextDamages.setText(String.valueOf(viewModel.getDamages()));
+        editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
+        editTextMissing.setText(String.valueOf(viewModel.getMissing()));
     }
 
     private void setupTextWatcher(EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
