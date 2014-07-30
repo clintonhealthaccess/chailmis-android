@@ -23,6 +23,13 @@ created: "2014-07-21T16:05:30.133+0000",
 lastUpdated: "2014-07-22T08:59:01.770+0000",
 href: "http://lmisdev.dhis2.org/api/dataElementGroups/gTRDFv2oqoQ",
 id: "gTRDFv2oqoQ"
+},
+{
+name: "Commodities - Something Else",
+created: "2014-07-21T16:05:30.133+0000",
+lastUpdated: "2014-07-22T08:59:01.770+0000",
+href: "http://lmisdev.dhis2.org/api/dataElementGroups/gTRDFv2oqoQ",
+id: "123456789"
 }
 ]
 }

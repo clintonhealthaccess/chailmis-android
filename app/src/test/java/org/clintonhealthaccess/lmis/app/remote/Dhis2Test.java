@@ -90,17 +90,14 @@ public class Dhis2Test {
         addHttpResponseRule("GET", String.format("%s/api/systemSettings/data_element_group_set_id", dhis2BaseUrl), new TestHttpResponse(200, "OvBXLc9jKsE"));
         setUpSuccessHttpGetRequest("/api/dataElementGroupSets/OvBXLc9jKsE", "dataElementGroupSetCommodities.json");
         setUpSuccessHttpGetRequest("/api/dataElementGroups/gTRDFv2oqoQ", "dataElementGroupAnelgesics.json");
+        setUpSuccessHttpGetRequest("/api/dataElementGroups/123456789", "dataElementGroupSomethinElse.json");
         setUpSuccessHttpGetRequest("/api/dataElements/gE5L6iZoOdh", "dataElementParacetamol_Injection_100.json");
         setUpSuccessHttpGetRequest("/api/categoryCombos/fvmWKl1D5QJ", "categoryComboConsumption.json");
 
         List<Category> categories = dhis2.fetchCommodities(new User());
-        String categoryName = "Commodities - Anelgesics ";
         String commodityName = "Paracetamol_Injection_100";
-        assertThat(categories, contains(new Category(categoryName)));
-        assertThat(categories.size(), is(1));
+        assertThat(categories.size(), is(2));
         assertThat(categories.get(0).getNotSavedCommodities().size(), is(1));
         assertThat(categories.get(0).getNotSavedCommodities().get(0).getName(), is(commodityName));
-
-
     }
 }

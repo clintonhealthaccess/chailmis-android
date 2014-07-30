@@ -1,0 +1,23 @@
+{
+    "access": {
+        "delete": true,
+        "externalize": false,
+        "manage": true,
+        "read": true,
+        "update": true,
+        "write": true
+    },
+    "created": "2014-07-21T16:12:17.750+0000",
+    "dataElementGroupSet": {
+        "created": "2014-07-22T11:58:01.934+0000",
+        "href": "http://lmisdev.dhis2.org/api/dimensions/OvBXLc9jKsE",
+        "id": "OvBXLc9jKsE",
+        "lastUpdated": "2014-07-22T11:58:01.934+0000",
+        "name": "LMIS Commodities"
+    },
+    "href": "http://lmisdev.dhis2.org/api/dataElementGroups/I2ZOPSfQELp",
+    "id": "I2ZOPSfQELp",
+    "lastUpdated": "2014-07-21T16:12:17.750+0000",
+    "name": "Commodities - Anti-diarrhea",
+    "shortName": "Commodities - Something Else"
+}

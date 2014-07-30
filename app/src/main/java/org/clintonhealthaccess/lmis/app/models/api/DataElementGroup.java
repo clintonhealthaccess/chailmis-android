@@ -5,12 +5,10 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Builder;
 
 
 @Getter
 @Setter
-@Builder
 public class DataElementGroup {
 
     private String name;
@@ -18,6 +16,9 @@ public class DataElementGroup {
     private String lastUpdated;
     private String href;
     private String id;
-    private List<DataElement> dataElements = new ArrayList<>();
+    private List<DataElement> dataElements;
 
+    public DataElementGroup() {
+        dataElements = new ArrayList<>();
+    }
 }
