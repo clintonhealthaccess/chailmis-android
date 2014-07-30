@@ -123,7 +123,7 @@ public class Commodity implements Serializable {
     public void setAggregation(Aggregation aggregation) {
         this.aggregation = aggregation;
     }
-    
+
     public int getStockOnHand() {
         return getStockItem().getQuantity();
     }

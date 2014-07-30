@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
@@ -36,6 +37,9 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
 
         final LossesCommodityViewModel viewModel = getItem(position);
 
+        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        textViewCommodityName.setText(viewModel.getName());
+
         EditText editTextWastages = (EditText) rowView.findViewById(R.id.editTextWastages);
         EditText editTextDamages = (EditText) rowView.findViewById(R.id.editTextDamages);
         EditText editTextExpiries = (EditText) rowView.findViewById(R.id.editTextExpiries);
@@ -43,18 +47,18 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
 
         preloadDataInto(viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
 
-        syncChangesWithViewModelFrom(viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
+        syncChangesWithViewModelFrom(textViewCommodityName, viewModel, editTextWastages, editTextDamages, editTextExpiries, editTextMissing);
 
         ImageButton imageButtonCancel = (ImageButton)rowView.findViewById(R.id.imageButtonCancel);
         activateCancelButton(imageButtonCancel, viewModel);
         return rowView;
     }
 
-    private void syncChangesWithViewModelFrom(LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
-        setupTextWatcher(editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
-        setupTextWatcher(editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
-        setupTextWatcher(editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
-        setupTextWatcher(editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
+    private void syncChangesWithViewModelFrom(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
+        setupTextWatcher(textViewCommodityName, editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
+        setupTextWatcher(textViewCommodityName, editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
+        setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
+        setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
     }
 
     private void preloadDataInto(LossesCommodityViewModel viewModel, EditText editTextWastages, EditText editTextDamages, EditText editTextExpiries, EditText editTextMissing) {
@@ -64,7 +68,7 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         editTextMissing.setText(String.valueOf(viewModel.getMissing()));
     }
 
-    private void setupTextWatcher(final EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
+    private void setupTextWatcher(final TextView textViewCommodityName, final EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
         editText.addTextChangedListener(new LmisTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
@@ -72,7 +76,9 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
                 int losses = viewModel.totalLosses();
                 int stockOnHand = viewModel.getStockOnHand();
                 if(losses > stockOnHand) {
-                    editText.setError(String.format(getContext().getString(R.string.totalLossesGreaterThanStockAtHand), losses, stockOnHand));
+                    textViewCommodityName.setError(String.format(getContext().getString(R.string.totalLossesGreaterThanStockAtHand), losses, stockOnHand));
+                }else{
+                    textViewCommodityName.setError(null);
                 }
             }
         });
