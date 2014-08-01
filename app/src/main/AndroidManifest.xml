@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.clintonhealthaccess.lmis.app" >
+    package="org.clintonhealthaccess.lmis.app">
 
     <application
+        android:name=".LmisApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/ic_home"
-        android:theme="@style/Theme.Dhisblue"
-        android:name=".LmisApplication">
+        android:theme="@style/Theme.Dhisblue">
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape" >
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,38 +25,61 @@
         <activity
             android:name=".activities.DispenseActivity"
             android:label="@string/title_activity_dispense"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.ReceiveActivity"
             android:label="@string/title_activity_receive"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.LossesActivity"
             android:label="@string/title_activity_losses"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.OrderActivity"
             android:label="@string/title_activity_order"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.MessagesActivity"
             android:label="@string/title_activity_messages"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.ReportsActivity"
             android:label="@string/title_activity_reports"
-            android:screenOrientation="landscape"
-            android:parentActivityName=".activities.HomeActivity" />
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
 
-        <service
-            android:name="org.clintonhealthaccess.lmis.app.sync.AuthenticatorService">
+        <service android:name="org.clintonhealthaccess.lmis.app.sync.AuthenticatorService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
@@ -69,22 +91,25 @@
             android:exported="true"
             android:process=":sync">
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
+            <meta-data
+                android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
         <provider
             android:name="org.clintonhealthaccess.lmis.app.sync.StubContentProvider"
             android:authorities="@string/sync_content_authority"
-            android:syncable="true"/>
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="c314ce4bd4a176a66c8f54992b47d15ef325df77"/>
+            android:syncable="true" />
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="c314ce4bd4a176a66c8f54992b47d15ef325df77" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 </manifest>
