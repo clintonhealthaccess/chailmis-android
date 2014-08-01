@@ -28,7 +28,31 @@ public class DailyCommoditySnapshotService {
     public void add(final Snapshotable snapshotable) {
         GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<DailyCommoditySnapshot>(DailyCommoditySnapshot.class, context);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = dbUtil.withDao(DailyCommoditySnapshot.class, new DbUtil.Operation<DailyCommoditySnapshot, List<DailyCommoditySnapshot>>() {
+        List<DailyCommoditySnapshot> dailyCommoditySnapshots = getSnapshotsForCommodityToday(snapshotable);
+
+        if (dailyCommoditySnapshots.isEmpty()) {
+            createNewSnaphot(snapshotable, dailyCommoditySnapshotDao);
+        } else {
+            updateSnapshot(snapshotable, dailyCommoditySnapshotDao, dailyCommoditySnapshots);
+        }
+
+
+    }
+
+    private void updateSnapshot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao, List<DailyCommoditySnapshot> dailyCommoditySnapshots) {
+        DailyCommoditySnapshot commoditySnapshot = dailyCommoditySnapshots.get(0);
+        commoditySnapshot.incrementValue(snapshotable.getValue());
+        commoditySnapshot.setSynced(false);
+        dailyCommoditySnapshotDao.update(commoditySnapshot);
+    }
+
+    private void createNewSnaphot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao) {
+        DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getAggregationField(), snapshotable.getValue());
+        dailyCommoditySnapshotDao.create(commoditySnapshot);
+    }
+
+    private List<DailyCommoditySnapshot> getSnapshotsForCommodityToday(final Snapshotable snapshotable) {
+        return dbUtil.withDao(DailyCommoditySnapshot.class, new DbUtil.Operation<DailyCommoditySnapshot, List<DailyCommoditySnapshot>>() {
             @Override
             public List<DailyCommoditySnapshot> operate(Dao<DailyCommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<DailyCommoditySnapshot, String> queryBuilder = dao.queryBuilder();
@@ -39,18 +63,6 @@ public class DailyCommoditySnapshotService {
                 return dao.query(query);
             }
         });
-
-        if (dailyCommoditySnapshots.size() > 0) {
-            DailyCommoditySnapshot commoditySnapshot = dailyCommoditySnapshots.get(0);
-            commoditySnapshot.incrementValue(snapshotable.getValue());
-            commoditySnapshot.setSynced(false);
-            dailyCommoditySnapshotDao.update(commoditySnapshot);
-        } else {
-            DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getAggregationField(), snapshotable.getValue());
-            dailyCommoditySnapshotDao.create(commoditySnapshot);
-        }
-
-
     }
 
     private Date startOfDay() {
