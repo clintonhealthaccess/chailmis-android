@@ -3,6 +3,7 @@ package org.clintonhealthaccess.lmis.app.models.api;
 import com.google.gson.annotations.SerializedName;
 
 import org.clintonhealthaccess.lmis.app.models.Aggregation;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public class DataElement {
     @SerializedName("categoryCombo")
     private Aggregation aggregation;
     private List<DataElementGroup> dataElementGroups;
+    private List<DataSet> dataSets;
 }

@@ -35,8 +35,6 @@ public class DailyCommoditySnapshotService {
         } else {
             updateSnapshot(snapshotable, dailyCommoditySnapshotDao, dailyCommoditySnapshots);
         }
-
-
     }
 
     private void updateSnapshot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao, List<DailyCommoditySnapshot> dailyCommoditySnapshots) {
@@ -56,11 +54,19 @@ public class DailyCommoditySnapshotService {
             @Override
             public List<DailyCommoditySnapshot> operate(Dao<DailyCommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<DailyCommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                Date startOfDay = startOfDay();
-                Date endOfDay = endOfDay();
-                queryBuilder.where().eq(COMMODITY_ID, snapshotable.getCommodity()).and().eq(AGGREGATION_FIELD_ID, snapshotable.getAggregationField()).and().between("date", startOfDay, endOfDay);
-                PreparedQuery<DailyCommoditySnapshot> query = queryBuilder.prepare();
-                return dao.query(query);
+                queryBuilder.where().eq(COMMODITY_ID, snapshotable.getCommodity()).and().eq(AGGREGATION_FIELD_ID, snapshotable.getAggregationField()).and().between("date", startOfDay(), endOfDay());
+                return dao.query(queryBuilder.prepare());
+            }
+        });
+    }
+
+    public List<DailyCommoditySnapshot> getUnSyncedSnapshots() {
+        return dbUtil.withDao(DailyCommoditySnapshot.class, new DbUtil.Operation<DailyCommoditySnapshot, List<DailyCommoditySnapshot>>() {
+            @Override
+            public List<DailyCommoditySnapshot> operate(Dao<DailyCommoditySnapshot, String> dao) throws SQLException {
+                QueryBuilder<DailyCommoditySnapshot, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().eq("synced", false);
+                return dao.query(queryBuilder.prepare());
             }
         });
     }

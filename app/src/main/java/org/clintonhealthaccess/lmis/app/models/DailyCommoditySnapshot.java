@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@DatabaseTable(tableName = "cumulatives")
+@DatabaseTable
 public class DailyCommoditySnapshot {
 
     @DatabaseField(generatedId = true)

@@ -39,7 +39,7 @@ public class DailyCommoditySnapshotServiceTest {
     private GenericDao<Aggregation> aggregationDao;
     private GenericDao<AggregationField> aggregationFieldDao;
     private GenericDao<Commodity> commodityDao;
-    private GenericDao<DailyCommoditySnapshot> cummulativeDao;
+    private GenericDao<DailyCommoditySnapshot> snapshotDao;
 
 
     @Before
@@ -49,7 +49,7 @@ public class DailyCommoditySnapshotServiceTest {
         aggregationDao = new GenericDao<>(Aggregation.class, context);
         aggregationFieldDao = new GenericDao<>(AggregationField.class, context);
         commodityDao = new GenericDao<>(Commodity.class, context);
-        cummulativeDao = new GenericDao<>(DailyCommoditySnapshot.class, context);
+        snapshotDao = new GenericDao<>(DailyCommoditySnapshot.class, context);
         try {
             setUpInjectionWithMockLmisServer(context, this);
         } catch (IOException e) {
@@ -67,7 +67,7 @@ public class DailyCommoditySnapshotServiceTest {
         dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity1, 3));
         dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity2, 4));
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = cummulativeDao.queryForAll();
+        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
 
         assertThat(dailyCommoditySnapshots.size(), is(2));
         assertThat(dailyCommoditySnapshots.get(0).getValue(), is(3));
@@ -83,7 +83,7 @@ public class DailyCommoditySnapshotServiceTest {
         dailyCommoditySnapshotService.add(dispensingItem);
         dailyCommoditySnapshotService.add(dispensingItem);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = cummulativeDao.queryForAll();
+        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
         assertThat(dailyCommoditySnapshots.size(), is(1));
         assertThat(dailyCommoditySnapshots.get(0).getValue(), is(9));
     }
@@ -98,13 +98,31 @@ public class DailyCommoditySnapshotServiceTest {
 
         DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getAggregationField(), 3);
         dailyCommoditySnapshot.setSynced(true);
-        cummulativeDao.create(dailyCommoditySnapshot);
+        snapshotDao.create(dailyCommoditySnapshot);
         dailyCommoditySnapshotService.add(dispensingItem);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = cummulativeDao.queryForAll();
+        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
         assertThat(dailyCommoditySnapshots.size(), is(1));
         assertThat(dailyCommoditySnapshots.get(0).isSynced(), is(false));
+    }
 
+    @Test
+    public void shouldGetCommoditySnapshotsWithSyncedAsFalse() {
+        generateTestCommodities();
+
+        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
+        Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
+        Snapshotable dispensingItem = new DispensingItem(fetchedCommodity1, 3);
+
+
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getAggregationField(), 3);
+        dailyCommoditySnapshot.setSynced(true);
+        snapshotDao.create(dailyCommoditySnapshot);
+
+        dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity2, 4));
+
+        List<DailyCommoditySnapshot> unsynchedSnapshots = dailyCommoditySnapshotService.getUnSyncedSnapshots();
+        assertThat(unsynchedSnapshots.size(), is(1));
     }
 
     private void generateTestCommodities() {

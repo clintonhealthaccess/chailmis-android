@@ -6,7 +6,7 @@ import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataSet;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 
 import java.util.List;
 import java.util.Map;

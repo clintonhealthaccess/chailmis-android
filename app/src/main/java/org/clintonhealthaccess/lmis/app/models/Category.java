@@ -26,6 +26,9 @@ public class Category implements Serializable {
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<Commodity> commoditiesCollection;
 
+    @DatabaseField(foreign = true, foreignAutoCreate = true)
+    private DataSet dataSet;
+
     private List<Commodity> commodities = new ArrayList<>();
 
     public Category() {
@@ -74,5 +77,9 @@ public class Category implements Serializable {
 
     public void addCommodity(Commodity commodity) {
         commodities.add(commodity);
+    }
+
+    public void setDataSet(DataSet dataSet) {
+        this.dataSet = dataSet;
     }
 }
