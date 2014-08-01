@@ -1,7 +1,5 @@
 package org.clintonhealthaccess.lmis.app.services;
 
-import android.content.Context;
-
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -20,9 +18,11 @@ import java.util.List;
 public class DispensingService {
 
     @Inject
-    private DbUtil dbUtil;
-    @Inject
     StockService stockService;
+    @Inject
+    DailyCommoditySnapshotService dailyCommoditySnapshotService;
+    @Inject
+    private DbUtil dbUtil;
 
     public void addDispensing(final Dispensing dispensing) {
         dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, DispensingItem>() {
@@ -33,6 +33,7 @@ public class DispensingService {
                     item.setDispensing(dispensing);
                     dao.create(item);
                     adjustStockLevel(item);
+                    dailyCommoditySnapshotService.add(item);
                 }
                 return null;
             }

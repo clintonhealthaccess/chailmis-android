@@ -87,6 +87,5 @@ public class DispensingServiceTest {
             dispensingService.addDispensing(dispensing);
         }
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0021-%s", currentMonth)));
-
     }
 }

@@ -6,32 +6,74 @@
             {
                 "lmisId": "2",
                 "name": "Coartem",
-                "orderDuration": 30
+                "orderDuration": 30,
+                "aggregation": {
+                    "name":"Consumption",
+                    "id":"idas",
+                    "categoryOptionCombos":[
+                        {"id":"some data","name":"Dispense"}
+                     ]
+                }
             },
             {
                 "lmisId": "3",
                 "name": "Choloquine",
-                "orderDuration": 90
+                "orderDuration": 90,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             },
             {
                 "lmisId": "4",
                 "name": "Quinine",
-                "orderDuration": 180
+                "orderDuration": 180,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             },
             {
                 "lmisId": "5",
                 "name": "Fansida",
-                "orderDuration": 360
+                "orderDuration": 360,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             },
             {
                 "lmisId": "6",
                 "name": "Hedex",
-                "orderDuration": 60
+                "orderDuration": 60,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             },
             {
                 "lmisId": "7",
                 "name": "Septrin",
-                "orderDuration": 60
+                "orderDuration": 60,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             }
         ]
     },
@@ -42,7 +84,14 @@
             {
                 "lmisId": "9",
                 "name": "Condom",
-                "orderDuration": 14
+                "orderDuration": 14,
+                "aggregation": {
+                                    "name":"Consumption",
+                                    "id":"idas",
+                                    "categoryOptionCombos":[
+                                        {"id":"some data","name":"Dispense"}
+                                     ]
+                                }
             }
         ]
     },

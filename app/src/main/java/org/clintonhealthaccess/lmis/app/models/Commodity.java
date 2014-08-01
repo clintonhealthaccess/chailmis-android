@@ -30,7 +30,7 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Aggregation aggregation;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
@@ -60,6 +60,12 @@ public class Commodity implements Serializable {
         this.name = name;
         this.aggregation = aggregation;
     }
+
+    public Commodity(String name, Category category, Aggregation aggregation) {
+        this(name, category);
+        this.aggregation = aggregation;
+    }
+
 
     public String getName() {
         return name;
