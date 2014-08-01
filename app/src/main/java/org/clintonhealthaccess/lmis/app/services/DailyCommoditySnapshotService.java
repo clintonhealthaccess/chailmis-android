@@ -43,6 +43,7 @@ public class DailyCommoditySnapshotService {
         if (dailyCommoditySnapshots.size() > 0) {
             DailyCommoditySnapshot commoditySnapshot = dailyCommoditySnapshots.get(0);
             commoditySnapshot.incrementValue(snapshotable.getValue());
+            commoditySnapshot.setSynced(false);
             dailyCommoditySnapshotDao.update(commoditySnapshot);
         } else {
             DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getAggregationField(), snapshotable.getValue());

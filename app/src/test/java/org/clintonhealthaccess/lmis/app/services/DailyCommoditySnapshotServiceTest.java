@@ -88,6 +88,24 @@ public class DailyCommoditySnapshotServiceTest {
         assertThat(dailyCommoditySnapshots.get(0).getValue(), is(9));
     }
 
+    @Test
+    public void shouldMarkSyncedItemAsUnSyncedWhenAnUpdateOccurs() throws Exception {
+
+        generateTestCommodities();
+        Commodity fetchedCommodity = commodityDao.queryForAll().get(0);
+        Snapshotable dispensingItem = new DispensingItem(fetchedCommodity, 3);
+
+
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getAggregationField(), 3);
+        dailyCommoditySnapshot.setSynced(true);
+        cummulativeDao.create(dailyCommoditySnapshot);
+        dailyCommoditySnapshotService.add(dispensingItem);
+
+        List<DailyCommoditySnapshot> dailyCommoditySnapshots = cummulativeDao.queryForAll();
+        assertThat(dailyCommoditySnapshots.size(), is(1));
+        assertThat(dailyCommoditySnapshots.get(0).isSynced(), is(false));
+
+    }
 
     private void generateTestCommodities() {
         Category category = new Category("commodities");
