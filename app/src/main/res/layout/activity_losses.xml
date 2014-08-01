@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/losses_header"
                 android:padding="10dp"
-                android:text="@string/losses"
+                android:text="@string/losses_and_adjustments"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
