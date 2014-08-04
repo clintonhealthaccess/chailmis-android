@@ -76,8 +76,8 @@ public class Dhis2 implements LmisServer {
                     Aggregation aggregation = element.getAggregation();
                     Commodity commodity = new Commodity(element.getId(), element.getName(), aggregation);
                     category.addCommodity(commodity);
-                    if (!element.getDataSets().isEmpty()){
-                    category.setDataSet(element.getDataSets().get(0));
+                    if (element.getDataSets() != null){
+                        category.setDataSet(element.getDataSets().get(0));
                     }
                 }
                 return category;
