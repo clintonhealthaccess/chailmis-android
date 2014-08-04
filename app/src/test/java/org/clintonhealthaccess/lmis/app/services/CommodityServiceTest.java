@@ -8,11 +8,13 @@ import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -55,6 +57,7 @@ public class CommodityServiceTest {
                 bind(LmisServer.class).toInstance(mockLmisServer);
             }
         });
+
     }
 
     @Test
@@ -92,6 +95,19 @@ public class CommodityServiceTest {
         assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
     }
 
+    @Ignore("Work In progress...")
+    @Test
+    public void shouldSaveCommodityAggregationFields() {
+
+    }
+
+    @Ignore("Work In progress...")
+    @Test
+    public void shouldSaveCommodityDataSet() {
+        List<Category> categories = getTestCategories();
+        commodityService.saveToDatabase(categories);
+    }
+
     @Test
     public void shouldSaveCommodityAggregations() {
         List<Category> categories = getTestCategories();
@@ -116,13 +132,19 @@ public class CommodityServiceTest {
         assertThat(numberOfFields, is(1L));
     }
 
-
-
     private List<Category> getTestCategories() {
+
+        DataSet dataSet = new DataSet();
+        dataSet.setDataSetId(12324L);
+        dataSet.setDescription("consumption data set");
+        dataSet.setName("consumption");
+
         List<Category> categories = new ArrayList<>();
         Category category = new Category("named cat");
+        category.setDataSet(dataSet);
         Commodity commodity = new Commodity("cat food");
         Commodity commodityDogFood = new Commodity("dog food");
+
 
         Aggregation aggregation = new Aggregation();
         aggregation.setId("id");
