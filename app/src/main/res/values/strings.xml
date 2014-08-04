@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DHIS LMIS</string>
+    <string name="app_name">DHIS2 LMIS</string>
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
 
-    <string name="title_activity_home">DHIS LMIS</string>
+    <string name="title_activity_home">DHIS2 LMIS</string>
     <string name="register_label">Please register with your LMIS credentials:</string>
     <string name="action_settings">Settings</string>
     <string name="losses_and_adjustments">Losses &amp; Adjustments</string>
+    <string name="losses">Losses</string>
     <string name="reports">Reports</string>
     <string name="messages">Messages</string>
     <string name="order">Order</string>
@@ -71,5 +72,6 @@
     <string name="missing">Missing</string>
     <string name="damaged">Damaged</string>
     <string name="totalLossesGreaterThanStockAtHand" formatted="false">Total quantity lost (%d) is greater than stock at hand (%d)</string>
+    <string name="fillInSomeLosses">Please enter some quantities for losses</string>
 
 </resources>

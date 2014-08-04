@@ -41,27 +41,31 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         setUpWastages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextWastages));
         setUpExpiries(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextExpiries));
         setUpMissing(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextMissing));
-        activateCancelButton((ImageButton)rowView.findViewById(R.id.imageButtonCancel), viewModel);
+        activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), viewModel);
         return rowView;
     }
 
-    private void setUpWastages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages){
-        editTextWastages.setText(String.valueOf(viewModel.getWastage()));
+    private void setUpWastages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages) {
+        if (viewModel.getWastage() != 0)
+            editTextWastages.setText(String.valueOf(viewModel.getWastage()));
         setupTextWatcher(textViewCommodityName, editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
     }
 
-    private void setUpDamages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextDamages){
-        editTextDamages.setText(String.valueOf(viewModel.getDamages()));
+    private void setUpDamages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextDamages) {
+        if(viewModel.getDamages() != 0)
+            editTextDamages.setText(String.valueOf(viewModel.getDamages()));
         setupTextWatcher(textViewCommodityName, editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
     }
 
-    private void setUpExpiries(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextExpiries){
-        editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
+    private void setUpExpiries(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextExpiries) {
+        if(viewModel.getExpiries() != 0)
+            editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
         setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
     }
 
-    private void setUpMissing(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextMissing){
-        editTextMissing.setText(String.valueOf(viewModel.getMissing()));
+    private void setUpMissing(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextMissing) {
+        if(viewModel.getMissing() != 0)
+            editTextMissing.setText(String.valueOf(viewModel.getMissing()));
         setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
     }
 
@@ -72,9 +76,9 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
                 command.execute(viewModel, editable);
                 int losses = viewModel.totalLosses();
                 int stockOnHand = viewModel.getStockOnHand();
-                if(losses > stockOnHand) {
+                if (losses > stockOnHand) {
                     textViewCommodityName.setError(String.format(getContext().getString(R.string.totalLossesGreaterThanStockAtHand), losses, stockOnHand));
-                }else{
+                } else {
                     textViewCommodityName.setError(null);
                 }
             }

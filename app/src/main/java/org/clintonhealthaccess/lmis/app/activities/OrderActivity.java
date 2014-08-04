@@ -87,6 +87,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         });
     }
 
+
     @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {
         return new CommoditiesToViewModelsConverter() {

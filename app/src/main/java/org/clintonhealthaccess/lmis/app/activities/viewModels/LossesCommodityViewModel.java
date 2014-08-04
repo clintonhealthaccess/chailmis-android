@@ -2,6 +2,8 @@ package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
+import java.io.Serializable;
+
 public class LossesCommodityViewModel extends BaseCommodityViewModel {
 
     private int wastage, damages, expiries, missing;
@@ -44,5 +46,9 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
 
     public int totalLosses() {
         return wastage + damages + expiries + missing;
+    }
+
+    public boolean isValid() {
+        return !(getMissing() == 0 && getExpiries() == 0 && getDamages() == 0 && getWastage() == 0) && totalLosses() <= getStockOnHand();
     }
 }

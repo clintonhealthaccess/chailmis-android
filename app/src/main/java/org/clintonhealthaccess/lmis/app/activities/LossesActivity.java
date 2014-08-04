@@ -1,8 +1,11 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
@@ -10,7 +13,10 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.LossesCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
+import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Loss;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +24,12 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class LossesActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.buttonSubmitLosses)
     Button buttonSubmitLosses;
-
-    @Override
-    protected void onCommoditySelectionChanged(List<BaseCommodityViewModel> selectedCommodities) {
-
-    }
 
     @Override
     protected Button getSubmitButton() {
@@ -48,7 +48,29 @@ public class LossesActivity extends CommoditySelectableActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        //Do submit stuff here.
+        buttonSubmitLosses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isValid()) {
+                    FragmentManager supportFragmentManager = getSupportFragmentManager();
+                    LossesConfirmationFragment lossesConfirmationFragment = LossesConfirmationFragment.newInstance(new Loss());
+                    lossesConfirmationFragment.show(supportFragmentManager, "lossesDialog");
+                } else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.fillInSomeLosses), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private boolean isValid() {
+        int count = arrayAdapter.getCount();
+        for (int i = 0; i < count; i++) {
+            LossesCommodityViewModel lossesCommodityViewModel = (LossesCommodityViewModel) arrayAdapter.getItem(i);
+            if (!lossesCommodityViewModel.isValid()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
