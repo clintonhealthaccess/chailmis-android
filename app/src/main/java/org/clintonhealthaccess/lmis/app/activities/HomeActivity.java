@@ -27,12 +27,6 @@ public class HomeActivity extends BaseActivity {
     @InjectView(R.id.layoutGraph)
     LinearLayout layout;
 
-    @InjectView(R.id.listViewAlerts)
-    ListView listViewAlerts;
-
-    @InjectView(R.id.listViewNotifications)
-    ListView listViewNotifications;
-
     @InjectView(R.id.buttonDispense)
     Button buttonDispense;
 

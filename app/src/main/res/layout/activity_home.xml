@@ -25,16 +25,16 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/receive"
+            android:text="@string/order"
             android:layout_weight="1"
-            android:id="@+id/buttonReceive" />
+            android:id="@+id/buttonOrder" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/order"
+            android:text="@string/receive"
             android:layout_weight="1"
-            android:id="@+id/buttonOrder" />
+            android:id="@+id/buttonReceive" />
 
         <Button
             android:layout_width="fill_parent"
