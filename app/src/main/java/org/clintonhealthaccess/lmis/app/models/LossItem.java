@@ -36,6 +36,16 @@ public class LossItem implements Serializable {
     @DatabaseField(canBeNull = false, defaultValue = "0")
     private int expiries;
 
+    public LossItem(Commodity commodity) {
+        this.commodity = commodity;
+    }
+
+    public LossItem(Commodity commodity, int expiries, int damages) {
+        this(commodity);
+        this.expiries = expiries;
+        this.damages = damages;
+    }
+
     public int getNewStockOnHand() {
         return commodity.getStockOnHand() - getTotalLosses();
     }

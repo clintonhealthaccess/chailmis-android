@@ -28,6 +28,7 @@ public class Loss implements Serializable {
     private List<LossItem> lossItems = new ArrayList<>();
 
     public void addLossItem(LossItem lossItem) {
+        lossItem.setLoss(this);
         lossItems.add(lossItem);
     }
 }

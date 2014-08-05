@@ -1,12 +1,14 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -68,6 +70,13 @@ public class LossesConfirmationFragment extends RoboDialogFragment {
             @Override
             public void onClick(View view) {
                 lossService.saveLoss(loss);
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.loss_successful), Toast.LENGTH_LONG).show();
+                dismiss();
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                    startActivity(activity.getIntent());
+                }
             }
         });
 

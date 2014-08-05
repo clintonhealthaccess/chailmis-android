@@ -52,10 +52,9 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
         return !(getMissing() == 0 && getExpiries() == 0 && getDamages() == 0 && getWastage() == 0) && totalLosses() <= getStockOnHand();
     }
 
-    public LossItem getLossItem(Loss loss) {
+    public LossItem getLossItem() {
         LossItem lossItem = new LossItem();
         lossItem.setCommodity(getCommodity());
-        lossItem.setLoss(loss);
         lossItem.setDamages(damages);
         lossItem.setExpiries(expiries);
         lossItem.setMissing(missing);

@@ -67,7 +67,7 @@ public class LossesActivity extends CommoditySelectableActivity {
         int count = arrayAdapter.getCount();
         for (int i = 0; i < count; i++) {
             LossesCommodityViewModel lossesCommodityViewModel = (LossesCommodityViewModel) arrayAdapter.getItem(i);
-            loss.addLossItem(lossesCommodityViewModel.getLossItem(loss));
+            loss.addLossItem(lossesCommodityViewModel.getLossItem());
         }
         return loss;
     }
