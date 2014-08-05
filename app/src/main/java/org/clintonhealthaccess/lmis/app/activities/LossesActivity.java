@@ -14,7 +14,6 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityVie
 import org.clintonhealthaccess.lmis.app.adapters.LossesCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
-import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 

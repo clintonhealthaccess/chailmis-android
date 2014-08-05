@@ -64,12 +64,22 @@ public class DispenseActivity extends CommoditySelectableActivity {
     });
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
+
     @InjectView(R.id.checkboxDispenseToFacility)
     CheckBox checkboxDispenseToFacility;
+
     @InjectView(R.id.textViewPrescriptionId)
     TextView textViewPrescriptionId;
+
     @InjectView(R.id.textViewPrescriptionText)
     TextView textViewPrescriptionText;
+
+    @InjectView(R.id.textViewCategories)
+    TextView textViewCategories;
+
+    @InjectView(R.id.textViewPageTitle)
+    TextView textViewPageTitle;
+
     @Inject
     DispensingService dispensingService;
 
@@ -134,6 +144,24 @@ public class DispenseActivity extends CommoditySelectableActivity {
         });
 
         textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
+        checkboxDispenseToFacility.setVisibility(View.GONE);
+        textViewCategories.setBackgroundColor(getResources().getColor(R.color.gray_header));
+        textViewPageTitle.setBackgroundColor(getResources().getColor(R.color.gray_header));
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            boolean is_adjustments = bundle.getBoolean(HomeActivity.IS_ADJUSTMENT);
+            if (is_adjustments) {
+                checkboxDispenseToFacility.setVisibility(View.VISIBLE);
+                checkboxDispenseToFacility.setChecked(true);
+                checkboxDispenseToFacility.setEnabled(false);
+                textViewCategories.setBackgroundColor(getResources().getColor(R.color.losses_background));
+                textViewPageTitle.setBackgroundColor(getResources().getColor(R.color.losses_background));
+                textViewPageTitle.setTextColor(getResources().getColor(R.color.losses_text));
+                textViewCategories.setTextColor(getResources().getColor(R.color.losses_text));
+                textViewPageTitle.setText(getString(R.string.adjustments));
+            }
+        }
+
     }
 
     @Override

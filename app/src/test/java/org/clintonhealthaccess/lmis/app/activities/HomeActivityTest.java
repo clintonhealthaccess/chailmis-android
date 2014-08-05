@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.inject.AbstractModule;
 
@@ -177,15 +178,17 @@ public class HomeActivityTest {
     }
 
     @Test
-    public void testClickAdjustmentsButtonNavigatesToLossesActivity() {
+    public void testClickAdjustmentsButtonNavigatesToDispenseActivity() {
         setRegistrationStatus(true);
 
         HomeActivity homeActivity = getHomeActivity();
 
         homeActivity.findViewById(R.id.buttonAdjustments).performClick();
 
-        Intent intent = new Intent(homeActivity, LossesActivity.class);
-
+        Intent intent = new Intent(homeActivity, DispenseActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(HomeActivity.IS_ADJUSTMENT, true);
+        intent.putExtras(bundle);
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
     }
 

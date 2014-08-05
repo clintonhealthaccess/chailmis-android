@@ -25,6 +25,7 @@
                 android:background="@color/gray_header"
                 android:padding="10dp"
                 android:text="@string/categories"
+                android:id="@+id/textViewCategories"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -51,6 +52,7 @@
                 android:background="@color/gray_header"
                 android:padding="10dp"
                 android:text="@string/dispense"
+                android:id="@+id/textViewPageTitle"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

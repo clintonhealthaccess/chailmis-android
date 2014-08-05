@@ -23,6 +23,7 @@ import static com.google.common.collect.ImmutableList.of;
 
 @ContentView(R.layout.activity_home)
 public class HomeActivity extends BaseActivity {
+    public static final String IS_ADJUSTMENT = "is_adjustment";
     @InjectView(R.id.layoutGraph)
     LinearLayout layout;
 
@@ -57,7 +58,6 @@ public class HomeActivity extends BaseActivity {
                     put(R.id.buttonReceive, ReceiveActivity.class);
                     put(R.id.buttonOrder, OrderActivity.class);
                     put(R.id.buttonLosses, LossesActivity.class);
-                    put(R.id.buttonAdjustments, LossesActivity.class);
                     put(R.id.buttonMessages, MessagesActivity.class);
                     put(R.id.buttonReports, ReportsActivity.class);
                 }
@@ -86,10 +86,21 @@ public class HomeActivity extends BaseActivity {
         };
 
         List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
-                buttonLosses, buttonMessages, buttonReports, buttonAdjustments);
+                buttonLosses, buttonMessages, buttonReports);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }
+
+        buttonAdjustments.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(IS_ADJUSTMENT, true);
+                Intent intent = new Intent(getApplicationContext(), DispenseActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setupAlerts() {

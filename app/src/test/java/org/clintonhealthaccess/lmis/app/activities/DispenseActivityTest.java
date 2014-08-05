@@ -1,6 +1,8 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowToast;
@@ -239,7 +242,7 @@ public class DispenseActivityTest {
         when(mockGridView.getAdapter()).thenReturn(mockCommoditiesAdapter);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
-        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).performClick();
         ShadowHandler.idleMainLooper();
 
         assertThat(ShadowToast.getTextOfLatestToast(), is(Matchers.nullValue()));
@@ -268,7 +271,7 @@ public class DispenseActivityTest {
         when(mockGridView.getChildCount()).thenReturn(1);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
-        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).performClick();
         ShadowHandler.idleMainLooper();
 
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_errors)));
@@ -292,7 +295,7 @@ public class DispenseActivityTest {
         when(mockGridView.getChildCount()).thenReturn(1);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
-        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).performClick();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_filled)));
     }
@@ -318,7 +321,7 @@ public class DispenseActivityTest {
         when(mockGridView.getChildCount()).thenReturn(1);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
-        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).performClick();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.dispense_submit_validation_message_zero)));
     }
@@ -407,10 +410,42 @@ public class DispenseActivityTest {
         when(mockGridView.getChildCount()).thenReturn(1);
 
         dispenseActivity.gridViewSelectedCommodities = mockGridView;
-        dispenseActivity.findViewById(R.id.buttonSubmitDispense).callOnClick();
+        dispenseActivity.findViewById(R.id.buttonSubmitDispense).performClick();
 
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertThat(dialog, is(notNullValue()));
+
+
+    }
+
+    @Test
+    public void dispenseToFacilityShouldBeVisibleWhenAdjustment() throws Exception {
+        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
+        intent.putExtra(HomeActivity.IS_ADJUSTMENT, true);
+        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
+        assertThat(activity.checkboxDispenseToFacility.getVisibility(), is(View.VISIBLE));
+        assertThat(activity.checkboxDispenseToFacility.isChecked(), is(true));
+        assertThat(activity.checkboxDispenseToFacility.isEnabled(), is(false));
+
+    }
+
+    @Test
+    public void shouldReadAdjustmentsWhenAdjustmentFlagIsSet() throws Exception {
+        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
+        intent.putExtra(HomeActivity.IS_ADJUSTMENT, true);
+        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
+        assertThat(activity.textViewPageTitle.getText().toString(), is(application.getString(R.string.adjustments)));
+        assertThat(((ColorDrawable) activity.textViewPageTitle.getBackground()).getColor(), is(application.getResources().getColor(R.color.losses_background)));
+        assertThat(((ColorDrawable) activity.textViewCategories.getBackground()).getColor(), is(application.getResources().getColor(R.color.losses_background)));
+
+
+    }
+
+    @Test
+    public void dispenseToFacilityShouldNotBeVisibleWhenNotAdjustment() throws Exception {
+        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
+        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
+        assertThat(activity.checkboxDispenseToFacility.getVisibility(), is(View.GONE));
 
     }
 
