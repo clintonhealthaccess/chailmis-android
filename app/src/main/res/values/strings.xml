@@ -74,5 +74,7 @@
     <string name="damaged">Damaged</string>
     <string name="totalLossesGreaterThanStockAtHand" formatted="false">Total quantity lost (%d) is greater than stock at hand (%d)</string>
     <string name="fillInSomeLosses">Please enter some quantities for losses</string>
+    <string name="total_losses">Total Losses</string>
+    <string name="new_stock_on_hand">New SOH</string>
 
 </resources>

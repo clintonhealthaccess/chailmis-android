@@ -5,9 +5,10 @@ import android.widget.Button;
 
 import com.google.inject.AbstractModule;
 
+
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.Order;
-import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.services.LossService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,49 +20,42 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class OrderConfirmationFragmentTest {
-    private OrderConfirmationFragment orderConfirmationFragment;
+public class LossesConfirmationFragmentTest {
 
-    private OrderService mockOrderingService;
-
+    private LossService lossServiceMock;
 
     @Before
     public void setUp() throws Exception {
-        mockOrderingService = mock(OrderService.class);
+        lossServiceMock = mock(LossService.class);
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
-                bind(OrderService.class).toInstance(mockOrderingService);
+                bind(LossService.class).toInstance(lossServiceMock);
             }
         });
-
-        orderConfirmationFragment = OrderConfirmationFragment.newInstance(new Order());
-        startFragment(orderConfirmationFragment);
+        LossesConfirmationFragment lossesConfirmationFragment = LossesConfirmationFragment.newInstance(new Loss());
+        startFragment(lossesConfirmationFragment);
     }
 
     @Test
-    public void testConfirmButtonLogic() throws Exception {
+    public void shouldCloseDialogWhenBackButtonIsPressed() {
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertTrue(dialog.isShowing());
-        Button buttonClose = (Button) dialog.findViewById(R.id.buttonOrderConfirm);
-        buttonClose.performClick();
-        verify(mockOrderingService).saveOrder(Matchers.<Order>anyObject());
+        Button closeButton = (Button) dialog.findViewById(R.id.button_losses_goBack);
+        closeButton.performClick();
         assertFalse(dialog.isShowing());
-
     }
 
     @Test
-    public void testGoBackButtonLogic() throws Exception {
+    public void shouldCallLossServiceSaveLossGivenConfirmButtonIsClicked() throws Exception {
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertTrue(dialog.isShowing());
-        Button buttonGoBack = (Button) dialog.findViewById(R.id.buttonOrderGoBack);
-        buttonGoBack.performClick();
-        verify(mockOrderingService, never()).saveOrder(Matchers.<Order>anyObject());
-        assertFalse(dialog.isShowing());
+        Button confirmButton = (Button) dialog.findViewById(R.id.button_losses_confirm);
+        confirmButton.performClick();
+        verify(lossServiceMock).saveLoss(Matchers.<Loss>anyObject());
     }
 }

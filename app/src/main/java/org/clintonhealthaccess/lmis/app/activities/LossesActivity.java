@@ -16,6 +16,7 @@ import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStra
 import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +53,23 @@ public class LossesActivity extends CommoditySelectableActivity {
             public void onClick(View view) {
                 if (isValid()) {
                     FragmentManager supportFragmentManager = getSupportFragmentManager();
-                    LossesConfirmationFragment lossesConfirmationFragment = LossesConfirmationFragment.newInstance(new Loss());
+                    LossesConfirmationFragment lossesConfirmationFragment = LossesConfirmationFragment.newInstance(generateLoss());
                     lossesConfirmationFragment.show(supportFragmentManager, "lossesDialog");
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.fillInSomeLosses), Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    private Loss generateLoss() {
+        Loss loss = new Loss();
+        int count = arrayAdapter.getCount();
+        for (int i = 0; i < count; i++) {
+            LossesCommodityViewModel lossesCommodityViewModel = (LossesCommodityViewModel) arrayAdapter.getItem(i);
+            loss.addLossItem(lossesCommodityViewModel.getLossItem(loss));
+        }
+        return loss;
     }
 
     private boolean isValid() {
