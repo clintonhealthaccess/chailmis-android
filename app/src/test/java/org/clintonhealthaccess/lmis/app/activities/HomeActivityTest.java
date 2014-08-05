@@ -104,7 +104,7 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonDispense).callOnClick();
+        homeActivity.findViewById(R.id.buttonDispense).performClick();
 
         Intent intent = new Intent(homeActivity, DispenseActivity.class);
 
@@ -117,7 +117,7 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonReceive).callOnClick();
+        homeActivity.findViewById(R.id.buttonReceive).performClick();
 
         Intent intent = new Intent(homeActivity, ReceiveActivity.class);
 
@@ -130,7 +130,7 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonOrder).callOnClick();
+        homeActivity.findViewById(R.id.buttonOrder).performClick();
 
         Intent intent = new Intent(homeActivity, OrderActivity.class);
 
@@ -143,7 +143,7 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonLosses).callOnClick();
+        homeActivity.findViewById(R.id.buttonLosses).performClick();
 
         Intent intent = new Intent(homeActivity, LossesActivity.class);
 
@@ -156,7 +156,7 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonReports).callOnClick();
+        homeActivity.findViewById(R.id.buttonReports).performClick();
 
         Intent intent = new Intent(homeActivity, ReportsActivity.class);
 
@@ -169,9 +169,22 @@ public class HomeActivityTest {
 
         HomeActivity homeActivity = getHomeActivity();
 
-        homeActivity.findViewById(R.id.buttonMessages).callOnClick();
+        homeActivity.findViewById(R.id.buttonMessages).performClick();
 
         Intent intent = new Intent(homeActivity, MessagesActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
+    }
+
+    @Test
+    public void testClickAdjustmentsButtonNavigatesToLossesActivity() {
+        setRegistrationStatus(true);
+
+        HomeActivity homeActivity = getHomeActivity();
+
+        homeActivity.findViewById(R.id.buttonAdjustments).performClick();
+
+        Intent intent = new Intent(homeActivity, LossesActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
     }

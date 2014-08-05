@@ -6,7 +6,6 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
@@ -39,6 +38,9 @@ public class HomeActivity extends BaseActivity {
     @InjectView(R.id.buttonLosses)
     Button buttonLosses;
 
+    @InjectView(R.id.buttonAdjustments)
+    Button buttonAdjustments;
+
     @InjectView(R.id.buttonReports)
     Button buttonReports;
 
@@ -55,6 +57,7 @@ public class HomeActivity extends BaseActivity {
                     put(R.id.buttonReceive, ReceiveActivity.class);
                     put(R.id.buttonOrder, OrderActivity.class);
                     put(R.id.buttonLosses, LossesActivity.class);
+                    put(R.id.buttonAdjustments, LossesActivity.class);
                     put(R.id.buttonMessages, MessagesActivity.class);
                     put(R.id.buttonReports, ReportsActivity.class);
                 }
@@ -83,7 +86,7 @@ public class HomeActivity extends BaseActivity {
         };
 
         List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
-                buttonLosses, buttonMessages, buttonReports);
+                buttonLosses, buttonMessages, buttonReports, buttonAdjustments);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }

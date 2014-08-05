@@ -39,10 +39,15 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/losses_and_adjustments"
+            android:text="@string/losses"
             android:layout_weight="1"
             android:id="@+id/buttonLosses" />
-
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/adjustments"
+            android:layout_weight="1"
+            android:id="@+id/buttonAdjustments" />
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

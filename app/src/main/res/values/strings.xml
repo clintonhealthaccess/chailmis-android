@@ -11,6 +11,7 @@
     <string name="action_settings">Settings</string>
     <string name="losses_and_adjustments">Losses &amp; Adjustments</string>
     <string name="losses">Losses</string>
+    <string name="adjustments">Adjustments</string>
     <string name="reports">Reports</string>
     <string name="messages">Messages</string>
     <string name="order">Order</string>
