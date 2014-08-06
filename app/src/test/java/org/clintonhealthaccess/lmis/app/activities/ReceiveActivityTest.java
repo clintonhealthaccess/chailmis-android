@@ -17,6 +17,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.shadows.ShadowHandler;
+import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectio
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -112,9 +115,23 @@ public class ReceiveActivityTest {
 
     }
 
-    @Ignore("WIP")
     @Test
     public void shouldNotLetUserSubmitFormWhenAllocationIdHasError() throws Exception {
+
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText("aoiiouads");
+        receiveActivity.buttonSubmitReceive.performClick();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), equalTo(application.getString(R.string.receive_submit_validation_message_allocation_id)));
+    }
+
+    @Test
+    public void shouldLetUserSubmitFormWhenAllocationIdHasNoError() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText("UG-200");
+        receiveActivity.buttonSubmitReceive.performClick();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
     }
 
     @Test

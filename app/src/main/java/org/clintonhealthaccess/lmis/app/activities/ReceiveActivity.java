@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
@@ -62,6 +63,22 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         completedAllocationIds = receiveService.getCompletedIds();
+        setupAllocationIdTextView();
+        buttonSubmitReceive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!allocationIdIsValid()) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.receive_submit_validation_message_allocation_id), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private boolean allocationIdIsValid() {
+        return textViewAllocationId.getError() == null;
+    }
+
+    private void setupAllocationIdTextView() {
         textViewAllocationId.setValidator(new AllocationIdValidator());
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
