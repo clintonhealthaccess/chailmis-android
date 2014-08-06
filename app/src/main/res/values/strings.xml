@@ -81,5 +81,8 @@
     <string name="ordered">Ordered</string>
     <string name="received">Received</string>
     <string name="difference">Difference</string>
+    <string name="error_allocation_id_wrong_format">Enter a valid allocation Id</string>
+    <string name="error_allocation_received">This allocation has already been received.</string>
+    <string name="allocation_id">Allocation ID</string>
 
 </resources>

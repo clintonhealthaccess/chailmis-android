@@ -7,10 +7,10 @@ import com.google.inject.AbstractModule;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
-import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -18,24 +18,30 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
+
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class ReceiveActivityTest {
 
 
     private UserService userService;
+    private ReceiveService mockReceiveService;
 
     private ReceiveActivity getReceiveActivity() {
         return buildActivity(ReceiveActivity.class).create().get();
@@ -44,11 +50,13 @@ public class ReceiveActivityTest {
     @Before
     public void setUp() throws Exception {
         userService = mock(UserService.class);
+        mockReceiveService = mock(ReceiveService.class);
         when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(userService);
+                bind(ReceiveService.class).toInstance(mockReceiveService);
             }
         });
 
@@ -73,12 +81,63 @@ public class ReceiveActivityTest {
         assertThat(eventDetails.activity.gridViewSelectedCommodities.getAdapter().getCount(), is(0));
     }
 
+
+    @Test
+    public void shouldShowAllocationIdAutoCompleteTextView() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.textViewAllocationId, not(nullValue()));
+    }
+
+    @Test
+    public void availableAllocationIdsShouldBeSelectableFromTheTextViewForAllocationId() throws Exception {
+        String item1 = "UG-0001";
+        String item2 = "UG-0002";
+        when(mockReceiveService.getReadyAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.textViewAllocationId.getAdapter().getCount(), is(2));
+        assertThat(receiveActivity.textViewAllocationId.getAdapter().getItem(0).toString(), is(item1));
+    }
+
+    @Test
+    public void shouldShowAnErrorMessageForAllocationIdThatHasAlreadyBeenReceived() throws Exception {
+        String item1 = "UG-0001";
+        String item2 = "UG-0002";
+        when(mockReceiveService.getCompletedIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
+        receiveActivity.textViewAllocationId.setText(item1);
+        assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_received)));
+        receiveActivity.textViewAllocationId.setText("UG-12032");
+        assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
+
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldNotLetUserSubmitFormWhenAllocationIdHasError() throws Exception {
+    }
+
+    @Test
+    public void shouldShowAnErrorWhenTheAllocationIdIsOfWrongFormat() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText("aoiiouads");
+        assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
+        receiveActivity.textViewAllocationId.setText("UG-12032");
+        assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldPresetTheQuantityForSelectedItemIfAllocationIdIsSet() throws Exception {
+    }
+
     private CommodityToggledEventDetails fireCommodityToggledEvent(CommoditySelectableActivity activity) {
         BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
         return new CommodityToggledEventDetails(activity, commodityToggledEvent);
     }
+
 
     private class CommodityToggledEventDetails {
         private CommoditySelectableActivity activity;
@@ -92,5 +151,7 @@ public class ReceiveActivityTest {
         public BaseCommodityViewModel commodityViewModel() {
             return this.commodityToggledEvent.getCommodity();
         }
+
+
     }
 }
