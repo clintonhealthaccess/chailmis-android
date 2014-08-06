@@ -77,5 +77,9 @@
     <string name="total_losses">Total Losses</string>
     <string name="new_stock_on_hand">New SOH</string>
     <string name="loss_successful">Saving Losses Successful</string>
+    <string name="allocation_source">LGA/State(CMS) Pick up</string>
+    <string name="ordered">Ordered</string>
+    <string name="received">Received</string>
+    <string name="difference">Difference</string>
 
 </resources>

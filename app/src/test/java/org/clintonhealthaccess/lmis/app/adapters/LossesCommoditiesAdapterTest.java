@@ -63,11 +63,9 @@ public class LossesCommoditiesAdapterTest {
     @Test
     public void shouldToggleItemOnCancelButtonClick() {
         ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, list_item_layout, R.id.imageButtonCancel);
-
         assertThat(adapter.getCount(), is(1));
 
         cancelButton.performClick();
-
         assertTrue(toggleEventFired);
     }
 
