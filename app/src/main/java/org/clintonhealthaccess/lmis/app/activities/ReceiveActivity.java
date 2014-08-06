@@ -17,7 +17,9 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
@@ -69,9 +71,39 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             public void onClick(View v) {
                 if (!allocationIdIsValid()) {
                     Toast.makeText(getApplicationContext(), getString(R.string.receive_submit_validation_message_allocation_id), Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (!quantitiesAreValid()) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.receive_quantities_validation_error_message), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(new Receive());
+                receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
         });
+    }
+
+    @Override
+    protected CommoditiesToViewModelsConverter getViewModelConverter() {
+        return new CommoditiesToViewModelsConverter() {
+            @Override
+            public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
+                List<ReceiveCommodityViewModel> receiveCommodityViewModels = new ArrayList<>();
+                for (Commodity commodity : commodities) {
+                    receiveCommodityViewModels.add(new ReceiveCommodityViewModel(commodity));
+                }
+                return receiveCommodityViewModels;
+            }
+        };
+    }
+
+    private boolean quantitiesAreValid() {
+        for (int i = 0; i < arrayAdapter.getCount(); i++) {
+            ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
+            if (viewModel.getQuantityOrdered() == 0 && viewModel.getQuantityReceived() == 0)
+                return false;
+        }
+        return true;
     }
 
     private boolean allocationIdIsValid() {
@@ -116,20 +148,6 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                 textViewAllocationId.setError(null);
             }
         }
-    }
-
-    @Override
-    protected CommoditiesToViewModelsConverter getViewModelConverter() {
-        return new CommoditiesToViewModelsConverter() {
-            @Override
-            public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
-                List<ReceiveCommodityViewModel> receiveCommodityViewModels = new ArrayList<>();
-                for (Commodity commodity : commodities) {
-                    receiveCommodityViewModels.add(new ReceiveCommodityViewModel(commodity));
-                }
-                return receiveCommodityViewModels;
-            }
-        };
     }
 
 }
