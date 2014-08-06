@@ -53,4 +53,34 @@ public class ReceiveCommoditiesAdapterTest {
         assertThat(difference, is(QUANTITY_DIFFERENCE));
     }
 
+    @Test
+    public void shouldUpdateDifferenceTextViewWhenQuantityOrderedAndQuantityReceivedChanges() {
+        View rowView = adapter.getView(0, null, parent);
+        EditText editTextQuantityOrdered = (EditText) rowView.findViewById(R.id.editTextOrderedQuantity);
+        EditText editTextQuantityReceived = (EditText) rowView.findViewById(R.id.editTextReceivedQuantity);
+
+        editTextQuantityOrdered.setText("7");
+        int difference = getIntFromString(((TextView) rowView.findViewById(R.id.textViewDifferenceQuantity)).getText().toString());
+        assertThat(difference, is(4));
+
+        editTextQuantityReceived.setText("2");
+        difference = getIntFromString(((TextView) rowView.findViewById(R.id.textViewDifferenceQuantity)).getText().toString());
+        assertThat(difference, is(5));
+    }
+
+    @Test
+    public void shouldUpdateQuantitiesInViewModelWhenReceivedAndOrderedQuantitiesChange() throws Exception {
+        View rowView = adapter.getView(0, null, parent);
+        EditText editTextQuantityOrdered = (EditText) rowView.findViewById(R.id.editTextOrderedQuantity);
+        EditText editTextQuantityReceived = (EditText) rowView.findViewById(R.id.editTextReceivedQuantity);
+
+        editTextQuantityOrdered.setText("7");
+        ReceiveCommodityViewModel viewModel = adapter.getItem(0);
+        assertThat(viewModel.getQuantityOrdered(), is(7));
+
+        editTextQuantityReceived.setText("2");
+        viewModel = adapter.getItem(0);
+        assertThat(viewModel.getQuantityReceived(), is(2));
+
+    }
 }

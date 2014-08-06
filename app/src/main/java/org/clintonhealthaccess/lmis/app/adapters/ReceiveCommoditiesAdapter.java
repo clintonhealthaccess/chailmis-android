@@ -1,6 +1,7 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,13 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
 public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityViewModel> {
 
@@ -29,31 +33,51 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        ViewHolder holder = new ViewHolder();
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(resource, parent, false);
 
-        if (convertView == null) {
-            holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(resource, parent, false);
+        holder.textViewCommodityName = (TextView) convertView.findViewById(R.id.textViewCommodityName);
+        holder.imageButtonCancel = (ImageButton) convertView.findViewById(R.id.imageButtonCancel);
+        holder.editTextOrderedQuantity = (EditText) convertView.findViewById(R.id.editTextOrderedQuantity);
+        holder.editTextReceivedQuantity = (EditText) convertView.findViewById(R.id.editTextReceivedQuantity);
+        holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
 
-            holder.textViewCommodityName = (TextView) convertView.findViewById(R.id.textViewCommodityName);
-            holder.imageButtonCancel = (ImageButton) convertView.findViewById(R.id.imageButtonCancel);
-            holder.editTextOrderedQuantity = (EditText) convertView.findViewById(R.id.editTextOrderedQuantity);
-            holder.editTextReceivedQuantity = (EditText) convertView.findViewById(R.id.editTextReceivedQuantity);
-            holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        ReceiveCommodityViewModel viewModel = getItem(position);
+        initialiseQuantities(holder, viewModel);
+        activateCancelButton(holder.imageButtonCancel, viewModel);
 
-        String name = getItem(position).getCommodity().getName();
-        holder.textViewCommodityName.setText(name);
-        holder.editTextReceivedQuantity.setText(String.valueOf(getItem(position).getQuantityReceived()));
-        holder.editTextOrderedQuantity.setText(String.valueOf(getItem(position).getQuantityOrdered()));
-        holder.textViewDifferenceQuantity.setText(String.valueOf(getItem(position).getDifference()));
-        activateCancelButton(holder.imageButtonCancel, getItem(position));
-
+        setupTextWatchers(holder, viewModel);
         return convertView;
+    }
+
+    private void initialiseQuantities(ViewHolder holder, ReceiveCommodityViewModel viewModel) {
+        holder.textViewCommodityName.setText(viewModel.getCommodity().getName());
+        if (viewModel.getQuantityOrdered() != 0)
+            holder.editTextReceivedQuantity.setText(String.valueOf(viewModel.getQuantityReceived()));
+        if (viewModel.getQuantityReceived() != 0)
+            holder.editTextOrderedQuantity.setText(String.valueOf(viewModel.getQuantityOrdered()));
+        holder.textViewDifferenceQuantity.setText(String.valueOf(viewModel.getDifference()));
+    }
+
+    private void setupTextWatchers(final ViewHolder viewHolder, final ReceiveCommodityViewModel receiveCommodityViewModel) {
+        viewHolder.editTextOrderedQuantity.addTextChangedListener(new LmisTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                super.afterTextChanged(s);
+                receiveCommodityViewModel.setQuantityOrdered(getIntFromString(s.toString()));
+                viewHolder.textViewDifferenceQuantity.setText(String.valueOf(receiveCommodityViewModel.getDifference()));
+            }
+        });
+
+        viewHolder.editTextReceivedQuantity.addTextChangedListener(new LmisTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                super.afterTextChanged(s);
+                receiveCommodityViewModel.setQuantityReceived(getIntFromString(s.toString()));
+                viewHolder.textViewDifferenceQuantity.setText(String.valueOf(receiveCommodityViewModel.getDifference()));
+            }
+        });
     }
 
     static class ViewHolder {

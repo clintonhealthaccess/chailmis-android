@@ -62,7 +62,6 @@ public class ReceiveActivityTest {
                 bind(ReceiveService.class).toInstance(mockReceiveService);
             }
         });
-
     }
 
     @Test
