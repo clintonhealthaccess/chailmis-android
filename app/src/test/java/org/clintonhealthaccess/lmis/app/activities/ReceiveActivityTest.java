@@ -6,6 +6,7 @@ import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -70,7 +71,6 @@ public class ReceiveActivityTest {
         assertThat(receiveActivity, not(nullValue()));
     }
 
-    @Ignore("W.I.P")
     @Test
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
         CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getReceiveActivity());
@@ -148,7 +148,7 @@ public class ReceiveActivityTest {
     }
 
     private CommodityToggledEventDetails fireCommodityToggledEvent(CommoditySelectableActivity activity) {
-        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity("name"));
+        ReceiveCommodityViewModel commodityViewModel = new ReceiveCommodityViewModel(new Commodity("name"));
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
         EventBus.getDefault().post(commodityToggledEvent);
         return new CommodityToggledEventDetails(activity, commodityToggledEvent);
