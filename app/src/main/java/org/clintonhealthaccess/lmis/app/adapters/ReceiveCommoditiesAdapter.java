@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
@@ -43,6 +42,7 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
         holder.editTextReceivedQuantity = (EditText) convertView.findViewById(R.id.editTextReceivedQuantity);
         holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
 
+
         ReceiveCommodityViewModel viewModel = getItem(position);
         initialiseQuantities(holder, viewModel);
         activateCancelButton(holder.imageButtonCancel, viewModel);
@@ -58,6 +58,7 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
         if (viewModel.getQuantityReceived() != 0)
             holder.editTextOrderedQuantity.setText(String.valueOf(viewModel.getQuantityOrdered()));
         holder.textViewDifferenceQuantity.setText(String.valueOf(viewModel.getDifference()));
+        holder.editTextOrderedQuantity.setEnabled(!viewModel.isQuantityOrderedDisabled());
     }
 
     private void setupTextWatchers(final ViewHolder viewHolder, final ReceiveCommodityViewModel receiveCommodityViewModel) {

@@ -34,6 +34,7 @@
         <activity
             android:name=".activities.ReceiveActivity"
             android:label="@string/title_activity_receive"
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data

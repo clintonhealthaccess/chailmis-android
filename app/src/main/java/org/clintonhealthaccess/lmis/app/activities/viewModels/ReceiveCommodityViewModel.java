@@ -1,5 +1,6 @@
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
 
+    private boolean quantityOrderedDisabled = false;
     private int quantityOrdered;
     private int quantityReceived;
 
@@ -22,7 +24,13 @@ public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
         this.quantityReceived = quantityReceived;
     }
 
-    public int getDifference () {
+    public ReceiveCommodityViewModel(AllocationItem item) {
+        super(item.getCommodity());
+        this.quantityOrdered = item.getQuantity();
+        this.quantityOrderedDisabled = true;
+    }
+
+    public int getDifference() {
         return quantityOrdered - quantityReceived;
     }
 }

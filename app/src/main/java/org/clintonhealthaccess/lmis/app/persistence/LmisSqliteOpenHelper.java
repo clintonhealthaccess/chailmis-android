@@ -9,6 +9,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.AggregationField;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
@@ -50,6 +52,8 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             createTableIfNotExists(connectionSource, DataSet.class);
             createTableIfNotExists(connectionSource, Loss.class);
             createTableIfNotExists(connectionSource, LossItem.class);
+            createTableIfNotExists(connectionSource, Allocation.class);
+            createTableIfNotExists(connectionSource, AllocationItem.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

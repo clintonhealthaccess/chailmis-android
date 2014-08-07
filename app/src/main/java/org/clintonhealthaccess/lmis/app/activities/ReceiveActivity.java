@@ -18,9 +18,11 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityVi
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.services.ReceiveService;
+import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
@@ -34,12 +36,12 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     @InjectView(R.id.buttonSubmitReceive)
     Button buttonSubmitReceive;
 
-
     @InjectView(R.id.textViewAllocationId)
     AutoCompleteTextView textViewAllocationId;
 
     @Inject
-    ReceiveService receiveService;
+    AllocationService allocationService;
+
     private List<String> completedAllocationIds;
 
     @Override
@@ -64,7 +66,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        completedAllocationIds = receiveService.getCompletedIds();
+        completedAllocationIds = allocationService.getReceivedAllocationIds();
         setupAllocationIdTextView();
         buttonSubmitReceive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +83,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                 receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
         });
+
     }
 
     @Override
@@ -114,7 +117,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         textViewAllocationId.setValidator(new AllocationIdValidator());
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, receiveService.getReadyAllocationIds());
+                android.R.layout.simple_dropdown_item_1line, allocationService.getYetToBeReceivedAllocationIds());
         textViewAllocationId.setAdapter(adapter);
 
         textViewAllocationId.addTextChangedListener(new LmisTextWatcher() {
@@ -129,13 +132,23 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String text = adapter.getItem(position);
                 validateAllocationId(text);
+                if (allocationIdIsValid()) {
+                    populateWithAllocation(allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString()));
+                }
             }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
+    }
+
+    void populateWithAllocation(Allocation allocation) {
+        for (AllocationItem item : allocation.getAllocationItems()) {
+            arrayAdapter.add(new ReceiveCommodityViewModel(item));
+        }
     }
 
     private void validateAllocationId(String text) {
