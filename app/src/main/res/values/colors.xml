@@ -12,4 +12,6 @@
     <color name="losses_header">#F3ACBD</color>
     <color name="black">#000</color>
     <color name="receive_background">#FF6421</color>
+    <color name="green_header">#57A127</color>
+    <color name="dark_blue_header">#365F9B</color>
 </resources>

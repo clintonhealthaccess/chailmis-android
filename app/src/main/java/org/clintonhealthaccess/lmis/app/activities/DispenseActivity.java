@@ -145,8 +145,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
         textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
         checkboxDispenseToFacility.setVisibility(View.GONE);
-        textViewCategories.setBackgroundColor(getResources().getColor(R.color.gray_header));
-        textViewPageTitle.setBackgroundColor(getResources().getColor(R.color.gray_header));
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             boolean is_adjustments = bundle.getBoolean(HomeActivity.IS_ADJUSTMENT);

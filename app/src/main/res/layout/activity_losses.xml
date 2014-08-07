@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/losses_background"
                 android:padding="10dp"
-                android:text="@string/categories"
+                android:text="@string/commodity_categories"
                 android:textColor="@color/losses_text"
                 android:textSize="18sp"
                 android:textStyle="bold" />

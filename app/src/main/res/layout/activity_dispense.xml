@@ -22,9 +22,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_header"
+                android:background="@color/dark_blue_header"
+                android:textColor="@color/white"
                 android:padding="10dp"
-                android:text="@string/categories"
+                android:text="@string/commodity_categories"
                 android:id="@+id/textViewCategories"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -43,13 +44,14 @@
 
         <RelativeLayout
             android:layout_width="fill_parent"
+            android:background="@color/dark_blue_header"
             android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:background="@color/gray_header"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:text="@string/dispense"
                 android:id="@+id/textViewPageTitle"
@@ -61,6 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:textSize="18sp" />
 
@@ -69,6 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/textViewPrescriptionId"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:text="@string/prescription"
                 android:textSize="18sp" />
@@ -104,7 +108,6 @@
                 android:id="@+id/gridViewSelectedCommodities"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/buttonSubmitDispense"
                 android:layout_below="@id/checkboxDispenseToFacility"
                 android:layout_marginTop="10dp"
                 android:gravity="center"

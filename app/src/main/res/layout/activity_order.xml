@@ -22,9 +22,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_header"
+                android:background="@color/green_header"
                 android:padding="10dp"
-                android:text="@string/categories"
+                android:text="@string/commodity_categories"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -48,9 +49,10 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_header"
+                android:background="@color/green_header"
                 android:padding="10dp"
                 android:text="@string/order"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -59,6 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:textColor="@color/white"
                 android:padding="10dp"
                 android:textSize="18sp" />
 
@@ -68,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/textViewSRVNo"
                 android:padding="10dp"
+                android:textColor="@color/white"
                 android:text="@string/srv"
                 android:textSize="18sp" />
 

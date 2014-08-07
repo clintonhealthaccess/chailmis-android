@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/receive_background"
                 android:padding="10dp"
-                android:text="@string/categories"
+                android:text="@string/commodity_categories"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
