@@ -137,4 +137,8 @@ public class Commodity implements Serializable {
     public void reduceStockOnHandBy(int quantity) {
         getStockItem().reduceQuantityBy(quantity);
     }
+
+    public void increaseStockOnHandBy(int quantity) {
+        getStockItem().increaseQuantityBy(quantity);
+    }
 }

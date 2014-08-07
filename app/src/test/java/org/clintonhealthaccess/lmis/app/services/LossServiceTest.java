@@ -32,8 +32,6 @@ public class LossServiceTest {
     @Inject
     private CommodityService commodityService;
 
-    @Inject
-    private DbUtil dbUtil;
     private GenericDao<Loss> lossDao;
 
     @Before

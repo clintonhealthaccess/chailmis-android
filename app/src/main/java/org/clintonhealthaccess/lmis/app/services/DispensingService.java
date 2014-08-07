@@ -52,7 +52,7 @@ public class DispensingService {
     }
 
     private void adjustStockLevel(DispensingItem dispensing) throws SQLException {
-        stockService.updateStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity());
+        stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity());
     }
 
     public String getNextPrescriptionId() {
