@@ -26,11 +26,16 @@ public class CommodityService {
     private CategoryService categoryService;
 
     @Inject
+    private AllocationService allocationService;
+
+    @Inject
     private DbUtil dbUtil;
 
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
+        //JUST FOR TESTING
+        allocationService.syncAllocations();
         categoryService.clearCache();
     }
 

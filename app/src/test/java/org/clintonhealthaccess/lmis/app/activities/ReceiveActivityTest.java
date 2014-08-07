@@ -31,7 +31,6 @@ import java.util.Arrays;
 import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
@@ -40,10 +39,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
@@ -161,13 +158,14 @@ public class ReceiveActivityTest {
         item.setCommodity(new Commodity("food"));
         item.setQuantity(10);
         item.setAllocation(allocation);
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
         when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.isReceived()).thenReturn(false);
         when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.arrayAdapter = mock(ArrayAdapter.class);
-        receiveActivity.textViewAllocationId.setSelection(0);
-        receiveActivity.populateWithAllocation(allocation);
-        verify(receiveActivity.arrayAdapter).add(anyObject());
+        receiveActivity.textViewAllocationId.setText("UG-0002");
+        assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
+        assertThat(receiveActivity.arrayAdapter.getCount(), is(1));
     }
 
     @Test

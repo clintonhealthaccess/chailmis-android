@@ -49,4 +49,13 @@ public class GenericDao<Model> {
             }
         });
     }
+
+    public Model getById(final String id) {
+        return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
+            @Override
+            public Model operate(Dao<Model, String> dao) throws SQLException {
+                return dao.queryForId(id);
+            }
+        });
+    }
 }

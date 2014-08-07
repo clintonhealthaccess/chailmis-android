@@ -29,7 +29,7 @@ public class Allocation {
     private boolean received;
 
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 3)
     private ForeignCollection<AllocationItem> allocationItems;
 
     public List<AllocationItem> getAllocationItems() {

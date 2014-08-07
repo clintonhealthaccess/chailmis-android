@@ -53,10 +53,12 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
 
     private void initialiseQuantities(ViewHolder holder, ReceiveCommodityViewModel viewModel) {
         holder.textViewCommodityName.setText(viewModel.getCommodity().getName());
-        if (viewModel.getQuantityOrdered() != 0)
-            holder.editTextReceivedQuantity.setText(String.valueOf(viewModel.getQuantityReceived()));
-        if (viewModel.getQuantityReceived() != 0)
+        if (viewModel.getQuantityOrdered() != 0) {
             holder.editTextOrderedQuantity.setText(String.valueOf(viewModel.getQuantityOrdered()));
+        }
+        if (viewModel.getQuantityReceived() != 0) {
+            holder.editTextReceivedQuantity.setText(String.valueOf(viewModel.getQuantityReceived()));
+        }
         holder.textViewDifferenceQuantity.setText(String.valueOf(viewModel.getDifference()));
         holder.editTextOrderedQuantity.setEnabled(!viewModel.isQuantityOrderedDisabled());
     }

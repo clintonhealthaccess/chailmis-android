@@ -17,6 +17,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
@@ -125,30 +126,34 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
                 validateAllocationId(text);
+                if (allocationIdIsValid()) {
+                    populateWithAllocation(allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString()));
+                }
             }
         });
-        textViewAllocationId.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        textViewAllocationId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String text = adapter.getItem(position);
                 validateAllocationId(text);
                 if (allocationIdIsValid()) {
                     populateWithAllocation(allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString()));
                 }
             }
-
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
         });
+
     }
 
     void populateWithAllocation(Allocation allocation) {
-        for (AllocationItem item : allocation.getAllocationItems()) {
-            arrayAdapter.add(new ReceiveCommodityViewModel(item));
+        if (allocation != null) {
+            selectedCommodities.clear();
+            arrayAdapter.clear();
+            for (AllocationItem item : allocation.getAllocationItems()) {
+                CommodityToggledEvent event = new CommodityToggledEvent(new ReceiveCommodityViewModel(item));
+                onEvent(event);
+            }
         }
+
     }
 
     private void validateAllocationId(String text) {

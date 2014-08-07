@@ -16,7 +16,7 @@ public class AllocationItem {
     @DatabaseField(foreign = true, canBeNull = false)
     private Allocation allocation;
 
-    @DatabaseField(foreign = true, canBeNull = false)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
     private Commodity commodity;
 
     @DatabaseField(canBeNull = false)
