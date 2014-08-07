@@ -36,6 +36,7 @@
     <string name="message_network_error">Network issue. Please try again later.</string>
     <string name="registration_successful_message">Registration Successful</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="categories">Categories</string>
     <string name="commodity_categories">Commodity Categories</string>
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>

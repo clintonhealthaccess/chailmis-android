@@ -1,6 +1,5 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 
 import com.google.inject.AbstractModule;
