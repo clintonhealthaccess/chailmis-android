@@ -13,6 +13,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
@@ -182,6 +183,17 @@ public class ReceiveActivityTest {
         performSubmitWithValidFields();
         assertThat(ShadowToast.getLatestToast(), is(nullValue()));
         assertThat(ShadowDialog.getLatestDialog(), is(notNullValue()));
+    }
+
+    @Test
+    public void shouldGenerateAReceiveFromSelectedReceiveCommodities() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL), 3, 6);
+        EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
+        Receive receive = receiveActivity.generateReceive();
+
+        assertThat(receive.getReceiveItems().size(), is(1));
+        assertThat(receive.getReceiveItems().get(0).getCommodity().getName(), is(PANADOL));
     }
 
     private void performSubmitWithValidFields() {

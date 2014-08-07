@@ -38,7 +38,7 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
 
         holder.textViewCommodityName = (TextView) convertView.findViewById(R.id.textViewCommodityName);
         holder.imageButtonCancel = (ImageButton) convertView.findViewById(R.id.imageButtonCancel);
-        holder.editTextOrderedQuantity = (EditText) convertView.findViewById(R.id.editTextOrderedQuantity);
+        holder.editTextAllocatedQuantity = (EditText) convertView.findViewById(R.id.editTextAllocatedQuantity);
         holder.editTextReceivedQuantity = (EditText) convertView.findViewById(R.id.editTextReceivedQuantity);
         holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
 
@@ -53,22 +53,24 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
 
     private void initialiseQuantities(ViewHolder holder, ReceiveCommodityViewModel viewModel) {
         holder.textViewCommodityName.setText(viewModel.getCommodity().getName());
-        if (viewModel.getQuantityOrdered() != 0) {
-            holder.editTextOrderedQuantity.setText(String.valueOf(viewModel.getQuantityOrdered()));
+
+        if (viewModel.getQuantityAllocated() != 0) {
+            holder.editTextAllocatedQuantity.setText(String.valueOf(viewModel.getQuantityAllocated()));
         }
         if (viewModel.getQuantityReceived() != 0) {
             holder.editTextReceivedQuantity.setText(String.valueOf(viewModel.getQuantityReceived()));
         }
+
         holder.textViewDifferenceQuantity.setText(String.valueOf(viewModel.getDifference()));
-        holder.editTextOrderedQuantity.setEnabled(!viewModel.isQuantityOrderedDisabled());
+        holder.editTextAllocatedQuantity.setEnabled(!viewModel.isQuantityAllocatedDisabled());
     }
 
     private void setupTextWatchers(final ViewHolder viewHolder, final ReceiveCommodityViewModel receiveCommodityViewModel) {
-        viewHolder.editTextOrderedQuantity.addTextChangedListener(new LmisTextWatcher() {
+        viewHolder.editTextAllocatedQuantity.addTextChangedListener(new LmisTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 super.afterTextChanged(s);
-                receiveCommodityViewModel.setQuantityOrdered(getIntFromString(s.toString()));
+                receiveCommodityViewModel.setQuantityAllocated(getIntFromString(s.toString()));
                 viewHolder.textViewDifferenceQuantity.setText(String.valueOf(receiveCommodityViewModel.getDifference()));
             }
         });
@@ -86,7 +88,7 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
     static class ViewHolder {
         TextView textViewCommodityName;
         ImageButton imageButtonCancel;
-        EditText editTextOrderedQuantity;
+        EditText editTextAllocatedQuantity;
         EditText editTextReceivedQuantity;
         TextView textViewDifferenceQuantity;
     }

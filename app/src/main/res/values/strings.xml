@@ -78,7 +78,7 @@
     <string name="new_stock_on_hand">New SOH</string>
     <string name="loss_successful">Saving Losses Successful</string>
     <string name="allocation_source">LGA/State(CMS) Pick up</string>
-    <string name="ordered">Ordered</string>
+    <string name="allocated">Allocated</string>
     <string name="received">Received</string>
     <string name="difference">Difference</string>
     <string name="error_allocation_id_wrong_format">Enter a valid allocation Id</string>
@@ -86,5 +86,6 @@
     <string name="allocation_id">Allocation ID</string>
     <string name="receive_submit_validation_message_allocation_id">Please make sure you have entered a valid Allocation Id</string>
     <string name="receive_quantities_validation_error_message">Please make sure you have entered valid quantities</string>
+    <string name="receive_successful">Saving Receive successful</string>
 
 </resources>

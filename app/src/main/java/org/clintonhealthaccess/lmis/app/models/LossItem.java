@@ -24,16 +24,16 @@ public class LossItem implements Serializable {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Loss loss;
 
-    @DatabaseField(canBeNull = false, defaultValue = "0")
+    @DatabaseField(canBeNull = false)
     private int wastages;
 
-    @DatabaseField(canBeNull = false, defaultValue = "0")
+    @DatabaseField(canBeNull = false)
     private int missing;
 
-    @DatabaseField(canBeNull = false, defaultValue = "0")
+    @DatabaseField(canBeNull = false)
     private int damages;
 
-    @DatabaseField(canBeNull = false, defaultValue = "0")
+    @DatabaseField(canBeNull = false)
     private int expiries;
 
     public LossItem(Commodity commodity) {

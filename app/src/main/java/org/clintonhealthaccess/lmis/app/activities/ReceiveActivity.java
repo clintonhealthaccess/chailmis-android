@@ -23,6 +23,7 @@ import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
@@ -80,11 +81,21 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                     Toast.makeText(getApplicationContext(), getString(R.string.receive_quantities_validation_error_message), Toast.LENGTH_LONG).show();
                     return;
                 }
-                ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(new Receive());
+                ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(generateReceive());
                 receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
         });
 
+    }
+
+    public Receive generateReceive() {
+        Receive receive = new Receive();
+        for (int i = 0; i < arrayAdapter.getCount(); i++) {
+            ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
+            ReceiveItem receiveItem = viewModel.getReceiveItem();
+            receive.addReceiveItem(receiveItem);
+        }
+        return receive;
     }
 
     @Override
@@ -104,7 +115,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     private boolean quantitiesAreValid() {
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
-            if (viewModel.getQuantityOrdered() == 0 && viewModel.getQuantityReceived() == 0)
+            if (viewModel.getQuantityAllocated() == 0 && viewModel.getQuantityReceived() == 0)
                 return false;
         }
         return true;

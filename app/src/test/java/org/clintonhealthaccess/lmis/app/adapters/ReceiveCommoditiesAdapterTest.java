@@ -44,7 +44,7 @@ public class ReceiveCommoditiesAdapterTest {
         View rowView = adapter.getView(0, null, parent);
         String commodityName = ((TextView) rowView.findViewById(R.id.textViewCommodityName)).getText().toString();
         int difference = getIntFromString(((TextView) rowView.findViewById(R.id.textViewDifferenceQuantity)).getText().toString());
-        int quantityOrdered = getIntFromString(((EditText) rowView.findViewById(R.id.editTextOrderedQuantity)).getText().toString());
+        int quantityOrdered = getIntFromString(((EditText) rowView.findViewById(R.id.editTextAllocatedQuantity)).getText().toString());
         int quantityReceived = getIntFromString(((EditText) rowView.findViewById(R.id.editTextReceivedQuantity)).getText().toString());
 
         assertThat(commodityName, is(PANADOL));
@@ -56,7 +56,7 @@ public class ReceiveCommoditiesAdapterTest {
     @Test
     public void shouldUpdateDifferenceTextViewWhenQuantityOrderedAndQuantityReceivedChanges() {
         View rowView = adapter.getView(0, null, parent);
-        EditText editTextQuantityOrdered = (EditText) rowView.findViewById(R.id.editTextOrderedQuantity);
+        EditText editTextQuantityOrdered = (EditText) rowView.findViewById(R.id.editTextAllocatedQuantity);
         EditText editTextQuantityReceived = (EditText) rowView.findViewById(R.id.editTextReceivedQuantity);
 
         editTextQuantityOrdered.setText("7");
@@ -71,12 +71,12 @@ public class ReceiveCommoditiesAdapterTest {
     @Test
     public void shouldUpdateQuantitiesInViewModelWhenReceivedAndOrderedQuantitiesChange() throws Exception {
         View rowView = adapter.getView(0, null, parent);
-        EditText editTextQuantityOrdered = (EditText) rowView.findViewById(R.id.editTextOrderedQuantity);
+        EditText editTextQuantityAllocated = (EditText) rowView.findViewById(R.id.editTextAllocatedQuantity);
         EditText editTextQuantityReceived = (EditText) rowView.findViewById(R.id.editTextReceivedQuantity);
 
-        editTextQuantityOrdered.setText("7");
+        editTextQuantityAllocated.setText("7");
         ReceiveCommodityViewModel viewModel = adapter.getItem(0);
-        assertThat(viewModel.getQuantityOrdered(), is(7));
+        assertThat(viewModel.getQuantityAllocated(), is(7));
 
         editTextQuantityReceived.setText("2");
         viewModel = adapter.getItem(0);

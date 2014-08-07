@@ -54,7 +54,6 @@ public class LossesConfirmationFragment extends RoboDialogFragment {
         ListView listViewLossesItem = (ListView) view.findViewById(R.id.listViewConfirmLosses);
 
         getDialog().setCanceledOnTouchOutside(false);
-
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         ConfirmLossesAdapter confirmLossesAdapter = new ConfirmLossesAdapter(getActivity().getApplicationContext(), R.layout.losses_confirm_list_item, loss.getLossItems());

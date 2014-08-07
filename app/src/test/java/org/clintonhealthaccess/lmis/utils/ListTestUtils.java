@@ -6,9 +6,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.robolectric.Robolectric;
+
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
 public class ListTestUtils {
     public static View getViewFromListRow(ArrayAdapter adapter, int row_layout, int viewId) {
@@ -28,5 +31,13 @@ public class ListTestUtils {
         ViewGroup genericLayout = new LinearLayout(Robolectric.application);
         View convertView = LayoutInflater.from(Robolectric.application).inflate(row_layout, null);
         return adapter.getView(index, convertView, genericLayout);
+    }
+
+    public static String getStringFromView(ArrayAdapter adapter, int row_layout, int viewId) {
+        return ((TextView) getViewFromListRow(adapter, row_layout, viewId)).getText().toString();
+    }
+
+    public static int getIntFromView(ArrayAdapter adapter, int row_layout, int viewId) {
+        return getIntFromString(((TextView) getViewFromListRow(adapter, row_layout, viewId)).getText().toString());
     }
 }
