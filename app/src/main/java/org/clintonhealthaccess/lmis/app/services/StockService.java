@@ -14,6 +14,10 @@ public class StockService {
     @Inject
     private DbUtil dbUtil;
 
+    @Inject
+    private CategoryService categoryService;
+
+
     public int getStockLevelFor(Commodity commodity) {
         return commodity.getStockOnHand();
     }
@@ -21,11 +25,13 @@ public class StockService {
     public void reduceStockLevelFor(final Commodity commodity, int quantity) {
         commodity.reduceStockOnHandBy(quantity);
         saveStockLevel(commodity);
+        categoryService.clearCache();
     }
 
     public void increaseStockLevelFor(Commodity commodity, int quantity) {
         commodity.increaseStockOnHandBy(quantity);
         saveStockLevel(commodity);
+        categoryService.clearCache();
     }
 
     private void saveStockLevel(final Commodity commodity) {

@@ -25,7 +25,7 @@ public class LossService {
 
     private void saveLossItems(List<LossItem> lossItems) {
         GenericDao<LossItem> lossItemDao = new GenericDao<>(LossItem.class, context);
-        for (LossItem lossItem: lossItems) {
+        for (LossItem lossItem : lossItems) {
             lossItemDao.create(lossItem);
             adjustStockLevel(lossItem);
         }
