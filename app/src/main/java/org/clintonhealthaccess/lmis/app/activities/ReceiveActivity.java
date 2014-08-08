@@ -33,6 +33,8 @@ import java.util.List;
 
 import roboguice.inject.InjectView;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 
 public class ReceiveActivity extends CommoditySelectableActivity {
     @InjectView(R.id.buttonSubmitReceive)
@@ -122,7 +124,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     private boolean allocationIdIsValid() {
-        return textViewAllocationId.getError() == null;
+        return textViewAllocationId.getError() == null && !isBlank(textViewAllocationId.getText().toString());
     }
 
     private void setupAllocationIdTextView() {
