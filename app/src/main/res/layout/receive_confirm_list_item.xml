@@ -34,6 +34,7 @@
         android:layout_weight="1"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
+        android:paddingLeft="5dp"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

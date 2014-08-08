@@ -47,6 +47,7 @@
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:textSize="@dimen/header_text_size"
+        android:paddingLeft="5dp"
         android:text="@string/difference" />
 
 </LinearLayout>
