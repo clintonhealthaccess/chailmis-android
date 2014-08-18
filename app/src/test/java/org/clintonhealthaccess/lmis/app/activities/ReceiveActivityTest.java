@@ -62,12 +62,13 @@ import de.greenrobot.event.EventBus;
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -247,21 +248,21 @@ public class ReceiveActivityTest {
     public void shouldDisableAllocationIfReceiveFromFacilityChecked() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
-        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(false));
+        assertThat(receiveActivity.textViewAllocationId).isDisabled();
     }
 
     @Test
     public void shouldEnableAllocationIfReceiveFromFacilityIsNotChecked() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(false);
-        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(true));
+        assertThat(receiveActivity.textViewAllocationId).isEnabled();
     }
 
     @Test
     public void shouldNotRequireAllocationIdWhenReceivingFromFacility() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
-        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(false));
+        assertThat(receiveActivity.textViewAllocationId).isDisabled();
         setupValidCommodity(receiveActivity);
         receiveActivity.getSubmitButton().performClick();
         ShadowHandler.idleMainLooper();
