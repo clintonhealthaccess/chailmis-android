@@ -117,5 +117,6 @@
     <string name="receive_submit_validation_message_allocation_id">Please make sure you have entered a valid Allocation Id</string>
     <string name="receive_quantities_validation_error_message">Please make sure you have entered valid quantities</string>
     <string name="receive_successful">Saving Receive successful</string>
+    <string name="receive_from_facility">Receive From Facility</string>
 
 </resources>

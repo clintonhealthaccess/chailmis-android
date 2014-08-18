@@ -110,6 +110,12 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewAllocationId" />
+
+            <CheckBox
+                android:id="@+id/checkBoxReceiveFromFacility"
+                android:layout_width="wrap_content"
+                android:text="@string/receive_from_facility"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <RelativeLayout

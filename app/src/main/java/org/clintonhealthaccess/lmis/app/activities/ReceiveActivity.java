@@ -36,6 +36,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -72,10 +74,14 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     @InjectView(R.id.textViewAllocationId)
     AutoCompleteTextView textViewAllocationId;
 
+    @InjectView(R.id.checkBoxReceiveFromFacility)
+    public CheckBox checkBoxReceiveFromFacility;
+
     @Inject
     AllocationService allocationService;
 
     private List<String> completedAllocationIds;
+
 
     @Override
     protected Button getSubmitButton() {
@@ -117,10 +123,17 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             }
         });
 
+        checkBoxReceiveFromFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                textViewAllocationId.setEnabled(!isChecked);
+            }
+        });
+
     }
 
     public Receive generateReceive() {
-        Receive receive = new Receive();
+        Receive receive = new Receive(checkBoxReceiveFromFacility.isChecked());
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
             ReceiveItem receiveItem = viewModel.getReceiveItem();
@@ -153,7 +166,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     private boolean allocationIdIsValid() {
-        return textViewAllocationId.getError() == null && !isBlank(textViewAllocationId.getText().toString());
+        return !textViewAllocationId.isEnabled() || (textViewAllocationId.getError() == null && !isBlank(textViewAllocationId.getText().toString()));
     }
 
     private void setupAllocationIdTextView() {

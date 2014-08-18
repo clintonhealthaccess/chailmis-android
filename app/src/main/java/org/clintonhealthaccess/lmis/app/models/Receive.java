@@ -55,6 +55,12 @@ public class Receive implements Serializable {
 
     private List<ReceiveItem> receiveItems = new ArrayList<>();
 
+    @DatabaseField(canBeNull = false)
+    private boolean receiveFromFacility = false;
+
+    public Receive(boolean receiveFromFacility){
+        this.setReceiveFromFacility(receiveFromFacility);
+    }
 
     public void addReceiveItem(ReceiveItem receiveItem) {
         receiveItem.setReceive(this);

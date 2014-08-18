@@ -108,6 +108,13 @@ public class ReceiveActivityTest {
         assertThat(receiveActivity, not(nullValue()));
     }
 
+
+    @Test
+    public void testCheckBoxReceiveFromFacilityExists() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.checkBoxReceiveFromFacility, not(nullValue()));
+    }
+
     @Ignore("Work in progress ...[Job]")
     @Test
     public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
@@ -222,16 +229,57 @@ public class ReceiveActivityTest {
 
         assertThat(receive.getReceiveItems().size(), is(1));
         assertThat(receive.getReceiveItems().get(0).getCommodity().getName(), is(PANADOL));
+        assertThat(receive.isReceiveFromFacility(), is(false));
+    }
+
+    @Test
+    public void shouldGenerateReceiveFromFacility() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL), 3, 6);
+        EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
+        Receive receive = receiveActivity.generateReceive();
+
+        assertThat(receive.isReceiveFromFacility(), is(true));
+    }
+
+    @Test
+    public void shouldDisableAllocationIfReceiveFromFacilityChecked() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(false));
+    }
+
+    @Test
+    public void shouldEnableAllocationIfReceiveFromFacilityIsNotChecked() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(false);
+        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(true));
+    }
+
+    @Test
+    public void shouldNotRequireAllocationIdWhenReceivingFromFacility() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        assertThat(receiveActivity.textViewAllocationId.isEnabled(), is(false));
+        setupValidCommodity(receiveActivity);
+        receiveActivity.getSubmitButton().performClick();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
+
     }
 
     private void performSubmitWithValidFields() {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+        setupValidCommodity(receiveActivity);
+        receiveActivity.getSubmitButton().performClick();
+    }
+
+    private void setupValidCommodity(ReceiveActivity receiveActivity) {
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL));
         viewModel.setQuantityReceived(2);
-
         fireCommodityToggledEvent(receiveActivity, viewModel);
-        receiveActivity.getSubmitButton().performClick();
     }
 
     private CommodityToggledEventDetails fireCommodityToggledEvent(ReceiveActivity activity) {
