@@ -117,4 +117,9 @@ public class AllocationService {
         allocationItemGenericDao.create(item);
 
     }
+
+    public void update(Allocation allocation) {
+        GenericDao<Allocation> allocationGenericDao = new GenericDao<>(Allocation.class, context);
+        allocationGenericDao.update(allocation);
+    }
 }

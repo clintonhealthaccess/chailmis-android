@@ -33,6 +33,7 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 
@@ -47,6 +48,8 @@ public class ReceiveService {
 
     @Inject
     StockService stockService;
+    @Inject
+    AllocationService allocationService;
 
     public List<String> getReadyAllocationIds() {
         return new ArrayList<>(Arrays.asList("UG-2004", "UG-2005"));
@@ -59,6 +62,11 @@ public class ReceiveService {
     public void saveReceive(Receive receive) {
         GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
         receiveDao.create(receive);
+        if (receive.getAllocation() != null) {
+            Allocation allocation = receive.getAllocation();
+            allocation.setReceived(true);
+            allocationService.update(allocation);
+        }
         saveReceiveItems(receive.getReceiveItems());
     }
 

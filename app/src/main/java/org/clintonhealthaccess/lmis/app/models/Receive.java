@@ -58,12 +58,16 @@ public class Receive implements Serializable {
     @DatabaseField(canBeNull = false)
     private boolean receiveFromFacility = false;
 
-    public Receive(boolean receiveFromFacility){
-        this.setReceiveFromFacility(receiveFromFacility);
+    private Allocation allocation;
+
+    public Receive(boolean receiveFromFacility, Allocation allocation){
+        this.receiveFromFacility = receiveFromFacility;
+        this.allocation = allocation;
     }
 
     public void addReceiveItem(ReceiveItem receiveItem) {
         receiveItem.setReceive(this);
         this.receiveItems.add(receiveItem);
     }
+
 }

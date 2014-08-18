@@ -31,8 +31,8 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -58,12 +58,14 @@ public class ReceiveServiceTest {
     public static final int QUANTITY_ALLOCATED = 4;
     public static final int QUANTITY_RECEIVED = 3;
     private GenericDao<Receive> receiveDao;
+    private GenericDao<Allocation> allocationsDao;
 
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
         commodityService.initialise(new User("test", "pass"));
         receiveDao = new GenericDao<>(Receive.class, Robolectric.application);
+        allocationsDao = new GenericDao<>(Allocation.class, Robolectric.application);
     }
 
     @Test
@@ -82,7 +84,7 @@ public class ReceiveServiceTest {
     @Test
     public void shouldUpdateCommodityStockOnHandOnSaveReceive() throws Exception {
         Commodity commodity = commodityService.all().get(0);
-        int newStockOnHand = commodity.getStockOnHand()+QUANTITY_RECEIVED;
+        int newStockOnHand = commodity.getStockOnHand() + QUANTITY_RECEIVED;
 
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
         Receive receive = new Receive();
@@ -91,6 +93,28 @@ public class ReceiveServiceTest {
         receiveService.saveReceive(receive);
         commodity = commodityService.all().get(0);
 
-        assertThat(commodity.getStockOnHand() ,is(newStockOnHand));
+        assertThat(commodity.getStockOnHand(), is(newStockOnHand));
+    }
+
+    @Test
+    public void shouldMarkAllocationAsReceivedIfHasAllocation() throws Exception {
+
+        Commodity commodity = commodityService.all().get(0);
+        ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
+        Receive receive = new Receive();
+
+        Allocation allocation = new Allocation();
+        allocation.setAllocationId("UG-002");
+        allocation.setReceived(false);
+        allocation = allocationsDao.create(allocation);
+
+        receive.setAllocation(allocation);
+        receive.addReceiveItem(receiveItem);
+
+        receiveService.saveReceive(receive);
+
+        assertThat(receiveDao.queryForAll().size(), is(1));
+        assertThat(receiveDao.queryForAll().get(0).getReceiveItemsCollection().size(), is(1));
+        assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
     }
 }

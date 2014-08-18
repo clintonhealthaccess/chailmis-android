@@ -269,6 +269,49 @@ public class ReceiveActivityTest {
 
     }
 
+    @Test
+    public void shouldSetAllocationInReceiveActivity() throws Exception {
+        String item1 = VALID_ALLOCATION_ID;
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1)));
+        Allocation allocation = mock(Allocation.class);
+        when(allocation.getAllocationId()).thenReturn(VALID_ALLOCATION_ID);
+        AllocationItem item = new AllocationItem();
+        item.setCommodity(new Commodity("food"));
+        item.setQuantity(10);
+        item.setAllocation(allocation);
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
+        when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.isReceived()).thenReturn(false);
+        when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
+
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+
+        assertThat(receiveActivity.allocation, is(notNullValue()));
+        assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
+    }
+
+    @Test
+    public void shouldPopulateAllocationInReceive() throws Exception {
+        String item1 = VALID_ALLOCATION_ID;
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1)));
+        Allocation allocation = mock(Allocation.class);
+        AllocationItem item = new AllocationItem();
+        item.setCommodity(new Commodity("food"));
+        item.setQuantity(10);
+        item.setAllocation(allocation);
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
+        when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.isReceived()).thenReturn(false);
+        when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
+
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+
+        Receive receive = receiveActivity.generateReceive();
+        assertThat(receive.getAllocation().getAllocationId(), is(allocation.getAllocationId()));
+    }
+
     private void performSubmitWithValidFields() {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);

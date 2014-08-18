@@ -80,6 +80,8 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     @Inject
     AllocationService allocationService;
 
+    Allocation allocation;
+
     private List<String> completedAllocationIds;
 
 
@@ -133,7 +135,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     public Receive generateReceive() {
-        Receive receive = new Receive(checkBoxReceiveFromFacility.isChecked());
+        Receive receive = new Receive(checkBoxReceiveFromFacility.isChecked(), allocation);
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
             ReceiveItem receiveItem = viewModel.getReceiveItem();
@@ -182,7 +184,8 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                 String text = s.toString();
                 validateAllocationId(text);
                 if (allocationIdIsValid()) {
-                    populateWithAllocation(allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString()));
+                    allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
+                    populateWithAllocation(allocation);
                 }
             }
         });
@@ -192,7 +195,8 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                 String text = adapter.getItem(position);
                 validateAllocationId(text);
                 if (allocationIdIsValid()) {
-                    populateWithAllocation(allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString()));
+                    allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
+                    populateWithAllocation(allocation);
                 }
             }
         });
