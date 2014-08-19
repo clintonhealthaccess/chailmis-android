@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -76,11 +77,12 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricGradleTestRunner.class)
 public class SelectedOrderCommoditiesAdapterTest {
 
+    public static final String ROUTINE = "Routine";
     private SelectedOrderCommoditiesAdapter adapter;
     private int list_item_layout = R.layout.selected_order_commodity_list_item;
     private List<OrderReason> orderReasons = new ArrayList<>();
     private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
-    private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
+    private OrderReason routine = new OrderReason(ROUTINE, OrderReason.ORDER_REASONS_JSON_KEY);
     private OrderCommodityViewModel commodityViewModel;
     private ArrayList<OrderCommodityViewModel> commodities;
 
@@ -281,5 +283,48 @@ public class SelectedOrderCommoditiesAdapterTest {
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         assertThat(textViewEndDate.isEnabled(), is(false));
+    }
+
+    @Ignore("Check to see how spinner's work in robolectric")
+    @Test
+    public void shouldShowRoutineAsTheDefaultReasonForOrder() throws Exception {
+        orderReasons = new ArrayList<>();
+        orderReasons.add(emergency);
+        orderReasons.add(routine);
+
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(list_item_layout, null);
+
+        View rowView = adapter.getView(0, convertView, genericLayout);
+
+        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
+
+        System.out.println("Spinner child count");
+        System.out.println(spinnerOrderReasons.getChildCount());
+
+        assertThat(((OrderReason) spinnerOrderReasons.getSelectedItem()).getReason(), is(ROUTINE));
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldShowSpinnerForUnexpectedOrderReasonsIfOrderDatesAreChangedWhenOrderReasonIsRoutine() throws Exception {
+        assert (false);
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldShowSpinnerForUnExpectedOrderReasonsIfOrderIsNotRoutine() throws Exception {
+
+        assert (false);
+    }
+
+    @Ignore("WIP")
+    @Test
+    public void shouldDefaultToBlankForUnExpectedReasons() throws Exception {
+        assert (false);
+
     }
 }

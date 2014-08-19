@@ -221,6 +221,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
         if (position != null) {
             spinner.setSelection(position);
+        } else {
+            OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
+            if (reasons.contains(routine)) {
+                spinner.setSelection(reasons.indexOf(routine));
+            }
         }
     }
 
