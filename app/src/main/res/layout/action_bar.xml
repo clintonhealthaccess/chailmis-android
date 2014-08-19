@@ -35,10 +35,9 @@
 
     <ImageView
         android:id="@+id/imageDhis2logo"
-        android:layout_width="160dp"
-        android:src="@drawable/lmis_logo_2"
+        android:layout_width="100dp"
+        android:src="@drawable/app_log"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
         android:adjustViewBounds="false" />
 
     <TextView
