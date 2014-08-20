@@ -267,7 +267,31 @@ public class ReceiveActivityTest {
         receiveActivity.getSubmitButton().performClick();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
+    }
 
+    @Test
+    public void shouldClearAllocationWhenReceivingFromFacility() throws Exception {
+        String item1 = VALID_ALLOCATION_ID;
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1)));
+        Allocation allocation = mock(Allocation.class);
+        when(allocation.getAllocationId()).thenReturn(VALID_ALLOCATION_ID);
+        AllocationItem item = new AllocationItem();
+        item.setCommodity(new Commodity("food"));
+        item.setQuantity(10);
+        item.setAllocation(allocation);
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
+        when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.isReceived()).thenReturn(false);
+        when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
+
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+
+        assertThat(receiveActivity.allocation, is(notNullValue()));
+        assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
+
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        assertThat(receiveActivity.allocation, is(nullValue()));
     }
 
     @Test

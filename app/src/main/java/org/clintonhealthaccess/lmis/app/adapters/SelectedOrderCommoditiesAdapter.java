@@ -240,7 +240,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
     private void doUpdateEndDate(Spinner spinner, OrderCommodityViewModel orderCommodityViewModel, TextView textViewStartDate, TextView textViewEndDate) {
         Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
-        String item = ((OrderReason) spinner.getItemAtPosition(orderReasonPosition)).getReason();
+        String item = orderReasonPosition == null ? "" : ((OrderReason) spinner.getItemAtPosition(orderReasonPosition)).getReason();
         if (item.equalsIgnoreCase(ROUTINE)) {
             String startDate = textViewStartDate.getText().toString();
             populateEndDate(startDate, 30, textViewEndDate);

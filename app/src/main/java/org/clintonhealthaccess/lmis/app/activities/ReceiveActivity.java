@@ -129,6 +129,8 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 textViewAllocationId.setEnabled(!isChecked);
+                if (isChecked)
+                    allocation = null;
             }
         });
 
@@ -182,25 +184,26 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
-                validateAllocationId(text);
-                if (allocationIdIsValid()) {
-                    allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
-                    populateWithAllocation(allocation);
-                }
+                setAllocation(text);
             }
         });
         textViewAllocationId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String text = adapter.getItem(position);
-                validateAllocationId(text);
-                if (allocationIdIsValid()) {
-                    allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
-                    populateWithAllocation(allocation);
-                }
+                setAllocation(text);
             }
         });
+    }
 
+    private void setAllocation(String allocationId) {
+        validateAllocationId(allocationId);
+        if (allocationIdIsValid()) {
+            allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
+            populateWithAllocation(allocation);
+        } else {
+            allocation = null;
+        }
     }
 
     void populateWithAllocation(Allocation allocation) {
