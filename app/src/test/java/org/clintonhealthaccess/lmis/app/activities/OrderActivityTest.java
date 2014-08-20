@@ -190,4 +190,9 @@ public class OrderActivityTest {
         assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.fillInAllOrderItemValues)));
         assertThat(ShadowDialog.getLatestDialog(), is(nullValue()));
     }
+
+    @Test
+    public void shouldInitializeStartAndEndDateForOrderCommodityViewModels() throws Exception {
+
+    }
 }

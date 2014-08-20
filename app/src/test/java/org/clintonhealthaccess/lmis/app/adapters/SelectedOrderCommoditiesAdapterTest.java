@@ -349,6 +349,22 @@ public class SelectedOrderCommoditiesAdapterTest {
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
 
         assertThat(((OrderReason) spinnerUnexpectedOrderReasons.getSelectedItem()).getReason(), is(Robolectric.application.getString(R.string.select_reason)));
+    }
+
+    @Test
+    public void shouldPrePopulateOrderPeriodStartAndEndDateWhenOrderReasonIsRoutine() throws Exception {
+        Date currentDate = new Date();
+        when(commodityViewModel.getOrderPeriodStartDate()).thenReturn(currentDate);
+        when(commodityViewModel.getOrderPeriodEndDate()).thenReturn(currentDate);
+
+        View rowView = getRowView();
+
+        TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
+        TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+
+        String dateString = SIMPLE_DATE_FORMAT.format(currentDate);
+        ANDROID.assertThat(textViewStartDate).hasText(dateString);
+        ANDROID.assertThat(textViewEndDate).hasText(dateString);
 
     }
 
