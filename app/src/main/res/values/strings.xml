@@ -118,5 +118,6 @@
     <string name="receive_quantities_validation_error_message">Please make sure you have entered valid quantities</string>
     <string name="receive_successful">Saving Receive successful</string>
     <string name="receive_from_facility">Receive From Facility</string>
+    <string name="select_reason">Select Reason ..</string>
 
 </resources>
