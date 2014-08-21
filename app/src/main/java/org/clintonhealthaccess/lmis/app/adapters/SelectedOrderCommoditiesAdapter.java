@@ -43,6 +43,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Predicate;
 
@@ -50,6 +51,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.utils.ViewHelpers;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.text.ParseException;
@@ -128,18 +130,40 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         return rowView;
     }
 
-    private void setVisibilityOfUnexpectedReasonsSpinner(String startDate, Date period, OrderCommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedReasons) {
-        if (orderCommodityViewModel.getReasonForOrder() != null && orderCommodityViewModel.getReasonForOrder().getReason().equalsIgnoreCase(ROUTINE) &&
-                !startDate.equalsIgnoreCase(SIMPLE_DATE_FORMAT.format(period))) {
-            spinnerUnexpectedReasons.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void setupQuantity(OrderCommodityViewModel orderCommodityViewModel, EditText editTextOrderQuantity, Spinner spinnerUnexpectedReasons) {
         if (orderCommodityViewModel.getQuantityEntered() != 0) {
             editTextOrderQuantity.setText(String.format("%d", orderCommodityViewModel.getQuantityEntered()));
         }
-        TextWatcher orderQuantityTextWatcher = new OrderQuantityTextWatcher(this, orderCommodityViewModel, spinnerUnexpectedReasons, editTextOrderQuantity);
+        final SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter1 = this;
+        final OrderCommodityViewModel orderCommodityViewModel1 = orderCommodityViewModel;
+        final Spinner spinnerUnexpectedQuantityReasons1 = spinnerUnexpectedReasons;
+        final EditText editTextOrderQuantity1 = editTextOrderQuantity;
+        TextWatcher orderQuantityTextWatcher = new LmisTextWatcher() {
+            private final OrderCommodityViewModel orderCommodityViewModel = orderCommodityViewModel1;
+            private final Spinner spinnerUnexpectedQuantityReasons = spinnerUnexpectedQuantityReasons1;
+            private final EditText editTextOrderQuantity = editTextOrderQuantity1;
+            private SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter = selectedOrderCommoditiesAdapter1;
+
+            @Override
+            public void afterTextChanged(final Editable editable) {
+                int quantityInt = ViewHelpers.getIntFromString(editable.toString());
+                orderCommodityViewModel.setQuantityEntered(quantityInt);
+                if (orderCommodityViewModel.quantityIsUnexpected()) {
+                    String commodityName = orderCommodityViewModel.getName();
+                    String message = getErrorMessage(commodityName);
+                    Toast.makeText(selectedOrderCommoditiesAdapter.getContext(), message, Toast.LENGTH_LONG).show();
+                }
+                setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedQuantityReasons);
+                if (quantityInt <= 0) {
+                    editTextOrderQuantity.setError(selectedOrderCommoditiesAdapter.getContext().getString(R.string.orderQuantityMustBeGreaterThanZero));
+                }
+            }
+
+            private String getErrorMessage(String commodityName) {
+                String formatString = selectedOrderCommoditiesAdapter.getContext().getString(R.string.unexpected_order_quantity_error);
+                return String.format(formatString, orderCommodityViewModel.getExpectedOrderQuantity(), commodityName);
+            }
+        };
         editTextOrderQuantity.addTextChangedListener(orderQuantityTextWatcher);
     }
 
@@ -164,10 +188,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
                 orderCommodityViewModel.setOrderReasonPosition(position);
                 OrderReason orderReason = getReason(((OrderReason) spinnerOrderReasons.getSelectedItem()).getReason());
                 orderCommodityViewModel.setReasonForOrder(orderReason);
-
-                if(!orderReason.getReason().equalsIgnoreCase(ROUTINE)){
-                    spinnerUnexpectedReasons.setVisibility(View.VISIBLE);
-                }
+                setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
 
                 doUpdateEndDate(spinnerOrderReasons, orderCommodityViewModel, textViewStartDate, textViewEndDate);
             }
@@ -175,7 +196,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         });
         setupSpinnerData(spinnerOrderReasons, orderReasons, orderCommodityViewModel.getOrderReasonPosition());
         setupUnexpectedReasonsSpinner(spinnerUnexpectedReasons, orderCommodityViewModel);
-        setupUnexpectedReasonsSpinnerVisibility(orderCommodityViewModel, spinnerUnexpectedReasons);
+        setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
     }
 
     private void setDateTextClickListeners(final TextView textViewStartDate, final TextView textViewEndDate) {
@@ -199,13 +220,14 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         }
     }
 
-    public void setupUnexpectedReasonsSpinnerVisibility(OrderCommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedQuantityReasons) {
-        if (orderCommodityViewModel.quantityIsUnexpected()) {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.VISIBLE);
+    private void setVisibilityOfUnexpectedReasonsSpinner(String dateText, Date actualDate, OrderCommodityViewModel orderCommodityViewModel, Spinner spinnerUnexpectedReasons) {
+        if (orderCommodityViewModel.isUnexpectedReasonsSpinnerVisible(dateText, actualDate)) {
+            spinnerUnexpectedReasons.setVisibility(View.VISIBLE);
         } else {
-            spinnerUnexpectedQuantityReasons.setVisibility(View.INVISIBLE);
+            spinnerUnexpectedReasons.setVisibility(View.INVISIBLE);
         }
     }
+
 
     private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedQuantityReasons, final OrderCommodityViewModel orderCommodityViewModel) {
         spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new LmisOnItemSelectedListener() {

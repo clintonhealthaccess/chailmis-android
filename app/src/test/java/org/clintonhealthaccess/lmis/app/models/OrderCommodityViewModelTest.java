@@ -30,8 +30,10 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.junit.Test;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import static junit.framework.Assert.assertFalse;
@@ -65,5 +67,69 @@ public class OrderCommodityViewModelTest {
     public void shouldBeInvalidIfDatesAreNull() {
         OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
         assertFalse(model.isValidAsOrderItem());
+    }
+
+
+    @Test
+    public void shouldShowUnexpectedReasonsWhenQuantityIsUnexpected() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setExpectedOrderQuantity(5);
+        assertTrue(model.quantityIsUnexpected());
+        assertTrue(model.isUnexpectedReasonsSpinnerVisible(null, null));
+
+    }
+
+    @Test
+    public void shouldHideUnexpectedReasonsWhenQuantityIsExpected() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setReasonForOrder(new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY));
+        model.setExpectedOrderQuantity(10);
+        assertFalse(model.quantityIsUnexpected());
+        assertFalse(model.isUnexpectedReasonsSpinnerVisible(null, null));
+
+    }
+
+    @Test
+    public void shouldHideUnexpectedReasonsWhenReasonIsRoutine() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setReasonForOrder(new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY));
+        model.setExpectedOrderQuantity(10);
+        assertFalse(model.quantityIsUnexpected());
+        assertFalse(model.isUnexpectedReasonsSpinnerVisible(null, null));
+    }
+
+    @Test
+    public void shouldShowUnexpectedReasonsWhenReasonIsNotRoutine() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setReasonForOrder(new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY));
+        assertTrue(model.isUnexpectedReasonsSpinnerVisible(null, null));
+    }
+
+
+    @Test
+    public void shouldShowUnexpectedReasonsWhenDateHasChangedWhenReasonIsRoutine() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setReasonForOrder(new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY));
+        model.setExpectedOrderQuantity(10);
+        assertFalse(model.quantityIsUnexpected());
+        Date currentDate = new Date();
+        String dateText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(currentDate);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        assertTrue(model.isUnexpectedReasonsSpinnerVisible(dateText, calendar.getTime()));
+
+    }
+
+    @Test
+    public void shouldNotShowUnexpectedReasonsWhenDateHasNotChangedWhenReasonIsRoutine() throws Exception {
+        OrderCommodityViewModel model = new OrderCommodityViewModel(new Commodity("Some commodity"), 10);
+        model.setReasonForOrder(new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY));
+        model.setExpectedOrderQuantity(10);
+        assertFalse(model.quantityIsUnexpected());
+        Date currentDate = new Date();
+        String dateText = SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(currentDate);
+        assertFalse(model.isUnexpectedReasonsSpinnerVisible(dateText, currentDate));
+
     }
 }

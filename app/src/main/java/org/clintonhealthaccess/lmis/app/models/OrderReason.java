@@ -35,6 +35,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "orderReasons")
 public class OrderReason {
 
+    public static final String ROUTINE = "Routine";
     public static final String ORDER_REASONS_JSON_KEY = "order_reasons";
     public static final String UNEXPECTED_QUANTITY_JSON_KEY = "unexpected_quantity_reasons";
 

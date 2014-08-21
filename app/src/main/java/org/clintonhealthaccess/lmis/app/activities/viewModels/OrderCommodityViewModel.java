@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
+import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 
@@ -112,5 +113,25 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
 
     public boolean isValidAsOrderItem() {
         return orderPeriodEndDate != null && orderPeriodStartDate != null && quantityEntered > 0;
+    }
+
+
+    public boolean isUnexpectedReasonsSpinnerVisible(String dateText, Date actualDate) {
+        boolean reasonIsRoutine = reasonIsRoutine();
+
+        if (!reasonIsRoutine) {
+            return true;
+        }
+
+        if (actualDate != null && dateText != null && reasonIsRoutine) {
+            if (!dateText.equalsIgnoreCase(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(actualDate)))
+                return true;
+        }
+
+        return this.quantityIsUnexpected();
+    }
+
+    private boolean reasonIsRoutine() {
+        return this.getReasonForOrder() != null && this.getReasonForOrder().getReason().equalsIgnoreCase(OrderReason.ROUTINE);
     }
 }
