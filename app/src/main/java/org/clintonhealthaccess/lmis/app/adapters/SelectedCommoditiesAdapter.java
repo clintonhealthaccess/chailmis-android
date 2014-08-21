@@ -65,19 +65,20 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewMo
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
-
         final BaseCommodityViewModel commodityViewModel = getItem(position);
         textViewCommodityName.setText(commodityViewModel.getName());
+        setupQuantity(editTextQuantity, commodityViewModel);
+        activateCancelButton(imageButtonCancel, commodityViewModel);
+        return rowView;
+    }
 
+    private void setupQuantity(EditText editTextQuantity, BaseCommodityViewModel commodityViewModel) {
         TextWatcher watcher = new QuantityTextWatcher(editTextQuantity, commodityViewModel);
         editTextQuantity.addTextChangedListener(watcher);
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity >= 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
-        activateCancelButton(imageButtonCancel, commodityViewModel);
-
-        return rowView;
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {

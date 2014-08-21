@@ -109,6 +109,20 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     protected void afterCreate(Bundle savedInstanceState) {
         completedAllocationIds = allocationService.getReceivedAllocationIds();
         setupAllocationIdTextView();
+        setupReceiveButton();
+
+        checkBoxReceiveFromFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                textViewAllocationId.setEnabled(!isChecked);
+                if (isChecked)
+                    allocation = null;
+            }
+        });
+
+    }
+
+    private void setupReceiveButton() {
         buttonSubmitReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,16 +138,6 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                 receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
         });
-
-        checkBoxReceiveFromFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                textViewAllocationId.setEnabled(!isChecked);
-                if (isChecked)
-                    allocation = null;
-            }
-        });
-
     }
 
     public Receive generateReceive() {

@@ -112,47 +112,56 @@ public class RegisterActivity extends RoboActionBarActivity {
     }
 
     protected void doRegister(final String username, final String password) {
-        AsyncTask<Void, Void, Boolean> registerTask = new AsyncTask<Void, Void, Boolean>() {
-            private LmisException failureCause;
-
-            private ProgressDialog dialog;
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                this.dialog = new ProgressDialog(RegisterActivity.this);
-                this.dialog.setMessage("Registering");
-                this.dialog.show();
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                User user;
-                try {
-                    user = userService.register(username, password);
-                } catch (LmisException e) {
-                    this.failureCause = e;
-                    return false;
-                }
-                commodityService.initialise(user);
-                orderService.syncReasons();
-                return true;
-            }
-
-            @Override
-            protected void onPostExecute(Boolean succeeded) {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                if (succeeded) {
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    finish();
-                }
-
-                String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
-                Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
-            }
-        };
+        AsyncTask<Void, Void, Boolean> registerTask = new RegisterTask(username, password);
         registerTask.execute();
+    }
+
+    private class RegisterTask extends AsyncTask<Void, Void, Boolean> {
+        private final String username;
+        private final String password;
+        private LmisException failureCause;
+
+        private ProgressDialog dialog;
+
+        public RegisterTask(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new ProgressDialog(RegisterActivity.this);
+            this.dialog.setMessage("Registering");
+            this.dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            User user;
+            try {
+                user = userService.register(username, password);
+            } catch (LmisException e) {
+                this.failureCause = e;
+                return false;
+            }
+            commodityService.initialise(user);
+            orderService.syncReasons();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean succeeded) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            if (succeeded) {
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                finish();
+            }
+
+            String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
+            Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
+        }
     }
 }
