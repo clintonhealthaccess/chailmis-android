@@ -59,10 +59,35 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:padding="10dp"
+        android:id="@+id/layoutSRV"
+        android:layout_width="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_height="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/srv_number"
+            android:textStyle="bold"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewSRVNumber"
+            android:textStyle="bold"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/listViewConfirmOrderItems"
         android:layout_width="fill_parent"
         android:layout_above="@id/layoutButtons"
+        android:layout_below="@id/layoutSRV"
         android:layout_height="fill_parent" />
+
 
 </RelativeLayout>

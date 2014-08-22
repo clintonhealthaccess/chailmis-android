@@ -121,5 +121,6 @@
     <string name="select_reason">Select Reason ..</string>
     <string name="not_in_stock">Not in Stock</string>
     <string name="help">HELP</string>
+    <string name="srv_number">SRV Number</string>
 
 </resources>

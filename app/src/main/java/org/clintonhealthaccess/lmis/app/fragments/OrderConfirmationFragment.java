@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -83,6 +84,7 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
         View view = inflater.inflate(R.layout.fragment_order_confirmation, container, false);
         Button buttonOrderConfirm = (Button) view.findViewById(R.id.buttonOrderConfirm);
         Button buttonOrderGoBack = (Button) view.findViewById(R.id.buttonOrderGoBack);
+        TextView textViewSRVNumber = (TextView) view.findViewById(R.id.textViewSRVNumber);
         ListView listViewOrderItems = (ListView) view.findViewById(R.id.listViewConfirmOrderItems);
 
         getDialog().setCanceledOnTouchOutside(false);
@@ -100,7 +102,7 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
                 }
             }
         });
-
+        textViewSRVNumber.setText(order.getSrvNumber());
         buttonOrderGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

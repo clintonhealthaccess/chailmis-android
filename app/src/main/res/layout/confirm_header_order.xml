@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
   ~
@@ -35,15 +34,6 @@
     android:padding="@dimen/confirm_items_padding"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_weight="1.5"
-        android:layout_height="wrap_content"
-        android:text="@string/serial_number"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:layout_gravity="center_horizontal"
-        android:textSize="@dimen/header_text_size" />
 
     <TextView
         android:layout_width="fill_parent"

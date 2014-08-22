@@ -52,11 +52,9 @@ public class ConfirmOrderAdapter extends ArrayAdapter<OrderItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.confirm_order_list_item, parent, false);
-        TextView textViewSerialNumber = (TextView) rowView.findViewById(R.id.textViewSerialNumber);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         TextView textViewQuantityOrdered = (TextView) rowView.findViewById(R.id.textViewQuantityOrdered);
         OrderItem item = getItem(position);
-        textViewSerialNumber.setText(item.getSRVNumber());
         textViewCommodityName.setText(item.getCommodtyName());
         textViewQuantityOrdered.setText(String.valueOf(item.getQuantity()));
         return rowView;
