@@ -65,7 +65,6 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 import static com.google.common.collect.Collections2.filter;
-import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodityViewModel> {
@@ -95,6 +94,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         final Spinner spinnerUnexpectedReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
+
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         textViewCommodityName.setText(orderCommodityViewModel.getName());
         setupSpinners(orderCommodityViewModel, spinnerOrderReasons, spinnerUnexpectedReasons, textViewStartDate, textViewEndDate);
@@ -110,11 +110,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         if (orderCommodityViewModel.getQuantityEntered() != 0) {
             editTextOrderQuantity.setText(String.format("%d", orderCommodityViewModel.getQuantityEntered()));
         }
-        final SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter1 = this;
-        final OrderCommodityViewModel orderCommodityViewModel1 = orderCommodityViewModel;
-        final Spinner spinnerUnexpectedQuantityReasons1 = spinnerUnexpectedReasons;
-        final EditText editTextOrderQuantity1 = editTextOrderQuantity;
-        TextWatcher orderQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel1, spinnerUnexpectedQuantityReasons1, editTextOrderQuantity1, selectedOrderCommoditiesAdapter1);
+        TextWatcher orderQuantityTextWatcher = new OrderQuantityTextWatcher(orderCommodityViewModel, spinnerUnexpectedReasons, editTextOrderQuantity, this);
         editTextOrderQuantity.addTextChangedListener(orderQuantityTextWatcher);
     }
 
@@ -169,15 +165,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     }
 
 
-    private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedQuantityReasons, final OrderCommodityViewModel orderCommodityViewModel) {
-        spinnerUnexpectedQuantityReasons.setOnItemSelectedListener(new LmisOnItemSelectedListener() {
+    private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedReasons, final OrderCommodityViewModel orderCommodityViewModel) {
+        spinnerUnexpectedReasons.setOnItemSelectedListener(new LmisOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //FIXME Unexpected reason not being set here.
                 orderCommodityViewModel.setUnexpectedReasonPosition(position);
             }
         });
-        setupSpinnerData(spinnerUnexpectedQuantityReasons, unexpectedOrderReasons, orderCommodityViewModel.getUnexpectedReasonPosition());
+        setupSpinnerData(spinnerUnexpectedReasons, unexpectedOrderReasons, orderCommodityViewModel.getUnexpectedReasonPosition());
 
     }
 
@@ -209,28 +205,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         Integer orderReasonPosition = orderCommodityViewModel.getOrderReasonPosition();
         String item = orderReasonPosition == null ? "" : ((OrderReason) spinner.getItemAtPosition(orderReasonPosition)).getReason();
         if (item.equalsIgnoreCase(ROUTINE)) {
-            String startDate = textViewStartDate.getText().toString();
-            populateEndDate(startDate, 30, textViewEndDate);
+            textViewEndDate.setText(SIMPLE_DATE_FORMAT.format(orderCommodityViewModel.getExpectedEndDate()));
             textViewEndDate.setEnabled(false);
         } else {
             textViewEndDate.setEnabled(true);
         }
-    }
-
-    private void populateEndDate(String startDate, Integer orderDuration, TextView textViewEndDate) {
-        if (!startDate.isEmpty()) {
-            textViewEndDate.setText(computeEndDate(startDate, orderDuration));
-        }
-    }
-
-    private String computeEndDate(String startDate, int addDays) {
-        String endDate = null;
-        try {
-            Date date = SIMPLE_DATE_FORMAT.parse(startDate);
-            endDate = SIMPLE_DATE_FORMAT.format(addDays(date, addDays));
-        } catch (ParseException ignored) {
-        }
-        return endDate;
     }
 
     private List<OrderReason> filterReasonsWithType(List<OrderReason> reasons, final String type) {
@@ -388,23 +367,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
     private class OrderQuantityTextWatcher extends LmisTextWatcher {
         private final OrderCommodityViewModel orderCommodityViewModel;
-        private final Spinner spinnerUnexpectedQuantityReasons;
+        private final Spinner spinnerUnexpectedReasons;
         private final EditText editTextOrderQuantity;
-        private final OrderCommodityViewModel orderCommodityViewModel1;
-        private final Spinner spinnerUnexpectedQuantityReasons1;
-        private final EditText editTextOrderQuantity1;
-        private final SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter1;
-        private SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter;
+        private SelectedOrderCommoditiesAdapter adapter;
 
-        public OrderQuantityTextWatcher(OrderCommodityViewModel orderCommodityViewModel1, Spinner spinnerUnexpectedQuantityReasons1, EditText editTextOrderQuantity1, SelectedOrderCommoditiesAdapter selectedOrderCommoditiesAdapter1) {
-            this.orderCommodityViewModel1 = orderCommodityViewModel1;
-            this.spinnerUnexpectedQuantityReasons1 = spinnerUnexpectedQuantityReasons1;
-            this.editTextOrderQuantity1 = editTextOrderQuantity1;
-            this.selectedOrderCommoditiesAdapter1 = selectedOrderCommoditiesAdapter1;
+        public OrderQuantityTextWatcher(OrderCommodityViewModel orderCommodityViewModel1, Spinner spinnerUnexpectedReasons1, EditText editTextOrderQuantity1, SelectedOrderCommoditiesAdapter adapter1) {
             orderCommodityViewModel = orderCommodityViewModel1;
-            spinnerUnexpectedQuantityReasons = spinnerUnexpectedQuantityReasons1;
+            spinnerUnexpectedReasons = spinnerUnexpectedReasons1;
             editTextOrderQuantity = editTextOrderQuantity1;
-            selectedOrderCommoditiesAdapter = selectedOrderCommoditiesAdapter1;
+            adapter = adapter1;
         }
 
         @Override
@@ -414,16 +385,16 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
             if (orderCommodityViewModel.quantityIsUnexpected()) {
                 String commodityName = orderCommodityViewModel.getName();
                 String message = getErrorMessage(commodityName);
-                Toast.makeText(selectedOrderCommoditiesAdapter.getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(adapter.getContext(), message, Toast.LENGTH_LONG).show();
             }
-            setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedQuantityReasons);
+            setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
             if (quantityInt <= 0) {
-                editTextOrderQuantity.setError(selectedOrderCommoditiesAdapter.getContext().getString(R.string.orderQuantityMustBeGreaterThanZero));
+                editTextOrderQuantity.setError(adapter.getContext().getString(R.string.orderQuantityMustBeGreaterThanZero));
             }
         }
 
         private String getErrorMessage(String commodityName) {
-            String formatString = selectedOrderCommoditiesAdapter.getContext().getString(R.string.unexpected_order_quantity_error);
+            String formatString = adapter.getContext().getString(R.string.unexpected_order_quantity_error);
             return String.format(formatString, orderCommodityViewModel.getExpectedOrderQuantity(), commodityName);
         }
     }

@@ -53,6 +53,9 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false)
     private String name;
 
+    @DatabaseField
+    private String orderFrequency;
+
     @DatabaseField(canBeNull = false)
     private int orderDuration;
 
@@ -169,5 +172,13 @@ public class Commodity implements Serializable {
 
     public void increaseStockOnHandBy(int quantity) {
         getStockItem().increaseQuantityBy(quantity);
+    }
+
+    public String getOrderFrequency() {
+        return orderFrequency;
+    }
+
+    public void setOrderFrequency(String orderFrequency) {
+        this.orderFrequency = orderFrequency;
     }
 }

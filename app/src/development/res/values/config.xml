@@ -29,6 +29,5 @@
   -->
 
 <resources>
-    <!--http://104.131.225.22:8888/dhis2-->
-    <string name="dhis2_base_url">http://lmisdev.dhis2.org</string>
+    <string name="dhis2_base_url">http://104.131.225.22:8888/dhis2</string>
 </resources>

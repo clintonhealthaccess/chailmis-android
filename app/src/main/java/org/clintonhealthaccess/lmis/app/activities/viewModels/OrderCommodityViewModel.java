@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.OrderCycle;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 
 import java.util.Date;
@@ -131,7 +132,27 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
         return this.quantityIsUnexpected();
     }
 
+    public Date getExpectedStartDate() {
+        return getOrderCycle().startDate(new Date());
+    }
+
+    public Date getExpectedEndDate() {
+        return getOrderCycle().endDate(new Date());
+    }
+
+    private OrderCycle getOrderCycle() {
+        String orderFrequency = getCommodity().getOrderFrequency();
+        OrderCycle orderCycle;
+        if (orderFrequency == null || orderFrequency.isEmpty()) {
+            orderCycle = OrderCycle.Monthly;
+        } else {
+            orderCycle = OrderCycle.valueOf(orderFrequency);
+        }
+        return orderCycle;
+    }
+
     private boolean reasonIsRoutine() {
         return this.getReasonForOrder() != null && this.getReasonForOrder().getReason().equalsIgnoreCase(OrderReason.ROUTINE);
     }
+
 }

@@ -42,6 +42,7 @@ import android.widget.TextView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.OrderCycle;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -241,8 +242,8 @@ public class SelectedOrderCommoditiesAdapterTest {
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         String endDate = textViewEndDate.getText().toString();
-
-        assertThat(endDate, is("31-Jan-14"));
+        Date expectedEndDate = OrderCycle.Monthly.endDate(new Date());
+        assertThat(endDate, is(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(expectedEndDate)));
     }
 
     @Test

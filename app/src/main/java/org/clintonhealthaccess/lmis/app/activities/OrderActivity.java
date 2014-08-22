@@ -52,7 +52,6 @@ import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -128,12 +127,9 @@ public class OrderActivity extends CommoditySelectableActivity {
                 for (Commodity commodity : commodities) {
                     OrderCommodityViewModel orderCommodityViewModel = new OrderCommodityViewModel(commodity);
 
-                    Date currentDate = new Date();
-                    orderCommodityViewModel.setOrderPeriodStartDate(currentDate);
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(currentDate);
-                    cal.add(Calendar.DAY_OF_MONTH, commodity.getOrderDuration());
-                    orderCommodityViewModel.setOrderPeriodEndDate(cal.getTime());
+                    orderCommodityViewModel.setOrderPeriodStartDate(orderCommodityViewModel.getExpectedStartDate());
+                    Date expectedEndDate = orderCommodityViewModel.getExpectedEndDate();
+                    orderCommodityViewModel.setOrderPeriodEndDate(expectedEndDate);
 
                     viewModels.add(orderCommodityViewModel);
                 }
