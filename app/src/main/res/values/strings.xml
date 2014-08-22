@@ -119,5 +119,7 @@
     <string name="receive_successful">Saving Receive successful</string>
     <string name="receive_from_facility">Receive From Facility</string>
     <string name="select_reason">Select Reason ..</string>
+    <string name="not_in_stock">Not in Stock</string>
+    <string name="help">HELP</string>
 
 </resources>
