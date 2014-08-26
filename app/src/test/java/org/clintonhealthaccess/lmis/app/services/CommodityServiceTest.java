@@ -31,10 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.j256.ormlite.dao.Dao;
 
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
-import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
@@ -48,9 +45,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -137,29 +132,7 @@ public class CommodityServiceTest {
         commodityService.saveToDatabase(categories);
     }
 
-    @Test
-    public void shouldSaveCommodityAggregations() {
-        List<Category> categories = getTestCategories();
 
-        commodityService.saveToDatabase(categories);
-
-        Long numberOfAggregations = dbUtil.withDao(Aggregation.class, new DbUtil.Operation<Aggregation, Long>() {
-            @Override
-            public Long operate(Dao<Aggregation, String> dao) throws SQLException {
-                return dao.countOf();
-            }
-        });
-
-        Long numberOfFields = dbUtil.withDao(AggregationField.class, new DbUtil.Operation<AggregationField, Long>() {
-            @Override
-            public Long operate(Dao<AggregationField, String> dao) throws SQLException {
-                return dao.countOf();
-            }
-        });
-
-        assertThat(numberOfAggregations, is(1L));
-        assertThat(numberOfFields, is(1L));
-    }
 
     private List<Category> getTestCategories() {
 
@@ -174,19 +147,6 @@ public class CommodityServiceTest {
         Commodity commodity = new Commodity("cat food");
         Commodity commodityDogFood = new Commodity("dog food");
 
-
-        Aggregation aggregation = new Aggregation();
-        aggregation.setId("id");
-        aggregation.setName("sum");
-
-        AggregationField field = new AggregationField();
-        field.setId("some id");
-        field.setName("stock lost");
-
-        aggregation.setAggregationFields(Arrays.asList(field));
-
-        commodity.setAggregation(aggregation);
-        commodityDogFood.setAggregation(aggregation);
 
         category.addCommodity(commodity);
         category.addCommodity(commodityDogFood);

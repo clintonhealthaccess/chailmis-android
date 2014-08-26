@@ -116,16 +116,10 @@ public class Dhis2Test {
 
     @Test
     public void shouldFetchCommoditiesFromAPIServiceEndPoint() throws Exception {
-        addHttpResponseRule("GET", String.format("%s/api/systemSettings/data_element_group_set_id", dhis2BaseUrl), new TestHttpResponse(200, "OvBXLc9jKsE"));
-        setUpSuccessHttpGetRequest("/api/dataElementGroupSets/OvBXLc9jKsE", "dataElementGroupSetCommodities.json");
-        setUpSuccessHttpGetRequest("/api/dataElementGroups/gTRDFv2oqoQ", "dataElementGroupAnelgesics.json");
-        setUpSuccessHttpGetRequest("/api/dataElementGroups/123456789", "dataElementGroupSomethinElse.json");
-        setUpSuccessHttpGetRequest("/api/dataElements/gE5L6iZoOdh", "dataElementParacetamol_Injection_100.json");
-        setUpSuccessHttpGetRequest("/api/categoryCombos/fvmWKl1D5QJ", "categoryComboConsumption.json");
-
+        setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
         List<Category> categories = dhis2.fetchCommodities(new User());
-        String commodityName = "Paracetamol_Injection_100";
-        assertThat(categories.size(), is(2));
+        String commodityName = "Implants - 5 yrs_pieces";
+        assertThat(categories.size(), is(10));
         assertThat(categories.get(0).getNotSavedCommodities().size(), is(1));
         assertThat(categories.get(0).getNotSavedCommodities().get(0).getName(), is(commodityName));
     }

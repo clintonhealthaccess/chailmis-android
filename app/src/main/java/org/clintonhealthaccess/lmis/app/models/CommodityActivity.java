@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, Clinton Health Access Initiative
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,18 +33,31 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@DatabaseTable(tableName = "aggregationFields")
-public class AggregationField {
-    @DatabaseField
-    private String name;
+@DatabaseTable
+public class CommodityActivity {
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Commodity commodity;
     @DatabaseField(id = true, uniqueIndex = true)
     private String id;
-    @DatabaseField(foreign = true)
-    private Aggregation aggregation;
+    @DatabaseField(canBeNull = false)
+    private String name;
+    @DatabaseField(canBeNull = false)
+    private String activityType;
+
+    public CommodityActivity() {
+        //Orm Lite likes
+    }
+
+
+    public CommodityActivity(Commodity actualCommodity, String id, String name, String activityType) {
+        this.commodity = actualCommodity;
+        this.id = id;
+        this.name = name;
+        this.activityType = activityType;
+
+    }
 }

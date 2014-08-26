@@ -29,13 +29,15 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.Context;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
-import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 
 public class CommodityService {
     @Inject
@@ -59,6 +62,9 @@ public class CommodityService {
 
     @Inject
     private DbUtil dbUtil;
+
+    @Inject
+    private Context context;
 
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
@@ -98,12 +104,18 @@ public class CommodityService {
                     commodity.setCategory(category);
                     dao.createOrUpdate(commodity);
                     createStock(commodity);
-                    if (commodity.getAggregation() != null)
-                        createAggregation(commodity);
+                    createCommodityActivity(commodity);
+
                 }
                 return null;
             }
         });
+    }
+
+    private void createCommodityActivity(Commodity commodity) {
+        CommodityActivity activity2 = new CommodityActivity(commodity, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
+        GenericDao<CommodityActivity> commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
+        commodityActivityGenericDao.create(activity2);
     }
 
 
@@ -119,29 +131,6 @@ public class CommodityService {
         });
     }
 
-    private void createAggregation(final Commodity commodity) {
 
-        dbUtil.withDao(Aggregation.class, new Operation<Aggregation, Void>() {
-            @Override
-            public Void operate(Dao<Aggregation, String> dao) throws SQLException {
-                Aggregation aggregation = commodity.getAggregation();
-                dao.createOrUpdate(aggregation);
-                saveAllAggregationFields(aggregation);
-                return null;
-            }
-        });
-    }
 
-    private void saveAllAggregationFields(final Aggregation aggregation) {
-        dbUtil.withDao(AggregationField.class, new Operation<AggregationField, Void>() {
-            @Override
-            public Void operate(Dao<AggregationField, String> dao) throws SQLException {
-                for (AggregationField field : aggregation.getAggregationFields()) {
-                    field.setAggregation(aggregation);
-                    dao.createOrUpdate(field);
-                }
-                return null;
-            }
-        });
-    }
 }

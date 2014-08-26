@@ -80,12 +80,12 @@ public class DispensingItem implements Serializable, Snapshotable {
     }
 
     @Override
-    public AggregationField getAggregationField() {
-        List<AggregationField> fields = ImmutableList.copyOf(getCommodity().getAggregation().getAggregationFieldsCollection());
-        Collection<AggregationField> filteredFields = filter(fields, new Predicate<AggregationField>() {
+    public CommodityActivity getActivity() {
+        List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        Collection<CommodityActivity> filteredFields = filter(fields, new Predicate<CommodityActivity>() {
             @Override
-            public boolean apply(AggregationField input) {
-                return input.getName().toLowerCase().contains(DISPENSE);
+            public boolean apply(CommodityActivity input) {
+                return input.getActivityType().toLowerCase().contains(DISPENSE);
             }
         });
         return new ArrayList<>(filteredFields).get(0);

@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.utils;
 
+import java.util.UUID;
+
 public class ViewHelpers {
     public static int getIntFromString(String number) {
         try {
@@ -38,5 +40,9 @@ public class ViewHelpers {
         }
     }
 
-
+    public static String getID() {
+        String s = UUID.randomUUID().toString();
+        System.out.println(s);
+        return s;
+    }
 }

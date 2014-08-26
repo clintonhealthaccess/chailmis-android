@@ -29,11 +29,11 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
-import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 
 public interface Snapshotable {
     Commodity getCommodity();
-    AggregationField getAggregationField();
+    CommodityActivity getActivity();
     int getValue();
 }

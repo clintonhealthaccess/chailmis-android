@@ -29,25 +29,26 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
-import com.google.common.base.Function;
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
+import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
+import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import static com.google.common.collect.Lists.transform;
 
 public class Dhis2 implements LmisServer {
     @Inject
@@ -62,56 +63,61 @@ public class Dhis2 implements LmisServer {
     @Override
     public List<Category> fetchCommodities(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        String groupSetId = service.getDateElementGroupSetId();
-        DataElementGroupSet groupSet = service.getDataElementGroupSet(groupSetId);
-        List<DataElementGroup> groups = groupSet.getDataElementGroups();
-        List<DataElementGroup> detailedElementGroups = new ArrayList<>();
-        for (DataElementGroup group : groups) {
-            detailedElementGroups.add(getDataElementGroupDetails(service, group));
-        }
-        return transformDataElementGroupsToCategories(detailedElementGroups);
+        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name]");
+        return getCategoriesFromDataSets(response.getDataSets());
     }
 
-    private DataElementGroup getDataElementGroupDetails(Dhis2Endpoint service, DataElementGroup group) {
-        List<DataElement> fetchedElements = new ArrayList<>();
-        DataElementGroup fetchedGroup = service.getDataElementGroup(group.getId());
-        for (DataElement element : fetchedGroup.getDataElements()) {
-            fetchedElements.add(getDataElementDetails(service, element));
+    private List<Category> getCategoriesFromDataSets(List<DataSet> dataSets) {
+        List<Category> categories = new ArrayList<>();
+        List<Commodity> commodities = new ArrayList<>();
+        List<DataElement> elements = new ArrayList<>();
+
+        for (DataSet dataSet : dataSets) {
+            if (dataSet != null && dataSet.getDataElements() != null)
+                elements.addAll(dataSet.getDataElements());
         }
-        fetchedGroup.getDataElements().clear();
-        fetchedGroup.getDataElements().addAll(fetchedElements);
-        return fetchedGroup;
+
+        for (DataElement element : elements) {
+            getOrCreateCommodity(element, commodities, categories);
+
+        }
+
+        return categories;
     }
 
-    private DataElement getDataElementDetails(Dhis2Endpoint service, DataElement element) {
-        DataElement dataElementDetail = service.getDataElement(element.getId());
-        Aggregation aggregationDetail = service.getCategoryCombo(dataElementDetail.getAggregation().getId());
-        dataElementDetail.setAggregation(aggregationDetail);
-        return dataElementDetail;
+    private void getOrCreateCommodity(DataElement element, List<Commodity> commodities, List<Category> categories) {
+        Commodity commodity = new Commodity();
+        Commodity actualCommodity;
+        DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
+        DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
+        commodity.setLmisId(dataElementGroup.getId());
+        if (commodities.contains(commodity)) {
+            actualCommodity = commodities.get(commodities.indexOf(commodity));
+        } else {
+            commodity.setName(dataElementGroup.getName());
+            Category category = new Category();
+            category.setName(dataElementGroupSet.getName());
+            category.setLmisId(dataElementGroupSet.getId());
+            if (categories.contains(category)) {
+                categories.get(categories.indexOf(category)).getCommodities().add(commodity);
+            } else {
+                category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
+                categories.add(category);
+            }
+            commodity.setCommodityActivities(new ArrayList<CommodityActivity>());
+            commodities.add(commodity);
+            actualCommodity = commodity;
+        }
+        System.out.println("Commodity-activity is " + element.getName());
+        AttributeValue attributeValue = element.getAttributeValues().get(0);
+        CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
+        actualCommodity.getCommodityActivities().add(commodityActivity);
     }
 
     @Override
     public Map<String, List<String>> fetchOrderReasons(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.getReasonsForOrder();
-    }
-
-    private List<Category> transformDataElementGroupsToCategories(List<DataElementGroup> groups) {
-        return transform(groups, new Function<DataElementGroup, Category>() {
-            @Override
-            public Category apply(DataElementGroup group) {
-                Category category = new Category(group.getName());
-                for (DataElement element : group.getDataElements()) {
-                    Aggregation aggregation = element.getAggregation();
-                    Commodity commodity = new Commodity(element.getId(), element.getName(), aggregation);
-                    category.addCommodity(commodity);
-                    if (element.getDataSets() != null){
-                        category.setDataSet(element.getDataSets().get(0));
-                    }
-                }
-                return category;
-            }
-        });
     }
 
 }

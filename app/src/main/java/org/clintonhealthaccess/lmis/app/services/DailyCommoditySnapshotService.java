@@ -33,7 +33,6 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
@@ -47,7 +46,7 @@ import java.util.List;
 public class DailyCommoditySnapshotService {
 
     public static final String COMMODITY_ID = "commodity_id";
-    public static final String AGGREGATION_FIELD_ID = "aggregationField_id";
+    public static final String COMMODITY_ACTIVITY_ID = "commodityActivity_id";
     @Inject
     DbUtil dbUtil;
 
@@ -74,7 +73,7 @@ public class DailyCommoditySnapshotService {
     }
 
     private void createNewSnaphot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao) {
-        DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getAggregationField(), snapshotable.getValue());
+        DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getActivity(), snapshotable.getValue());
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 
@@ -83,7 +82,7 @@ public class DailyCommoditySnapshotService {
             @Override
             public List<DailyCommoditySnapshot> operate(Dao<DailyCommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<DailyCommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, snapshotable.getCommodity()).and().eq(AGGREGATION_FIELD_ID, snapshotable.getAggregationField()).and().between("date", startOfDay(), endOfDay());
+                queryBuilder.where().eq(COMMODITY_ID, snapshotable.getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, snapshotable.getActivity()).and().between("date", startOfDay(), endOfDay());
                 return dao.query(queryBuilder.prepare());
             }
         });

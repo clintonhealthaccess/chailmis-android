@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, Clinton Health Access Initiative
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,16 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.remote.responses;
 
-import com.google.gson.annotations.SerializedName;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@DatabaseTable(tableName = "aggregations")
-public class Aggregation {
-    @DatabaseField
-    private String name;
-    @DatabaseField(id = true, uniqueIndex = true)
-    private String id;
-
-    @ForeignCollectionField(eager = true)
-    private ForeignCollection<AggregationField> aggregationFieldsCollection;
-
-    @SerializedName("categoryOptionCombos")
-    private List<AggregationField> aggregationFields;
+@Data
+public class DataSetSearchResponse {
+    private List<DataSet> dataSets = new ArrayList<DataSet>();
 }

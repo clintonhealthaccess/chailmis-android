@@ -31,17 +31,18 @@ package org.clintonhealthaccess.lmis.app.remote.endpoints;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
+import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
 import java.util.List;
 import java.util.Map;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface Dhis2Endpoint {
 
@@ -60,13 +61,14 @@ public interface Dhis2Endpoint {
     @GET("/api/dataElements/{id}")
     DataElement getDataElement(@Path("id") String id);
 
-    @GET("/api/categoryCombos/{id}")
-    Aggregation getCategoryCombo(@Path("id") String id);
 
     @GET("/api/dataElementGroupSets/{id}")
     DataElementGroupSet getDataElementGroupSet(@Path("id") String id);
 
     @GET("/api/dataElementGroups/{id}")
     DataElementGroup getDataElementGroup(@Path("id") String id);
+
+    @GET("/api/dataSets")
+    DataSetSearchResponse searchDataSets(@Query("query") String query, @Query("fields") String fields);
 }
   

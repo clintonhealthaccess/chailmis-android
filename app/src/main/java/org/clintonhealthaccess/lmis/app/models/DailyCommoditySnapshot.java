@@ -47,8 +47,8 @@ public class DailyCommoditySnapshot {
     @DatabaseField(generatedId = true)
     private Long id;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true)
-    private AggregationField aggregationField;
+    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, columnName = "commodityActivity_id")
+    private CommodityActivity commodityActivity;
 
     @DatabaseField(canBeNull = false)
     private int value;
@@ -62,9 +62,9 @@ public class DailyCommoditySnapshot {
     @DatabaseField(canBeNull = false, uniqueCombo = true)
     private Date date;
 
-    public DailyCommoditySnapshot(Commodity commodity, AggregationField aggregationField, int value) {
+    public DailyCommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, int value) {
         this.commodity = commodity;
-        this.aggregationField = aggregationField;
+        this.commodityActivity = commodityActivity;
         this.value = value;
         this.synced = false;
         this.date = new Date();

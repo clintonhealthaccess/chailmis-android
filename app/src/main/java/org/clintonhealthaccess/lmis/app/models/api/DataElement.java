@@ -29,9 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
-import com.google.gson.annotations.SerializedName;
-
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 
 import java.util.List;
@@ -44,8 +41,7 @@ import lombok.Setter;
 public class DataElement {
     private String id;
     private String name;
-    @SerializedName("categoryCombo")
-    private Aggregation aggregation;
     private List<DataElementGroup> dataElementGroups;
     private List<DataSet> dataSets;
+    private List<AttributeValue> attributeValues;
 }

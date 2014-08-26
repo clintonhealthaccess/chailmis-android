@@ -40,8 +40,12 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.google.common.collect.ImmutableList.copyOf;
+import lombok.Getter;
+import lombok.Setter;
 
+import static com.google.common.collect.ImmutableList.copyOf;
+@Getter
+@Setter
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
@@ -62,11 +66,14 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
-    private Aggregation aggregation;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
+
+    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    private ForeignCollection<CommodityActivity> commodityActivitiesSaved;
+
+    private List<CommodityActivity> commodityActivities;
 
     public Commodity() {
         // ormlite wants it
@@ -85,17 +92,6 @@ public class Commodity implements Serializable {
     public Commodity(String name, Category category) {
         this(name);
         this.category = category;
-    }
-
-    public Commodity(String id, String name, Aggregation aggregation) {
-        this.lmisId = id;
-        this.name = name;
-        this.aggregation = aggregation;
-    }
-
-    public Commodity(String name, Category category, Aggregation aggregation) {
-        this(name, category);
-        this.aggregation = aggregation;
     }
 
 
@@ -154,13 +150,6 @@ public class Commodity implements Serializable {
         return true;
     }
 
-    public Aggregation getAggregation() {
-        return aggregation;
-    }
-
-    public void setAggregation(Aggregation aggregation) {
-        this.aggregation = aggregation;
-    }
 
     public int getStockOnHand() {
         return getStockItem().getQuantity();
@@ -181,4 +170,6 @@ public class Commodity implements Serializable {
     public void setOrderFrequency(String orderFrequency) {
         this.orderFrequency = orderFrequency;
     }
+
+
 }

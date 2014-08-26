@@ -32,6 +32,10 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.clintonhealthaccess.lmis.app.models.api.DataElement;
+
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,4 +56,8 @@ public class DataSet {
     private String periodType;
     @DatabaseField(generatedId = true)
     private Long dataSetId;
+
+    private List<DataElement> dataElements;
+
+
 }

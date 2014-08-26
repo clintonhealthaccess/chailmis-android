@@ -33,10 +33,9 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.models.Aggregation;
-import org.clintonhealthaccess.lmis.app.models.AggregationField;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -49,13 +48,16 @@ import org.robolectric.Robolectric;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
+import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DailyCommoditySnapshotServiceTest {
+    public static final String DISPENSING = "DISPENSING";
     @Inject
     DailyCommoditySnapshotService dailyCommoditySnapshotService;
 
@@ -65,9 +67,8 @@ public class DailyCommoditySnapshotServiceTest {
     @Inject
     DbUtil dbUtil;
     private GenericDao<Category> categoryDao;
-    private GenericDao<Aggregation> aggregationDao;
-    private GenericDao<AggregationField> aggregationFieldDao;
     private GenericDao<Commodity> commodityDao;
+    private GenericDao<CommodityActivity> commodityActivityGenericDao;
     private GenericDao<DailyCommoditySnapshot> snapshotDao;
 
 
@@ -75,10 +76,9 @@ public class DailyCommoditySnapshotServiceTest {
     public void setUp() {
         Context context = Robolectric.application;
         categoryDao = new GenericDao<>(Category.class, context);
-        aggregationDao = new GenericDao<>(Aggregation.class, context);
-        aggregationFieldDao = new GenericDao<>(AggregationField.class, context);
         commodityDao = new GenericDao<>(Commodity.class, context);
         snapshotDao = new GenericDao<>(DailyCommoditySnapshot.class, context);
+        commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
         try {
             setUpInjectionWithMockLmisServer(context, this);
         } catch (IOException e) {
@@ -125,7 +125,7 @@ public class DailyCommoditySnapshotServiceTest {
         Snapshotable dispensingItem = new DispensingItem(fetchedCommodity, 3);
 
 
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getAggregationField(), 3);
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getActivity(), 3);
         dailyCommoditySnapshot.setSynced(true);
         snapshotDao.create(dailyCommoditySnapshot);
         dailyCommoditySnapshotService.add(dispensingItem);
@@ -144,7 +144,7 @@ public class DailyCommoditySnapshotServiceTest {
         Snapshotable dispensingItem = new DispensingItem(fetchedCommodity1, 3);
 
 
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getAggregationField(), 3);
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getActivity(), 3);
         dailyCommoditySnapshot.setSynced(true);
         snapshotDao.create(dailyCommoditySnapshot);
 
@@ -158,20 +158,16 @@ public class DailyCommoditySnapshotServiceTest {
         Category category = new Category("commodities");
         categoryDao.create(category);
 
-        Aggregation aggregation = new Aggregation();
-        aggregation.setName("Consumption");
-        aggregation.setId("aggregationId");
-        aggregationDao.create(aggregation);
 
-        AggregationField aggregationField = new AggregationField();
-        aggregationField.setAggregation(aggregation);
-        aggregationField.setName("dispense");
-        aggregationField.setId("aggregationFieldId");
-        aggregationFieldDao.create(aggregationField);
-
-        Commodity commodity = new Commodity("Panado", category, aggregation);
-        Commodity commodity2 = new Commodity("other drug", category, aggregation);
+        Commodity commodity = new Commodity("Panado", category);
+        Commodity commodity2 = new Commodity("other drug", category);
         commodityDao.create(commodity);
         commodityDao.create(commodity2);
+        CommodityActivity activity = new CommodityActivity(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
+        commodityActivityGenericDao.create(activity);
+        CommodityActivity activity2 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
+        commodityActivityGenericDao.create(activity2);
     }
+
+
 }
