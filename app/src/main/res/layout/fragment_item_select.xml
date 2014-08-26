@@ -50,7 +50,7 @@
             android:textColor="@color/white"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="@string/close" />
+            android:text="@string/close_selection" />
     </RelativeLayout>
 
     <LinearLayout
