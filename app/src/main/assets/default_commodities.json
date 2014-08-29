@@ -4,76 +4,69 @@
         "name": "Anti Malarials",
         "commodities": [
             {
-                "lmisId": "2",
+                "id": "1",
                 "name": "Coartem",
                 "orderDuration": 30,
-                "aggregation": {
-                    "name":"Consumption",
-                    "id":"idas",
-                    "categoryOptionCombos":[
-                        {"id":"some data","name":"Dispense"}
-                     ]
-                }
+                "commodityActivities":[
+                 {
+                    "id":"1234","name":"Coartem_DISPENSING","activityType":"dispense"
+                    ,"commodity":{"id": "1","name": "Coartem","orderDuration": 30}
+                 }
+                ]
             },
             {
-                "lmisId": "3",
+                "id": "3",
                 "name": "Choloquine",
                 "orderDuration": 90,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                 {
+                                    "id":"12344","name":"Choloquine_DISPENSING","activityType":"dispense"
+                                    ,"commodity":{"id": "3","name": "Choloquine","orderDuration": 30}
+                                 }
+                                ]
             },
             {
-                "lmisId": "4",
+                "id": "4",
                 "name": "Quinine",
                 "orderDuration": 180,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                 {
+                                    "id":"1234as","name":"Quinine_DISPENSING","activityType":"dispense"
+                                    ,"commodity":{"id": "4","name": "Quinine","orderDuration": 30}
+                                 }
+                                ]
             },
             {
-                "lmisId": "5",
+                "id": "5",
                 "name": "Fansida",
                 "orderDuration": 360,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                 {
+                                    "id":"1234222","name":"Fansida_DISPENSING","activityType":"dispense"
+                                    ,"commodity":{"id": "5","name": "Fansida","orderDuration": 30}
+                                 }
+                                ]
             },
             {
-                "lmisId": "6",
+                "id": "6",
                 "name": "Hedex",
                 "orderDuration": 60,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                                 {
+                                                    "id":"123294","name":"Hedex_DISPENSING","activityType":"dispense"
+                                                    ,"commodity":{"id": "6","name": "Hedex","orderDuration": 30}
+                                                 }]
             },
             {
-                "lmisId": "7",
+                "id": "7",
                 "name": "Septrin",
                 "orderDuration": 60,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                 {
+                                    "id":"12ee34","name":"Septrin_DISPENSING","activityType":"dispense"
+                                    ,"commodity":{"id": "7","name": "Septrin","orderDuration": 30}
+                                 }
+                                ]
             }
         ]
     },
@@ -82,16 +75,15 @@
         "name": "Antenatal",
         "commodities": [
             {
-                "lmisId": "9",
+                "id": "9",
                 "name": "Condom",
                 "orderDuration": 14,
-                "aggregation": {
-                                    "name":"Consumption",
-                                    "id":"idas",
-                                    "categoryOptionCombos":[
-                                        {"id":"some data","name":"Dispense"}
-                                     ]
-                                }
+                "commodityActivities":[
+                                 {
+                                    "id":"1229234","name":"Condom_DISPENSING","activityType":"dispense"
+,"commodity":{"id": "9","name": "Condom","orderDuration": 30}
+                                 }
+                                ]
             }
         ]
     },

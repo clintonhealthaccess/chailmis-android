@@ -38,21 +38,20 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import static com.google.common.collect.ImmutableList.copyOf;
+
 @Getter
 @Setter
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = false)
-    private String lmisId;
+    @DatabaseField(id = true, uniqueIndex = true)
+    private String id;
 
     @DatabaseField(canBeNull = false)
     private String name;
@@ -70,22 +69,22 @@ public class Commodity implements Serializable {
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = true)
     private ForeignCollection<CommodityActivity> commodityActivitiesSaved;
 
-    private List<CommodityActivity> commodityActivities;
+    private List<CommodityActivity> commodityActivities = new ArrayList<>();
 
     public Commodity() {
         // ormlite wants it
     }
 
     public Commodity(String name) {
-        this.lmisId = name;
+        this.id = name;
         this.name = name;
     }
 
     public Commodity(String id, String name) {
-        this.lmisId = id;
+        this.id = id;
         this.name = name;
     }
 
@@ -114,17 +113,14 @@ public class Commodity implements Serializable {
 
         Commodity commodity = (Commodity) o;
 
-        return lmisId.equals(commodity.lmisId);
+        return id.equals(commodity.id);
     }
 
     @Override
     public int hashCode() {
-        return lmisId.hashCode();
+        return id.hashCode();
     }
 
-    public String getLmisId() {
-        return lmisId;
-    }
 
     //BAD
     public void setCategory(Category category) {

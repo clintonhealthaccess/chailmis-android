@@ -91,7 +91,7 @@ public class Dhis2 implements LmisServer {
         Commodity actualCommodity;
         DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
         DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
-        commodity.setLmisId(dataElementGroup.getId());
+        commodity.setId(dataElementGroup.getId());
         if (commodities.contains(commodity)) {
             actualCommodity = commodities.get(commodities.indexOf(commodity));
         } else {

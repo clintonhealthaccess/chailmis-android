@@ -102,6 +102,7 @@ public class AllocationService {
     }
 
     public void syncAllocations() {
+        //FIXME: Just for test purposes
         GenericDao<Allocation> allocationGenericDao = new GenericDao<>(Allocation.class, context);
         GenericDao<AllocationItem> allocationItemGenericDao = new GenericDao<>(AllocationItem.class, context);
         GenericDao<Commodity> commodityDao = new GenericDao<>(Commodity.class, context);

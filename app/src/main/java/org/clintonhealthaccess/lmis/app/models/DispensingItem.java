@@ -47,6 +47,7 @@ import static com.google.common.collect.Collections2.filter;
 @DatabaseTable(tableName = "dispensingItems")
 public class DispensingItem implements Serializable, Snapshotable {
     public static final String DISPENSE = "dispense";
+
     Commodity commodity;
 
     @DatabaseField(canBeNull = false)
@@ -66,7 +67,7 @@ public class DispensingItem implements Serializable, Snapshotable {
 
     public DispensingItem(Commodity commodity, int quantity) {
         this.commodity = commodity;
-        this.commodityId = commodity.getLmisId();
+        this.commodityId = commodity.getId();
         this.quantity = quantity;
         created = new Date();
     }
@@ -82,12 +83,16 @@ public class DispensingItem implements Serializable, Snapshotable {
     @Override
     public CommodityActivity getActivity() {
         List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        System.out.printf("Number of items %d%n", fields.size());
         Collection<CommodityActivity> filteredFields = filter(fields, new Predicate<CommodityActivity>() {
             @Override
             public boolean apply(CommodityActivity input) {
-                return input.getActivityType().toLowerCase().contains(DISPENSE);
+                String testString = input.getActivityType().toLowerCase();
+                System.out.printf("comparing %s to %s %n", testString, DISPENSE);
+                return testString.contains(DISPENSE);
             }
         });
+
         return new ArrayList<>(filteredFields).get(0);
     }
 

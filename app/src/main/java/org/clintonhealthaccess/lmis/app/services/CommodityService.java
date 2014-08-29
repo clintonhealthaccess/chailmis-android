@@ -37,7 +37,6 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
-import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -48,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
-import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 
 public class CommodityService {
     @Inject
@@ -69,7 +67,11 @@ public class CommodityService {
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
-        //JUST FOR TESTING
+
+        // get order types
+        // get order reasons
+
+        //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();
         categoryService.clearCache();
     }
@@ -113,9 +115,15 @@ public class CommodityService {
     }
 
     private void createCommodityActivity(Commodity commodity) {
-        CommodityActivity activity2 = new CommodityActivity(commodity, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
         GenericDao<CommodityActivity> commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
-        commodityActivityGenericDao.create(activity2);
+
+        for (CommodityActivity commodityActivity : commodity.getCommodityActivities()) {
+            if (commodityActivity.getCommodity() == null) {
+                commodityActivity.setCommodity(commodity);
+            }
+            commodityActivityGenericDao.create(commodityActivity);
+        }
+
     }
 
 
@@ -130,7 +138,6 @@ public class CommodityService {
             }
         });
     }
-
 
 
 }
