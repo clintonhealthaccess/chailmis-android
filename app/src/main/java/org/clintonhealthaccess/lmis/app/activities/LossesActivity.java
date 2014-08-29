@@ -45,7 +45,6 @@ import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStra
 import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
 
 import java.util.ArrayList;
 import java.util.List;

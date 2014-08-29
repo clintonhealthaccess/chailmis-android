@@ -42,7 +42,6 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.ConfirmLossesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmReceiveAdapter;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;

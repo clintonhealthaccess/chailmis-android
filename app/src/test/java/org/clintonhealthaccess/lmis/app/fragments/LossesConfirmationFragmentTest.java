@@ -31,16 +31,13 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.inject.AbstractModule;
-
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.services.LossService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

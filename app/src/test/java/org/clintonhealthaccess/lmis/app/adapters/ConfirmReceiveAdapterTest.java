@@ -42,11 +42,8 @@ import org.robolectric.Robolectric;
 
 import java.util.Arrays;
 
-import de.greenrobot.event.EventBus;
-
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getIntFromView;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getStringFromView;
-import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 

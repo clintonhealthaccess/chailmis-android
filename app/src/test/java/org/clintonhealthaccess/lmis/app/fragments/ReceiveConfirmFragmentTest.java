@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Dialog;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.inject.AbstractModule;
 
@@ -46,13 +45,11 @@ import org.mockito.Matchers;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowToast;
 
-
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.robolectric.Robolectric.application;
