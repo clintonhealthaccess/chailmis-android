@@ -37,18 +37,11 @@ import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
-import java.util.List;
-import java.util.Map;
-
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
 public interface Dhis2Endpoint {
-
-    @GET("/api/systemSettings/reasons_for_order")
-    Map<String, List<String>> getReasonsForOrder();
-
     @GET("/api/systemSettings/data_element_group_set_id")
     String getDateElementGroupSetId();
 

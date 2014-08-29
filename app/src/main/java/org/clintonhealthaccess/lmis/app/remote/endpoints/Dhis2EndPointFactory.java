@@ -47,11 +47,15 @@ import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
+import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 
 public class Dhis2EndPointFactory {
     @InjectResource(R.string.message_invalid_login_credential)
     private String messageInvalidLoginCredential;
+
+    @InjectResource(R.string.url_not_found)
+    private String urlNotFound;
 
     @InjectResource(R.string.message_network_error)
     private String messageNetworkError;
@@ -80,7 +84,7 @@ public class Dhis2EndPointFactory {
     private class Dhis2ErrorHandler implements ErrorHandler {
         @Override
         public Throwable handleError(RetrofitError cause) {
-            if(cause.getResponse() == null) {
+            if (cause.getResponse() == null) {
                 return new LmisException(cause);
             }
 
@@ -95,10 +99,15 @@ public class Dhis2EndPointFactory {
             }
 
             int statusCode = cause.getResponse().getStatus();
+            if (statusCode == SC_NOT_FOUND) {
+                i("Failed attempt to login.", "Response code : " + statusCode);
+                return new LmisException(urlNotFound);
+            }
             if (statusCode != SC_OK) {
                 i("Failed attempt to login.", "Response code : " + statusCode);
                 return new LmisException(messageInvalidLoginCredential);
             }
+
             return new LmisException(cause.getMessage());
         }
     }

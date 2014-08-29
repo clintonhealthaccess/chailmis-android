@@ -122,5 +122,6 @@
     <string name="not_in_stock">Not in Stock</string>
     <string name="help">HELP</string>
     <string name="srv_number">SRV Number</string>
+    <string name="url_not_found">Url Not Found</string>
 
 </resources>

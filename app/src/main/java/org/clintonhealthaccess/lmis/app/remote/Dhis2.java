@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +100,11 @@ public class Dhis2 implements LmisServer {
             category.setName(dataElementGroupSet.getName());
             category.setLmisId(dataElementGroupSet.getId());
             if (categories.contains(category)) {
-                categories.get(categories.indexOf(category)).getCommodities().add(commodity);
+                List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
+                updatedCommodities.add(commodity);
+                category.setCommodities(updatedCommodities);
+                int location = categories.indexOf(category);
+                categories.set(location, category);
             } else {
                 category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
                 categories.add(category);
@@ -108,16 +113,20 @@ public class Dhis2 implements LmisServer {
             commodities.add(commodity);
             actualCommodity = commodity;
         }
-        System.out.println("Commodity-activity is " + element.getName());
-        AttributeValue attributeValue = element.getAttributeValues().get(0);
-        CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
-        actualCommodity.getCommodityActivities().add(commodityActivity);
+        if (element.getAttributeValues().size() > 0) {
+            AttributeValue attributeValue = element.getAttributeValues().get(0);
+            CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
+            actualCommodity.getCommodityActivities().add(commodityActivity);
+        }
+
     }
 
     @Override
     public Map<String, List<String>> fetchOrderReasons(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        return service.getReasonsForOrder();
+        Map<String, List<String>> reasons = new HashMap<>();
+        reasons.put("order_reasons", Arrays.asList("Emergency", "Routine"));
+        reasons.put("unexpected_quantity_reasons", Arrays.asList("Losses", "Expiries", "High Demand"));
+        return reasons;
     }
 
 }
