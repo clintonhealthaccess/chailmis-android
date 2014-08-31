@@ -112,7 +112,7 @@ public class AllocationService {
         allocationGenericDao.create(allocation);
 
         AllocationItem item = new AllocationItem();
-        item.setCommodity(commodityDao.getById("1"));
+        item.setCommodity(commodityDao.queryForAll().get(0));
         item.setQuantity(10);
         item.setAllocation(allocation);
         allocationItemGenericDao.create(item);

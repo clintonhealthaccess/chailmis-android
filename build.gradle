@@ -7,7 +7,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.12.+'
-//        classpath 'org.robolectric.gradle:gradle-android-test-plugin:0.10.1-SNAPSHOT'
         classpath 'com.github.jcandksolutions.gradle:android-unit-test:1.2.+'
     }
 }
@@ -15,5 +14,6 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+
     }
 }
