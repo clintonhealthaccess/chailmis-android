@@ -9,4 +9,4 @@ env:
 language: android
 notifications:
 - {email: false}
-script: [sh scripts/run_acceptance.sh]
+script: [sh scripts/run_acceptance_ci.sh]
