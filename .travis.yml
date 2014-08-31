@@ -1,0 +1,12 @@
+android:
+  components: [build-tools-19.0.3]
+  licenses: [android-sdk-.*, .*intel.+]
+before_script: [echo no | android create avd --force -n test -t $ANDROID_TARGET --abi
+    $ANDROID_ABI, emulator -avd test -no-skin -no-audio -no-window &, adb wait-for-device,
+  adb shell input keyevent 82 &]
+env:
+  matrix: [ANDROID_TARGET=android-16  ANDROID_ABI=armeabi-v7a]
+language: android
+notifications:
+- {email: false}
+script: [sh scripts/run_acceptance.sh]
