@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -52,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Dhis2 implements LmisServer {
+    public static final String SYNC = "SYNC";
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
 
@@ -74,11 +77,13 @@ public class Dhis2 implements LmisServer {
         List<DataElement> elements = new ArrayList<>();
 
         for (DataSet dataSet : dataSets) {
+            Log.e(SYNC, String.format("DataSet: %s", dataSet.getName()));
             if (dataSet != null && dataSet.getDataElements() != null)
                 elements.addAll(dataSet.getDataElements());
         }
 
         for (DataElement element : elements) {
+            Log.e(SYNC, String.format("DatElement: %s", element.getName()));
             getOrCreateCommodity(element, commodities, categories);
 
         }
@@ -89,35 +94,38 @@ public class Dhis2 implements LmisServer {
     private void getOrCreateCommodity(DataElement element, List<Commodity> commodities, List<Category> categories) {
         Commodity commodity = new Commodity();
         Commodity actualCommodity;
-        DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
-        DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
-        commodity.setId(dataElementGroup.getId());
-        if (commodities.contains(commodity)) {
-            actualCommodity = commodities.get(commodities.indexOf(commodity));
-        } else {
-            commodity.setName(dataElementGroup.getName());
-            Category category = new Category();
-            category.setName(dataElementGroupSet.getName());
-            category.setLmisId(dataElementGroupSet.getId());
-            if (categories.contains(category)) {
-                List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
-                updatedCommodities.add(commodity);
-                category.setCommodities(updatedCommodities);
-                int location = categories.indexOf(category);
-                categories.set(location, category);
+        if (element.getDataElementGroups().size() > 0) {
+            DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
+            DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
+            commodity.setId(dataElementGroup.getId());
+            if (commodities.contains(commodity)) {
+                actualCommodity = commodities.get(commodities.indexOf(commodity));
             } else {
-                category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
-                categories.add(category);
+                commodity.setName(dataElementGroup.getName());
+                Category category = new Category();
+                category.setName(dataElementGroupSet.getName());
+                category.setLmisId(dataElementGroupSet.getId());
+                if (categories.contains(category)) {
+                    List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
+                    updatedCommodities.add(commodity);
+                    category.setCommodities(updatedCommodities);
+                    int location = categories.indexOf(category);
+                    categories.set(location, category);
+                } else {
+                    category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
+                    categories.add(category);
+                }
+                commodity.setCommodityActivities(new ArrayList<CommodityActivity>());
+                commodities.add(commodity);
+                actualCommodity = commodity;
             }
-            commodity.setCommodityActivities(new ArrayList<CommodityActivity>());
-            commodities.add(commodity);
-            actualCommodity = commodity;
+            if (element.getAttributeValues().size() > 0) {
+                AttributeValue attributeValue = element.getAttributeValues().get(0);
+                CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
+                actualCommodity.getCommodityActivities().add(commodityActivity);
+            }
         }
-        if (element.getAttributeValues().size() > 0) {
-            AttributeValue attributeValue = element.getAttributeValues().get(0);
-            CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
-            actualCommodity.getCommodityActivities().add(commodityActivity);
-        }
+
 
     }
 

@@ -120,12 +120,12 @@ public class Dhis2Test {
     public void shouldFetchCommoditiesFromAPIServiceEndPoint() throws Exception {
         setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
         List<Category> categories = dhis2.fetchCommodities(new User());
-        String commodityName = "Implants - 5 yrs_pieces";
+        String commodityName = "Cotrimoxazole_suspension";
         assertThat(categories.size(), is(10));
         Category category = categories.get(0);
         System.out.printf("\n category contains %s\n%n", category.getNotSavedCommodities().get(0).getName());
         assertThat(category.getNotSavedCommodities().size(), is(greaterThan(1)));
-        assertThat(category.getName(), is("Family Planning"));
+        assertThat(category.getName(), is("Antibiotics"));
         assertThat(category.getNotSavedCommodities().get(0).getName(), is(commodityName));
     }
 }
