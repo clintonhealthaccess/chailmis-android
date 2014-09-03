@@ -43,12 +43,17 @@ import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValue;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +83,12 @@ public class Dhis2 implements LmisServer {
 
         for (DataSet dataSet : dataSets) {
             Log.e(SYNC, String.format("DataSet: %s", dataSet.getName()));
-            if (dataSet != null && dataSet.getDataElements() != null)
-                elements.addAll(dataSet.getDataElements());
+            if (dataSet != null && dataSet.getDataElements() != null) {
+                for (DataElement elm : dataSet.getDataElements()) {
+                    elm.setDataSets(new ArrayList<DataSet>(Arrays.asList(dataSet)));
+                    elements.add(elm);
+                }
+            }
         }
 
         for (DataElement element : elements) {
@@ -98,6 +107,7 @@ public class Dhis2 implements LmisServer {
             DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
             DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
             commodity.setId(dataElementGroup.getId());
+
             if (commodities.contains(commodity)) {
                 actualCommodity = commodities.get(commodities.indexOf(commodity));
             } else {
@@ -122,6 +132,9 @@ public class Dhis2 implements LmisServer {
             if (element.getAttributeValues().size() > 0) {
                 AttributeValue attributeValue = element.getAttributeValues().get(0);
                 CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
+                if (element.getDataSets() != null && element.getDataSets().size() > 0) {
+                    commodityActivity.setDataSet(element.getDataSets().get(0).getId());
+                }
                 actualCommodity.getCommodityActivities().add(commodityActivity);
             }
         }
@@ -137,4 +150,54 @@ public class Dhis2 implements LmisServer {
         return reasons;
     }
 
+    @Override
+    public Map<Commodity, Integer> fetchStockLevels(List<Commodity> commodities, User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+
+        String DATE_FORMAT = "yyyy-MM-dd";
+
+        SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(new Date());
+
+        String startDate = SIMPLE_DATE_FORMAT.format(calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+
+        String endDate = SIMPLE_DATE_FORMAT.format(calendar.getTime());
+
+        String dataSet = commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet();
+
+        DataValueSet valueSet = service.fetchDataValues(dataSet, user.getFacilityCode(), startDate, endDate);
+
+        return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
+    }
+
+    public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {
+        DataValue mostRecentDataValue = null;
+        for (DataValue dataValue : dataValues) {
+            if (dataValue.getDataElement().equalsIgnoreCase(abc)) {
+                if (mostRecentDataValue == null || mostRecentDataValue.getPeriod() < dataValue.getPeriod()) {
+                    mostRecentDataValue = dataValue;
+                }
+            }
+        }
+        return mostRecentDataValue;
+    }
+
+    public Map<Commodity, Integer> fetchStockLevelsForCommodities(List<Commodity> commodities, List<DataValue> values) {
+        Map<Commodity, Integer> result = new HashMap<>();
+
+        for (Commodity commodity : commodities) {
+            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.CURRENT_STOCK);
+            if (stockLevelActivity != null) {
+                DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
+                if (mostRecentDataValueForActivity != null)
+                    result.put(commodity, Integer.parseInt(mostRecentDataValueForActivity.getValue()));
+            }
+        }
+        return result;
+    }
 }

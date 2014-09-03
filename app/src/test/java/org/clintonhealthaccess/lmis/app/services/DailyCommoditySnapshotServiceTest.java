@@ -163,8 +163,10 @@ public class DailyCommoditySnapshotServiceTest {
         commodityDao.create(commodity);
         commodityDao.create(commodity2);
         CommodityActivity activity = new CommodityActivity(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
+        activity.setDataSet("123");
         commodityActivityGenericDao.create(activity);
         CommodityActivity activity2 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
+        activity2.setDataSet("123");
         commodityActivityGenericDao.create(activity2);
     }
 

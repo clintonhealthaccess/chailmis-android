@@ -35,6 +35,7 @@ import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
 import retrofit.http.GET;
@@ -63,5 +64,8 @@ public interface Dhis2Endpoint {
 
     @GET("/api/dataSets")
     DataSetSearchResponse searchDataSets(@Query("query") String query, @Query("fields") String fields);
+
+    @GET("/api/dataValueSets")
+    DataValueSet fetchDataValues(@Query("dataSet") String dataSet, @Query("orgUnit") String orgUnit, @Query("startDate") String startDate, @Query("endDate") String endDate);
 }
   

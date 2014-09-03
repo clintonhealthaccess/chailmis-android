@@ -45,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
@@ -67,13 +68,38 @@ public class CommodityService {
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
+        categoryService.clearCache();
 
-        // get order types
-        // get order reasons
+        List<Commodity> commodities = all();
+        Map<Commodity, Integer> stockLevels = lmisServer.fetchStockLevels(commodities, user);
+        saveStockLevels(stockLevels);
+        //FIXME: get order types
+        //FIXME: get order reasons
 
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();
         categoryService.clearCache();
+    }
+
+    private void createStock(final Commodity commodity, final int amount) {
+        dbUtil.withDao(StockItem.class, new Operation<StockItem, Void>() {
+            @Override
+            public Void operate(Dao<StockItem, String> dao) throws SQLException {
+                StockItem stockItem = new StockItem(commodity, amount);
+                dao.create(stockItem);
+                return null;
+            }
+        });
+    }
+
+    private void saveStockLevels(Map<Commodity, Integer> stockLevels) {
+        for (Commodity commodity : all()) {
+            if (stockLevels.containsKey(commodity)) {
+                createStock(commodity, stockLevels.get(commodity));
+            } else {
+                createStock(commodity, 0);
+            }
+        }
     }
 
     public List<Commodity> all() {
@@ -85,7 +111,7 @@ public class CommodityService {
         return commodities;
     }
 
-    protected void saveToDatabase(final List<Category> allCommodities) {
+    public void saveToDatabase(final List<Category> allCommodities) {
         dbUtil.withDao(Category.class, new Operation<Category, Void>() {
             @Override
             public Void operate(Dao<Category, String> dao) throws SQLException {
@@ -105,9 +131,7 @@ public class CommodityService {
                 for (Commodity commodity : category.getNotSavedCommodities()) {
                     commodity.setCategory(category);
                     dao.createOrUpdate(commodity);
-                    createStock(commodity);
                     createCommodityActivity(commodity);
-
                 }
                 return null;
             }
@@ -124,19 +148,6 @@ public class CommodityService {
             commodityActivityGenericDao.create(commodityActivity);
         }
 
-    }
-
-
-    private void createStock(final Commodity commodity) {
-        dbUtil.withDao(StockItem.class, new Operation<StockItem, Void>() {
-            @Override
-            public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                // FIXME: Should fetch stock levels from 'Special Receive' screen or from DHIS2
-                StockItem stockItem = new StockItem(commodity, 10);
-                dao.create(stockItem);
-                return null;
-            }
-        });
     }
 
 

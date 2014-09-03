@@ -83,12 +83,10 @@ public class DispensingItem implements Serializable, Snapshotable {
     @Override
     public CommodityActivity getActivity() {
         List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
-        System.out.printf("Number of items %d%n", fields.size());
         Collection<CommodityActivity> filteredFields = filter(fields, new Predicate<CommodityActivity>() {
             @Override
             public boolean apply(CommodityActivity input) {
                 String testString = input.getActivityType().toLowerCase();
-                System.out.printf("comparing %s to %s %n", testString, DISPENSE);
                 return testString.contains(DISPENSE);
             }
         });

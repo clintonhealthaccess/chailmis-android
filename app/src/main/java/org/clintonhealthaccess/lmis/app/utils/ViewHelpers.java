@@ -42,7 +42,6 @@ public class ViewHelpers {
 
     public static String getID() {
         String s = UUID.randomUUID().toString();
-        System.out.println(s);
         return s;
     }
 }

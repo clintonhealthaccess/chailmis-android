@@ -48,6 +48,11 @@ public class CommodityActivity {
     @DatabaseField(canBeNull = false)
     private String activityType;
 
+    @DatabaseField(canBeNull = false)
+    private String dataSet;
+
+    public static String CURRENT_STOCK = "CURRENT_STOCK";
+
     public CommodityActivity() {
         //Orm Lite likes
     }
@@ -58,6 +63,7 @@ public class CommodityActivity {
         this.id = id;
         this.name = name;
         this.activityType = activityType;
+
 
     }
 }

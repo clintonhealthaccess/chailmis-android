@@ -27,23 +27,15 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.remote;
-
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.UserProfile;
+package org.clintonhealthaccess.lmis.app.models.api;
 
 import java.util.List;
-import java.util.Map;
 
-public interface LmisServer {
-    UserProfile validateLogin(User user);
+import lombok.Data;
 
-    List<Category> fetchCommodities(User user);
-
-    java.util.Map<String, List<String>> fetchOrderReasons(User user);
-
-    Map<Commodity,Integer> fetchStockLevels(List<Commodity> allCommodities, User user);
-
+@Data
+public class DataValueSet {
+    private List<DataValue> dataValues;
+    private String dataSet;
 }
+

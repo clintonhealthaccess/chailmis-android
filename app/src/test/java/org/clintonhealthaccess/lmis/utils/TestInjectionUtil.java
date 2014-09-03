@@ -38,13 +38,16 @@ import com.google.inject.Module;
 
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import roboguice.inject.RoboInjector;
 
@@ -77,17 +80,30 @@ public class TestInjectionUtil {
 
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase, Module anotherMockedModule) throws IOException {
         final LmisServer mockLmisServer = mock(LmisServer.class);
-        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(context));
+        List<Category> categories = defaultCategories(context);
+        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
+        when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testStockLevels(categories));
         Module mockedModule = new AbstractModule() {
             @Override
             protected void configure() {
                 bind(LmisServer.class).toInstance(mockLmisServer);
             }
         };
-        if(anotherMockedModule != null) {
+        if (anotherMockedModule != null) {
             mockedModule = override(mockedModule).with(anotherMockedModule);
         }
         setUpInjection(testCase, mockedModule);
+    }
+
+    private static Map<Commodity, Integer> testStockLevels(List<Category> categories) {
+        HashMap<Commodity, Integer> result = new HashMap<>();
+        for (Category category : categories) {
+                for (Commodity commodity : category.getNotSavedCommodities()) {
+                    result.put(commodity, 10);
+                }
+
+        }
+        return result;
     }
 
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase) throws IOException {

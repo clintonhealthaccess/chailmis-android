@@ -39,6 +39,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import lombok.Getter;
@@ -70,7 +71,7 @@ public class Commodity implements Serializable {
     private ForeignCollection<StockItem> stockItems;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<CommodityActivity> commodityActivitiesSaved;
+    private Collection<CommodityActivity> commodityActivitiesSaved;
 
     private List<CommodityActivity> commodityActivities = new ArrayList<>();
 
@@ -167,5 +168,11 @@ public class Commodity implements Serializable {
         this.orderFrequency = orderFrequency;
     }
 
-
+    public CommodityActivity getCommodityActivity(String activityType) {
+        for (CommodityActivity commodityActivity : new ArrayList<>(commodityActivitiesSaved)) {
+            if (commodityActivity.getActivityType().equalsIgnoreCase(activityType))
+                return commodityActivity;
+        }
+        return null;
+    }
 }

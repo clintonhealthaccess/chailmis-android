@@ -36,7 +36,12 @@ import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.api.DataValue;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -48,6 +53,10 @@ import org.robolectric.tester.org.apache.http.TestHttpResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +82,12 @@ public class Dhis2Test {
     @Inject
     private Dhis2 dhis2;
 
+    @Inject
+    private CommodityService commodityService;
+
+    @Inject
+    private CategoryService categoryService;
+
     @Before
     public void setUp() throws Exception {
         setUpInjection(this);
@@ -91,6 +106,7 @@ public class Dhis2Test {
         Header authorizationHeader = lastSentHttpRequest.getFirstHeader("Authorization");
         assertThat(authorizationHeader.getValue(), equalTo("Basic dGVzdDpwYXNz"));
     }
+
     @Ignore("WIP")
     @Test
     public void testShouldFetchReasonsForOrder() throws Exception {
@@ -123,9 +139,68 @@ public class Dhis2Test {
         String commodityName = "Cotrimoxazole_suspension";
         assertThat(categories.size(), is(10));
         Category category = categories.get(0);
-        System.out.printf("\n category contains %s\n%n", category.getNotSavedCommodities().get(0).getName());
         assertThat(category.getNotSavedCommodities().size(), is(greaterThan(1)));
         assertThat(category.getName(), is("Antibiotics"));
         assertThat(category.getNotSavedCommodities().get(0).getName(), is(commodityName));
+    }
+
+    @Test
+    public void shouldGetLatestDataValueFromResultForEachDataElement() throws Exception {
+        String orgUnit = "orgnunit";
+        String DATE_FORMAT = "yyyy-MM-dd";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        String startDate = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        String endDate = dateFormat.format(calendar.getTime());
+
+        setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
+        setUpSuccessHttpGetRequest("/api/dataValueSets?dataSet=1ce7aa8c65e&orgUnit=" + orgUnit + "&startDate=" + startDate + "&endDate=" + endDate, "dataValues.json");
+        User user = new User();
+        user.setFacilityCode(orgUnit);
+        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        categoryService.clearCache();
+        List<Commodity> commodities = commodityService.all();
+        assertThat(commodities.size(), greaterThan(0));
+        Map<Commodity, Integer> result = dhis2.fetchStockLevels(commodities, user);
+        String commodityName = "Cotrimoxazole_suspension";
+        String commodityId = "877d0e9f022";
+        Commodity commodity = new Commodity(commodityId, commodityName);
+        assertThat(result.get(commodity), is(271));
+    }
+
+    @Test
+    public void shouldGetMostRecentDataValueForGivenActivity() throws Exception {
+        List<DataValue> dataValues = new ArrayList<>();
+        dataValues.add(DataValue.builder().value("10").period("20131225").dataElement("abc").build());
+        dataValues.add(DataValue.builder().value("11").period("201312").dataElement("abc").build());
+        dataValues.add(DataValue.builder().value("13").period("20131226").dataElement("abc").build());
+        dataValues.add(DataValue.builder().value("14").period("20131227").dataElement("abc4").build());
+        dataValues.add(DataValue.builder().value("14").period("20141227").dataElement("abc3").build());
+        assertThat(dhis2.findMostRecentDataValueForActivity(dataValues, "abc").getValue(), is("13"));
+    }
+
+    @Test
+    public void shouldGetStockLevelsForCommoditiesFromDataValues() throws Exception {
+        List<DataValue> dataValues = new ArrayList<>();
+        String commodityActivityId = "abc";
+        dataValues.add(DataValue.builder().value("10").period("20131225").dataElement(commodityActivityId).build());
+        dataValues.add(DataValue.builder().value("11").period("201312").dataElement(commodityActivityId).build());
+        dataValues.add(DataValue.builder().value("13").period("20131226").dataElement(commodityActivityId).build());
+        dataValues.add(DataValue.builder().value("14").period("20131227").dataElement("abc4").build());
+        dataValues.add(DataValue.builder().value("14").period("20141227").dataElement("abc3").build());
+
+
+        List<Commodity> commodities = new ArrayList<>();
+        Commodity commodity = new Commodity("commodity");
+        CommodityActivity activity = new CommodityActivity(commodity, commodityActivityId, "commodity_receive_stock", "CURRENT_STOCK");
+        ArrayList<CommodityActivity> commodityActivities = new ArrayList<>();
+        commodityActivities.add(activity);
+        commodity.setCommodityActivitiesSaved(commodityActivities);
+        commodities.add(commodity);
+        Map<Commodity, Integer> result = dhis2.fetchStockLevelsForCommodities(commodities, dataValues);
+        assertThat(result.get(commodity), is(13));
+
     }
 }
