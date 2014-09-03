@@ -46,13 +46,11 @@ import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
@@ -60,7 +58,6 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
@@ -80,12 +77,11 @@ public class OrderServiceTest {
     private UserService mockUserService;
     private LmisSqliteOpenHelper openHelper;
     private AndroidConnectionSource connectionSource;
-    private String responseBody = "{\"order_reasons\":[\"Emergency\",\"Routine\"],\"unexpected_quantity_reasons\":[\"High Demand\",\"Losses\"]}";
-
-    private OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
-    private OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
-    private OrderReason highDemand = new OrderReason("High Demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
-    private OrderReason losses = new OrderReason("Losses", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+    private String responseBody =
+            "{\"optionSets\":[{\"id\":\"61a2525ca8d\",\"name\":\"Reasons For Order\",\"options\":[\"HIGH DEMAND\",\"LOSSES\",\"EXPIRIES\"]}]}";
+    private OrderReason highDemand = new OrderReason("HIGH DEMAND");
+    private OrderReason losses = new OrderReason("LOSSES");
+    private OrderReason expiries = new OrderReason("EXPIRIES");
 
     private Dao<OrderItem, String> orderItemDao;
     private Dao<OrderReason, ?> reasonDao;
@@ -119,49 +115,11 @@ public class OrderServiceTest {
 
         orderService.syncReasons();
 
-        HashMap<String, Object> queryParams = new HashMap<>();
-        queryParams.put("type", OrderReason.ORDER_REASONS_JSON_KEY);
-        List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
-
-        assertThat(orderReasons, contains(emergency, routine));
+        List<OrderReason> orderReasons = reasonDao.queryForAll();
+        System.out.println("Available Reasons" + orderReasons);
+        assertThat(orderReasons, contains(highDemand, losses, expiries));
     }
 
-    @Ignore("WIP")
-    @Test
-    public void shouldGetReasonsForUnexpectedOrderQuantitiesFromDHIS2AndSaveThem() throws Exception {
-        addPendingHttpResponse(200, responseBody);
-
-        orderService.syncReasons();
-
-        HashMap<String, Object> queryParams = new HashMap<>();
-        queryParams.put("type", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
-        List<OrderReason> orderReasons = reasonDao.queryForFieldValues(queryParams);
-
-        assertThat(orderReasons, contains(highDemand, losses));
-    }
-
-    @Ignore("WIP")
-    @Test
-    public void shouldReplaceAllReasonsInDatabaseAfterFetch() throws Exception {
-        addPendingHttpResponse(200, responseBody);
-        orderService.syncReasons();
-        assertThat(reasonDao.countOf(), is(4L));
-
-        addPendingHttpResponse(200, responseBody);
-        orderService.syncReasons();
-        assertThat(reasonDao.countOf(), is(4L));
-    }
-
-    @Ignore("WIP")
-    @Test
-    public void shouldProvideAllReasonsForOrders() {
-        addPendingHttpResponse(200, responseBody);
-        orderService.syncReasons();
-
-        List<OrderReason> reasons = orderService.allOrderReasons();
-        assertThat(reasons, containsInAnyOrder(emergency, routine, losses, highDemand));
-
-    }
 
     @Test
     public void shouldPersistAnOrder() throws SQLException {
@@ -176,11 +134,11 @@ public class OrderServiceTest {
         commodityViewModel.setOrderPeriodStartDate(new Date());
         commodityViewModel.setOrderPeriodEndDate(new Date());
 
-        OrderReason emergency = new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY);
+        OrderReason emergency = new OrderReason("Emergency");
         reasonDao.create(emergency);
         commodityViewModel.setReasonForOrder(emergency);
 
-        OrderReason highDemand = new OrderReason("High demand", OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
+        OrderReason highDemand = new OrderReason("High demand");
         reasonDao.create(highDemand);
         commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
 

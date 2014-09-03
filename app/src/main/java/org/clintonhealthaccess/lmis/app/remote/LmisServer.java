@@ -42,8 +42,10 @@ public interface LmisServer {
 
     List<Category> fetchCommodities(User user);
 
-    java.util.Map<String, List<String>> fetchOrderReasons(User user);
+    List<String> fetchOrderReasons(User user);
 
-    Map<Commodity,Integer> fetchStockLevels(List<Commodity> allCommodities, User user);
+    List<String> fetchOrderTypes(User user);
+
+    Map<Commodity, Integer> fetchStockLevels(List<Commodity> allCommodities, User user);
 
 }

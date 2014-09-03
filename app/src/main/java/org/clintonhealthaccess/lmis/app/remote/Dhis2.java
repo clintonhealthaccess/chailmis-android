@@ -45,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
@@ -145,11 +146,18 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public Map<String, List<String>> fetchOrderReasons(User user) {
-        Map<String, List<String>> reasons = new HashMap<>();
-        reasons.put("order_reasons", Arrays.asList("Emergency", "Routine"));
-        reasons.put("unexpected_quantity_reasons", Arrays.asList("Losses", "Expiries", "High Demand"));
-        return reasons;
+    public List<String> fetchOrderReasons(User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        OptionSetResponse optionSetResponse = service.searchOptionSets("order", "name,id,options");
+        List<String> optionSets = new ArrayList<>();
+        if (optionSetResponse.getOptionSets() != null && optionSetResponse.getOptionSets().size() > 0)
+            optionSets = optionSetResponse.getOptionSets().get(0).getOptions();
+        return optionSets;
+    }
+
+    @Override
+    public List<String> fetchOrderTypes(User user) {
+        return null;
     }
 
     @Override

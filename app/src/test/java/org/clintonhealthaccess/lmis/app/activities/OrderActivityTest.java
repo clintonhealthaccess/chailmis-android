@@ -91,7 +91,7 @@ public class OrderActivityTest {
     @Before
     public void setUp() throws Exception {
         orderServiceMock = mock(OrderService.class);
-        List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Emergency", OrderReason.ORDER_REASONS_JSON_KEY));
+        List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Emergency"));
         when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
         when(orderServiceMock.getNextSRVNumber()).thenReturn(TEST_SRV_NUMBER);
         userService = mock(UserService.class);

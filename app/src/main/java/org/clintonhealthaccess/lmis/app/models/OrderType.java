@@ -32,51 +32,20 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "orderReasons")
-public class OrderReason {
-
-    public static final String ROUTINE = "Routine";
+@DatabaseTable
+public class OrderType {
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
     @DatabaseField(canBeNull = false)
-    private String reason;
+    private String name;
 
-
-    public OrderReason() {
-        //Orm lite wants it
+    public OrderType() {
+        //Orm lite likes this
     }
 
-    public OrderReason(String reason) {
-        this.reason = reason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderReason)) return false;
-
-        OrderReason that = (OrderReason) o;
-
-        if (!reason.equals(that.reason)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return reason.hashCode();
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderReason{" +
-                "reason='" + reason + '\'' +
-                '}';
+    public OrderType(String name) {
+        this.name = name;
     }
 }

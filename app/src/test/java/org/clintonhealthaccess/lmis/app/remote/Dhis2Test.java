@@ -62,8 +62,6 @@ import java.util.Map;
 
 import roboguice.inject.InjectResource;
 
-import static org.clintonhealthaccess.lmis.app.models.OrderReason.ORDER_REASONS_JSON_KEY;
-import static org.clintonhealthaccess.lmis.app.models.OrderReason.UNEXPECTED_QUANTITY_JSON_KEY;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -112,11 +110,10 @@ public class Dhis2Test {
     public void testShouldFetchReasonsForOrder() throws Exception {
         setUpSuccessHttpGetRequest("/api/systemSettings/reasons_for_order", "systemSettingForReasonsForOrder.json");
 
-        Map<String, List<String>> reasons = dhis2.fetchOrderReasons(new User("test", "pass"));
+        List<String> reasons = dhis2.fetchOrderReasons(new User("test", "pass"));
 
-        assertThat(reasons.size(), is(2));
-        assertThat(reasons.get(ORDER_REASONS_JSON_KEY), contains("Emergency", "Routine"));
-        assertThat(reasons.get(UNEXPECTED_QUANTITY_JSON_KEY), contains("High Demand", "Losses", "Expirations", "Adjustments"));
+        assertThat(reasons.size(), is(3));
+        assertThat(reasons, contains("High Demand", "Losses", "Expiries"));
     }
 
     private void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {

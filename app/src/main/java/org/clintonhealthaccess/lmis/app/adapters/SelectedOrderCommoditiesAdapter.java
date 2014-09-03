@@ -45,8 +45,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.base.Predicate;
-
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -58,13 +56,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-import static com.google.common.collect.Collections2.filter;
 import static org.apache.commons.lang3.time.DateUtils.toCalendar;
 
 public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodityViewModel> {
@@ -73,15 +69,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
     public static final String ROUTINE = "Routine";
     public static final int MIN_ORDER_PERIOD = 7;
-    private List<OrderReason> unexpectedOrderReasons;
-    private List<OrderReason> orderReasons;
+    private List<OrderReason> unexpectedOrderReasons = new ArrayList<>();
+    private List<OrderReason> orderTypes;
 
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons) {
         super(context, resource, commodities);
-        unexpectedOrderReasons = filterReasonsWithType(reasons, OrderReason.UNEXPECTED_QUANTITY_JSON_KEY);
-        unexpectedOrderReasons.add(0, new OrderReason(context.getString(R.string.select_reason), "FAKE"));
-        orderReasons = filterReasonsWithType(reasons, OrderReason.ORDER_REASONS_JSON_KEY);
+        unexpectedOrderReasons.addAll(reasons);
+        unexpectedOrderReasons.add(0, new OrderReason(context.getString(R.string.select_reason)));
+        orderTypes = reasons;
     }
 
     @Override
@@ -130,7 +126,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     private void setupSpinners(final OrderCommodityViewModel orderCommodityViewModel, final Spinner spinnerOrderReasons, final Spinner spinnerUnexpectedReasons, final TextView textViewStartDate, final TextView textViewEndDate) {
         spinnerUnexpectedReasons.setPrompt("Select Reason");
         spinnerOrderReasons.setOnItemSelectedListener(new OrderReasonItemSelectedListener(orderCommodityViewModel, spinnerOrderReasons, spinnerUnexpectedReasons, textViewStartDate, textViewEndDate));
-        setupSpinnerData(spinnerOrderReasons, orderReasons, orderCommodityViewModel.getOrderReasonPosition());
+        setupSpinnerData(spinnerOrderReasons, orderTypes, orderCommodityViewModel.getOrderReasonPosition());
         setupUnexpectedReasonsSpinner(spinnerUnexpectedReasons, orderCommodityViewModel);
         setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
     }
@@ -185,7 +181,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         if (position != null) {
             spinner.setSelection(position);
         } else {
-            OrderReason routine = new OrderReason("Routine", OrderReason.ORDER_REASONS_JSON_KEY);
+            OrderReason routine = new OrderReason("Routine");
             if (reasons.contains(routine)) {
                 spinner.setSelection(reasons.indexOf(routine));
             }
@@ -193,7 +189,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     }
 
     private OrderReason getReason(String reasonName) {
-        for (OrderReason reason : orderReasons) {
+        for (OrderReason reason : orderTypes) {
             if (reason.getReason().equals(reasonName)) {
                 return reason;
             }
@@ -212,15 +208,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         }
     }
 
-    private List<OrderReason> filterReasonsWithType(List<OrderReason> reasons, final String type) {
-        Collection<OrderReason> reasonsCollection = filter(reasons, new Predicate<OrderReason>() {
-            @Override
-            public boolean apply(OrderReason reason) {
-                return reason.getType().equals(type);
-            }
-        });
-        return new ArrayList<>(reasonsCollection);
-    }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final OrderCommodityViewModel orderCommodityViewModel) {
         imageButtonCancel.setOnClickListener(new View.OnClickListener() {
