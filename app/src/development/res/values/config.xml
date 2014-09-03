@@ -30,4 +30,5 @@
 
 <resources>
     <string name="dhis2_base_url">http://104.131.225.22:8888/dhis2</string>
+    <!--<string name="dhis2_base_url">http://192.168.56.1:8080/dhis2</string>-->
 </resources>

@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
+import com.google.gson.Gson;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -165,7 +166,7 @@ public class Dhis2 implements LmisServer {
 
         String end = SIMPLE_DATE_FORMAT.format(calendar.getTime());
 
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.add(Calendar.MONTH, -6);
 
         String start = SIMPLE_DATE_FORMAT.format(calendar.getTime());
 
@@ -174,13 +175,11 @@ public class Dhis2 implements LmisServer {
         DataValueSet valueSet = new DataValueSet();
 
         try {
-
             valueSet = service.fetchDataValues(dataSet, user.getFacilityCode(), start, end);
-
+            Gson gson = new Gson();
+            e(SYNC, "values received  " + gson.toJson(valueSet));
         } catch (LmisException exception) {
-
             e(SYNC, "error syncing stock levels");
-
         }
 
         return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());

@@ -82,6 +82,7 @@ public class Dhis2EndPointFactory {
                 .setErrorHandler(new Dhis2ErrorHandler())
                 .setEndpoint(dhis2BaseUrl)
                 .setClient(new ApacheClient())
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
     }
 

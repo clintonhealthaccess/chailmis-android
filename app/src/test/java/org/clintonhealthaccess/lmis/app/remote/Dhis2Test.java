@@ -152,7 +152,7 @@ public class Dhis2Test {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         String end = dateFormat.format(calendar.getTime());
-        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        calendar.add(Calendar.MONTH, -6);
         String start = dateFormat.format(calendar.getTime());
         setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
         setUpSuccessHttpGetRequest("/api/dataValueSets?dataSet=1ce7aa8c65e&orgUnit=" + orgUnit + "&startDate=" + start + "&endDate=" + end, "dataValues.json");
