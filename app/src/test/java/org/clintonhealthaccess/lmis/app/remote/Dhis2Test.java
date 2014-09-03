@@ -151,12 +151,11 @@ public class Dhis2Test {
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        String startDate = dateFormat.format(calendar.getTime());
+        String end = dateFormat.format(calendar.getTime());
         calendar.add(Calendar.DAY_OF_MONTH, -7);
-        String endDate = dateFormat.format(calendar.getTime());
-
+        String start = dateFormat.format(calendar.getTime());
         setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
-        setUpSuccessHttpGetRequest("/api/dataValueSets?dataSet=1ce7aa8c65e&orgUnit=" + orgUnit + "&startDate=" + startDate + "&endDate=" + endDate, "dataValues.json");
+        setUpSuccessHttpGetRequest("/api/dataValueSets?dataSet=1ce7aa8c65e&orgUnit=" + orgUnit + "&startDate=" + start + "&endDate=" + end, "dataValues.json");
         User user = new User();
         user.setFacilityCode(orgUnit);
         commodityService.saveToDatabase(dhis2.fetchCommodities(user));

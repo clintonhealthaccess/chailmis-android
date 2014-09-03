@@ -29,13 +29,14 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
 
 @Data
 public class DataValueSet {
-    private List<DataValue> dataValues;
+    private List<DataValue> dataValues = new ArrayList<>();
     private String dataSet;
 }
 

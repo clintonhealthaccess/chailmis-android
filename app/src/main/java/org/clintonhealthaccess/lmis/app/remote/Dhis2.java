@@ -29,10 +29,9 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
-import android.util.Log;
-
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
@@ -58,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.util.Log.e;
+
 public class Dhis2 implements LmisServer {
     public static final String SYNC = "SYNC";
     @Inject
@@ -82,7 +83,7 @@ public class Dhis2 implements LmisServer {
         List<DataElement> elements = new ArrayList<>();
 
         for (DataSet dataSet : dataSets) {
-            Log.e(SYNC, String.format("DataSet: %s", dataSet.getName()));
+            e(SYNC, String.format("DataSet: %s", dataSet.getName()));
             if (dataSet != null && dataSet.getDataElements() != null) {
                 for (DataElement elm : dataSet.getDataElements()) {
                     elm.setDataSets(new ArrayList<DataSet>(Arrays.asList(dataSet)));
@@ -92,7 +93,7 @@ public class Dhis2 implements LmisServer {
         }
 
         for (DataElement element : elements) {
-            Log.e(SYNC, String.format("DatElement: %s", element.getName()));
+            e(SYNC, String.format("DatElement: %s", element.getName()));
             getOrCreateCommodity(element, commodities, categories);
 
         }
@@ -162,15 +163,25 @@ public class Dhis2 implements LmisServer {
 
         calendar.setTime(new Date());
 
-        String startDate = SIMPLE_DATE_FORMAT.format(calendar.getTime());
+        String end = SIMPLE_DATE_FORMAT.format(calendar.getTime());
 
         calendar.add(Calendar.DAY_OF_MONTH, -7);
 
-        String endDate = SIMPLE_DATE_FORMAT.format(calendar.getTime());
+        String start = SIMPLE_DATE_FORMAT.format(calendar.getTime());
 
         String dataSet = commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet();
 
-        DataValueSet valueSet = service.fetchDataValues(dataSet, user.getFacilityCode(), startDate, endDate);
+        DataValueSet valueSet = new DataValueSet();
+
+        try {
+
+            valueSet = service.fetchDataValues(dataSet, user.getFacilityCode(), start, end);
+
+        } catch (LmisException exception) {
+
+            e(SYNC, "error syncing stock levels");
+
+        }
 
         return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
     }

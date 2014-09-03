@@ -47,6 +47,7 @@ import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
+import static org.apache.http.HttpStatus.SC_INTERNAL_SERVER_ERROR;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 
@@ -56,6 +57,9 @@ public class Dhis2EndPointFactory {
 
     @InjectResource(R.string.url_not_found)
     private String urlNotFound;
+
+    @InjectResource(R.string.internal_server_error)
+    private String internalServerError;
 
     @InjectResource(R.string.message_network_error)
     private String messageNetworkError;
@@ -99,9 +103,14 @@ public class Dhis2EndPointFactory {
             }
 
             int statusCode = cause.getResponse().getStatus();
+
             if (statusCode == SC_NOT_FOUND) {
                 i("Failed attempt to login.", "Response code : " + statusCode);
                 return new LmisException(urlNotFound);
+            }
+            if (statusCode == SC_INTERNAL_SERVER_ERROR) {
+                i("Internal Server Error", "Response code : " + statusCode);
+                return new LmisException(internalServerError);
             }
             if (statusCode != SC_OK) {
                 i("Failed attempt to login.", "Response code : " + statusCode);

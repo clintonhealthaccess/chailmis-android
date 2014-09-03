@@ -120,5 +120,6 @@
     <string name="help">HELP</string>
     <string name="srv_number">SRV Number</string>
     <string name="url_not_found">Url Not Found</string>
+    <string name="internal_server_error">Internal Server Error</string>
 
 </resources>
