@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,28 +28,11 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.remote;
+package org.clintonhealthaccess.lmis.app.models.api;
 
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
+import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
-
-public interface LmisServer {
-    UserProfile validateLogin(User user);
-
-    List<Category> fetchCommodities(User user);
-
-    List<String> fetchOrderReasons(User user);
-
-    List<String> fetchOrderTypes(User user);
-
-    Map<Commodity, Integer> fetchStockLevels(List<Commodity> allCommodities, User user);
-
-    DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
+@Data
+public class DataValueCount {
+    private double imported, updated, ignored, deleted;
 }

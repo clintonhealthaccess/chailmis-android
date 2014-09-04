@@ -50,9 +50,19 @@ public class LMISTestCase {
         Robolectric.addPendingHttpResponse(200, rootDataSetJson);
     }
 
+    protected void setUpSuccessHttpPostRequest(int i, String fixtureFile) throws IOException {
+        String rootDataSetJson = readFixtureFile(fixtureFile);
+        Robolectric.addPendingHttpResponse(200, rootDataSetJson);
+    }
+
     protected void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {
         String rootDataSetJson = readFixtureFile(fixtureFile);
         Robolectric.addHttpResponseRule("GET", String.format("%s%s", dhis2BaseUrl, uri), new TestHttpResponse(200, rootDataSetJson));
+    }
+
+    protected void setUpSuccessHttpPostRequest(String uri, String fixtureFile) throws IOException {
+        String rootDataSetJson = readFixtureFile(fixtureFile);
+        Robolectric.addHttpResponseRule("POST", String.format("%s%s", dhis2BaseUrl, uri), new TestHttpResponse(200, rootDataSetJson));
     }
 
     private String readFixtureFile(String fileName) throws IOException {

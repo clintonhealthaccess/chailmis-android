@@ -29,6 +29,7 @@
 
 <resources>
     <string name="app_name">DHIS2 LMIS</string>
+    <integer name="sync_interval">60</integer>
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
     <string name="title_activity_home">DHIS2 LMIS</string>

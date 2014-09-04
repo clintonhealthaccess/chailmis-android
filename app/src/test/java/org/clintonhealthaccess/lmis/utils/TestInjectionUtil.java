@@ -36,15 +36,19 @@ import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 
+import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +87,7 @@ public class TestInjectionUtil {
         List<Category> categories = defaultCategories(context);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
         when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testStockLevels(categories));
+        when(mockLmisServer.pushDataValueSet((DataValueSet) anyObject(), (User) anyObject())).thenReturn(fakePushDataValuesResponse());
         Module mockedModule = new AbstractModule() {
             @Override
             protected void configure() {
@@ -95,12 +100,22 @@ public class TestInjectionUtil {
         setUpInjection(testCase, mockedModule);
     }
 
+    private static DataValueSetPushResponse fakePushDataValuesResponse() {
+        try {
+            String json = readFixtureFile("successfulSnapshotPush.json");
+            return new Gson().fromJson(json, DataValueSetPushResponse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static Map<Commodity, Integer> testStockLevels(List<Category> categories) {
         HashMap<Commodity, Integer> result = new HashMap<>();
         for (Category category : categories) {
-                for (Commodity commodity : category.getNotSavedCommodities()) {
-                    result.put(commodity, 10);
-                }
+            for (Commodity commodity : category.getNotSavedCommodities()) {
+                result.put(commodity, 10);
+            }
 
         }
         return result;
@@ -114,5 +129,13 @@ public class TestInjectionUtil {
         InputStream src = context.getAssets().open("default_commodities.json");
         String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
         return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
+    }
+
+    private static String readFixtureFile(String fileName) throws IOException {
+        URL url = TestInjectionUtil.class.getClassLoader().getResource("fixtures/" + fileName);
+        InputStream src = url.openStream();
+        String content = IOUtils.toString(src);
+        src.close();
+        return content;
     }
 }

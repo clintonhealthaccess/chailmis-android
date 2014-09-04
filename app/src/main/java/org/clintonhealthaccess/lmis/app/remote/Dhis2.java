@@ -49,6 +49,7 @@ import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSet;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
@@ -211,6 +212,12 @@ public class Dhis2 implements LmisServer {
         }
 
         return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
+    }
+
+    @Override
+    public DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        return service.pushDataValueSet(valueSet);
     }
 
     public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {

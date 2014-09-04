@@ -59,6 +59,9 @@ public class SyncManager {
     @InjectResource(R.string.sync_account_type)
     private String syncAccountType;
 
+    @InjectResource(R.integer.sync_interval)
+    private Integer syncInterval;
+
     public void kickOff() {
         Account[] accounts = accountManager.getAccounts();
         i("###### amount of accounts : ", valueOf(accounts.length));
@@ -70,7 +73,7 @@ public class SyncManager {
     private void kickOffFor(Account account) {
         setIsSyncable(account, syncContentAuthority, 1);
         setSyncAutomatically(account, syncContentAuthority, true);
-        addPeriodicSync(account, syncContentAuthority, periodicSyncParams(), 60);
+        addPeriodicSync(account, syncContentAuthority, periodicSyncParams(), syncInterval);
         i("==> auto sync enabled to : ", account.name);
     }
 

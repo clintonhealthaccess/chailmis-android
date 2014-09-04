@@ -35,13 +35,25 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.api.DataValue;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static android.util.Log.e;
+import static android.util.Log.i;
 
 public class DailyCommoditySnapshotService {
 
@@ -52,6 +64,10 @@ public class DailyCommoditySnapshotService {
 
     @Inject
     Context context;
+
+    @Inject
+    private LmisServer lmisServer;
+
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<DailyCommoditySnapshot>(DailyCommoditySnapshot.class, context);
@@ -115,5 +131,51 @@ public class DailyCommoditySnapshotService {
         cal.set(Calendar.SECOND, Calendar.getInstance().getActualMaximum(Calendar.SECOND));
         cal.set(Calendar.MILLISECOND, Calendar.getInstance().getActualMaximum(Calendar.MILLISECOND));
         return cal.getTime();
+    }
+
+    public void syncWithServer(User user) {
+        List<DailyCommoditySnapshot> snapshotsToSync = getUnSyncedSnapshots();
+        if (Helpers.collectionIsNotEmpty(snapshotsToSync)) {
+            i("==> Syncing...........", snapshotsToSync.size() + " snapshots");
+            DataValueSet valueSet = getDataValueSetFromSnapshots(snapshotsToSync, user.getFacilityCode());
+            try {
+                DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
+                if (response.isSuccess()) {
+                    markSnapShotsAsSynced(snapshotsToSync);
+                }
+            } catch (LmisException ex) {
+                e("==> Syncing...........", snapshotsToSync.size() + " snapshots failed");
+            }
+
+
+        }
+
+    }
+
+    private void markSnapShotsAsSynced(final List<DailyCommoditySnapshot> snapshotsToSync) {
+
+        GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<DailyCommoditySnapshot>(DailyCommoditySnapshot.class, context);
+        for (DailyCommoditySnapshot snapshot : snapshotsToSync) {
+            snapshot.setSynced(true);
+            dailyCommoditySnapshotDao.update(snapshot);
+        }
+
+    }
+
+    protected DataValueSet getDataValueSetFromSnapshots(List<DailyCommoditySnapshot> snapshotsToSync, String orgUnit) {
+        DataValueSet dataValueSet = new DataValueSet();
+        dataValueSet.setDataValues(new ArrayList<DataValue>());
+
+        String dateFormat = "yyyyMMdd";
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+
+        for (DailyCommoditySnapshot snapshot : snapshotsToSync) {
+            DataValue dataValue = DataValue.builder().value(String.valueOf(snapshot.getValue())).
+                    dataElement(snapshot.getCommodityActivity().getId()).
+                    period(simpleDateFormat.format(snapshot.getDate())).orgUnit(orgUnit).build();
+            dataValueSet.getDataValues().add(dataValue);
+        }
+        return dataValueSet;
     }
 }

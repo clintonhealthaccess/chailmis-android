@@ -37,10 +37,13 @@ import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
@@ -76,5 +79,7 @@ public interface Dhis2Endpoint {
     @GET("/api/categoryCombos")
     CategoryComboSearchResponse searchCategoryCombos(@Query("query") String query, @Query("fields") String fields);
 
+    @POST("/api/dataValueSets")
+    DataValueSetPushResponse pushDataValueSet(@Body DataValueSet valueSet);
 }
   

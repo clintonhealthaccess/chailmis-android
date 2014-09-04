@@ -39,7 +39,10 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.services.DailyCommoditySnapshotService;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.RoboGuice;
 
@@ -50,6 +53,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Inject
     DbUtil dbUtil;
+    @Inject
+    DailyCommoditySnapshotService dailyCommoditySnapshotService;
+
+    @Inject
+    UserService userService;
+
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -60,7 +69,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         i("==> Syncing...........", account.name);
-
+        User user = userService.getRegisteredUser();
+        dailyCommoditySnapshotService.syncWithServer(user);
 
     }
 }
