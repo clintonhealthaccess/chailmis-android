@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,59 +28,38 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.utils;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.io.IOUtils;
+import org.clintonhealthaccess.lmis.app.R;
+import org.robolectric.Robolectric;
+import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
-@DatabaseTable(tableName = "orderReasons")
-public class OrderReason {
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
-    public static final String ROUTINE = "Routine";
-    public static final String HIGH_DEMAND = "HIGH DEMAND";
-    public static final String LOSSES = "LOSSES";
-    public static final String EXPIRIES = "EXPIRIES";
+import roboguice.inject.InjectResource;
 
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
+public class LMISTestCase {
+    @InjectResource(R.string.dhis2_base_url)
+    protected String dhis2BaseUrl;
 
-    @DatabaseField(canBeNull = false)
-    private String reason;
-
-
-    public OrderReason() {
-        //Orm lite wants it
+    protected void setUpSuccessHttpGetRequest(int i, String fixtureFile) throws IOException {
+        String rootDataSetJson = readFixtureFile(fixtureFile);
+        Robolectric.addPendingHttpResponse(200, rootDataSetJson);
     }
 
-    public OrderReason(String reason) {
-        this.reason = reason;
+    protected void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {
+        String rootDataSetJson = readFixtureFile(fixtureFile);
+        Robolectric.addHttpResponseRule("GET", String.format("%s%s", dhis2BaseUrl, uri), new TestHttpResponse(200, rootDataSetJson));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderReason)) return false;
-
-        OrderReason that = (OrderReason) o;
-
-        if (!reason.equals(that.reason)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return reason.hashCode();
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderReason{" +
-                "reason='" + reason + '\'' +
-                '}';
+    private String readFixtureFile(String fileName) throws IOException {
+        URL url = this.getClass().getClassLoader().getResource("fixtures/" + fileName);
+        InputStream src = url.openStream();
+        String content = IOUtils.toString(src);
+        src.close();
+        return content;
     }
 }

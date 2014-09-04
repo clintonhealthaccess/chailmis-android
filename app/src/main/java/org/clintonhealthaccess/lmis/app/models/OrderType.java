@@ -35,6 +35,8 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class OrderType {
 
+    public static final String ROUTINE = "ROUTINE";
+    public static final String EMERGENCY = "EMERGENCY";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -43,6 +45,31 @@ public class OrderType {
 
     public OrderType() {
         //Orm lite likes this
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderType orderType = (OrderType) o;
+
+        if (!name.equals(orderType.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "OrderType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public OrderType(String name) {

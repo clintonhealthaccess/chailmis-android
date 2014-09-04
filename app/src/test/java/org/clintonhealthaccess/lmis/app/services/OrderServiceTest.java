@@ -40,9 +40,11 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -66,7 +68,7 @@ import static org.robolectric.Robolectric.addPendingHttpResponse;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class OrderServiceTest {
+public class OrderServiceTest extends LMISTestCase {
 
     @Inject
     private OrderService orderService;
@@ -85,9 +87,12 @@ public class OrderServiceTest {
 
     private Dao<OrderItem, String> orderItemDao;
     private Dao<OrderReason, ?> reasonDao;
+    private Dao<OrderType, ?> orderTypeDao;
     private Dao<Order, String> orderDao;
     private Dao<Commodity, String> commodityDao;
     private Dao<Category, ?> categoryDao;
+    private OrderType Routine = new OrderType("ROUTINE");
+    private OrderType Emergency = new OrderType("EMERGENCY");
 
     @Before
     public void setUp() throws SQLException {
@@ -107,19 +112,24 @@ public class OrderServiceTest {
         orderItemDao = createDao(connectionSource, OrderItem.class);
         commodityDao = createDao(connectionSource, Commodity.class);
         categoryDao = createDao(connectionSource, Category.class);
+        orderTypeDao = createDao(connectionSource, OrderType.class);
     }
 
     @Test
     public void shouldGetReasonsForOrderFromDHIS2AndSaveThem() throws Exception {
         addPendingHttpResponse(200, responseBody);
-
-        orderService.syncReasons();
-
+        orderService.syncOrderReasons();
         List<OrderReason> orderReasons = reasonDao.queryForAll();
-        System.out.println("Available Reasons" + orderReasons);
         assertThat(orderReasons, contains(highDemand, losses, expiries));
     }
 
+    @Test
+    public void shouldGetTypesOfOrderFromDHIS2AndSaveThem() throws Exception {
+        setUpSuccessHttpGetRequest(200, "orderTypes.json");
+        orderService.syncOrderTypes();
+        List<OrderType> orderTypes = orderTypeDao.queryForAll();
+        assertThat(orderTypes, contains(Routine, Emergency));
+    }
 
     @Test
     public void shouldPersistAnOrder() throws SQLException {

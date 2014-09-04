@@ -119,7 +119,7 @@ public class RegisterActivityTest {
     @Test
     public void shouldInitialiseOrderReasonsOnSuccessfulRegistration() {
         performSuccessfulRegistration();
-        verify(mockOrderService, times(1)).syncReasons();
+        verify(mockOrderService, times(1)).syncOrderReasons();
     }
 
     private void performSuccessfulRegistration() {

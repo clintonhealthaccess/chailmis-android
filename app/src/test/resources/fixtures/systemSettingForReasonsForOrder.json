@@ -1,1 +1,14 @@
-{"order_reasons":["Emergency","Routine"],"unexpected_quantity_reasons":["High Demand","Losses","Expirations","Adjustments"]}
+{
+    "optionSets": [
+        {
+            "id": "61a2525ca8d",
+            "name": "Reasons For Order",
+            "options": [
+                "HIGH DEMAND",
+                "LOSSES",
+                "EXPIRIES"
+            ]
+        }
+    ]
+
+}

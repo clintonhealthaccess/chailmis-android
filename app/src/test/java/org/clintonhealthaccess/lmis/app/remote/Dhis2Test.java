@@ -31,28 +31,25 @@ package org.clintonhealthaccess.lmis.app.remote;
 
 import com.google.inject.Inject;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,22 +57,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import roboguice.inject.InjectResource;
-
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.robolectric.Robolectric.addHttpResponseRule;
 import static org.robolectric.Robolectric.addPendingHttpResponse;
 import static org.robolectric.Robolectric.getSentHttpRequest;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class Dhis2Test {
-    @InjectResource(R.string.dhis2_base_url)
-    private String dhis2BaseUrl;
+public class Dhis2Test extends LMISTestCase {
 
     @Inject
     private Dhis2 dhis2;
@@ -105,33 +97,26 @@ public class Dhis2Test {
         assertThat(authorizationHeader.getValue(), equalTo("Basic dGVzdDpwYXNz"));
     }
 
-    @Ignore("WIP")
     @Test
     public void testShouldFetchReasonsForOrder() throws Exception {
-        setUpSuccessHttpGetRequest("/api/systemSettings/reasons_for_order", "systemSettingForReasonsForOrder.json");
-
+        setUpSuccessHttpGetRequest(200, "systemSettingForReasonsForOrder.json");
         List<String> reasons = dhis2.fetchOrderReasons(new User("test", "pass"));
-
         assertThat(reasons.size(), is(3));
-        assertThat(reasons, contains("High Demand", "Losses", "Expiries"));
+        assertThat(reasons, contains(OrderReason.HIGH_DEMAND, OrderReason.LOSSES, OrderReason.EXPIRIES));
     }
 
-    private void setUpSuccessHttpGetRequest(String uri, String fixtureFile) throws IOException {
-        String rootDataSetJson = readFixtureFile(fixtureFile);
-        addHttpResponseRule("GET", String.format("%s%s", dhis2BaseUrl, uri), new TestHttpResponse(200, rootDataSetJson));
-    }
 
-    private String readFixtureFile(String fileName) throws IOException {
-        URL url = this.getClass().getClassLoader().getResource("fixtures/" + fileName);
-        InputStream src = url.openStream();
-        String content = IOUtils.toString(src);
-        src.close();
-        return content;
+    @Test
+    public void testShouldFetchOrderTypes() throws Exception {
+        setUpSuccessHttpGetRequest(200, "orderTypes.json");
+        List<String> reasons = dhis2.fetchOrderTypes(new User("test", "pass"));
+        assertThat(reasons.size(), is(2));
+        assertThat(reasons, contains(OrderType.ROUTINE, OrderType.EMERGENCY));
     }
 
     @Test
     public void shouldFetchCommoditiesFromAPIServiceEndPoint() throws Exception {
-        setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
         List<Category> categories = dhis2.fetchCommodities(new User());
         String commodityName = "Cotrimoxazole_suspension";
         assertThat(categories.size(), is(10));

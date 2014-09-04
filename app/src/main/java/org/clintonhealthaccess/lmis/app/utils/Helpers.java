@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,59 +28,12 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.utils;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import java.util.Collection;
 
-@DatabaseTable(tableName = "orderReasons")
-public class OrderReason {
-
-    public static final String ROUTINE = "Routine";
-    public static final String HIGH_DEMAND = "HIGH DEMAND";
-    public static final String LOSSES = "LOSSES";
-    public static final String EXPIRIES = "EXPIRIES";
-
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = false)
-    private String reason;
-
-
-    public OrderReason() {
-        //Orm lite wants it
-    }
-
-    public OrderReason(String reason) {
-        this.reason = reason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof OrderReason)) return false;
-
-        OrderReason that = (OrderReason) o;
-
-        if (!reason.equals(that.reason)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return reason.hashCode();
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderReason{" +
-                "reason='" + reason + '\'' +
-                '}';
+public class Helpers {
+    public static boolean collectionIsNotEmpty(Collection collection) {
+        return collection != null && collection.size() > 0;
     }
 }

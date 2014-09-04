@@ -146,7 +146,8 @@ public class RegisterActivity extends RoboActionBarActivity {
                 return false;
             }
             commodityService.initialise(user);
-            orderService.syncReasons();
+            orderService.syncOrderReasons();
+            orderService.syncOrderTypes();
             return true;
         }
 

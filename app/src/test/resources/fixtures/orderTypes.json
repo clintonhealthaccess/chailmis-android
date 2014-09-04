@@ -1,0 +1,30 @@
+{
+
+    "categoryCombos": [
+        {
+            "id": "06c1a54babd",
+            "name": "TYPE_OF_ORDER_CATEGORY_COMBINATION",
+            "categories": [
+                {
+                    "id": "81cac718929",
+                    "name": "TYPE_OF_ORDER",
+                    "categoryOptions": [
+                        {
+                            "id": "2e2a8c79a7a",
+                            "name": "ROUTINE",
+                            "created": "2014-09-02T08:28:41.130+0000",
+                            "lastUpdated": "2014-09-02T08:28:42.351+0000"
+                        },
+                        {
+                            "id": "1d9e8d5522f",
+                            "name": "EMERGENCY",
+                            "created": "2014-09-02T08:28:41.130+0000",
+                            "lastUpdated": "2014-09-02T08:28:42.376+0000"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+
+}

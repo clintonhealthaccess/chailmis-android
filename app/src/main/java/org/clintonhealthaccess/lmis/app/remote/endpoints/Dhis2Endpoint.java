@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.remote.endpoints;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
+import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -71,6 +72,9 @@ public interface Dhis2Endpoint {
 
     @GET("/api/optionSets")
     OptionSetResponse searchOptionSets(@Query("query") String query, @Query("fields") String fields);
+
+    @GET("/api/categoryCombos")
+    CategoryComboSearchResponse searchCategoryCombos(@Query("query") String query, @Query("fields") String fields);
 
 }
   

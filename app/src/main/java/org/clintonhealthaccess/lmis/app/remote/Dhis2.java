@@ -40,15 +40,21 @@ import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
+import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
+import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
+import org.clintonhealthaccess.lmis.app.models.api.CategoryOption;
+import org.clintonhealthaccess.lmis.app.models.api.DHISCategory;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import org.clintonhealthaccess.lmis.app.models.api.OptionSet;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -150,14 +156,28 @@ public class Dhis2 implements LmisServer {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         OptionSetResponse optionSetResponse = service.searchOptionSets("order", "name,id,options");
         List<String> optionSets = new ArrayList<>();
-        if (optionSetResponse.getOptionSets() != null && optionSetResponse.getOptionSets().size() > 0)
-            optionSets = optionSetResponse.getOptionSets().get(0).getOptions();
+        List<OptionSet> optionSetList = optionSetResponse.getOptionSets();
+        if (Helpers.collectionIsNotEmpty(optionSetList))
+            optionSets = optionSetList.get(0).getOptions();
         return optionSets;
     }
 
     @Override
     public List<String> fetchOrderTypes(User user) {
-        return null;
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        List<String> types = new ArrayList<>();
+        CategoryComboSearchResponse response = service.searchCategoryCombos("order", "name,id,categories[id,name,categoryOptions]");
+        List<CategoryCombo> categoryCombos = response.getCategoryCombos();
+        if (Helpers.collectionIsNotEmpty(categoryCombos)) {
+            List<DHISCategory> categories = categoryCombos.get(0).getCategories();
+            if (Helpers.collectionIsNotEmpty(categories)) {
+                for (CategoryOption option : categories.get(0).getCategoryOptions()) {
+                    types.add(option.getName());
+                }
+            }
+        }
+
+        return types;
     }
 
     @Override

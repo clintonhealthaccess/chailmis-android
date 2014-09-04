@@ -35,6 +35,7 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
@@ -51,10 +52,9 @@ public class OrderService implements OrderItemSaver {
     @Inject
     private DbUtil dbUtil;
 
-    public List<OrderReason> syncReasons() {
+    public List<OrderReason> syncOrderReasons() {
         final ArrayList<OrderReason> savedReasons = new ArrayList<>();
         final List<String> reasons = lmisServer.fetchOrderReasons(userService.getRegisteredUser());
-        System.out.println("reasons :" + reasons);
         dbUtil.withDao(OrderReason.class, new DbUtil.Operation<OrderReason, Void>() {
             @Override
             public Void operate(Dao<OrderReason, String> dao) throws SQLException {
@@ -133,5 +133,25 @@ public class OrderService implements OrderItemSaver {
                 return null;
             }
         });
+    }
+
+    public ArrayList<OrderType> syncOrderTypes() {
+        final ArrayList<OrderType> orderTypes = new ArrayList<>();
+        final List<String> reasons = lmisServer.fetchOrderTypes(userService.getRegisteredUser());
+        dbUtil.withDao(OrderType.class, new DbUtil.Operation<OrderType, Void>() {
+            @Override
+            public Void operate(Dao<OrderType, String> dao) throws SQLException {
+                dao.delete(dao.queryForAll());
+                for (String reason : reasons) {
+                    OrderType data = new OrderType(reason);
+                    dao.create(data);
+                    orderTypes.add(data);
+                }
+
+                return null;
+            }
+        });
+
+        return orderTypes;
     }
 }
