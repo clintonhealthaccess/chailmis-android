@@ -47,13 +47,6 @@
         android:layout_toLeftOf="@id/imageButtonCancel"
         android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/spinnerOrderReasons"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:baselineAligned="false"
-            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/textViewStartDate"

@@ -41,7 +41,6 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
     private int unexpectedReasonPosition;
-    private OrderReason reasonForOrder;
     private OrderReason reasonForUnexpectedOrderQuantity;
 
     public OrderCommodityViewModel(Commodity commodity) {
@@ -96,13 +95,6 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
         this.unexpectedReasonPosition = unexpectedReasonPosition;
     }
 
-    public OrderReason getReasonForOrder() {
-        return reasonForOrder;
-    }
-
-    public void setReasonForOrder(OrderReason reasonForOrder) {
-        this.reasonForOrder = reasonForOrder;
-    }
 
     public OrderReason getReasonForUnexpectedOrderQuantity() {
         return reasonForUnexpectedOrderQuantity;
@@ -117,14 +109,11 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     }
 
 
-    public boolean isUnexpectedReasonsSpinnerVisible(String dateText, Date actualDate) {
-        boolean reasonIsRoutine = reasonIsRoutine();
-
-        if (!reasonIsRoutine) {
+    public boolean isUnexpectedReasonsSpinnerVisible(String dateText, Date actualDate, boolean typeIsRoutine) {
+        if (!typeIsRoutine) {
             return true;
         }
-
-        if (actualDate != null && dateText != null && reasonIsRoutine) {
+        if (actualDate != null && dateText != null && typeIsRoutine) {
             if (!dateText.equalsIgnoreCase(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(actualDate)))
                 return true;
         }
@@ -151,8 +140,5 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
         return orderCycle;
     }
 
-    private boolean reasonIsRoutine() {
-        return this.getReasonForOrder() != null && this.getReasonForOrder().getReason().equalsIgnoreCase(OrderReason.ROUTINE);
-    }
 
 }

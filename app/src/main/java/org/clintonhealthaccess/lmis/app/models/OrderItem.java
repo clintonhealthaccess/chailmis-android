@@ -55,9 +55,6 @@ public class OrderItem {
     @DatabaseField(foreign = true, canBeNull = false)
     private Order order;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-    private OrderReason reasonForOrder;
-
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private OrderReason reasonForUnexpectedQuantity;
 
@@ -70,7 +67,6 @@ public class OrderItem {
         this.startDate = commodityViewModel.getOrderPeriodStartDate();
         this.endDate = commodityViewModel.getOrderPeriodEndDate();
         this.quantity = commodityViewModel.getQuantityEntered();
-        this.reasonForOrder = commodityViewModel.getReasonForOrder();
         this.reasonForUnexpectedQuantity = commodityViewModel.getReasonForUnexpectedOrderQuantity();
     }
 
@@ -94,9 +90,7 @@ public class OrderItem {
         if (endDate != null ? !endDate.equals(orderItem.endDate) : orderItem.endDate != null) {
             return false;
         }
-        if (reasonForOrder != null ? !reasonForOrder.equals(orderItem.reasonForOrder) : orderItem.reasonForOrder != null) {
-            return false;
-        }
+
         if (reasonForUnexpectedQuantity != null ? !reasonForUnexpectedQuantity.equals(orderItem.reasonForUnexpectedQuantity) : orderItem.reasonForUnexpectedQuantity != null) {
             return false;
         }
@@ -113,7 +107,6 @@ public class OrderItem {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + quantity;
-        result = 31 * result + (reasonForOrder != null ? reasonForOrder.hashCode() : 0);
         result = 31 * result + (reasonForUnexpectedQuantity != null ? reasonForUnexpectedQuantity.hashCode() : 0);
         return result;
     }

@@ -27,59 +27,17 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.events;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 
 import lombok.Data;
 
-@DatabaseTable
 @Data
-public class OrderType {
+public class OrderTypeChanged {
+    private OrderType orderType;
 
-    public static final String ROUTINE = "ROUTINE";
-    public static final String EMERGENCY = "EMERGENCY";
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = false)
-    private String name;
-
-    public OrderType() {
-        //Orm lite likes this
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderType orderType = (OrderType) o;
-
-        if (!name.equals(orderType.name)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "OrderType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public OrderType(String name) {
-        this.name = name;
-    }
-
-    public boolean isRoutine() {
-        return getName().equalsIgnoreCase(ROUTINE);
+    public OrderTypeChanged(OrderType orderType) {
+        this.orderType = orderType;
     }
 }

@@ -32,8 +32,10 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,18 +45,22 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.OrderTypeAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.OrderTypeChanged;
 import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -70,10 +76,13 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.textViewSRVNo)
     TextView textViewSRVNo;
+
     private String nextSRVNumber;
 
+    @InjectView(R.id.spinnerOrderType)
+    Spinner spinnerOrderType;
 
-    // FIXME: id need change here
+
     private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_order_commodity_list_item;
     }
@@ -91,12 +100,21 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedOrderCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType());
+    }
+
+    private OrderType getOrderType() {
+        return (OrderType) spinnerOrderType.getSelectedItem();
     }
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
         return ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+    }
+
+    @Override
+    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+        setupOrderTypes();
     }
 
     @Override
@@ -113,6 +131,29 @@ public class OrderActivity extends CommoditySelectableActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_LONG).show();
                 }
+            }
+        });
+    }
+
+    private void setupOrderTypes() {
+        List<OrderType> orderTypes = orderService.allOrderTypes();
+        final ArrayAdapter<OrderType> adapter = new OrderTypeAdapter(this, R.layout.spinner_item, orderTypes);
+        spinnerOrderType.setAdapter(adapter);
+
+        OrderType routine = new OrderType(OrderType.ROUTINE);
+        if (orderTypes.contains(routine)) {
+            spinnerOrderType.setSelection(orderTypes.indexOf(routine));
+        }
+        spinnerOrderType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                EventBus.getDefault().post(new OrderTypeChanged(adapter.getItem(position)));
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

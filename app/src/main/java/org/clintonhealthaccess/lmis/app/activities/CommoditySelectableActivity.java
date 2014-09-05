@@ -76,7 +76,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(getLayoutId());
         setupCategories();
-
+        beforeArrayAdapterCreate(savedInstanceState);
         arrayAdapter = getArrayAdapter();
         gridViewSelectedCommodities.setAdapter(arrayAdapter);
 
@@ -122,6 +122,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     abstract protected ArrayAdapter getArrayAdapter();
 
     abstract protected void afterCreate(Bundle savedInstanceState);
+
+    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+
+    }
 
     abstract protected CommoditiesToViewModelsConverter getViewModelConverter();
 

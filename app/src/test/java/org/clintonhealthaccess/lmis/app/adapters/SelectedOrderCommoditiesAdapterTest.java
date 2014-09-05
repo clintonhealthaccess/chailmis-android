@@ -49,7 +49,6 @@ import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -80,14 +79,15 @@ public class SelectedOrderCommoditiesAdapterTest {
     private SelectedOrderCommoditiesAdapter adapter;
     private int list_item_layout = R.layout.selected_order_commodity_list_item;
     private List<OrderReason> orderReasons = new ArrayList<>();
-    private List<OrderType> orderTypes = new ArrayList<>();
-    private OrderType emergency = new OrderType("Emergency");
     private OrderReason highDemand = new OrderReason("High Demand");
+    private OrderReason adjustments = new OrderReason("Adjustments");
     private OrderReason losses = new OrderReason("losses");
     private OrderReason expiries = new OrderReason("expiries");
-    private OrderType routine = new OrderType(ROUTINE);
     private OrderCommodityViewModel commodityViewModel;
     private ArrayList<OrderCommodityViewModel> commodities;
+
+    OrderType routine = new OrderType(OrderType.ROUTINE);
+    OrderType emergency = new OrderType(OrderType.EMERGENCY);
 
     @Before
     public void setUp() {
@@ -101,12 +101,10 @@ public class SelectedOrderCommoditiesAdapterTest {
         commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         commodityViewModel.setOrderReasonPosition(0);
         commodities.add(commodityViewModel);
-
-        orderTypes.add(emergency);
-        orderTypes.add(routine);
         orderReasons.add(losses);
         orderReasons.add(highDemand);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
+        orderReasons.add(adjustments);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
     }
 
     @Test
@@ -191,17 +189,11 @@ public class SelectedOrderCommoditiesAdapterTest {
     }
 
 
-    @Ignore("WIP - JAMES")
     @Test
     public void shouldShowUnExpectedReasonsSpinnerIfQuantityIsUnexpected() throws Exception {
-        orderReasons = new ArrayList<>();
-        orderReasons.add(highDemand);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-
         View rowView = getRowView();
 
         EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
-        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
         Spinner spinnerUnexpectedQuantityReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
 
         assertThat(spinnerUnexpectedQuantityReasons, is(notNullValue()));
@@ -216,67 +208,29 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         ANDROID.assertThat(spinnerUnexpectedQuantityReasons).isNotVisible();
     }
-    @Ignore("WIP")
+
     @Test
     public void shouldSetEndDateGivenStartDateAndTheOrderTypeIsRoutine() throws Exception {
-        orderReasons = new ArrayList<>();
-        orderReasons.add(highDemand);
-        orderReasons.add(losses);
-        orderReasons.add(expiries);
-
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-
         View rowView = getRowView();
-
         TextView startDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
-
         startDate.setText("01-Jan-14");
-
-        Spinner spinner = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-
-        spinner.setSelection(0);
-
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
-
         String endDate = textViewEndDate.getText().toString();
         Date expectedEndDate = OrderCycle.Monthly.endDate(new Date());
         assertThat(endDate, is(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(expectedEndDate)));
     }
-    @Ignore("WIP")
+
     @Test
     public void shouldDisableEndDateWhenOrderTypeIsRoutine() throws Exception {
-        orderReasons = new ArrayList<>();
-        orderReasons.add(highDemand);
-        orderReasons.add(losses);
-
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-
         View rowView = getRowView();
-
-        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-
-        spinnerOrderReasons.setSelection(0);
-
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
-
         ANDROID.assertThat(textViewEndDate).isDisabled();
     }
-    @Ignore("WIP")
-    @Test
-    public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
-        commodityViewModel.setOrderReasonPosition(null);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-        View rowView = getRowView();
 
-        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
 
-        assertThat(((OrderReason) spinnerOrderReasons.getSelectedItem()).getReason(), is(ROUTINE));
-    }
-    @Ignore("WIP")
     @Test
     public void shouldShowSpinnerForUnexpectedOrderReasonsIfStartOrderDateIsChangedWhenOrderTypeIsRoutine() throws Exception {
         Date currentDate = new Date();
-        commodityViewModel.setReasonForOrder(null);
         commodityViewModel.setOrderReasonPosition(null);
         commodityViewModel.setOrderPeriodStartDate(currentDate);
         View rowView = getRowView();
@@ -290,11 +244,10 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isVisible();
     }
-    @Ignore("WIP")
+
     @Test
     public void shouldShowSpinnerForUnexpectedOrderReasonsIfEndOrderDateIsChangedWhenOrderReasonIsRoutine() throws Exception {
         Date currentDate = new Date();
-        commodityViewModel.setReasonForOrder(null);
         commodityViewModel.setOrderReasonPosition(null);
         commodityViewModel.setOrderPeriodEndDate(currentDate);
         View rowView = getRowView();
@@ -308,38 +261,30 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isVisible();
     }
-    @Ignore("WIP")
+
     @Test
     public void shouldShowSpinnerForUnExpectedOrderReasonsIfOrderTypeIsNotRoutine() throws Exception {
-
-        orderReasons = new ArrayList<>();
-//        orderReasons.add(routine);
-//        orderReasons.add(emergency);
         commodityViewModel.setExpectedOrderQuantity(10);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, emergency);
         View rowView = getRowView();
-
-        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-        assertThat(((OrderReason) spinnerOrderReasons.getSelectedItem()).getReason(), is("Routine"));
-        spinnerOrderReasons.setSelection(1);
-        assertThat(((OrderReason) spinnerOrderReasons.getSelectedItem()).getReason(), is("Emergency"));
-
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
-
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isVisible();
     }
 
     @Test
+    public void shouldHideSpinnerForUnExpectedOrderReasonsIfOrderTypeIsRoutine() throws Exception {
+        commodityViewModel.setExpectedOrderQuantity(10);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
+        View rowView = getRowView();
+        Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
+        ANDROID.assertThat(spinnerUnexpectedOrderReasons).isNotVisible();
+    }
+
+    @Test
     public void shouldDefaultToBlankForUnExpectedReasons() throws Exception {
-
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons);
-
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
 
-        Spinner spinnerOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerOrderReasons);
-
-        spinnerOrderReasons.setSelection(1);
 
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
 
@@ -349,17 +294,19 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldPrePopulateOrderPeriodStartAndEndDateWhenOrderReasonIsRoutine() throws Exception {
         Date currentDate = new Date();
+        commodities = new ArrayList<>();
         commodityViewModel.setOrderPeriodStartDate(currentDate);
-        commodityViewModel.setOrderPeriodEndDate(currentDate);
-
+        commodities.add(commodityViewModel);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
 
         TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
         String dateString = SIMPLE_DATE_FORMAT.format(currentDate);
+        String endDateString = SIMPLE_DATE_FORMAT.format(commodityViewModel.getExpectedEndDate());
         ANDROID.assertThat(textViewStartDate).hasText(dateString);
-        ANDROID.assertThat(textViewEndDate).hasText(dateString);
+        assertThat(textViewEndDate.getText().toString(), is(endDateString));
 
     }
 

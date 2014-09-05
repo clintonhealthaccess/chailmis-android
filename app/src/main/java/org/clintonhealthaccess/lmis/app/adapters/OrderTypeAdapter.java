@@ -27,59 +27,42 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.adapters;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-import lombok.Data;
+import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 
-@DatabaseTable
-@Data
-public class OrderType {
+import java.util.List;
 
-    public static final String ROUTINE = "ROUTINE";
-    public static final String EMERGENCY = "EMERGENCY";
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = false)
-    private String name;
-
-    public OrderType() {
-        //Orm lite likes this
+public class OrderTypeAdapter extends ArrayAdapter<OrderType> {
+    public OrderTypeAdapter(Context context, int resource, List<OrderType> objects) {
+        super(context, resource, objects);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        OrderType orderType = (OrderType) o;
-
-        if (!name.equals(orderType.name)) return false;
-
-        return true;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        TextView textView = (TextView) inflater.inflate(R.layout.spinner_item, parent, false);
+        textView.setText(getItem(position).getName());
+        return textView;
     }
 
     @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        TextView view = (TextView) super.getView(position, convertView, parent);
 
-    @Override
-    public String toString() {
-        return "OrderType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
-    public OrderType(String name) {
-        this.name = name;
-    }
-
-    public boolean isRoutine() {
-        return getName().equalsIgnoreCase(ROUTINE);
+        if (view == null) {
+            view = new TextView(getContext());
+        }
+        view.setText(getItem(position).getName());
+        return view;
     }
 }

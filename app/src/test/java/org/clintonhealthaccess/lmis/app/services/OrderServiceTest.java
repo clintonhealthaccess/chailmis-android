@@ -146,7 +146,6 @@ public class OrderServiceTest extends LMISTestCase {
 
         OrderReason emergency = new OrderReason("Emergency");
         reasonDao.create(emergency);
-        commodityViewModel.setReasonForOrder(emergency);
 
         OrderReason highDemand = new OrderReason("High demand");
         reasonDao.create(highDemand);
@@ -186,4 +185,24 @@ public class OrderServiceTest extends LMISTestCase {
         releaseHelper();
     }
 
+
+    @Test
+    public void shouldGetAllOrderTypes() throws Exception {
+
+        final OrderType routine = new OrderType("Routine");
+        final OrderType emergency = new OrderType("emergency");
+
+        dbUtil.withDao(OrderType.class, new DbUtil.Operation<OrderType, OrderType>() {
+            @Override
+            public OrderType operate(Dao<OrderType, String> dao) throws SQLException {
+                dao.create(routine);
+                dao.create(emergency);
+                return null;
+            }
+        });
+
+        assertThat(orderService.allOrderTypes().size(), is(2));
+        assertThat(orderService.allOrderTypes(), contains(routine, emergency));
+
+    }
 }

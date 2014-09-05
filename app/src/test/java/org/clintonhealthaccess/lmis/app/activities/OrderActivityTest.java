@@ -32,7 +32,6 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.google.inject.AbstractModule;
 
@@ -45,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
@@ -64,7 +64,6 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -91,9 +90,11 @@ public class OrderActivityTest {
     @Before
     public void setUp() throws Exception {
         orderServiceMock = mock(OrderService.class);
-        List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Emergency"));
+        List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Losses"));
+        List<OrderType> types = Arrays.asList(new OrderType(OrderType.ROUTINE), new OrderType(OrderType.EMERGENCY));
         when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
         when(orderServiceMock.getNextSRVNumber()).thenReturn(TEST_SRV_NUMBER);
+        when(orderServiceMock.allOrderTypes()).thenReturn(types);
         userService = mock(UserService.class);
         when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         setUpInjection(this, new AbstractModule() {
@@ -113,17 +114,8 @@ public class OrderActivityTest {
     }
 
     @Test
-    public void shouldPassOrderReasonsFromOrderServiceToAdapter() {
-        SelectedOrderCommoditiesAdapter adapter = (SelectedOrderCommoditiesAdapter) orderActivity.gridViewSelectedCommodities.getAdapter();
-
-        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(new Commodity("name"));
-        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
-
-        EventBus.getDefault().post(commodityToggledEvent);
-
-        Spinner orderReasonsSpinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_order_commodity_list_item, R.id.spinnerOrderReasons);
-        assertThat(orderReasonsSpinner.getAdapter().getCount(), is(1));
-        assertThat(((OrderReason) orderReasonsSpinner.getItemAtPosition(0)).getReason(), is("Emergency"));
+    public void shouldPassOrderTypesFromOrderServiceToAdapter() {
+        assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
     @Test
@@ -145,8 +137,8 @@ public class OrderActivityTest {
 
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1, commodityViewModel2);
-
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons);
+        OrderType type = new OrderType(OrderType.ROUTINE);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
 
         OrderItem orderItem2 = new OrderItem(commodityViewModel1);
         OrderItem orderItem1 = new OrderItem(commodityViewModel2);
@@ -194,5 +186,10 @@ public class OrderActivityTest {
     @Test
     public void shouldInitializeStartAndEndDateForOrderCommodityViewModels() throws Exception {
 
+    }
+
+    @Test
+    public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
+        assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 }

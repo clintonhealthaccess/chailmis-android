@@ -128,5 +128,6 @@
     <string name="alert_date">Alert Date</string>
     <string name="allocation_number">Allocation Number</string>
     <string name="date_of_allocations">Date of Allocations</string>
+    <string name="order_type">Type:</string>
 
 </resources>

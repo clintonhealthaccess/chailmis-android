@@ -45,6 +45,7 @@ import java.util.List;
 
 public class OrderService implements OrderItemSaver {
     List<OrderReason> orderReasons;
+    List<OrderType> orderTypes;
     @Inject
     private UserService userService;
     @Inject
@@ -70,6 +71,18 @@ public class OrderService implements OrderItemSaver {
         });
 
         return savedReasons;
+    }
+
+    public List<OrderType> allOrderTypes() {
+        if (orderTypes == null) {
+            orderTypes = dbUtil.withDao(OrderType.class, new DbUtil.Operation<OrderType, List<OrderType>>() {
+                @Override
+                public List<OrderType> operate(Dao<OrderType, String> dao) throws SQLException {
+                    return dao.queryForAll();
+                }
+            });
+        }
+        return orderTypes;
     }
 
     public List<OrderReason> allOrderReasons() {
