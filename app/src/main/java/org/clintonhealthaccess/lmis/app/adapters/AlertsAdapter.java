@@ -27,46 +27,15 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities;
+package org.clintonhealthaccess.lmis.app.adapters;
 
-import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.view.View;
+import android.content.Context;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
-import roboguice.inject.InjectView;
-
-public class MessagesActivity extends BaseActivity {
-
-    @InjectView(R.id.listViewNotifications)
-    ListView listViewNotifications;
-
-    @InjectView(R.id.listViewAlerts)
-    ListView listViewAlerts;
-
-    View alertsListViewHeader;
-
-    View notificationsListViewHeader;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
-        setContentView(R.layout.activity_messages);
-        alertsListViewHeader = getLayoutInflater().inflate(R.layout.alerts_header_view, null);
-        notificationsListViewHeader = getLayoutInflater().inflate(R.layout.notifications_header_view, null);
-        listViewAlerts.addHeaderView(alertsListViewHeader);
-        listViewNotifications.addHeaderView(notificationsListViewHeader);
-        listViewAlerts.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
-        listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
+public class AlertsAdapter extends ArrayAdapter<Commodity> {
+    public AlertsAdapter(Context context, int resource) {
+        super(context, resource);
     }
-
-
 }

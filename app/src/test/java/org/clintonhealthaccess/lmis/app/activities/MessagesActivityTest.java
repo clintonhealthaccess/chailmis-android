@@ -74,4 +74,23 @@ public class MessagesActivityTest {
         MessagesActivity messagesActivity = getMessagesActivity();
         assertThat(messagesActivity, not(nullValue()));
     }
+
+    @Test
+    public void listViewsShouldExist() throws Exception {
+        MessagesActivity messagesActivity = getMessagesActivity();
+        assertThat(messagesActivity.listViewAlerts, not(nullValue()));
+        assertThat(messagesActivity.listViewNotifications, not(nullValue()));
+    }
+
+    @Test
+    public void alertsHeaderShouldNotBeNull() throws Exception {
+        MessagesActivity messagesActivity = getMessagesActivity();
+        assertThat(messagesActivity.alertsListViewHeader, not(nullValue()));
+    }
+
+    @Test
+    public void notificationsHeaderShouldNotBeNull() throws Exception {
+        MessagesActivity messagesActivity = getMessagesActivity();
+        assertThat(messagesActivity.notificationsListViewHeader, not(nullValue()));
+    }
 }

@@ -122,5 +122,11 @@
     <string name="srv_number">SRV Number</string>
     <string name="url_not_found">Url Not Found</string>
     <string name="internal_server_error">Internal Server Error</string>
+    <string name="alerts_title">ALERTS</string>
+    <string name="notifications_title">NOTIFICATIONS</string>
+    <string name="current_stock">Current Stock</string>
+    <string name="alert_date">Alert Date</string>
+    <string name="allocation_number">Allocation Number</string>
+    <string name="date_of_allocations">Date of Allocations</string>
 
 </resources>
