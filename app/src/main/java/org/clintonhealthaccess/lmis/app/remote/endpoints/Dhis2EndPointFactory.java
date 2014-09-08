@@ -92,19 +92,20 @@ public class Dhis2EndPointFactory {
             if (cause.getResponse() == null) {
                 return new LmisException(cause);
             }
-
-            e("Error DHIS2 reason", cause.getResponse().getReason());
-            e("Error DHIS2 url", cause.getResponse().getUrl());
-            for (Header header : cause.getResponse().getHeaders()) {
-                e("Error DHIS2 header", String.format("%s : %s", header.getName(), header.getValue()));
-            }
+            printHeaders(cause);
             if (cause.isNetworkError()) {
                 i("Failed to connect DHIS2 server.", cause.getMessage());
                 return new LmisException(messageNetworkError);
             }
+            LmisException exception = checkForHTTPErrors(cause.getResponse().getStatus());
+            if (exception != null) {
+                return exception;
+            } else {
+                return new LmisException(cause.getMessage());
+            }
+        }
 
-            int statusCode = cause.getResponse().getStatus();
-
+        private LmisException checkForHTTPErrors(int statusCode) {
             if (statusCode == SC_NOT_FOUND) {
                 i("Failed attempt to login.", "Response code : " + statusCode);
                 return new LmisException(urlNotFound);
@@ -117,8 +118,15 @@ public class Dhis2EndPointFactory {
                 i("Failed attempt to login.", "Response code : " + statusCode);
                 return new LmisException(messageInvalidLoginCredential);
             }
+            return null;
+        }
 
-            return new LmisException(cause.getMessage());
+        private void printHeaders(RetrofitError cause) {
+            e("Error DHIS2 reason", cause.getResponse().getReason());
+            e("Error DHIS2 url", cause.getResponse().getUrl());
+            for (Header header : cause.getResponse().getHeaders()) {
+                e("Error DHIS2 header", String.format("%s : %s", header.getName(), header.getValue()));
+            }
         }
     }
 

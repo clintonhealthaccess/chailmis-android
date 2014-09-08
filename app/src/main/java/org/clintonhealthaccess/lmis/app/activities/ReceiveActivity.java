@@ -122,6 +122,11 @@ public class ReceiveActivity extends CommoditySelectableActivity {
 
     }
 
+    @Override
+    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+
+    }
+
     private void setupReceiveButton() {
         buttonSubmitReceive.setOnClickListener(new View.OnClickListener() {
             @Override

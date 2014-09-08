@@ -149,10 +149,7 @@ public class DailyCommoditySnapshotService {
             } catch (LmisException ex) {
                 e("==> Syncing...........", snapshotsToSync.size() + " snapshots failed");
             }
-
-
         }
-
     }
 
     private void markSnapShotsAsSynced(final List<DailyCommoditySnapshot> snapshotsToSync) {

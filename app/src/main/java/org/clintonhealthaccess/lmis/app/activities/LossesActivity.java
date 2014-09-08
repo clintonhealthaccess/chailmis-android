@@ -90,6 +90,11 @@ public class LossesActivity extends CommoditySelectableActivity {
         });
     }
 
+    @Override
+    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+
+    }
+
     private Loss generateLoss() {
         Loss loss = new Loss();
         int count = arrayAdapter.getCount();

@@ -123,9 +123,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-
-    }
+    abstract protected void beforeArrayAdapterCreate(Bundle savedInstanceState);
 
     abstract protected CommoditiesToViewModelsConverter getViewModelConverter();
 

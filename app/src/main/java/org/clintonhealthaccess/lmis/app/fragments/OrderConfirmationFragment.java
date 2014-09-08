@@ -86,9 +86,27 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
         Button buttonOrderGoBack = (Button) view.findViewById(R.id.buttonOrderGoBack);
         TextView textViewSRVNumber = (TextView) view.findViewById(R.id.textViewSRVNumber);
         ListView listViewOrderItems = (ListView) view.findViewById(R.id.listViewConfirmOrderItems);
-
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        setupConfirmButton(buttonOrderConfirm);
+        textViewSRVNumber.setText(order.getSrvNumber());
+        buttonOrderGoBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        setupList(inflater, container, listViewOrderItems);
+        return view;
+    }
+
+    private void setupList(LayoutInflater inflater, ViewGroup container, ListView listViewOrderItems) {
+        listViewOrderItems.addHeaderView(inflater.inflate(R.layout.confirm_header_order, container));
+        ConfirmOrderAdapter adapter = new ConfirmOrderAdapter(getActivity(), R.layout.confirm_order_list_item, order.getItems());
+        listViewOrderItems.setAdapter(adapter);
+    }
+
+    private void setupConfirmButton(Button buttonOrderConfirm) {
         buttonOrderConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,17 +120,6 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
                 }
             }
         });
-        textViewSRVNumber.setText(order.getSrvNumber());
-        buttonOrderGoBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        listViewOrderItems.addHeaderView(inflater.inflate(R.layout.confirm_header_order, container));
-        ConfirmOrderAdapter adapter = new ConfirmOrderAdapter(getActivity(), R.layout.confirm_order_list_item, order.getItems());
-        listViewOrderItems.setAdapter(adapter);
-        return view;
     }
 
     private void showToastMessage(String message) {

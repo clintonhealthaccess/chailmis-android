@@ -192,6 +192,11 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+
+    }
+
+    @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {
         return new CommoditiesToViewModelsConverter() {
             @Override

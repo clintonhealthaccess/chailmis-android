@@ -59,18 +59,21 @@ public class OrderService implements OrderItemSaver {
         dbUtil.withDao(OrderReason.class, new DbUtil.Operation<OrderReason, Void>() {
             @Override
             public Void operate(Dao<OrderReason, String> dao) throws SQLException {
-                dao.delete(dao.queryForAll());
-                for (String reason : reasons) {
-                    OrderReason data = new OrderReason(reason);
-                    dao.create(data);
-                    savedReasons.add(data);
-                }
-
+                saveReasons(dao, reasons, savedReasons);
                 return null;
             }
         });
 
         return savedReasons;
+    }
+
+    private void saveReasons(Dao<OrderReason, String> dao, List<String> reasons, ArrayList<OrderReason> savedReasons) throws SQLException {
+        dao.delete(dao.queryForAll());
+        for (String reason : reasons) {
+            OrderReason data = new OrderReason(reason);
+            dao.create(data);
+            savedReasons.add(data);
+        }
     }
 
     public List<OrderType> allOrderTypes() {
@@ -154,17 +157,20 @@ public class OrderService implements OrderItemSaver {
         dbUtil.withDao(OrderType.class, new DbUtil.Operation<OrderType, Void>() {
             @Override
             public Void operate(Dao<OrderType, String> dao) throws SQLException {
-                dao.delete(dao.queryForAll());
-                for (String reason : reasons) {
-                    OrderType data = new OrderType(reason);
-                    dao.create(data);
-                    orderTypes.add(data);
-                }
-
+                saveOrderTypes(dao, reasons, orderTypes);
                 return null;
             }
         });
 
         return orderTypes;
+    }
+
+    private void saveOrderTypes(Dao<OrderType, String> dao, List<String> reasons, ArrayList<OrderType> orderTypes) throws SQLException {
+        dao.delete(dao.queryForAll());
+        for (String reason : reasons) {
+            OrderType data = new OrderType(reason);
+            dao.create(data);
+            orderTypes.add(data);
+        }
     }
 }
