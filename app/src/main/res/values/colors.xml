@@ -33,12 +33,9 @@
     <color name="m_light_grey">#f5f5f5</color>
     <color name="m_grey">#ddd</color>
     <color name="blue">#1D5288</color>
-    <color name="disabled">#D3D3D3</color>
-    <color name="gray_header">#CACACA</color>
     <color name="white">#FFFFFF</color>
     <color name="losses_background">#474747</color>
     <color name="losses_text">#FFFFFF</color>
-    <color name="losses_header">#F3ACBD</color>
     <color name="black">#000</color>
     <color name="receive_background">#FF6421</color>
     <color name="green_header">#57A127</color>

@@ -86,7 +86,7 @@ public class Dhis2Test extends LMISTestCase {
 
     @Test
     public void testShouldValidateUserLogin() throws Exception {
-        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
+        setUpSuccessHttpGetRequest(200,"userResponse.json");
 
         User user = new User("test", "pass");
         dhis2.validateLogin(user);

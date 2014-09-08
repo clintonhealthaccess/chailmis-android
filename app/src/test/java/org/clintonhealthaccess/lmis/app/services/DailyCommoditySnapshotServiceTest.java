@@ -48,7 +48,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +55,6 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

@@ -36,6 +36,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
+import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -55,7 +56,7 @@ import static org.mockito.Mockito.mock;
 import static org.robolectric.Robolectric.addPendingHttpResponse;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class UserServiceTest {
+public class UserServiceTest extends LMISTestCase {
     @Inject
     private UserService userService;
 
@@ -79,8 +80,7 @@ public class UserServiceTest {
     @Test
     public void testShouldKnowIfThereIsUserRegistered() throws Exception {
         assertThat(userService.userRegistered(), is(false));
-
-        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
+        setUpSuccessHttpGetRequest(200,"userResponse.json");
 
         User newUser = userService.register("admin", "district");
 
@@ -90,13 +90,12 @@ public class UserServiceTest {
 
     @Test
     public void shouldSaveTheOrgUnitIfAvailable() throws Exception {
-
-        addPendingHttpResponse(200, Robolectric.application.getString(R.string.user_profile_demo_response));
+        setUpSuccessHttpGetRequest(200,"userResponse.json");
 
         User newUser = userService.register("admin", "district");
 
-        assertThat(newUser.getFacilityName(), is("cr Abi LGA Staff Clinic"));
-        assertThat(newUser.getFacilityCode(), is("U5Zz9lIqxpt"));
+        assertThat(newUser.getFacilityName(), is("tw office"));
+        assertThat(newUser.getFacilityCode(), is("hOw1BJrojgE"));
     }
 
 

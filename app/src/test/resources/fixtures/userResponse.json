@@ -1,0 +1,37 @@
+{
+id: "MNNl5tMBYU3",
+name: "admin admin",
+created: "2014-09-02T08:27:40.782+0000",
+lastUpdated: "2014-09-03T16:51:33.836+0000",
+surname: "admin",
+firstName: "admin",
+lastCheckedInterpretations: "2014-09-03T16:51:33.835+0000",
+userCredentials: {
+id: "oIzhWzeK4dV",
+code: "admin",
+name: "admin admin",
+created: "2014-09-02T08:27:40.849+0000",
+lastUpdated: "2014-09-08T06:52:36.848+0000",
+username: "admin",
+passwordLastUpdated: "2014-09-02T08:27:40.849+0000",
+userAuthorityGroups: [
+{
+id: "yNOrb6rks85",
+name: "Superuser",
+created: "2014-09-02T08:27:40.820+0000",
+lastUpdated: "2014-09-02T08:27:40.820+0000"
+}
+],
+lastLogin: "2014-09-08T06:52:24.347+0000",
+selfRegistered: false,
+disabled: false
+},
+organisationUnits: [
+{
+id: "hOw1BJrojgE",
+name: "tw office",
+created: "2014-09-03T11:04:13.259+0000",
+lastUpdated: "2014-09-03T11:04:13.458+0000"
+}
+]
+}

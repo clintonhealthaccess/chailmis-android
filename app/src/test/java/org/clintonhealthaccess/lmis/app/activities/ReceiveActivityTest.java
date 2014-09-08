@@ -46,6 +46,7 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,7 +63,6 @@ import de.greenrobot.event.EventBus;
 import static junit.framework.Assert.assertFalse;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.fest.assertions.api.ANDROID.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -248,21 +248,21 @@ public class ReceiveActivityTest {
     public void shouldDisableAllocationIfReceiveFromFacilityChecked() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
-        assertThat(receiveActivity.textViewAllocationId).isDisabled();
+        ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
     }
 
     @Test
     public void shouldEnableAllocationIfReceiveFromFacilityIsNotChecked() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(false);
-        assertThat(receiveActivity.textViewAllocationId).isEnabled();
+        ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
     }
 
     @Test
     public void shouldNotRequireAllocationIdWhenReceivingFromFacility() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
-        assertThat(receiveActivity.textViewAllocationId).isDisabled();
+        ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         setupValidCommodity(receiveActivity);
         receiveActivity.getSubmitButton().performClick();
         ShadowHandler.idleMainLooper();
