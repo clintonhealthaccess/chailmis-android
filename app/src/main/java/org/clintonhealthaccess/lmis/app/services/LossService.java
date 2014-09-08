@@ -46,6 +46,9 @@ public class LossService {
     @Inject
     private StockService stockService;
 
+    @Inject
+    private DailyCommoditySnapshotService snapshotService;
+
     public void saveLoss(Loss loss) {
         GenericDao<Loss> lossDao = new GenericDao<>(Loss.class, context);
         lossDao.create(loss);
@@ -57,6 +60,8 @@ public class LossService {
         for (LossItem lossItem : lossItems) {
             lossItemDao.create(lossItem);
             adjustStockLevel(lossItem);
+            snapshotService.add(lossItem);
+
         }
     }
 

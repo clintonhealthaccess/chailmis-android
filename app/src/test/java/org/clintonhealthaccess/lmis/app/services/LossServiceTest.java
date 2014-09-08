@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -57,12 +58,14 @@ public class LossServiceTest {
     private CommodityService commodityService;
 
     private GenericDao<Loss> lossDao;
+    private GenericDao<DailyCommoditySnapshot> snapshotGenericDao;
 
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
         commodityService.initialise(new User("test", "pass"));
         lossDao = new GenericDao<>(Loss.class, Robolectric.application);
+        snapshotGenericDao = new GenericDao<>(DailyCommoditySnapshot.class, Robolectric.application);
     }
 
     @Test
@@ -85,14 +88,28 @@ public class LossServiceTest {
     public void shouldUpdateCommodityStockOnHandWhenSavingLoss() throws Exception {
         Commodity commodity = commodityService.all().get(0);
         int stockOnHand = commodity.getStockOnHand();
-        int expectedStockOnHand = stockOnHand - 3;
+        int expectedStockOnHand = stockOnHand - 1;
 
         Loss loss = new Loss();
-        loss.addLossItem(new LossItem(commodity, 1, 2));
+        loss.addLossItem(new LossItem(commodity, 1));
         lossService.saveLoss(loss);
 
         commodity = commodityService.all().get(0);
 
         assertThat(commodity.getStockOnHand(), is(expectedStockOnHand));
+    }
+
+    @Test
+    public void shouldUpdateSnapShotWhenLossItemIsSaved() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        assertThat(snapshotGenericDao.queryForAll().size(), is(0));
+        int stockOnHand = commodity.getStockOnHand();
+        int expectedStockOnHand = stockOnHand - 1;
+        Loss loss = new Loss();
+        loss.addLossItem(new LossItem(commodity, 1));
+        lossService.saveLoss(loss);
+        commodity = commodityService.all().get(0);
+        assertThat(snapshotGenericDao.queryForAll().size(), is(3));
+
     }
 }

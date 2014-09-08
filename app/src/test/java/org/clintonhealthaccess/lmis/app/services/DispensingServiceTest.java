@@ -94,9 +94,10 @@ public class DispensingServiceTest {
         Commodity commodity = commodityService.all().get(0);
         int stockLevel = stockService.getStockLevelFor(commodity);
         assertThat(stockLevel, is(10));
+        Dispensing dispensing = new Dispensing(false);
         DispensingItem item1 = new DispensingItem(commodity, 1);
-        assertThat(item1.getActivity().getActivityType(), is("dispense"));
-        Dispensing dispensing = new Dispensing();
+        item1.setDispensing(dispensing);
+        assertThat(item1.getActivitiesValues().get(0).getActivity().getActivityType(), is("dispense"));
         dispensing.addItem(item1);
         dispensingService.addDispensing(dispensing);
 

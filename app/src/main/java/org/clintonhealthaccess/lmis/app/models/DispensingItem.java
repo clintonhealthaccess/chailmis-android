@@ -29,7 +29,9 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -42,11 +44,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.collect.Collections2.filter;
-
 @DatabaseTable(tableName = "dispensingItems")
 public class DispensingItem implements Serializable, Snapshotable {
     public static final String DISPENSE = "dispense";
+    public static final String ADJUSTMENTS = "adjustments";
 
     Commodity commodity;
 
@@ -81,23 +82,28 @@ public class DispensingItem implements Serializable, Snapshotable {
     }
 
     @Override
-    public CommodityActivity getActivity() {
+    public List<CommodityActivityValue> getActivitiesValues() {
         List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
-        Collection<CommodityActivity> filteredFields = filter(fields, new Predicate<CommodityActivity>() {
-            @Override
-            public boolean apply(CommodityActivity input) {
-                String testString = input.getActivityType().toLowerCase();
-                return testString.contains(DISPENSE);
-            }
-        });
-
-        return new ArrayList<>(filteredFields).get(0);
+        Collection<CommodityActivityValue> values = FluentIterable
+                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+                    @Override
+                    public CommodityActivityValue apply(CommodityActivity input) {
+                        return new CommodityActivityValue(input, quantity);
+                    }
+                }).filter(new Predicate<CommodityActivityValue>() {
+                    @Override
+                    public boolean apply(CommodityActivityValue input) {
+                        String testString = input.getActivity().getActivityType().toLowerCase();
+                        if (dispensing.isDispenseToFacility()) {
+                            return testString.contains(ADJUSTMENTS);
+                        } else {
+                            return testString.contains(DISPENSE);
+                        }
+                    }
+                }).toList();
+        return new ArrayList<>(values);
     }
 
-    @Override
-    public int getValue() {
-        return quantity;
-    }
 
     public Integer getQuantity() {
         return quantity;

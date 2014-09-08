@@ -85,7 +85,6 @@ public class LossesCommoditiesAdapterTest {
         assertThat(viewModel.getWastage(), is(10));
         assertThat(viewModel.getMissing(), is(20));
         assertThat(viewModel.getExpiries(), is(30));
-        assertThat(viewModel.getDamages(), is(40));
     }
 
     @Test
@@ -102,7 +101,6 @@ public class LossesCommoditiesAdapterTest {
         Commodity commodity = new Commodity("Commodity");
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(commodity);
         lossesCommodityViewModel.setMissing(1);
-        lossesCommodityViewModel.setDamages(2);
         lossesCommodityViewModel.setWastages(3);
         lossesCommodityViewModel.setExpiries(4);
         List<LossesCommodityViewModel> commodities = Arrays.asList(lossesCommodityViewModel);
@@ -110,12 +108,10 @@ public class LossesCommoditiesAdapterTest {
         adapter = new LossesCommoditiesAdapter(Robolectric.application, list_item_layout, commodities);
 
         int missing = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).getText().toString());
-        int damages = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextDamages)).getText().toString());
         int wastages = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextWastages)).getText().toString());
         int expiries = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextExpiries)).getText().toString());
 
         assertThat(missing, is(1));
-        assertThat(damages, is(2));
         assertThat(wastages, is(3));
         assertThat(expiries, is(4));
     }
@@ -130,12 +126,9 @@ public class LossesCommoditiesAdapterTest {
         TextView textViewCommodityName = (TextView)getViewFromListRow(adapter, list_item_layout, R.id.textViewCommodityName);
         assertNull(textViewCommodityName.getError());
 
-        EditText editTextDamages = (EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextDamages);
-        editTextDamages.setText("10");
 
         assertThat(textViewCommodityName.getError().toString(), is("Total quantity lost (18) is greater than stock at hand (10)"));
 
-        editTextDamages.setText("1");
         assertNull(textViewCommodityName.getError());
     }
 
@@ -149,6 +142,5 @@ public class LossesCommoditiesAdapterTest {
         ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextWastages)).setText("10");
         ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).setText("20");
         ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextExpiries)).setText("30");
-        ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextDamages)).setText("40");
     }
 }

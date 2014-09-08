@@ -397,9 +397,9 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
             String endDate = s.toString();
             setVisibilityOfUnexpectedReasonsSpinner(endDate, orderCommodityViewModel.getOrderPeriodEndDate(), orderCommodityViewModel, spinnerUnexpectedReasons);
             try {
-
                 orderCommodityViewModel.setOrderPeriodEndDate(SIMPLE_DATE_FORMAT.parse(endDate));
             } catch (ParseException ignored) {
+
             }
         }
     }

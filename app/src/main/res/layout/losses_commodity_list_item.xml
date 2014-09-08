@@ -111,21 +111,6 @@
             android:inputType="number"
             android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/damaged"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/editTextDamages"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:hint="@string/hint_quantity"
-            android:inputType="number"
-            android:textSize="16sp" />
 
     </LinearLayout>
 

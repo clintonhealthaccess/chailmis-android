@@ -68,7 +68,7 @@ public class ConfirmLossesAdapterTest {
 
         LossItem lossItem = new LossItem();
         lossItem.setCommodity(commodity);
-        lossItem.setDamages(2);
+        lossItem.setWastages(2);
         lossItem.setExpiries(3);
 
         List<LossItem> lossItems = Arrays.asList(lossItem);

@@ -46,12 +46,6 @@ public class LossesViewModelCommands {
         }
     }
 
-    public static class SetDamagesCommand implements Command {
-        @Override
-        public void execute(LossesCommodityViewModel viewModel, Editable editable) {
-            viewModel.setDamages(getIntFromString(editable.toString()));
-        }
-    }
 
     public static class SetExpiriesCommand implements Command {
         @Override

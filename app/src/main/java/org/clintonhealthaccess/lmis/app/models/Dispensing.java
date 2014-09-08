@@ -54,6 +54,10 @@ public class Dispensing implements Serializable {
     @DatabaseField(dataType = DataType.DATE_LONG)
     private Date created;
 
+    public Dispensing(boolean willDispenseToFacility) {
+        dispenseToFacility = willDispenseToFacility;
+    }
+
     public void addItem(DispensingItem dispensingItem) {
         dispensingItems.add(dispensingItem);
     }

@@ -37,6 +37,7 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
@@ -94,8 +95,13 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity1, 3));
-        dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity2, 4));
+        Dispensing dispensing = new Dispensing(false);
+        DispensingItem snapshotable = new DispensingItem(fetchedCommodity1, 3);
+        DispensingItem snapshotable1 = new DispensingItem(fetchedCommodity2, 4);
+        snapshotable.setDispensing(dispensing);
+        snapshotable1.setDispensing(dispensing);
+        dailyCommoditySnapshotService.add(snapshotable);
+        dailyCommoditySnapshotService.add(snapshotable1);
 
         List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
 
@@ -106,8 +112,10 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
     @Test
     public void shouldUpdateDailyCommoditySummaryIfItExists() throws Exception {
         Commodity fetchedCommodity = commodityDao.queryForAll().get(0);
-        Snapshotable dispensingItem = new DispensingItem(fetchedCommodity, 3);
 
+        DispensingItem dispensingItem = new DispensingItem(fetchedCommodity, 3);
+        Dispensing dispensing = new Dispensing(false);
+        dispensingItem.setDispensing(dispensing);
         dailyCommoditySnapshotService.add(dispensingItem);
         dailyCommoditySnapshotService.add(dispensingItem);
         dailyCommoditySnapshotService.add(dispensingItem);
@@ -121,10 +129,11 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
     public void shouldMarkSyncedItemAsUnSyncedWhenAnUpdateOccurs() throws Exception {
 
         Commodity fetchedCommodity = commodityDao.queryForAll().get(0);
-        Snapshotable dispensingItem = new DispensingItem(fetchedCommodity, 3);
+        DispensingItem dispensingItem = new DispensingItem(fetchedCommodity, 3);
+        Dispensing dispensing = new Dispensing(false);
+        dispensingItem.setDispensing(dispensing);
 
-
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getActivity(), 3);
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
         dailyCommoditySnapshot.setSynced(true);
         snapshotDao.create(dailyCommoditySnapshot);
         dailyCommoditySnapshotService.add(dispensingItem);
@@ -139,14 +148,17 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
 
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
-        Snapshotable dispensingItem = new DispensingItem(fetchedCommodity1, 3);
+        DispensingItem dispensingItem = new DispensingItem(fetchedCommodity1, 3);
+        Dispensing dispensing = new Dispensing(false);
+        dispensingItem.setDispensing(dispensing);
 
-
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getActivity(), 3);
+        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
         dailyCommoditySnapshot.setSynced(true);
         snapshotDao.create(dailyCommoditySnapshot);
 
-        dailyCommoditySnapshotService.add(new DispensingItem(fetchedCommodity2, 4));
+        DispensingItem snapshotable = new DispensingItem(fetchedCommodity2, 4);
+        snapshotable.setDispensing(dispensing);
+        dailyCommoditySnapshotService.add(snapshotable);
 
         List<DailyCommoditySnapshot> unsynchedSnapshots = dailyCommoditySnapshotService.getUnSyncedSnapshots();
         assertThat(unsynchedSnapshots.size(), is(1));

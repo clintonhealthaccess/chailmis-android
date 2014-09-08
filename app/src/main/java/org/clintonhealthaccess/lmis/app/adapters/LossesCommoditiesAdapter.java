@@ -66,7 +66,6 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(viewModel.getName());
 
-        setUpDamages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextDamages));
         setUpWastages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextWastages));
         setUpExpiries(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextExpiries));
         setUpMissing(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextMissing));
@@ -80,20 +79,15 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         setupTextWatcher(textViewCommodityName, editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
     }
 
-    private void setUpDamages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextDamages) {
-        if(viewModel.getDamages() != 0)
-            editTextDamages.setText(String.valueOf(viewModel.getDamages()));
-        setupTextWatcher(textViewCommodityName, editTextDamages, new LossesViewModelCommands.SetDamagesCommand(), viewModel);
-    }
 
     private void setUpExpiries(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextExpiries) {
-        if(viewModel.getExpiries() != 0)
+        if (viewModel.getExpiries() != 0)
             editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
         setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
     }
 
     private void setUpMissing(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextMissing) {
-        if(viewModel.getMissing() != 0)
+        if (viewModel.getMissing() != 0)
             editTextMissing.setText(String.valueOf(viewModel.getMissing()));
         setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
     }

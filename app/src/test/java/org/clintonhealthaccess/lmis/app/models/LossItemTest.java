@@ -27,58 +27,35 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities.viewmodels;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.junit.Test;
 
-public class LossesCommodityViewModel extends BaseCommodityViewModel {
+import java.util.ArrayList;
+import java.util.Arrays;
 
-    private int wastage, expiries, missing;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    public LossesCommodityViewModel(Commodity commodity) {
-        super(commodity);
-    }
-
-    public void setWastages(int wastage) {
-        this.wastage = wastage;
-    }
-
-    public int getWastage() {
-        return wastage;
-    }
-
-    public int getMissing() {
-        return missing;
-    }
-
-    public void setMissing(int missing) {
-        this.missing = missing;
-    }
-
-
-    public int getExpiries() {
-        return expiries;
-    }
-
-    public void setExpiries(int expired) {
-        this.expiries = expired;
-    }
-
-    public int totalLosses() {
-        return wastage + expiries + missing;
-    }
-
-    public boolean isValid() {
-        return !(getMissing() == 0 && getExpiries() == 0 && getWastage() == 0) && totalLosses() <= getStockOnHand();
-    }
-
-    public LossItem getLossItem() {
-        LossItem lossItem = new LossItem();
-        lossItem.setCommodity(getCommodity());
-        lossItem.setExpiries(expiries);
-        lossItem.setMissing(missing);
-        lossItem.setWastages(wastage);
-        return lossItem;
+public class LossItemTest {
+    @Test
+    public void shouldCreateActivitiesForMissingWastedAndExpiries() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        CommodityActivity wasted = new CommodityActivity(commodity, "12", "12", "waste");
+        CommodityActivity missing = new CommodityActivity(commodity, "12", "12", "missing");
+        CommodityActivity expiries = new CommodityActivity(commodity, "12", "12", "expired");
+        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityActivity>(Arrays.asList(wasted, missing, expiries)));
+        LossItem lossItem = new LossItem(commodity, 10);
+        lossItem.setWastages(10);
+        lossItem.setExpiries(20);
+        lossItem.setMissing(30);
+        assertThat(lossItem.getActivitiesValues().size(), is(3));
+        CommodityActivityValue wastedValue = new CommodityActivityValue(wasted, 10);
+        CommodityActivityValue expiriesValue = new CommodityActivityValue(expiries, 20);
+        CommodityActivityValue missingValue = new CommodityActivityValue(missing, 30);
+        assertThat(lossItem.getActivitiesValues(), containsInAnyOrder(wastedValue, expiriesValue, missingValue));
     }
 }

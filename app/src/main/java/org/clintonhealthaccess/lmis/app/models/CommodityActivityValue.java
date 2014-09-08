@@ -27,58 +27,48 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities.viewmodels;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
+import lombok.Getter;
+import lombok.Setter;
 
-public class LossesCommodityViewModel extends BaseCommodityViewModel {
+@Getter
+@Setter
+public class CommodityActivityValue {
+    private CommodityActivity activity;
+    private Integer value;
 
-    private int wastage, expiries, missing;
-
-    public LossesCommodityViewModel(Commodity commodity) {
-        super(commodity);
+    public CommodityActivityValue(CommodityActivity input, int quantity) {
+        this.activity = input;
+        this.value = quantity;
     }
 
-    public void setWastages(int wastage) {
-        this.wastage = wastage;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommodityActivityValue)) return false;
+
+        CommodityActivityValue value1 = (CommodityActivityValue) o;
+
+        if (!activity.equals(value1.activity)) return false;
+        if (!value.equals(value1.value)) return false;
+
+        return true;
     }
 
-    public int getWastage() {
-        return wastage;
+    @Override
+    public int hashCode() {
+        int result = activity.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
     }
 
-    public int getMissing() {
-        return missing;
-    }
-
-    public void setMissing(int missing) {
-        this.missing = missing;
-    }
-
-
-    public int getExpiries() {
-        return expiries;
-    }
-
-    public void setExpiries(int expired) {
-        this.expiries = expired;
-    }
-
-    public int totalLosses() {
-        return wastage + expiries + missing;
-    }
-
-    public boolean isValid() {
-        return !(getMissing() == 0 && getExpiries() == 0 && getWastage() == 0) && totalLosses() <= getStockOnHand();
-    }
-
-    public LossItem getLossItem() {
-        LossItem lossItem = new LossItem();
-        lossItem.setCommodity(getCommodity());
-        lossItem.setExpiries(expiries);
-        lossItem.setMissing(missing);
-        lossItem.setWastages(wastage);
-        return lossItem;
+    @Override
+    public String toString() {
+        return "CommodityActivityValue{" +
+                "activity=" + activity.getActivityType() +
+                ", value=" + value +
+                '}';
     }
 }
+

@@ -29,10 +29,15 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.clintonhealthaccess.lmis.app.services.Snapshotable;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,8 +47,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "loss_items")
-public class LossItem implements Serializable {
+public class LossItem implements Serializable, Snapshotable {
 
+    public static final String WASTED = "waste";
+    public static final String MISSING = "missing";
+    public static final String EXPIRED = "expire";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -60,19 +68,15 @@ public class LossItem implements Serializable {
     private int missing;
 
     @DatabaseField(canBeNull = false)
-    private int damages;
-
-    @DatabaseField(canBeNull = false)
     private int expiries;
 
     public LossItem(Commodity commodity) {
         this.commodity = commodity;
     }
 
-    public LossItem(Commodity commodity, int expiries, int damages) {
+    public LossItem(Commodity commodity, int expiries) {
         this(commodity);
         this.expiries = expiries;
-        this.damages = damages;
     }
 
     public int getNewStockOnHand() {
@@ -80,6 +84,29 @@ public class LossItem implements Serializable {
     }
 
     public int getTotalLosses() {
-        return missing + wastages + damages + expiries;
+        return missing + wastages + expiries;
+    }
+
+
+    @Override
+    public List<CommodityActivityValue> getActivitiesValues() {
+        List<CommodityActivity> activities = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        List<CommodityActivityValue> values = new ArrayList<>();
+        for (CommodityActivity activity : activities) {
+            String activityType = activity.getActivityType().toLowerCase();
+            if (activityType.contains(WASTED)) {
+                values.add(new CommodityActivityValue(activity, wastages));
+            }
+
+            if (activityType.contains(MISSING)) {
+                values.add(new CommodityActivityValue(activity, missing));
+            }
+
+            if (activityType.contains(EXPIRED)) {
+                values.add(new CommodityActivityValue(activity, expiries));
+            }
+
+        }
+        return values;
     }
 }

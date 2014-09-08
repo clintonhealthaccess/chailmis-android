@@ -42,11 +42,10 @@ public class LossesCommodityViewModelTest {
         LossesCommodityViewModel viewModel = new LossesCommodityViewModel(new Commodity("Food"));
         viewModel.setExpiries(10);
         viewModel.setWastages(20);
-        viewModel.setDamages(30);
 
-        assertThat(viewModel.totalLosses(), is(60));
+        assertThat(viewModel.totalLosses(), is(30));
 
         viewModel.setMissing(2);
-        assertThat(viewModel.totalLosses(), is(62));
+        assertThat(viewModel.totalLosses(), is(32));
     }
 }

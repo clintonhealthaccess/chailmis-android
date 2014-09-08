@@ -36,6 +36,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivityValue;
 import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
@@ -71,34 +72,36 @@ public class DailyCommoditySnapshotService {
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<DailyCommoditySnapshot>(DailyCommoditySnapshot.class, context);
+        for (CommodityActivityValue value : snapshotable.getActivitiesValues()) {
+            List<DailyCommoditySnapshot> dailyCommoditySnapshots = getSnapshotsForCommodityToday(value);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = getSnapshotsForCommodityToday(snapshotable);
-
-        if (dailyCommoditySnapshots.isEmpty()) {
-            createNewSnaphot(snapshotable, dailyCommoditySnapshotDao);
-        } else {
-            updateSnapshot(snapshotable, dailyCommoditySnapshotDao, dailyCommoditySnapshots);
+            if (dailyCommoditySnapshots.isEmpty()) {
+                createNewSnaphot(value, dailyCommoditySnapshotDao);
+            } else {
+                updateSnapshot(value, dailyCommoditySnapshotDao, dailyCommoditySnapshots);
+            }
         }
+
     }
 
-    private void updateSnapshot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao, List<DailyCommoditySnapshot> dailyCommoditySnapshots) {
+    private void updateSnapshot(CommodityActivityValue commodityActivityValue, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao, List<DailyCommoditySnapshot> dailyCommoditySnapshots) {
         DailyCommoditySnapshot commoditySnapshot = dailyCommoditySnapshots.get(0);
-        commoditySnapshot.incrementValue(snapshotable.getValue());
+        commoditySnapshot.incrementValue(commodityActivityValue.getValue());
         commoditySnapshot.setSynced(false);
         dailyCommoditySnapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnaphot(Snapshotable snapshotable, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao) {
-        DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(snapshotable.getCommodity(), snapshotable.getActivity(), snapshotable.getValue());
+    private void createNewSnaphot(CommodityActivityValue commodityActivityValue, GenericDao<DailyCommoditySnapshot> dailyCommoditySnapshotDao) {
+        DailyCommoditySnapshot commoditySnapshot = new DailyCommoditySnapshot(commodityActivityValue.getActivity().getCommodity(), commodityActivityValue.getActivity(), commodityActivityValue.getValue());
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 
-    private List<DailyCommoditySnapshot> getSnapshotsForCommodityToday(final Snapshotable snapshotable) {
+    private List<DailyCommoditySnapshot> getSnapshotsForCommodityToday(final CommodityActivityValue commodityActivityValue) {
         return dbUtil.withDao(DailyCommoditySnapshot.class, new DbUtil.Operation<DailyCommoditySnapshot, List<DailyCommoditySnapshot>>() {
             @Override
             public List<DailyCommoditySnapshot> operate(Dao<DailyCommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<DailyCommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, snapshotable.getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, snapshotable.getActivity()).and().between("date", startOfDay(), endOfDay());
+                queryBuilder.where().eq(COMMODITY_ID, commodityActivityValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commodityActivityValue.getActivity()).and().between("date", startOfDay(), endOfDay());
                 return dao.query(queryBuilder.prepare());
             }
         });
