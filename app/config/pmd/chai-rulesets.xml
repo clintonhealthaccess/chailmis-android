@@ -41,6 +41,8 @@
     <rule ref="rulesets/android.xml" />
     <rule ref="rulesets/design.xml" >
         <exclude name="ImmutableField" />
+        <exclude name="ConfusingTernary" />
+        <exclude name="SingularField" />
     </rule>
     <rule ref="rulesets/unusedcode.xml" >
         <exclude name="UnusedPrivateField" />
