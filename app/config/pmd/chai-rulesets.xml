@@ -39,8 +39,12 @@
     <rule ref="rulesets/basic.xml" />
     <rule ref="rulesets/braces.xml" />
     <rule ref="rulesets/android.xml" />
-    <rule ref="rulesets/design.xml" />
-    <rule ref="rulesets/unusedcode.xml" />
+    <rule ref="rulesets/design.xml" >
+        <exclude name="ImmutableField" />
+    </rule>
+    <rule ref="rulesets/unusedcode.xml" >
+        <exclude name="UnusedPrivateField" />
+    </rule>
 
     <!-- Coupling rules -->
     <rule ref="rulesets/coupling.xml">
