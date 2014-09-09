@@ -29,10 +29,12 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Builder;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class DataValue {
     private String value, period, orgUnit, dataElement, categoryOptionCombo, attributeOptionCombo, storedBy;

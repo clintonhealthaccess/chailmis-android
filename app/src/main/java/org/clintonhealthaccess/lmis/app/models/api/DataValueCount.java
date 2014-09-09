@@ -30,9 +30,11 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class DataValueCount {
     private double imported, updated, ignored, deleted;
 }

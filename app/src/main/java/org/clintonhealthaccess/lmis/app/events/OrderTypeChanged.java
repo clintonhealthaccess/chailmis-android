@@ -31,9 +31,11 @@ package org.clintonhealthaccess.lmis.app.events;
 
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class OrderTypeChanged {
     private OrderType orderType;
 

@@ -32,10 +32,13 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @DatabaseTable
-@Data
+@Getter
+@Setter
+
 public class OrderType {
 
     public static final String ROUTINE = "ROUTINE";
