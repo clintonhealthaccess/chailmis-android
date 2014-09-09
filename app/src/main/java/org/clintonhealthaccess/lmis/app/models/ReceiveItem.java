@@ -29,8 +29,18 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import org.clintonhealthaccess.lmis.app.services.Snapshotable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +50,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "receive_items")
-public class ReceiveItem {
+public class ReceiveItem implements Snapshotable {
 
+    public static final String RECEIVED = "receive";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -67,4 +78,22 @@ public class ReceiveItem {
         return quantityAllocated - quantityReceived;
     }
 
+    @Override
+    public List<CommodityActivityValue> getActivitiesValues() {
+        List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        Collection<CommodityActivityValue> values = FluentIterable
+                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+                    @Override
+                    public CommodityActivityValue apply(CommodityActivity input) {
+                        return new CommodityActivityValue(input, quantityReceived);
+                    }
+                }).filter(new Predicate<CommodityActivityValue>() {
+                    @Override
+                    public boolean apply(CommodityActivityValue input) {
+                        String testString = input.getActivity().getActivityType().toLowerCase();
+                        return testString.contains(RECEIVED);
+                    }
+                }).toList();
+        return new ArrayList<>(values);
+    }
 }

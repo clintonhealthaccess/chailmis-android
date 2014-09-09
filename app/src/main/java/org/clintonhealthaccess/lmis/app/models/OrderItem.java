@@ -29,14 +29,23 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-public class OrderItem {
+public class OrderItem implements Snapshotable{
 
+    public static final String ORDERED_AMOUNT = "ORDERED_AMOUNT";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -129,5 +138,29 @@ public class OrderItem {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    @Override
+    public List<CommodityActivityValue> getActivitiesValues() {
+        List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        Collection<CommodityActivityValue> values = FluentIterable
+                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+                    @Override
+                    public CommodityActivityValue apply(CommodityActivity input) {
+                        return new CommodityActivityValue(input, quantity);
+                    }
+                }).filter(new Predicate<CommodityActivityValue>() {
+                    @Override
+                    public boolean apply(CommodityActivityValue input) {
+                        String testString = input.getActivity().getActivityType().toLowerCase();
+                        return testString.contains(ORDERED_AMOUNT);
+                    }
+                }).toList();
+        return new ArrayList<>(values);
     }
 }

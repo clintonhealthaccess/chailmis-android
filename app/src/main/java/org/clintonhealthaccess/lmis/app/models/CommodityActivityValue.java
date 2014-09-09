@@ -29,6 +29,10 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
+
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -70,5 +74,7 @@ public class CommodityActivityValue {
                 ", value=" + value +
                 '}';
     }
+
+
 }
 

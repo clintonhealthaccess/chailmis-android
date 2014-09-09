@@ -48,16 +48,28 @@ public class DataSet {
 
     @DatabaseField
     private String description;
-    @DatabaseField
+
+    @DatabaseField(id = true, uniqueIndex = true)
     private String id;
     @DatabaseField
     private String name;
     @DatabaseField
     private String periodType;
-    @DatabaseField(generatedId = true)
-    private Long dataSetId;
 
     private List<DataElement> dataElements;
 
 
+    public DataSet(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "DataSet{" +
+                "periodType='" + periodType + '\'' +
+                ", description='" + description + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -61,6 +61,16 @@ public class GenericDao<Model> {
         });
     }
 
+    public Model createOrUpdate(final Model object) {
+        return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
+            @Override
+            public Model operate(Dao<Model, String> dao) throws SQLException {
+                dao.createOrUpdate(object);
+                return object;
+            }
+        });
+    }
+
     public List<Model> queryForAll() {
         return dbUtil.withDao(type, new DbUtil.Operation<Model, List<Model>>() {
             @Override

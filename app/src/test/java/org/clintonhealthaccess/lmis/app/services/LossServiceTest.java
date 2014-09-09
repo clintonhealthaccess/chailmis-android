@@ -32,7 +32,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -58,14 +58,14 @@ public class LossServiceTest {
     private CommodityService commodityService;
 
     private GenericDao<Loss> lossDao;
-    private GenericDao<DailyCommoditySnapshot> snapshotGenericDao;
+    private GenericDao<CommoditySnapshot> snapshotGenericDao;
 
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
         commodityService.initialise(new User("test", "pass"));
         lossDao = new GenericDao<>(Loss.class, Robolectric.application);
-        snapshotGenericDao = new GenericDao<>(DailyCommoditySnapshot.class, Robolectric.application);
+        snapshotGenericDao = new GenericDao<>(CommoditySnapshot.class, Robolectric.application);
     }
 
     @Test

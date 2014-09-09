@@ -30,10 +30,22 @@
 
 package org.clintonhealthaccess.lmis.app.utils;
 
+import org.clintonhealthaccess.lmis.app.models.OrderCycle;
+
 import java.util.Collection;
 
 public class Helpers {
     public static boolean collectionIsNotEmpty(Collection collection) {
         return collection != null && collection.size() > 0;
+    }
+
+    public static OrderCycle getOrderCycle(String orderFrequency) {
+        OrderCycle orderCycle;
+        if (orderFrequency == null || orderFrequency.isEmpty()) {
+            orderCycle = OrderCycle.Monthly;
+        } else {
+            orderCycle = OrderCycle.valueOf(orderFrequency);
+        }
+        return orderCycle;
     }
 }

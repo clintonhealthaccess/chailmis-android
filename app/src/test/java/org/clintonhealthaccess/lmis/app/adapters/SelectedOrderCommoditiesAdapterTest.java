@@ -94,7 +94,6 @@ public class SelectedOrderCommoditiesAdapterTest {
         setUpInjection(this);
         Commodity commodity = mock(Commodity.class);
         when(commodity.getName()).thenReturn("Aspirin");
-        when(commodity.getOrderDuration()).thenReturn(30);
         when(commodity.getStockItem()).thenReturn(new StockItem(commodity, 20));
 
         commodities = new ArrayList<>();

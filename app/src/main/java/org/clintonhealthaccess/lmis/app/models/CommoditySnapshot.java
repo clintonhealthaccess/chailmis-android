@@ -27,50 +27,51 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.sync;
+package org.clintonhealthaccess.lmis.app.models;
 
-import android.accounts.Account;
-import android.content.AbstractThreadedSyncAdapter;
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.SyncResult;
-import android.os.Bundle;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-import com.google.inject.Inject;
+import java.util.Date;
 
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
-import org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService;
-import org.clintonhealthaccess.lmis.app.services.UserService;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import roboguice.RoboGuice;
+@Getter
+@Setter
+@NoArgsConstructor
+@DatabaseTable
+public class CommoditySnapshot {
 
-import static android.util.Log.i;
+    public static final String PERIOD = "period";
+    @DatabaseField(generatedId = true)
+    private Long id;
 
-public class SyncAdapter extends AbstractThreadedSyncAdapter {
-    private final ContentResolver contentResolver;
+    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, columnName = "commodityActivity_id")
+    private CommodityActivity commodityActivity;
 
-    @Inject
-    DbUtil dbUtil;
-    @Inject
-    CommoditySnapshotService commoditySnapshotService;
+    @DatabaseField(canBeNull = false)
+    private int value;
 
-    @Inject
-    UserService userService;
+    @DatabaseField(defaultValue = "false")
+    private boolean synced;
 
+    @DatabaseField(canBeNull = false, foreign = true, uniqueCombo = true)
+    private Commodity commodity;
 
-    public SyncAdapter(Context context, boolean autoInitialize) {
-        super(context, autoInitialize);
-        contentResolver = context.getContentResolver();
-        RoboGuice.getInjector(context).injectMembers(this);
+    @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = PERIOD)
+    private String period;
+
+    public CommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, int value) {
+        this.commodity = commodity;
+        this.commodityActivity = commodityActivity;
+        this.value = value;
+        this.synced = false;
+        this.period = commodityActivity.getPeriod();
     }
 
-    @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        i("==> Syncing...........", account.name);
-        User user = userService.getRegisteredUser();
-        commoditySnapshotService.syncWithServer(user);
-
+    public void incrementValue(int value) {
+        this.value += value;
     }
 }

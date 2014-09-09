@@ -10,25 +10,41 @@
                             "name": "Coartem",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "1234",
                         "name": "Coartem_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "ceb68e89-60a2-4b22-b07e-03ab1c20fdba",
+                        "dataSet": {
+                            "id": "14c64f70-40a3-472e-9709-753648d9d374",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "0efb88db-3387-4846-ba81-274e1fc78b56",
                         "name": "ad827c84-ebd5-428c-a766-ed58456f5276"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "55db132a-ae01-4646-aed5-4d296ed8c02b",
+                        "dataSet": {
+                            "id": "224478c6-8964-4ccf-891b-dda3d7e4422e",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "9be1a0fc-ac65-4192-90a9-f810836afcbd",
                         "name": "ca78286a-90cd-47cf-8354-699c75b04c7c"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "dfb743db-f117-48fa-90ab-2e9ed6d555f0",
+                        "dataSet": {
+                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "2c5b0af3-54ff-4852-9537-073727dfd345",
                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
                     }
@@ -46,25 +62,41 @@
                             "name": "Choloquine",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "efa02220-4b7f-4c89-8b69-3785fffa49e4",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "12344",
                         "name": "Choloquine_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "13fd5d4b-7059-4bcf-9f8f-071c6e4ea2e7",
+                        "dataSet": {
+                            "id": "45ded345-4bb8-4a9d-b817-6ac98b833280",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "74e85a50-d0e4-4e8d-9470-90cfc8423b6c",
                         "name": "6e8a56c7-c34d-448a-b306-ebc460c6eda2"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "2a1cc958-c1a0-42b3-a02b-eb2d78e2e963",
+                        "dataSet": {
+                            "id": "2d1d62c6-8aa3-4b5d-b34a-583ea746c43d",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "6645f087-a617-41fb-abbb-1366eb2f3a63",
                         "name": "ad415130-e455-4358-b2c5-54817538327f"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "8219aece-06d7-46b1-9b3e-565327a8529d",
+                        "dataSet": {
+                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "e003847a-8e31-4522-855a-d97006574f14",
                         "name": "72de09aa-dbb2-40df-bf04-1395ece55516"
                     }
@@ -82,25 +114,41 @@
                             "name": "Quinine",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "02822b7b-38b2-4498-a76d-3e43f3b27201",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "1234as",
                         "name": "Quinine_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "99b93468-945b-44a1-ae9c-418069811efa",
+                        "dataSet": {
+                            "id": "34f02ee0-1d81-4e6f-bfa8-9a1b3d76c5ce",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "78ed16ad-ca2c-4cce-9a28-49472843e1cc",
                         "name": "4cba9355-9063-4900-a4e8-2ba3933f6a0d"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "b6ab7476-1ea3-4e6e-881c-c618f04f40a5",
+                        "dataSet": {
+                            "id": "c7bbcb76-c489-4fb4-bfa8-6b1ba6f601a5",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "c3894b31-52b6-48f4-ada0-70ca23f46cfc",
                         "name": "e0dbf320-ce76-4ab0-96a6-20ab3df735ca"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "2a1ab16f-e585-40b4-bae7-0adfb8006ad2",
+                        "dataSet": {
+                            "id": "ef052ae4-9cf2-4c43-91a5-2458cdaac79c",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "cc9941f3-9369-46f6-a9d1-ee4c88e7e757",
                         "name": "e5adfcdd-6a78-43ba-9206-059eaee4bfa1"
                     }
@@ -118,25 +166,41 @@
                             "name": "Fansida",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "26ef3dd5-bd6a-4855-84ed-521aa83443c0",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "1234222",
                         "name": "Fansida_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "bfceb7a3-50df-4619-902e-bd12911f7222",
+                        "dataSet": {
+                            "id": "2f164be2-15d7-41fd-bf9d-1d0d93d096b2",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "34ddbd6e-031a-435d-b8c0-a8099259e666",
                         "name": "6d8d3a72-dfa7-40a5-9d6d-5ed07e7dc4a0"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "31035757-9950-40cb-9e4f-061e6876d394",
+                        "dataSet": {
+                            "id": "7388649b-5b48-4e8f-9af9-757f781cb34a",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "068010c6-3089-4609-8c07-f7a9788bd36f",
                         "name": "d219ff58-b691-43d6-8f46-5e6f29c89634"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "d77c1792-2129-45a4-9adb-e108c56e6030",
+                        "dataSet": {
+                            "id": "624485e0-0c0a-4be5-b781-f704c1fef968",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "a10e2ee1-b66b-478f-893d-b3b62d19d336",
                         "name": "1e70dbf7-cacc-44b7-8163-c2d0f500100f"
                     }
@@ -154,25 +218,41 @@
                             "name": "Hedex",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "2f7835f0-d198-4fdf-9f65-3070bcfcac72",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "123294",
                         "name": "Hedex_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "9a0e4ac1-9b64-49d9-9180-5a5ad379356c",
+                        "dataSet": {
+                            "id": "5d05818c-f331-4c80-ab6b-fefc9f6d18ae",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "f671abea-6f16-4aa7-ab01-ee7c95cb7e06",
                         "name": "25830e61-1dc7-4dcb-b65d-487fda5224eb"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "90ab9062-3126-47ad-9d5c-2189e9235628",
+                        "dataSet": {
+                            "id": "81c25c1a-d2f0-4e5c-a855-04cd0c58ba3d",
+                            "name": "lmis dataset",
+                            "periodType": "BiMonthly"
+                        },
                         "id": "34b30a79-6c61-4326-b07a-c4a22f9cb263",
                         "name": "279ffd4f-5e21-4350-8a46-3af54fe67367"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "f0751926-ea0a-4b7b-b5d5-1cfb59aba7d4",
+                        "dataSet": {
+                            "id": "ea156dcd-7306-4cdb-a2ad-d5b0d7972595",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "fc9bd04f-ec9f-4d3b-8982-712b0446da23",
                         "name": "a51856c7-289e-49a8-afed-036eb4c36a4b"
                     }
@@ -190,25 +270,41 @@
                             "name": "Septrin",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                            "id": "3daa447d-087a-49e2-9ca8-662b3b27ddce",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "12ee34",
                         "name": "Septrin_DISPENSING"
                     },
                     {
                         "activityType": "EXPIRED",
-                        "dataSet": "5982c69e-88e0-4e0d-8524-e10a999418f6",
+                        "dataSet": {
+                            "id": "a6656f64-492a-4fdf-abee-eb5c2aed4cfb",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "f8add2d1-fa5e-4358-a98d-6cdf2d5f2688",
                         "name": "2b4068d7-78af-45b2-8d48-faab69de2cf6"
                     },
                     {
                         "activityType": "WASTE",
-                        "dataSet": "f1da7761-a8e2-4ca2-89e7-0a23d6125d22",
+                        "dataSet": {
+                            "id": "5397f102-ebc4-4324-812b-e1f87e1bafd1",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
                         "id": "c0338759-cb3d-443e-9340-24e6729b7001",
                         "name": "88133bd2-40cb-40f0-9cc9-26165c3d3839"
                     },
                     {
                         "activityType": "MISSING",
-                        "dataSet": "52007731-0fa3-49c6-9aee-b01f0885d493",
+                        "dataSet": {
+                            "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
                         "id": "61cb11ad-27ad-4af4-9127-3b2441e35ded",
                         "name": "c255495f-ac0e-49f2-b396-c0d27ceef519"
                     }
@@ -232,7 +328,11 @@
                             "name": "Condom",
                             "orderDuration": 30
                         },
-                        "dataSet": "121223",
+                        "dataSet": {
+                                                    "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
+                                                    "name": "lmis dataset",
+                                                    "periodType": "Monthly"
+                                                },
                         "id": "1229234",
                         "name": "Condom_DISPENSING"
                     }

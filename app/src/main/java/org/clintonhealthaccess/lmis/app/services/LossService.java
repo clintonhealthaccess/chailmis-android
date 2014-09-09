@@ -47,7 +47,7 @@ public class LossService {
     private StockService stockService;
 
     @Inject
-    private DailyCommoditySnapshotService snapshotService;
+    private CommoditySnapshotService snapshotService;
 
     public void saveLoss(Loss loss) {
         GenericDao<Loss> lossDao = new GenericDao<>(Loss.class, context);

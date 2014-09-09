@@ -29,8 +29,14 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import android.util.Log;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
+
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,9 +53,8 @@ public class CommodityActivity {
     private String name;
     @DatabaseField(canBeNull = false)
     private String activityType;
-
-    @DatabaseField(canBeNull = false)
-    private String dataSet;
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    private DataSet dataSet;
 
     public static String CURRENT_STOCK = "CURRENT_STOCK";
 
@@ -65,5 +70,16 @@ public class CommodityActivity {
         this.activityType = activityType;
 
 
+    }
+
+    public String getPeriod() {
+        Log.e("Sync", "dataSet -->" + getDataSet());
+        Log.e("Sync", "dataSet -->" + getDataSet());
+        String periodType = getDataSet().getPeriodType();
+        Log.e("Sync", "periodType -->" + periodType);
+        OrderCycle cycle = Helpers.getOrderCycle(periodType);
+        String period = cycle.getPeriod(new Date());
+        Log.e("Sync", "period -->" + period);
+        return period;
     }
 }

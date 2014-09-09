@@ -37,6 +37,7 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -140,8 +141,12 @@ public class CommodityService {
 
     private void createCommodityActivity(Commodity commodity) {
         GenericDao<CommodityActivity> commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
+        GenericDao<DataSet> dataSetGenericDao = new GenericDao<>(DataSet.class, context);
 
         for (CommodityActivity commodityActivity : commodity.getCommodityActivities()) {
+            if (commodityActivity.getDataSet() != null) {
+                dataSetGenericDao.createOrUpdate(commodityActivity.getDataSet());
+            }
             if (commodityActivity.getCommodity() == null) {
                 commodityActivity.setCommodity(commodity);
             }

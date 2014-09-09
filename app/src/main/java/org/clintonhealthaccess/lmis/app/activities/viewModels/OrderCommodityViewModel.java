@@ -29,10 +29,13 @@
 
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
+import android.util.Log;
+
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderCycle;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.util.Date;
 
@@ -132,11 +135,7 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     private OrderCycle getOrderCycle() {
         String orderFrequency = getCommodity().getOrderFrequency();
         OrderCycle orderCycle;
-        if (orderFrequency == null || orderFrequency.isEmpty()) {
-            orderCycle = OrderCycle.Monthly;
-        } else {
-            orderCycle = OrderCycle.valueOf(orderFrequency);
-        }
+        orderCycle = Helpers.getOrderCycle(orderFrequency);
         return orderCycle;
     }
 

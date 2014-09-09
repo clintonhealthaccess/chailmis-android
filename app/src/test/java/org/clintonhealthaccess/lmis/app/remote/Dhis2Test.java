@@ -33,7 +33,6 @@ import com.google.inject.Inject;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
-import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
@@ -48,7 +47,6 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +61,6 @@ import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static org.robolectric.Robolectric.addPendingHttpResponse;
 import static org.robolectric.Robolectric.getSentHttpRequest;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -86,7 +83,7 @@ public class Dhis2Test extends LMISTestCase {
 
     @Test
     public void testShouldValidateUserLogin() throws Exception {
-        setUpSuccessHttpGetRequest(200,"userResponse.json");
+        setUpSuccessHttpGetRequest(200, "userResponse.json");
 
         User user = new User("test", "pass");
         dhis2.validateLogin(user);
@@ -136,8 +133,8 @@ public class Dhis2Test extends LMISTestCase {
         String end = dateFormat.format(calendar.getTime());
         calendar.add(Calendar.MONTH, -6);
         String start = dateFormat.format(calendar.getTime());
-        setUpSuccessHttpGetRequest("/api/dataSets?query=LMIS&fields=id%2Cname%2CdataElements%5Bname%2Cid%2CattributeValues%5Bvalue%2Cattribute%5Bid%2Cname%5D%5D%2CdataElementGroups%5Bid%2Cname%2CdataElementGroupSet%5Bid%2Cname%5D", "dataSets.json");
-        setUpSuccessHttpGetRequest("/api/dataValueSets?dataSet=1ce7aa8c65e&orgUnit=" + orgUnit + "&startDate=" + start + "&endDate=" + end, "dataValues.json");
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "dataValues.json");
         User user = new User();
         user.setFacilityCode(orgUnit);
         commodityService.saveToDatabase(dhis2.fetchCommodities(user));

@@ -82,7 +82,7 @@ public class Dhis2 implements LmisServer {
     @Override
     public List<Category> fetchCommodities(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name]");
+        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name]");
         return getCategoriesFromDataSets(response.getDataSets());
     }
 
@@ -143,7 +143,7 @@ public class Dhis2 implements LmisServer {
                 AttributeValue attributeValue = element.getAttributeValues().get(0);
                 CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
                 if (element.getDataSets() != null && element.getDataSets().size() > 0) {
-                    commodityActivity.setDataSet(element.getDataSets().get(0).getId());
+                    commodityActivity.setDataSet(element.getDataSets().get(0));
                 }
                 actualCommodity.getCommodityActivities().add(commodityActivity);
             }
@@ -199,7 +199,7 @@ public class Dhis2 implements LmisServer {
 
         String start = SIMPLE_DATE_FORMAT.format(calendar.getTime());
 
-        String dataSet = commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet();
+        String dataSet = commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet().getId();
 
         DataValueSet valueSet = new DataValueSet();
 

@@ -29,20 +29,32 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum OrderCycle {
-    Monthly(1, 1),
-    Bimonthly(1, 2),
+    Daily(0, 0, "yyyyMMdd"),
+    Monthly(1, 1, "yyyyMM"),
+    BiMonthly(1, 2),
     Quarterly(1, 3),
-    Six_monthly(1, 6),
-    Yearly(1, 12);
+    SixMonthly(1, 6),
+    Yearly(1, 12, "yyyy");
 
     OrderCycle(int startMonths, int endMonths) {
         this.startMonths = startMonths;
         this.endMonths = endMonths;
     }
+
+    OrderCycle(int startMonths, int endMonths, String format) {
+        this.startMonths = startMonths;
+        this.endMonths = endMonths;
+        this.dateFormat = new SimpleDateFormat(format);
+    }
+
 
     public Date startDate(Date now) {
         Calendar calendar = getCalendarFromDate(now);
@@ -56,6 +68,58 @@ public enum OrderCycle {
         calendar.add(Calendar.MONTH, endMonths);
         setDateToLastDayOfMonth(calendar);
         return calendar.getTime();
+    }
+
+    public String getPeriod(Date date) {
+        switch (this) {
+            case BiMonthly:
+                return getBiMonthlyPeriod(date);
+            case SixMonthly:
+                return getSixMonthlyPeriod(date);
+            case Quarterly:
+                return getQuarterlyPeriod(date);
+            default:
+                return dateFormat.format(date);
+        }
+    }
+
+    private String getBiMonthlyPeriod(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if ((calendar.get(Calendar.MONTH) + 1) % 2 == 0) {
+            calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1);
+        }
+        return new SimpleDateFormat("yyyyMM").format(calendar.getTime()) + "B";
+    }
+
+    private String getSixMonthlyPeriod(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        String number = "2";
+        calendar.setTime(date);
+        if (((calendar.get(Calendar.MONTH) + 1) / 6) == 0) {
+            number = "1";
+        }
+        return new SimpleDateFormat("yyyy").format(calendar.getTime()) + "S" + number;
+    }
+
+
+    private String getQuarterlyPeriod(Date date) {
+        String month = new SimpleDateFormat("MM").format(date);
+
+        Map<String, String> dates = new HashMap<>();
+        dates.put("01", "1");
+        dates.put("02", "1");
+        dates.put("03", "1");
+        dates.put("04", "2");
+        dates.put("05", "2");
+        dates.put("06", "2");
+        dates.put("07", "3");
+        dates.put("08", "3");
+        dates.put("09", "3");
+        dates.put("10", "4");
+        dates.put("11", "4");
+        dates.put("12", "4");
+        return new SimpleDateFormat("yyyy").format(date) + "Q" + dates.get(month);
     }
 
     private static void setDateToFirstDayOfMonth(Calendar calendar) {
@@ -79,4 +143,5 @@ public enum OrderCycle {
 
     private int startMonths;
     private int endMonths;
+    private DateFormat dateFormat;
 }

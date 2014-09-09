@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,50 +28,21 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.utils;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.clintonhealthaccess.lmis.app.models.OrderCycle;
+import org.junit.Test;
 
-import java.util.Date;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+public class HelpersTest {
 
-@Getter
-@Setter
-@NoArgsConstructor
-@DatabaseTable
-public class DailyCommoditySnapshot {
-
-    @DatabaseField(generatedId = true)
-    private Long id;
-
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, columnName = "commodityActivity_id")
-    private CommodityActivity commodityActivity;
-
-    @DatabaseField(canBeNull = false)
-    private int value;
-
-    @DatabaseField(defaultValue = "false")
-    private boolean synced;
-
-    @DatabaseField(canBeNull = false, foreign = true, uniqueCombo = true)
-    private Commodity commodity;
-
-    @DatabaseField(canBeNull = false, uniqueCombo = true)
-    private Date date;
-
-    public DailyCommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, int value) {
-        this.commodity = commodity;
-        this.commodityActivity = commodityActivity;
-        this.value = value;
-        this.synced = false;
-        this.date = new Date();
-    }
-
-    public void incrementValue(int value) {
-        this.value += value;
+    @Test
+    public void shouldGetCorrectOrderCycle() throws Exception {
+        assertThat(Helpers.getOrderCycle("Daily"), is(OrderCycle.Daily));
+        assertThat(Helpers.getOrderCycle("Monthly"), is(OrderCycle.Monthly));
+        assertThat(Helpers.getOrderCycle("BiMonthly"), is(OrderCycle.BiMonthly));
+        assertThat(Helpers.getOrderCycle("SixMonthly"), is(OrderCycle.SixMonthly));
     }
 }

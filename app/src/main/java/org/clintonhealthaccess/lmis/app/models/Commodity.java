@@ -60,17 +60,13 @@ public class Commodity implements Serializable {
     @DatabaseField
     private String orderFrequency;
 
-    @DatabaseField(canBeNull = false)
-    private int orderDuration;
-
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
-
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
 
-    @ForeignCollectionField(eager = true)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 5)
     private Collection<CommodityActivity> commodityActivitiesSaved;
 
     private List<CommodityActivity> commodityActivities = new ArrayList<>();
@@ -97,10 +93,6 @@ public class Commodity implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public int getOrderDuration() {
-        return orderDuration;
     }
 
     @Override

@@ -36,7 +36,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
-import org.clintonhealthaccess.lmis.app.models.DailyCommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -61,10 +62,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
+public class CommoditySnapshotServiceTest extends LMISTestCase {
     public static final String DISPENSING = "DISPENSING";
     @Inject
-    DailyCommoditySnapshotService dailyCommoditySnapshotService;
+    CommoditySnapshotService commoditySnapshotService;
 
     @Inject
     CommodityService commodityService;
@@ -74,7 +75,8 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
     private GenericDao<Category> categoryDao;
     private GenericDao<Commodity> commodityDao;
     private GenericDao<CommodityActivity> commodityActivityGenericDao;
-    private GenericDao<DailyCommoditySnapshot> snapshotDao;
+    private GenericDao<CommoditySnapshot> snapshotDao;
+    private GenericDao<DataSet> dataSetGenericDao;
 
 
     @Before
@@ -82,8 +84,9 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         Context context = Robolectric.application;
         categoryDao = new GenericDao<>(Category.class, context);
         commodityDao = new GenericDao<>(Commodity.class, context);
-        snapshotDao = new GenericDao<>(DailyCommoditySnapshot.class, context);
+        snapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
         commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
+        dataSetGenericDao = new GenericDao<>(DataSet.class, context);
         setUpInjection(this);
         generateTestCommodities();
     }
@@ -100,13 +103,13 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         DispensingItem snapshotable1 = new DispensingItem(fetchedCommodity2, 4);
         snapshotable.setDispensing(dispensing);
         snapshotable1.setDispensing(dispensing);
-        dailyCommoditySnapshotService.add(snapshotable);
-        dailyCommoditySnapshotService.add(snapshotable1);
+        commoditySnapshotService.add(snapshotable);
+        commoditySnapshotService.add(snapshotable1);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
 
-        assertThat(dailyCommoditySnapshots.size(), is(2));
-        assertThat(dailyCommoditySnapshots.get(0).getValue(), is(3));
+        assertThat(commoditySnapshots.size(), is(2));
+        assertThat(commoditySnapshots.get(0).getValue(), is(3));
     }
 
     @Test
@@ -116,13 +119,13 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         DispensingItem dispensingItem = new DispensingItem(fetchedCommodity, 3);
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
-        dailyCommoditySnapshotService.add(dispensingItem);
-        dailyCommoditySnapshotService.add(dispensingItem);
-        dailyCommoditySnapshotService.add(dispensingItem);
+        commoditySnapshotService.add(dispensingItem);
+        commoditySnapshotService.add(dispensingItem);
+        commoditySnapshotService.add(dispensingItem);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
-        assertThat(dailyCommoditySnapshots.size(), is(1));
-        assertThat(dailyCommoditySnapshots.get(0).getValue(), is(9));
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        assertThat(commoditySnapshots.get(0).getValue(), is(9));
     }
 
     @Test
@@ -133,14 +136,14 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
-        dailyCommoditySnapshot.setSynced(true);
-        snapshotDao.create(dailyCommoditySnapshot);
-        dailyCommoditySnapshotService.add(dispensingItem);
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
+        commoditySnapshot.setSynced(true);
+        snapshotDao.create(commoditySnapshot);
+        commoditySnapshotService.add(dispensingItem);
 
-        List<DailyCommoditySnapshot> dailyCommoditySnapshots = snapshotDao.queryForAll();
-        assertThat(dailyCommoditySnapshots.size(), is(1));
-        assertThat(dailyCommoditySnapshots.get(0).isSynced(), is(false));
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        assertThat(commoditySnapshots.get(0).isSynced(), is(false));
     }
 
     @Test
@@ -152,15 +155,15 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        DailyCommoditySnapshot dailyCommoditySnapshot = new DailyCommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
-        dailyCommoditySnapshot.setSynced(true);
-        snapshotDao.create(dailyCommoditySnapshot);
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
+        commoditySnapshot.setSynced(true);
+        snapshotDao.create(commoditySnapshot);
 
         DispensingItem snapshotable = new DispensingItem(fetchedCommodity2, 4);
         snapshotable.setDispensing(dispensing);
-        dailyCommoditySnapshotService.add(snapshotable);
+        commoditySnapshotService.add(snapshotable);
 
-        List<DailyCommoditySnapshot> unsynchedSnapshots = dailyCommoditySnapshotService.getUnSyncedSnapshots();
+        List<CommoditySnapshot> unsynchedSnapshots = commoditySnapshotService.getUnSyncedSnapshots();
         assertThat(unsynchedSnapshots.size(), is(1));
     }
 
@@ -172,11 +175,11 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        DailyCommoditySnapshot snapshot1 = new DailyCommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        DailyCommoditySnapshot snapshot2 = new DailyCommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
-        List<DailyCommoditySnapshot> snapshots = Arrays.asList(snapshot1, snapshot2);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        List<CommoditySnapshot> snapshots = Arrays.asList(snapshot1, snapshot2);
 
-        DataValueSet valueSet = dailyCommoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
+        DataValueSet valueSet = commoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
 
         assertThat(valueSet, is(notNullValue()));
         assertThat(valueSet.getDataValues().size(), is(2));
@@ -194,16 +197,16 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        DailyCommoditySnapshot snapshot1 = new DailyCommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        DailyCommoditySnapshot snapshot2 = new DailyCommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
 
-        assertThat(dailyCommoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
 
-        dailyCommoditySnapshotService.syncWithServer(new User("user", "user"));
+        commoditySnapshotService.syncWithServer(new User("user", "user"));
 
-        assertThat(dailyCommoditySnapshotService.getUnSyncedSnapshots().size(), is(0));
+        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(0));
 
 
     }
@@ -218,19 +221,22 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        DailyCommoditySnapshot snapshot1 = new DailyCommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        DailyCommoditySnapshot snapshot2 = new DailyCommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
 
-        assertThat(dailyCommoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
 
-        dailyCommoditySnapshotService.syncWithServer(new User("user", "user"));
+        commoditySnapshotService.syncWithServer(new User("user", "user"));
 
-        assertThat(dailyCommoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
     }
 
     private void generateTestCommodities() {
+        DataSet dataSet = new DataSet("123123");
+        dataSet.setPeriodType("Daily");
+        dataSetGenericDao.createOrUpdate(dataSet);
         Category category = new Category("commodities");
         categoryDao.create(category);
 
@@ -239,10 +245,10 @@ public class DailyCommoditySnapshotServiceTest extends LMISTestCase {
         commodityDao.create(commodity);
         commodityDao.create(commodity2);
         CommodityActivity activity = new CommodityActivity(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
-        activity.setDataSet("123");
+        activity.setDataSet(dataSet);
         commodityActivityGenericDao.create(activity);
         CommodityActivity activity2 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
-        activity2.setDataSet("123");
+        activity2.setDataSet(dataSet);
         commodityActivityGenericDao.create(activity2);
     }
 

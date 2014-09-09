@@ -58,11 +58,8 @@ public class Category implements Serializable {
     @DatabaseField(canBeNull = false)
     private String name;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 5)
     private ForeignCollection<Commodity> commoditiesCollection;
-
-    @DatabaseField(foreign = true, foreignAutoCreate = true)
-    private DataSet dataSet;
 
     private List<Commodity> commodities = new ArrayList<>();
 
@@ -114,7 +111,4 @@ public class Category implements Serializable {
         commodities.add(commodity);
     }
 
-    public void setDataSet(DataSet dataSet) {
-        this.dataSet = dataSet;
-    }
 }

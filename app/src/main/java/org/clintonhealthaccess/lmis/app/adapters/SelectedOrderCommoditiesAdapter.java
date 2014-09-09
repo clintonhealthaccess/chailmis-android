@@ -242,7 +242,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         return calendar;
     }
 
-    //FIXME hack to stop app from crashing when start date is set to its absolute maximum
+    //FIXME hack to stop app from crashing when start period is set to its absolute maximum
     private void setTimeFieldsOnMaxStartDate(Calendar calendarDateWithTimeFieldsSet, Calendar calendarMaxDate) {
         if (calendarMaxDate != null) {
             calendarMaxDate.set(Calendar.HOUR_OF_DAY, calendarDateWithTimeFieldsSet.get(Calendar.HOUR_OF_DAY));

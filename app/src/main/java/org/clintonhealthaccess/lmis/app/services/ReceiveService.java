@@ -51,6 +51,9 @@ public class ReceiveService {
     @Inject
     AllocationService allocationService;
 
+    @Inject
+    CommoditySnapshotService commoditySnapshotService;
+
     public List<String> getReadyAllocationIds() {
         return new ArrayList<>(Arrays.asList("UG-2004", "UG-2005"));
     }
@@ -75,6 +78,7 @@ public class ReceiveService {
         for (ReceiveItem receiveItem : receiveItems) {
             receiveItemDao.create(receiveItem);
             stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived());
+            commoditySnapshotService.add(receiveItem);
         }
     }
 }

@@ -133,17 +133,15 @@ public class CommodityServiceTest {
     }
 
 
-
     private List<Category> getTestCategories() {
 
         DataSet dataSet = new DataSet();
-        dataSet.setDataSetId(12324L);
+        dataSet.setId("12324L");
         dataSet.setDescription("consumption data set");
         dataSet.setName("consumption");
 
         List<Category> categories = new ArrayList<>();
         Category category = new Category("named cat");
-        category.setDataSet(dataSet);
         Commodity commodity = new Commodity("cat food");
         Commodity commodityDogFood = new Commodity("dog food");
 

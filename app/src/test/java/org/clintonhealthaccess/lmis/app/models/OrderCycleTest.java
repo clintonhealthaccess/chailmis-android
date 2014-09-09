@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -38,51 +39,107 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class OrderCycleTest {
+
+    private SimpleDateFormat testDateFormat;
+
+    @Before
+    public void setUp() throws Exception {
+        testDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    }
+
     @Test
     public void monthlyOrderCycleShouldStartFromFirstDayOfNextMonth() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("3/08/2012");
-        Date expectedDate = sdf.parse("1/09/2012");
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        Date expectedDate = testDateFormat.parse("1/09/2012");
         assertThat(OrderCycle.Monthly.startDate(currentDate), is(expectedDate));
     }
 
     @Test
     public void monthlyOrderCycleShouldEndOnTheLastDayOfNextMonth() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("22/08/2012");
-        Date expectedDate = sdf.parse("30/09/2012");
+        Date currentDate = testDateFormat.parse("22/08/2012");
+        Date expectedDate = testDateFormat.parse("30/09/2012");
         assertThat(OrderCycle.Monthly.endDate(currentDate), is(expectedDate));
     }
 
     @Test
     public void bimonthlyOrderCycleShouldStartFromFirstDayOfNextMonth() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("3/08/2012");
-        Date expectedDate = sdf.parse("1/09/2012");
-        assertThat(OrderCycle.Bimonthly.startDate(currentDate), is(expectedDate));
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        Date expectedDate = testDateFormat.parse("1/09/2012");
+        assertThat(OrderCycle.BiMonthly.startDate(currentDate), is(expectedDate));
     }
 
     @Test
     public void bimonthlyOrderCycleShouldEndOnTheLastDayOfTwoMonthsAfter() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("3/08/2012");
-        Date expectedDate = sdf.parse("31/10/2012");
-        assertThat(OrderCycle.Bimonthly.endDate(currentDate), is(expectedDate));
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        Date expectedDate = testDateFormat.parse("31/10/2012");
+        assertThat(OrderCycle.BiMonthly.endDate(currentDate), is(expectedDate));
     }
 
     @Test
     public void quarterlyOrderCycleShouldStartFromFirstDayOfNextMonth() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("3/08/2012");
-        Date expectedDate = sdf.parse("1/09/2012");
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        Date expectedDate = testDateFormat.parse("1/09/2012");
         assertThat(OrderCycle.Quarterly.startDate(currentDate), is(expectedDate));
     }
 
     @Test
     public void quarterlyOrderCycleShouldEndOnTheLastDayOfFourMonthsAfter() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date currentDate = sdf.parse("3/08/2012");
-        Date expectedDate = sdf.parse("30/11/2012");
+
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        Date expectedDate = testDateFormat.parse("30/11/2012");
         assertThat(OrderCycle.Quarterly.endDate(currentDate), is(expectedDate));
+    }
+
+    @Test
+    public void shouldGenerateCorrectDailyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.Daily.getPeriod(currentDate), is("20120803"));
+    }
+
+    @Test
+    public void shouldGenerateCorrectMonthlyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.Monthly.getPeriod(currentDate), is("201208"));
+
+        currentDate = testDateFormat.parse("23/01/2012");
+        assertThat(OrderCycle.Monthly.getPeriod(currentDate), is("201201"));
+    }
+
+    @Test
+    public void shouldGenerateCorrectBiMonthlyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.BiMonthly.getPeriod(currentDate), is("201207B"));
+
+        currentDate = testDateFormat.parse("3/01/2012");
+        assertThat(OrderCycle.BiMonthly.getPeriod(currentDate), is("201201B"));
+    }
+
+
+    @Test
+    public void shouldGenerateCorrectQuarterlyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.Quarterly.getPeriod(currentDate), is("2012Q3"));
+
+        currentDate = testDateFormat.parse("3/01/2012");
+        assertThat(OrderCycle.Quarterly.getPeriod(currentDate), is("2012Q1"));
+    }
+
+    @Test
+    public void shouldGenerateCorrectSixMonthlyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.SixMonthly.getPeriod(currentDate), is("2012S2"));
+
+        currentDate = testDateFormat.parse("3/01/2012");
+        assertThat(OrderCycle.SixMonthly.getPeriod(currentDate), is("2012S1"));
+    }
+
+    @Test
+    public void shouldGenerateCorrectYearlyPeriodFormat() throws Exception {
+        Date currentDate = testDateFormat.parse("3/08/2012");
+        assertThat(OrderCycle.Yearly.getPeriod(currentDate), is("2012"));
+
+        currentDate = testDateFormat.parse("3/01/2012");
+        assertThat(OrderCycle.Yearly.getPeriod(currentDate), is("2012"));
     }
 }

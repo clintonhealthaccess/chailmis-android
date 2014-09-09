@@ -49,7 +49,7 @@ public class DispensingService {
     @Inject
     StockService stockService;
     @Inject
-    DailyCommoditySnapshotService dailyCommoditySnapshotService;
+    CommoditySnapshotService commoditySnapshotService;
     @Inject
     private DbUtil dbUtil;
 
@@ -62,7 +62,7 @@ public class DispensingService {
                     item.setDispensing(dispensing);
                     dao.create(item);
                     adjustStockLevel(item);
-                    dailyCommoditySnapshotService.add(item);
+                    commoditySnapshotService.add(item);
                 }
                 return null;
             }
