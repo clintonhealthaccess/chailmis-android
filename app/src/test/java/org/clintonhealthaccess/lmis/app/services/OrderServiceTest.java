@@ -37,6 +37,8 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
@@ -90,7 +92,9 @@ public class OrderServiceTest extends LMISTestCase {
     private Dao<OrderType, ?> orderTypeDao;
     private Dao<Order, String> orderDao;
     private Dao<Commodity, String> commodityDao;
+    private Dao<CommodityActivity, String> commodityActivityDao;
     private Dao<Category, ?> categoryDao;
+    private Dao<DataSet, ?> dataSetDao;
     private OrderType Routine = new OrderType("ROUTINE");
     private OrderType Emergency = new OrderType("EMERGENCY");
 
@@ -111,8 +115,11 @@ public class OrderServiceTest extends LMISTestCase {
         orderDao = createDao(connectionSource, Order.class);
         orderItemDao = createDao(connectionSource, OrderItem.class);
         commodityDao = createDao(connectionSource, Commodity.class);
+        commodityActivityDao = createDao(connectionSource, CommodityActivity.class);
         categoryDao = createDao(connectionSource, Category.class);
         orderTypeDao = createDao(connectionSource, OrderType.class);
+        dataSetDao = createDao(connectionSource, DataSet.class);
+
     }
 
     @Test
@@ -136,9 +143,19 @@ public class OrderServiceTest extends LMISTestCase {
 
         Category category = new Category("Category");
         categoryDao.create(category);
-
         Commodity commodity = new Commodity("Commodity 1", category);
         commodityDao.create(commodity);
+        DataSet dataSet = new DataSet("asdas");
+        dataSetDao.create(dataSet);
+        CommodityActivity commodityActivity = new CommodityActivity(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
+        commodityActivity.setDataSet(dataSet);
+        CommodityActivity otherActivity = new CommodityActivity(commodity, "23323", "1212", OrderItem.ORDER_REASON);
+        otherActivity.setDataSet(dataSet);
+
+        commodityActivityDao.create(commodityActivity);
+        commodityActivityDao.create(otherActivity);
+
+        commodity = commodityDao.queryForId(commodity.getId());
 
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         commodityViewModel.setOrderPeriodStartDate(new Date());
@@ -150,9 +167,12 @@ public class OrderServiceTest extends LMISTestCase {
         OrderReason highDemand = new OrderReason("High demand");
         reasonDao.create(highDemand);
         commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
+        OrderType type = new OrderType("123", "routine");
+        orderTypeDao.create(type);
 
         OrderItem orderItem = new OrderItem(commodityViewModel);
         Order order = new Order();
+        order.setOrderType(type);
         order.addItem(orderItem);
 
         orderService.saveOrder(order);
@@ -168,7 +188,10 @@ public class OrderServiceTest extends LMISTestCase {
     public void shouldGenerateSRVNumber() throws Exception {
 
         assertThat(orderService.getNextSRVNumber(), is("AU-0001"));
+        OrderType type = new OrderType("123", "routine");
+        orderTypeDao.create(type);
         final Order order = new Order("AU-0001");
+        order.setOrderType(type);
         dbUtil.withDao(Order.class, new DbUtil.Operation<Order, Order>() {
             @Override
             public Order operate(Dao<Order, String> dao) throws SQLException {

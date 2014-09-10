@@ -96,4 +96,9 @@ public class ReceiveItem implements Snapshotable {
                 }).toList();
         return new ArrayList<>(values);
     }
+
+    @Override
+    public String getAttributeOptionCombo() {
+        return null;
+    }
 }

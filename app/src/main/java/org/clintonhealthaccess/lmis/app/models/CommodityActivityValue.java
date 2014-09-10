@@ -29,10 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
-
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,11 +36,16 @@ import lombok.Setter;
 @Setter
 public class CommodityActivityValue {
     private CommodityActivity activity;
-    private Integer value;
+    private String value;
 
     public CommodityActivityValue(CommodityActivity input, int quantity) {
         this.activity = input;
-        this.value = quantity;
+        this.value = String.valueOf(quantity);
+    }
+
+    public CommodityActivityValue(CommodityActivity input, String reasonForUnexpectedQuantity) {
+        this.activity = input;
+        this.value = reasonForUnexpectedQuantity;
     }
 
     @Override

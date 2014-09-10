@@ -40,4 +40,5 @@ import lombok.Setter;
 public class CategoryCombo {
     private String id, name;
     private List<DHISCategory> categories;
+    private List<DHISCategoryOptionCombo> categoryOptionCombos;
 }

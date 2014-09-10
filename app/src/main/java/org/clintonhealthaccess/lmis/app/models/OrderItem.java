@@ -43,9 +43,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class OrderItem implements Snapshotable{
+public class OrderItem implements Snapshotable {
 
-    public static final String ORDERED_AMOUNT = "ORDERED_AMOUNT";
+    public static final String ORDERED_AMOUNT = "ordered_amount";
+    public static final String ORDER_REASON = "reason_for_order";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -149,18 +150,36 @@ public class OrderItem implements Snapshotable{
     public List<CommodityActivityValue> getActivitiesValues() {
         List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
         Collection<CommodityActivityValue> values = FluentIterable
-                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+                .from(fields).filter(new Predicate<CommodityActivity>() {
+                    @Override
+                    public boolean apply(CommodityActivity input) {
+                        String testString = input.getActivityType().toLowerCase();
+                        return testString.contains(ORDERED_AMOUNT) || (testString.contains(ORDER_REASON) && reasonForUnexpectedQuantity != null);
+                    }
+                }).transform(new Function<CommodityActivity, CommodityActivityValue>() {
                     @Override
                     public CommodityActivityValue apply(CommodityActivity input) {
-                        return new CommodityActivityValue(input, quantity);
-                    }
-                }).filter(new Predicate<CommodityActivityValue>() {
-                    @Override
-                    public boolean apply(CommodityActivityValue input) {
-                        String testString = input.getActivity().getActivityType().toLowerCase();
-                        return testString.contains(ORDERED_AMOUNT);
+                        String testString = input.getActivityType().toLowerCase();
+                        if (testString.contains(ORDERED_AMOUNT)) {
+                            return new CommodityActivityValue(input, quantity);
+                        } else {
+                            return new CommodityActivityValue(input, reasonForUnexpectedQuantity.getReason());
+                        }
                     }
                 }).toList();
         return new ArrayList<>(values);
+    }
+
+    @Override
+    public String getAttributeOptionCombo() {
+        return order.getOrderType().getId();
+    }
+
+    public OrderReason getReasonForUnexpectedQuantity() {
+        return reasonForUnexpectedQuantity;
+    }
+
+    public void setReasonForUnexpectedQuantity(OrderReason reasonForUnexpectedQuantity) {
+        this.reasonForUnexpectedQuantity = reasonForUnexpectedQuantity;
     }
 }

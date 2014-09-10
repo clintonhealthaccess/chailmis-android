@@ -168,12 +168,14 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     }
 
 
-    private void setupUnexpectedReasonsSpinner(Spinner spinnerUnexpectedReasons, final OrderCommodityViewModel orderCommodityViewModel) {
+    private void setupUnexpectedReasonsSpinner(final Spinner spinnerUnexpectedReasons, final OrderCommodityViewModel orderCommodityViewModel) {
         spinnerUnexpectedReasons.setOnItemSelectedListener(new LmisOnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //FIXME Unexpected reason not being set here.
                 orderCommodityViewModel.setUnexpectedReasonPosition(position);
+                if (position != 0) {
+                    orderCommodityViewModel.setReasonForUnexpectedOrderQuantity((OrderReason) spinnerUnexpectedReasons.getAdapter().getItem(position));
+                }
             }
         });
         setupSpinnerData(spinnerUnexpectedReasons, unexpectedOrderReasons, orderCommodityViewModel.getUnexpectedReasonPosition());

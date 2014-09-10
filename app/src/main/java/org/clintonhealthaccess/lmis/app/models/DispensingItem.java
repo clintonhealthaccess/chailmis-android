@@ -104,6 +104,11 @@ public class DispensingItem implements Serializable, Snapshotable {
         return new ArrayList<>(values);
     }
 
+    @Override
+    public String getAttributeOptionCombo() {
+        return null;
+    }
+
 
     public Integer getQuantity() {
         return quantity;

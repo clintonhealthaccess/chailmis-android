@@ -30,13 +30,14 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivityValue;
 
 import java.util.List;
-import java.util.Map;
 
 public interface Snapshotable {
     Commodity getCommodity();
+
     List<CommodityActivityValue> getActivitiesValues();
+
+    String getAttributeOptionCombo();
 }

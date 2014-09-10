@@ -193,11 +193,12 @@ public class OrderActivity extends CommoditySelectableActivity {
     protected Order generateOrder() {
         int numberOfItems = arrayAdapter.getCount();
         Order order = new Order();
-
+        order.setOrderType(getOrderType());
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);
             OrderItem orderItem = new OrderItem(commodityViewModel);
             orderItem.setOrder(order);
+            orderItem.setReasonForUnexpectedQuantity(commodityViewModel.getReasonForUnexpectedOrderQuantity());
             order.addItem(orderItem);
         }
         order.setSrvNumber(nextSRVNumber);

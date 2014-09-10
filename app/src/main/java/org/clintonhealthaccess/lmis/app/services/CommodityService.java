@@ -74,8 +74,6 @@ public class CommodityService {
         List<Commodity> commodities = all();
         Map<Commodity, Integer> stockLevels = lmisServer.fetchStockLevels(commodities, user);
         saveStockLevels(stockLevels);
-        //FIXME: get order types
-        //FIXME: get order reasons
 
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();

@@ -48,6 +48,9 @@ public class Order implements Serializable {
 
     private List<OrderItem> orderItems = newArrayList();
 
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
+    private OrderType orderType;
+
     public Order() {
         //Orm lite likes
     }
@@ -107,5 +110,13 @@ public class Order implements Serializable {
 
     public void setSrvNumber(String srvNumber) {
         this.srvNumber = srvNumber;
+    }
+
+    public OrderType getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(OrderType orderType) {
+        this.orderType = orderType;
     }
 }

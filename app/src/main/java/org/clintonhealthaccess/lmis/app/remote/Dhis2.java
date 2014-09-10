@@ -37,6 +37,7 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
@@ -44,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryOption;
 import org.clintonhealthaccess.lmis.app.models.api.DHISCategory;
+import org.clintonhealthaccess.lmis.app.models.api.DHISCategoryOptionCombo;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -164,16 +166,24 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<String> fetchOrderTypes(User user) {
+    public List<OrderType> fetchOrderTypes(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        List<String> types = new ArrayList<>();
-        CategoryComboSearchResponse response = service.searchCategoryCombos("order", "name,id,categories[id,name,categoryOptions]");
+        List<OrderType> types = new ArrayList<>();
+        CategoryComboSearchResponse response = service.searchCategoryCombos("order", "name,id,categories[id,name,categoryOptions],categoryOptionCombos");
         List<CategoryCombo> categoryCombos = response.getCategoryCombos();
         if (Helpers.collectionIsNotEmpty(categoryCombos)) {
-            List<DHISCategory> categories = categoryCombos.get(0).getCategories();
+            CategoryCombo combo = categoryCombos.get(0);
+            List<DHISCategory> categories = combo.getCategories();
             if (Helpers.collectionIsNotEmpty(categories)) {
                 for (CategoryOption option : categories.get(0).getCategoryOptions()) {
-                    types.add(option.getName());
+                    String name = option.getName();
+                    for (DHISCategoryOptionCombo comboOption : combo.getCategoryOptionCombos()) {
+                        if (comboOption.getName().equalsIgnoreCase("(" + name + ")")) {
+                            types.add(new OrderType(comboOption.getId(), name));
+                        }
+                    }
+
+
                 }
             }
         }

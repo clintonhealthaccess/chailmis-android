@@ -109,4 +109,9 @@ public class LossItem implements Serializable, Snapshotable {
         }
         return values;
     }
+
+    @Override
+    public String getAttributeOptionCombo() {
+        return null;
+    }
 }

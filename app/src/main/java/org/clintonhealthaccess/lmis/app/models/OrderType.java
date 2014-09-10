@@ -43,8 +43,8 @@ public class OrderType {
 
     public static final String ROUTINE = "ROUTINE";
     public static final String EMERGENCY = "EMERGENCY";
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
+    @DatabaseField(uniqueIndex = true, id = true)
+    private String id;
 
     @DatabaseField(canBeNull = false)
     private String name;
@@ -52,6 +52,7 @@ public class OrderType {
     public OrderType() {
         //Orm lite likes this
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -80,6 +81,11 @@ public class OrderType {
 
     public OrderType(String name) {
         this.name = name;
+    }
+
+    public OrderType(String id, String name) {
+        this.name = name;
+        this.id = id;
     }
 
     public boolean isRoutine() {

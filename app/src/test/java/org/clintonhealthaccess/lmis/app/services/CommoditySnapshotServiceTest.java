@@ -109,7 +109,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
 
         assertThat(commoditySnapshots.size(), is(2));
-        assertThat(commoditySnapshots.get(0).getValue(), is(3));
+        assertThat(commoditySnapshots.get(0).getValue(), is("3"));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
         assertThat(commoditySnapshots.size(), is(1));
-        assertThat(commoditySnapshots.get(0).getValue(), is(9));
+        assertThat(commoditySnapshots.get(0).getValue(), is("9"));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), "3");
         commoditySnapshot.setSynced(true);
         snapshotDao.create(commoditySnapshot);
         commoditySnapshotService.add(dispensingItem);
@@ -155,7 +155,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), 3);
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), "3");
         commoditySnapshot.setSynced(true);
         snapshotDao.create(commoditySnapshot);
 
@@ -175,8 +175,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         List<CommoditySnapshot> snapshots = Arrays.asList(snapshot1, snapshot2);
 
         DataValueSet valueSet = commoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
@@ -197,8 +197,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
 
@@ -221,8 +221,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
         List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
         CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, 3);
-        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), 8);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
 

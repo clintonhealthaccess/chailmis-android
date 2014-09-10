@@ -53,6 +53,9 @@ public class OrderService implements OrderItemSaver {
     @Inject
     private DbUtil dbUtil;
 
+    @Inject
+    private CommoditySnapshotService commoditySnapshotService;
+
     public List<OrderReason> syncOrderReasons() {
         final ArrayList<OrderReason> savedReasons = new ArrayList<>();
         final List<String> reasons = lmisServer.fetchOrderReasons(userService.getRegisteredUser());
@@ -146,31 +149,28 @@ public class OrderService implements OrderItemSaver {
             @Override
             public String operate(Dao<OrderItem, String> dao) throws SQLException {
                 dao.create(orderItem);
+                commoditySnapshotService.add(orderItem);
                 return null;
             }
         });
     }
 
-    public ArrayList<OrderType> syncOrderTypes() {
-        final ArrayList<OrderType> orderTypes = new ArrayList<>();
-        final List<String> reasons = lmisServer.fetchOrderTypes(userService.getRegisteredUser());
+    public void syncOrderTypes() {
+        final List<OrderType> orderTypes = lmisServer.fetchOrderTypes(userService.getRegisteredUser());
         dbUtil.withDao(OrderType.class, new DbUtil.Operation<OrderType, Void>() {
             @Override
             public Void operate(Dao<OrderType, String> dao) throws SQLException {
-                saveOrderTypes(dao, reasons, orderTypes);
+                saveOrderTypes(dao, orderTypes);
                 return null;
             }
         });
 
-        return orderTypes;
     }
 
-    private void saveOrderTypes(Dao<OrderType, String> dao, List<String> reasons, ArrayList<OrderType> orderTypes) throws SQLException {
+    private void saveOrderTypes(Dao<OrderType, String> dao, List<OrderType> types) throws SQLException {
         dao.delete(dao.queryForAll());
-        for (String reason : reasons) {
-            OrderType data = new OrderType(reason);
-            dao.create(data);
-            orderTypes.add(data);
+        for (OrderType type : types) {
+            dao.create(type);
         }
     }
 }

@@ -32,8 +32,6 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,7 +50,7 @@ public class CommoditySnapshot {
     private CommodityActivity commodityActivity;
 
     @DatabaseField(canBeNull = false)
-    private int value;
+    private String value;
 
     @DatabaseField(defaultValue = "false")
     private boolean synced;
@@ -63,7 +61,11 @@ public class CommoditySnapshot {
     @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = PERIOD)
     private String period;
 
-    public CommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, int value) {
+    @DatabaseField(canBeNull = true)
+    private String attributeOptionCombo;
+
+
+    public CommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, String value) {
         this.commodity = commodity;
         this.commodityActivity = commodityActivity;
         this.value = value;
@@ -71,7 +73,19 @@ public class CommoditySnapshot {
         this.period = commodityActivity.getPeriod();
     }
 
-    public void incrementValue(int value) {
-        this.value += value;
+    public CommoditySnapshot(Commodity commodity, CommodityActivity commodityActivity, String value, String attributeOptionComboId) {
+        this(commodity, commodityActivity, value);
+        this.attributeOptionCombo = attributeOptionComboId;
+    }
+
+    public void incrementValue(String value) {
+        try {
+            int numberValue = Integer.parseInt(value);
+            int setValue = Integer.parseInt(this.value);
+            this.value = String.valueOf(numberValue + setValue);
+
+        } catch (NumberFormatException ex) {
+            this.value = value;
+        }
     }
 }
