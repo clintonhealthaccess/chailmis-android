@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, ThoughtWorks
- *
+ * Copyright (c) 2014, Thoughtworks Inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,24 +27,34 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.utils;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.OrderCycle;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.junit.Test;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class Helpers {
-    public static boolean collectionIsNotEmpty(Collection collection) {
-        return collection != null && !collection.isEmpty();
-    }
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    public static OrderCycle getOrderCycle(String orderFrequency) {
-        OrderCycle orderCycle;
-        if (orderFrequency == null || orderFrequency.isEmpty()) {
-            orderCycle = OrderCycle.Monthly;
-        } else {
-            orderCycle = OrderCycle.valueOf(orderFrequency);
-        }
-        return orderCycle;
+public class OrderItemTest {
+
+    @Test
+    public void shouldCreateCommodityActivityForAmountAndReason() throws Exception {
+
+        Commodity commodity = mock(Commodity.class);
+        CommodityActivity amountActivity = new CommodityActivity(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
+        CommodityActivity reasonActivity = new CommodityActivity(commodity, "12", "demand", OrderItem.ORDER_REASON);
+        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<>(Arrays.asList(amountActivity, reasonActivity)));
+        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
+        String testReason = "reason";
+        commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));
+        OrderItem item = new OrderItem(commodityViewModel);
+        assertThat(item.getActivitiesValues().size(), is(2));
+        assertThat(item.getActivitiesValues().get(0).getValue(), is("10"));
+        assertThat(item.getActivitiesValues().get(1).getValue(), is(testReason));
     }
 }

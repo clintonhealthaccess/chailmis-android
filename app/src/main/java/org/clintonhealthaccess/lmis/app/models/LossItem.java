@@ -93,21 +93,24 @@ public class LossItem implements Serializable, Snapshotable {
         List<CommodityActivity> activities = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
         List<CommodityActivityValue> values = new ArrayList<>();
         for (CommodityActivity activity : activities) {
-            String activityType = activity.getActivityType().toLowerCase();
-            if (activityType.contains(WASTED)) {
-                values.add(new CommodityActivityValue(activity, wastages));
-            }
-
-            if (activityType.contains(MISSING)) {
-                values.add(new CommodityActivityValue(activity, missing));
-            }
-
-            if (activityType.contains(EXPIRED)) {
-                values.add(new CommodityActivityValue(activity, expiries));
-            }
-
+            selectActivity(values, activity);
         }
         return values;
+    }
+
+    private void selectActivity(List<CommodityActivityValue> values, CommodityActivity activity) {
+        String activityType = activity.getActivityType().toLowerCase();
+        if (activityType.contains(WASTED)) {
+            values.add(new CommodityActivityValue(activity, wastages));
+        }
+
+        if (activityType.contains(MISSING)) {
+            values.add(new CommodityActivityValue(activity, missing));
+        }
+
+        if (activityType.contains(EXPIRED)) {
+            values.add(new CommodityActivityValue(activity, expiries));
+        }
     }
 
     @Override

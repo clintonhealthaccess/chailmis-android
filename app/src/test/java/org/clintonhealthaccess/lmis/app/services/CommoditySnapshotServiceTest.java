@@ -294,7 +294,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.get(0).getValue(), is(otherReason));
     }
 
-  
+
     private void generateTestCommodities() {
         DataSet dataSet = new DataSet("123123");
         dataSet.setPeriodType("Daily");

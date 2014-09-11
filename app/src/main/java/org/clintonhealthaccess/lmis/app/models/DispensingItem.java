@@ -93,15 +93,19 @@ public class DispensingItem implements Serializable, Snapshotable {
                 }).filter(new Predicate<CommodityActivityValue>() {
                     @Override
                     public boolean apply(CommodityActivityValue input) {
-                        String testString = input.getActivity().getActivityType().toLowerCase();
-                        if (dispensing.isDispenseToFacility()) {
-                            return testString.contains(ADJUSTMENTS);
-                        } else {
-                            return testString.contains(DISPENSE);
-                        }
+                        return selectDispenseOrAdjusments(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
+    }
+
+    private boolean selectDispenseOrAdjusments(CommodityActivityValue input) {
+        String testString = input.getActivity().getActivityType().toLowerCase();
+        if (dispensing.isDispenseToFacility()) {
+            return testString.contains(ADJUSTMENTS);
+        } else {
+            return testString.contains(DISPENSE);
+        }
     }
 
     @Override

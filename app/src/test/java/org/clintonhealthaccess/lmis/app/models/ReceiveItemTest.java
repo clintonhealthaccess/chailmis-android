@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, ThoughtWorks
- *
+ * Copyright (c) 2014, Thoughtworks Inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,24 +27,26 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.utils;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.OrderCycle;
+import org.junit.Test;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-public class Helpers {
-    public static boolean collectionIsNotEmpty(Collection collection) {
-        return collection != null && !collection.isEmpty();
-    }
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    public static OrderCycle getOrderCycle(String orderFrequency) {
-        OrderCycle orderCycle;
-        if (orderFrequency == null || orderFrequency.isEmpty()) {
-            orderCycle = OrderCycle.Monthly;
-        } else {
-            orderCycle = OrderCycle.valueOf(orderFrequency);
-        }
-        return orderCycle;
+public class ReceiveItemTest {
+    @Test
+    public void shouldSelectCorrectActivity() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        CommodityActivity activity = new CommodityActivity(commodity, "12", "12", "receive");
+        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityActivity>(Arrays.asList(activity)));
+        ReceiveItem item = new ReceiveItem(commodity, 10, 20);
+        assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
+        assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
     }
 }

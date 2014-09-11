@@ -90,11 +90,15 @@ public class ReceiveItem implements Snapshotable {
                 }).filter(new Predicate<CommodityActivityValue>() {
                     @Override
                     public boolean apply(CommodityActivityValue input) {
-                        String testString = input.getActivity().getActivityType().toLowerCase();
-                        return testString.contains(RECEIVED);
+                        return selectReceiveActivity(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
+    }
+
+    private boolean selectReceiveActivity(CommodityActivityValue input) {
+        String testString = input.getActivity().getActivityType().toLowerCase();
+        return testString.contains(RECEIVED);
     }
 
     @Override

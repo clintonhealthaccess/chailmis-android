@@ -211,7 +211,7 @@ public class Dhis2 implements LmisServer {
     }
 
     private String getDataSetId(List<Commodity> commodities) {
-        return commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet().getId();
+        return commodities.get(0).getCommodityActivity(CommodityActivity.currentStock).getDataSet().getId();
     }
 
     private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
@@ -244,7 +244,7 @@ public class Dhis2 implements LmisServer {
         Map<Commodity, Integer> result = new HashMap<>();
 
         for (Commodity commodity : commodities) {
-            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.CURRENT_STOCK);
+            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.currentStock);
             if (stockLevelActivity != null) {
                 DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
                 if (mostRecentDataValueForActivity != null) {
