@@ -71,14 +71,6 @@ public class OrderType {
         return name.hashCode();
     }
 
-    @Override
-    public String toString() {
-        return "OrderType{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
-
     public OrderType(String name) {
         this.name = name;
     }

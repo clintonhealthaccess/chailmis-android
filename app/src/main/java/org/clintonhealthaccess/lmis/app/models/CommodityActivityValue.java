@@ -68,14 +68,6 @@ public class CommodityActivityValue {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "CommodityActivityValue{" +
-                "activity=" + activity.getActivityType() +
-                ", value=" + value +
-                '}';
-    }
-
 
 }
 

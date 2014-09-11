@@ -58,18 +58,8 @@ public class DataSet {
 
     private List<DataElement> dataElements;
 
-
     public DataSet(String id) {
         this.id = id;
     }
 
-    @Override
-    public String toString() {
-        return "DataSet{" +
-                "periodType='" + periodType + '\'' +
-                ", description='" + description + '\'' +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

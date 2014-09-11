@@ -37,12 +37,6 @@ import java.util.List;
 public class UserProfile {
     private String name;
     private String created;
-    private String lastUpdated;
-    private String surname;
-    private String firstName;
-    private String email;
-    private String phoneNumber;
-    private UserCredentials userCredentials;
     private List<OrganisationUnit> organisationUnits = new ArrayList<OrganisationUnit>();
     private String id;
 
