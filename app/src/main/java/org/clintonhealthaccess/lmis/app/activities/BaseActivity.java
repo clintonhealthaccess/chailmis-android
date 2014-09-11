@@ -33,7 +33,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,14 +81,34 @@ public class BaseActivity extends RoboActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        try {
-            getMenuInflater().inflate(R.menu.home, menu);
-        } catch (Exception e) {
-            // FIXME: this is hacky...it breaks in ItemSelectFragmentTest but I don't know why...
-        }
+        try{
+            MenuInflater menuInflater = getMenuInflater();
+            super.onCreateOptionsMenu(menu);
+            menuInflater.inflate(R.menu.home, menu);
+            final View menu_hotlist = menu.findItem(R.id.action_alert).getActionView();
+            TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
+            updateAlertCount(5, textViewnumberOfAlerts);
+            menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }catch (Exception e){
+            //Exception when running tests
+        }
         return true;
+    }
+
+    public void updateAlertCount(final int value, final TextView textView) {
+        if (textView == null) return;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (value == 0)
+                    textView.setVisibility(View.INVISIBLE);
+                else {
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(Integer.toString(value));
+                }
+            }
+        });
     }
 
     private String getDate() {
