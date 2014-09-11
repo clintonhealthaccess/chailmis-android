@@ -48,8 +48,6 @@ import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static android.util.Log.e;
@@ -73,7 +71,6 @@ public class CommoditySnapshotService {
         GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
         for (CommodityActivityValue value : snapshotable.getActivitiesValues()) {
             List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
-
             if (commoditySnapshots.isEmpty()) {
                 createNewSnaphot(value, snapshotGenericDao, snapshotable.getAttributeOptionCombo());
             } else {
@@ -115,24 +112,6 @@ public class CommoditySnapshotService {
                 return dao.query(queryBuilder.prepare());
             }
         });
-    }
-
-    private Date startOfDay() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().getActualMinimum(Calendar.HOUR_OF_DAY));
-        cal.set(Calendar.MINUTE, Calendar.getInstance().getActualMinimum(Calendar.MINUTE));
-        cal.set(Calendar.SECOND, Calendar.getInstance().getActualMinimum(Calendar.SECOND));
-        cal.set(Calendar.MILLISECOND, Calendar.getInstance().getActualMinimum(Calendar.MILLISECOND));
-        return cal.getTime();
-    }
-
-    private Date endOfDay() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().getActualMaximum(Calendar.HOUR_OF_DAY));
-        cal.set(Calendar.MINUTE, Calendar.getInstance().getActualMaximum(Calendar.MINUTE));
-        cal.set(Calendar.SECOND, Calendar.getInstance().getActualMaximum(Calendar.SECOND));
-        cal.set(Calendar.MILLISECOND, Calendar.getInstance().getActualMaximum(Calendar.MILLISECOND));
-        return cal.getTime();
     }
 
     public void syncWithServer(User user) {

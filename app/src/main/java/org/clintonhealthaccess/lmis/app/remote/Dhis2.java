@@ -29,7 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -160,8 +159,9 @@ public class Dhis2 implements LmisServer {
         OptionSetResponse optionSetResponse = service.searchOptionSets("order", "name,id,options");
         List<String> optionSets = new ArrayList<>();
         List<OptionSet> optionSetList = optionSetResponse.getOptionSets();
-        if (Helpers.collectionIsNotEmpty(optionSetList))
+        if (Helpers.collectionIsNotEmpty(optionSetList)) {
             optionSets = optionSetList.get(0).getOptions();
+        }
         return optionSets;
     }
 
@@ -174,54 +174,54 @@ public class Dhis2 implements LmisServer {
         if (Helpers.collectionIsNotEmpty(categoryCombos)) {
             CategoryCombo combo = categoryCombos.get(0);
             List<DHISCategory> categories = combo.getCategories();
-            if (Helpers.collectionIsNotEmpty(categories)) {
-                for (CategoryOption option : categories.get(0).getCategoryOptions()) {
-                    String name = option.getName();
-                    for (DHISCategoryOptionCombo comboOption : combo.getCategoryOptionCombos()) {
-                        if (comboOption.getName().equalsIgnoreCase("(" + name + ")")) {
-                            types.add(new OrderType(comboOption.getId(), name));
-                        }
-                    }
+            getTypesFromCategories(types, combo, categories);
+        }
+        return types;
+    }
 
-
-                }
+    private void getTypesFromCategories(List<OrderType> types, CategoryCombo combo, List<DHISCategory> categories) {
+        if (Helpers.collectionIsNotEmpty(categories)) {
+            for (CategoryOption option : categories.get(0).getCategoryOptions()) {
+                String name = option.getName();
+                getAndSetIdFromCategoryOptionCombos(types, combo, name);
             }
         }
+    }
 
-        return types;
+    private void getAndSetIdFromCategoryOptionCombos(List<OrderType> types, CategoryCombo combo, String name) {
+        for (DHISCategoryOptionCombo comboOption : combo.getCategoryOptionCombos()) {
+            if (comboOption.getName().equalsIgnoreCase("(" + name + ")")) {
+                types.add(new OrderType(comboOption.getId(), name));
+            }
+        }
     }
 
     @Override
     public Map<Commodity, Integer> fetchStockLevels(List<Commodity> commodities, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-
-        String DATE_FORMAT = "yyyy-MM-dd";
-
-        SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
-
         Calendar calendar = Calendar.getInstance();
-
-        calendar.setTime(new Date());
-
-        String end = SIMPLE_DATE_FORMAT.format(calendar.getTime());
-
-        calendar.add(Calendar.MONTH, -6);
-
-        String start = SIMPLE_DATE_FORMAT.format(calendar.getTime());
-
-        String dataSet = commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet().getId();
-
         DataValueSet valueSet = new DataValueSet();
-
         try {
-            valueSet = service.fetchDataValues(dataSet, user.getFacilityCode(), start, end);
-            Gson gson = new Gson();
-            e(SYNC, "values received  " + gson.toJson(valueSet));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            valueSet = service.fetchDataValues(getDataSetId(commodities), user.getFacilityCode(), getStartDate(calendar, simpleDateFormat), getEndDate(calendar, simpleDateFormat));
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
-
         return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
+    }
+
+    private String getDataSetId(List<Commodity> commodities) {
+        return commodities.get(0).getCommodityActivity(CommodityActivity.CURRENT_STOCK).getDataSet().getId();
+    }
+
+    private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
+        calendar.add(Calendar.MONTH, -6);
+        return simpleDateFormat.format(calendar.getTime());
+    }
+
+    private String getEndDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
+        calendar.setTime(new Date());
+        return simpleDateFormat.format(calendar.getTime());
     }
 
     @Override
@@ -233,10 +233,8 @@ public class Dhis2 implements LmisServer {
     public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {
         DataValue mostRecentDataValue = null;
         for (DataValue dataValue : dataValues) {
-            if (dataValue.getDataElement().equalsIgnoreCase(abc)) {
-                if (mostRecentDataValue == null || mostRecentDataValue.getPeriod() < dataValue.getPeriod()) {
-                    mostRecentDataValue = dataValue;
-                }
+            if (dataValue.getDataElement().equalsIgnoreCase(abc) && (mostRecentDataValue == null || mostRecentDataValue.getPeriod() < dataValue.getPeriod())) {
+                mostRecentDataValue = dataValue;
             }
         }
         return mostRecentDataValue;
@@ -249,8 +247,9 @@ public class Dhis2 implements LmisServer {
             CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.CURRENT_STOCK);
             if (stockLevelActivity != null) {
                 DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
-                if (mostRecentDataValueForActivity != null)
+                if (mostRecentDataValueForActivity != null) {
                     result.put(commodity, Integer.parseInt(mostRecentDataValueForActivity.getValue()));
+                }
             }
         }
         return result;

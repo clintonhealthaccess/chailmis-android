@@ -34,29 +34,34 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.getDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
@@ -67,13 +72,19 @@ public class CommodityServiceTest {
 
     @Inject
     private CommodityService commodityService;
+    private CommodityService spyedCommodityService;
     @Inject
     private DbUtil dbUtil;
 
+    private Map<Commodity, Integer> mockStockLevels;
+    private LmisServer mockLmisServer;
+
     @Before
     public void setUp() throws Exception {
-        final LmisServer mockLmisServer = mock(LmisServer.class);
+        mockLmisServer = mock(LmisServer.class);
+        mockStockLevels = mock(Map.class);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
+        when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(mockStockLevels);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -81,6 +92,7 @@ public class CommodityServiceTest {
                 bind(LmisServer.class).toInstance(mockLmisServer);
             }
         });
+
 
     }
 
@@ -109,6 +121,32 @@ public class CommodityServiceTest {
         verifyAllCommodityCategories();
     }
 
+    @Test
+    public void shouldSaveCommodityCommodityActivities() {
+        commodityService.initialise(new User("test", "pass"));
+        Commodity testCommodity = commodityService.all().get(0);
+        assertThat(testCommodity.getCommodityActivitiesSaved().size(), is(not(0)));
+    }
+
+
+    @Test
+    public void shouldSaveCommodityActivityWithDataSet() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        Commodity testCommodity = commodityService.all().get(0);
+        assertThat(testCommodity.getCommodityActivitiesSaved().size(), is(not(0)));
+        CommodityActivity actual = (CommodityActivity) testCommodity.getCommodityActivitiesSaved().toArray()[0];
+        assertThat(actual.getDataSet(), is(notNullValue()));
+
+    }
+
+    @Test
+    public void shouldSaveStockLevelsOnInitialise() throws Exception {
+        spyedCommodityService = spy(commodityService);
+        spyedCommodityService.initialise(new User("user", "user"));
+        verify(spyedCommodityService).saveStockLevels(mockStockLevels);
+    }
+
+
     private void verifyAllCommodityCategories() {
         List<Category> allCategories = categoryService.all();
 
@@ -117,19 +155,6 @@ public class CommodityServiceTest {
         assertThat(antiMalarialCategory.getName(), equalTo("Anti Malarials"));
         assertThat(antiMalarialCategory.getCommodities().size(), is(6));
         assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
-    }
-
-    @Ignore("Work In progress...")
-    @Test
-    public void shouldSaveCommodityAggregationFields() {
-
-    }
-
-    @Ignore("Work In progress...")
-    @Test
-    public void shouldSaveCommodityDataSet() {
-        List<Category> categories = getTestCategories();
-        commodityService.saveToDatabase(categories);
     }
 
 

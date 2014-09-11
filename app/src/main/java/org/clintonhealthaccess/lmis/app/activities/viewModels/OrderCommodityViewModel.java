@@ -29,8 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
-import android.util.Log;
-
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderCycle;

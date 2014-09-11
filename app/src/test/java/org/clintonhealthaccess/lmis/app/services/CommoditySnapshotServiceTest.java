@@ -36,6 +36,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActivityValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -59,7 +60,10 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommoditySnapshotServiceTest extends LMISTestCase {
@@ -233,6 +237,64 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
     }
 
+    @Test
+    public void shouldSetAttributeAllocationNumberIfAvailable() throws Exception {
+        String testAttributeOptionCombo = "12asdjkla";
+        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
+        Dispensing dispensing = new Dispensing(false);
+
+        DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
+        snapshotable.setDispensing(dispensing);
+        doReturn(testAttributeOptionCombo).when(snapshotable).getAttributeOptionCombo();
+        commoditySnapshotService.add(snapshotable);
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        assertThat(commoditySnapshots.get(0).getAttributeOptionCombo(), is(testAttributeOptionCombo));
+    }
+
+
+    @Test
+    public void shouldCreateOrUpdateSnapshotForEachActivityValue() throws Exception {
+        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
+        Dispensing dispensing = new Dispensing(false);
+        assertThat(fetchedCommodity1.getCommodityActivitiesSaved().size(), is(greaterThan(1)));
+        CommodityActivityValue activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity(DispensingItem.DISPENSE), 1);
+        CommodityActivityValue otherActivityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity(DispensingItem.ADJUSTMENTS), 2);
+        List<CommodityActivityValue> values = new ArrayList<>(Arrays.asList(activityValue, otherActivityValue));
+        DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
+        snapshotable.setDispensing(dispensing);
+        doReturn(values).when(snapshotable).getActivitiesValues();
+        commoditySnapshotService.add(snapshotable);
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(2));
+    }
+
+    @Test
+    public void shouldReplaceValueForNonIntegerValues() throws Exception {
+        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
+        Dispensing dispensing = new Dispensing(false);
+        String reasonForUnexpectedQuantity = "work";
+        CommodityActivityValue activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity("dispense"), reasonForUnexpectedQuantity);
+        List<CommodityActivityValue> values = new ArrayList<>(Arrays.asList(activityValue));
+        DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
+        snapshotable.setDispensing(dispensing);
+        doReturn(values).when(snapshotable).getActivitiesValues();
+        commoditySnapshotService.add(snapshotable);
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        assertThat(commoditySnapshots.get(0).getValue(), is(reasonForUnexpectedQuantity));
+
+        String otherReason = "other reason";
+        activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity("dispense"), otherReason);
+        values = new ArrayList<>(Arrays.asList(activityValue));
+        doReturn(values).when(snapshotable).getActivitiesValues();
+        commoditySnapshotService.add(snapshotable);
+        commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        assertThat(commoditySnapshots.get(0).getValue(), is(otherReason));
+    }
+
+  
     private void generateTestCommodities() {
         DataSet dataSet = new DataSet("123123");
         dataSet.setPeriodType("Daily");
@@ -245,11 +307,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         commodityDao.create(commodity);
         commodityDao.create(commodity2);
         CommodityActivity activity = new CommodityActivity(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
+        CommodityActivity activity2 = new CommodityActivity(commodity, getID(), "Panado_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
         activity.setDataSet(dataSet);
-        commodityActivityGenericDao.create(activity);
-        CommodityActivity activity2 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
         activity2.setDataSet(dataSet);
+        commodityActivityGenericDao.create(activity);
         commodityActivityGenericDao.create(activity2);
+        CommodityActivity activity3 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
+        activity3.setDataSet(dataSet);
+        commodityActivityGenericDao.create(activity3);
     }
 
 

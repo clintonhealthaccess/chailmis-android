@@ -91,7 +91,7 @@ public class CommodityService {
         });
     }
 
-    private void saveStockLevels(Map<Commodity, Integer> stockLevels) {
+    protected void saveStockLevels(Map<Commodity, Integer> stockLevels) {
         for (Commodity commodity : all()) {
             if (stockLevels.containsKey(commodity)) {
                 createStock(commodity, stockLevels.get(commodity));

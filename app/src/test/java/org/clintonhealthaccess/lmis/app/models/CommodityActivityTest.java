@@ -29,51 +29,30 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
-
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@Getter
-@Setter
-@DatabaseTable
-public class CommodityActivity {
-    @DatabaseField(canBeNull = false, foreign = true)
-    private Commodity commodity;
-    @DatabaseField(id = true, uniqueIndex = true)
-    private String id;
-    @DatabaseField(canBeNull = false)
-    private String name;
-    @DatabaseField(canBeNull = false)
-    private String activityType;
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-    private DataSet dataSet;
+@RunWith(RobolectricGradleTestRunner.class)
+public class CommodityActivityTest {
 
-    public static String CURRENT_STOCK = "CURRENT_STOCK";
-
-    public CommodityActivity() {
-        //Orm Lite likes
+    @Test
+    public void shouldSetPeriodFromOrderCycle() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+        String expectedPeriod = dateFormat.format(new Date());
+        CommodityActivity activity = new CommodityActivity();
+        DataSet dataSet = mock(DataSet.class);
+        when(dataSet.getPeriodType()).thenReturn("Monthly");
+        activity.setDataSet(dataSet);
+        assertThat(activity.getPeriod(), is(expectedPeriod));
     }
 
-
-    public CommodityActivity(Commodity actualCommodity, String id, String name, String activityType) {
-        this.commodity = actualCommodity;
-        this.id = id;
-        this.name = name;
-        this.activityType = activityType;
-
-
-    }
-
-    public String getPeriod() {
-        String periodType = getDataSet().getPeriodType();
-        OrderCycle cycle = Helpers.getOrderCycle(periodType);
-        String period = cycle.getPeriod(new Date());
-        return period;
-    }
 }
