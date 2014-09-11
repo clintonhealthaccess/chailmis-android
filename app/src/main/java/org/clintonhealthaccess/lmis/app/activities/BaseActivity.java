@@ -81,19 +81,35 @@ public class BaseActivity extends RoboActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        try{
+        try {
             MenuInflater menuInflater = getMenuInflater();
             super.onCreateOptionsMenu(menu);
             menuInflater.inflate(R.menu.home, menu);
             final View menu_hotlist = menu.findItem(R.id.action_alert).getActionView();
+            menu_hotlist.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
+                    startActivity(intent);
+                }
+            });
             TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
             updateAlertCount(5, textViewnumberOfAlerts);
             menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             //Exception when running tests
         }
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_alert) {
+
+            return true;
+        }
+        return false;
     }
 
     public void updateAlertCount(final int value, final TextView textView) {
