@@ -144,10 +144,14 @@ public class OrderActivityTest {
         OrderItem orderItem1 = new OrderItem(commodityViewModel2);
 
         Order expectedOrder = new Order();
+        expectedOrder.setSrvNumber(TEST_SRV_NUMBER);
         expectedOrder.addItem(orderItem1);
         expectedOrder.addItem(orderItem2);
 
-        assertThat(expectedOrder, is(orderActivity.generateOrder()));
+        Order actualOrder = orderActivity.generateOrder();
+
+        assertThat(actualOrder.getSrvNumber(), is(expectedOrder.getSrvNumber()));
+        assertThat(actualOrder.getItems().size(), is(expectedOrder.getItems().size()));
     }
 
     @Test
@@ -184,12 +188,67 @@ public class OrderActivityTest {
     }
 
     @Test
-    public void shouldInitializeStartAndEndDateForOrderCommodityViewModels() throws Exception {
-
+    public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
+        assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
     @Test
-    public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
-        assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
+    public void shouldSetTheOrderTypeWhenOrderIsGenerated() throws Exception {
+        Order actualOrder = orderActivity.generateOrder();
+        assertThat(actualOrder.getOrderType().getName(), is(OrderType.ROUTINE));
+    }
+
+    @Test
+    public void shouldGetCorrectOrderTypeWhenItChanges() throws Exception {
+        orderActivity.spinnerOrderType.setSelection(1);
+        Order actualOrder = orderActivity.generateOrder();
+        assertThat(actualOrder.getOrderType().getName(), is(OrderType.EMERGENCY));
+    }
+
+    @Test
+    public void shouldSetUnexpectedReasonOnOrderItemsWhenCreatingAnOrder() throws Exception {
+        int testQuantity = 10;
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
+        String testReason = "HIGH DEMAND";
+        commodityViewModel1.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));
+
+        List<OrderReason> orderReasons = Arrays.asList();
+        List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
+        OrderType type = new OrderType(OrderType.ROUTINE);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+
+        Order actualOrder = orderActivity.generateOrder();
+        assertThat(actualOrder.getItems().size(), is(1));
+        assertThat(actualOrder.getItems().get(0).getReasonForUnexpectedQuantity().getReason(), is(testReason));
+    }
+
+    @Test
+    public void shouldSetQuantityOnOrderItemsWhenCreatingAnOrder() throws Exception {
+        int testQuantity = 10;
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
+
+        List<OrderReason> orderReasons = Arrays.asList();
+        List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
+        OrderType type = new OrderType(OrderType.ROUTINE);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+
+        Order actualOrder = orderActivity.generateOrder();
+        assertThat(actualOrder.getItems().size(), is(1));
+        assertThat(actualOrder.getItems().get(0).getQuantity(), is(testQuantity));
+    }
+
+    @Test
+    public void shouldSetTheOrderWhenCreatingAnOrder() throws Exception {
+        int testQuantity = 10;
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
+
+        List<OrderReason> orderReasons = Arrays.asList();
+        List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
+        OrderType type = new OrderType(OrderType.ROUTINE);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+
+        Order actualOrder = orderActivity.generateOrder();
+        assertThat(actualOrder.getItems().size(), is(1));
+        assertThat(actualOrder.getItems().get(0).getOrder().getSrvNumber(), is(TEST_SRV_NUMBER));
     }
 }

@@ -89,6 +89,15 @@ public class GenericDao<Model> {
         });
     }
 
+    public long countOf() {
+        return dbUtil.withDao(type, new DbUtil.Operation<Model, Long>() {
+            @Override
+            public Long operate(Dao<Model, String> dao) throws SQLException {
+                return dao.countOf();
+            }
+        });
+    }
+
     public Model getById(final String id) {
         return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
             @Override

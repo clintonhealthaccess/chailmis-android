@@ -38,6 +38,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityView
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
@@ -52,6 +53,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -72,6 +74,8 @@ import static org.robolectric.Robolectric.application;
 @RunWith(RobolectricGradleTestRunner.class)
 public class OrderServiceTest extends LMISTestCase {
 
+    public static final String SRV_NUMBER = "SRV NUMBER";
+    public static final int QUANTITY = 10;
     @Inject
     private OrderService orderService;
 
@@ -95,6 +99,7 @@ public class OrderServiceTest extends LMISTestCase {
     private Dao<CommodityActivity, String> commodityActivityDao;
     private Dao<Category, ?> categoryDao;
     private Dao<DataSet, ?> dataSetDao;
+    private GenericDao<CommoditySnapshot> snapshotGenericDao;
     private OrderType Routine = new OrderType("ROUTINE");
     private OrderType Emergency = new OrderType("EMERGENCY");
 
@@ -119,6 +124,8 @@ public class OrderServiceTest extends LMISTestCase {
         categoryDao = createDao(connectionSource, Category.class);
         orderTypeDao = createDao(connectionSource, OrderType.class);
         dataSetDao = createDao(connectionSource, DataSet.class);
+        snapshotGenericDao = new GenericDao<>(CommoditySnapshot.class, Robolectric.application);
+
 
     }
 
@@ -141,47 +148,15 @@ public class OrderServiceTest extends LMISTestCase {
     @Test
     public void shouldPersistAnOrder() throws SQLException {
 
-        Category category = new Category("Category");
-        categoryDao.create(category);
-        Commodity commodity = new Commodity("Commodity 1", category);
-        commodityDao.create(commodity);
-        DataSet dataSet = new DataSet("asdas");
-        dataSetDao.create(dataSet);
-        CommodityActivity commodityActivity = new CommodityActivity(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
-        commodityActivity.setDataSet(dataSet);
-        CommodityActivity otherActivity = new CommodityActivity(commodity, "23323", "1212", OrderItem.ORDER_REASON);
-        otherActivity.setDataSet(dataSet);
-
-        commodityActivityDao.create(commodityActivity);
-        commodityActivityDao.create(otherActivity);
-
-        commodity = commodityDao.queryForId(commodity.getId());
-
-        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
-        commodityViewModel.setOrderPeriodStartDate(new Date());
-        commodityViewModel.setOrderPeriodEndDate(new Date());
-
-        OrderReason emergency = new OrderReason("Emergency");
-        reasonDao.create(emergency);
-
-        OrderReason highDemand = new OrderReason("High demand");
-        reasonDao.create(highDemand);
-        commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
-        OrderType type = new OrderType("123", "routine");
-        orderTypeDao.create(type);
-
-        OrderItem orderItem = new OrderItem(commodityViewModel);
-        Order order = new Order();
-        order.setOrderType(type);
-        order.addItem(orderItem);
+        Order order = createOrder();
 
         orderService.saveOrder(order);
 
         Order returnedOrder = orderDao.queryForSameId(order);
+
         assertThat(orderDao.countOf(), is(1L));
         assertThat(returnedOrder.getSrvNumber(), is(order.getSrvNumber()));
-
-        assertThat(orderItemDao.queryForAll().get(0), is(orderItem));
+        assertThat(orderItemDao.queryForAll().get(0).getQuantity(), is(QUANTITY));
     }
 
     @Test
@@ -227,5 +202,55 @@ public class OrderServiceTest extends LMISTestCase {
         assertThat(orderService.allOrderTypes().size(), is(2));
         assertThat(orderService.allOrderTypes(), contains(routine, emergency));
 
+    }
+
+    @Test
+    public void shouldMakeSnapShotOfOrderItemWhenItIsSaved() throws Exception {
+        Order order = createOrder();
+
+        assertThat(snapshotGenericDao.countOf(), is(0L));
+        orderService.saveOrder(order);
+
+        Order returnedOrder = orderDao.queryForSameId(order);
+        assertThat(orderDao.countOf(), is(1L));
+        assertThat(returnedOrder.getSrvNumber(), is(order.getSrvNumber()));
+        assertThat(snapshotGenericDao.countOf(), is(2L));
+    }
+
+    private Order createOrder() throws SQLException {
+        Category category = new Category("Category");
+        categoryDao.create(category);
+        Commodity commodity = new Commodity("Commodity 1", category);
+        commodityDao.create(commodity);
+        DataSet dataSet = new DataSet("asdas");
+        dataSetDao.create(dataSet);
+        CommodityActivity commodityActivity = new CommodityActivity(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
+        commodityActivity.setDataSet(dataSet);
+        CommodityActivity otherActivity = new CommodityActivity(commodity, "23323", "1212", OrderItem.ORDER_REASON);
+        otherActivity.setDataSet(dataSet);
+
+        commodityActivityDao.create(commodityActivity);
+        commodityActivityDao.create(otherActivity);
+
+        commodity = commodityDao.queryForId(commodity.getId());
+
+        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, QUANTITY);
+        commodityViewModel.setOrderPeriodStartDate(new Date());
+        commodityViewModel.setOrderPeriodEndDate(new Date());
+
+        OrderReason emergency = new OrderReason("Emergency");
+        reasonDao.create(emergency);
+
+        OrderReason highDemand = new OrderReason("High demand");
+        reasonDao.create(highDemand);
+        commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
+        OrderType type = new OrderType("123", "routine");
+        orderTypeDao.create(type);
+
+        OrderItem orderItem = new OrderItem(commodityViewModel);
+        Order order = new Order(SRV_NUMBER);
+        order.setOrderType(type);
+        order.addItem(orderItem);
+        return order;
     }
 }

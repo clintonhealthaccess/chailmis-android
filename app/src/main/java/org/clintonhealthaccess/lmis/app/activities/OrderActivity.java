@@ -194,6 +194,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         int numberOfItems = arrayAdapter.getCount();
         Order order = new Order();
         order.setOrderType(getOrderType());
+        order.setSrvNumber(nextSRVNumber);
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);
             OrderItem orderItem = new OrderItem(commodityViewModel);
@@ -201,7 +202,6 @@ public class OrderActivity extends CommoditySelectableActivity {
             orderItem.setReasonForUnexpectedQuantity(commodityViewModel.getReasonForUnexpectedOrderQuantity());
             order.addItem(orderItem);
         }
-        order.setSrvNumber(nextSRVNumber);
         return order;
     }
 }
