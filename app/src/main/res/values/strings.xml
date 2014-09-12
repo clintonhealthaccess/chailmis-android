@@ -77,7 +77,7 @@
     <string name="hint_end_date">End Date</string>
     <string name="hint_quantity">Quantity</string>
     <string name="hint_start_date">Start Date</string>
-    <string name="unexpected_order_quantity_error" formatted="false">Unexpected quantity (%d) entered  for %s. Please give a reason.</string>
+    <string name="unexpected_order_quantity_error" formatted="false">Expected quantity for %s is (%d). Please give a reason.</string>
     <string name="prescription">Prescription No:</string>
     <string name="commodityName">Commodity Name</string>
     <string name="srv">SRV :</string>

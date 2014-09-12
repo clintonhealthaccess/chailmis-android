@@ -344,7 +344,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
             if (orderCommodityViewModel.quantityIsUnexpected()) {
                 String commodityName = orderCommodityViewModel.getName();
                 String message = getErrorMessage(commodityName);
-                Toast.makeText(adapter.getContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(adapter.getContext(), message, Toast.LENGTH_SHORT).show();
             }
             setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
             if (quantityInt <= 0) {
@@ -354,7 +354,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
         private String getErrorMessage(String commodityName) {
             String formatString = adapter.getContext().getString(R.string.unexpected_order_quantity_error);
-            return String.format(formatString, orderCommodityViewModel.getExpectedOrderQuantity(), commodityName);
+            return String.format(formatString, commodityName, orderCommodityViewModel.getQuantityEntered());
         }
     }
 
