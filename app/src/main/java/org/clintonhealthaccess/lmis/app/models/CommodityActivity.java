@@ -54,7 +54,7 @@ public class CommodityActivity {
     @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private DataSet dataSet;
 
-    public static String currentStock = "CURRENT_STOCK";
+    public static String stockOnHand = "STOCK_ON_HAND";
 
     public CommodityActivity() {
         //Orm Lite likes

@@ -41,7 +41,6 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
-import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryOption;
 import org.clintonhealthaccess.lmis.app.models.api.DHISCategory;
 import org.clintonhealthaccess.lmis.app.models.api.DHISCategoryOptionCombo;
@@ -167,15 +166,9 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<OrderType> fetchOrderTypes(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         List<OrderType> types = new ArrayList<>();
-        CategoryComboSearchResponse response = service.searchCategoryCombos("order", "name,id,categories[id,name,categoryOptions],categoryOptionCombos");
-        List<CategoryCombo> categoryCombos = response.getCategoryCombos();
-        if (Helpers.collectionIsNotEmpty(categoryCombos)) {
-            CategoryCombo combo = categoryCombos.get(0);
-            List<DHISCategory> categories = combo.getCategories();
-            getTypesFromCategories(types, combo, categories);
-        }
+        types.add(new OrderType(OrderType.ROUTINE));
+        types.add(new OrderType(OrderType.EMERGENCY));
         return types;
     }
 
@@ -211,7 +204,7 @@ public class Dhis2 implements LmisServer {
     }
 
     private String getDataSetId(List<Commodity> commodities) {
-        return commodities.get(0).getCommodityActivity(CommodityActivity.currentStock).getDataSet().getId();
+        return commodities.get(0).getCommodityActivity(CommodityActivity.stockOnHand).getDataSet().getId();
     }
 
     private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
@@ -244,7 +237,7 @@ public class Dhis2 implements LmisServer {
         Map<Commodity, Integer> result = new HashMap<>();
 
         for (Commodity commodity : commodities) {
-            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.currentStock);
+            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.stockOnHand);
             if (stockLevelActivity != null) {
                 DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
                 if (mostRecentDataValueForActivity != null) {

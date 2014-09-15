@@ -41,6 +41,7 @@ import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static android.util.Log.e;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
@@ -148,7 +150,8 @@ public class CommodityService {
             if (commodityActivity.getCommodity() == null) {
                 commodityActivity.setCommodity(commodity);
             }
-            commodityActivityGenericDao.create(commodityActivity);
+            e(Dhis2.SYNC, String.format("Saving activity %s %s", commodityActivity.getName(), commodityActivity.getId()));
+            commodityActivityGenericDao.createOrUpdate(commodityActivity);
         }
 
     }

@@ -854,10 +854,10 @@ name: "Antibiotics"
 },
 {
 id: "a88329b7973",
-name: "Ampicillin/cloxacillin_suspension_CURRENT_STOCK",
+name: "Ampicillin/cloxacillin_suspension_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -992,10 +992,10 @@ name: "Anelgesics"
 },
 {
 id: "133914d02bb",
-name: "Paracetamol_injection_CURRENT_STOCK",
+name: "Paracetamol_injection_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1130,10 +1130,10 @@ name: "Antibiotics"
 },
 {
 id: "6a2ac1f0f03",
-name: "Multivitamin_syrup_CURRENT_STOCK",
+name: "Multivitamin_syrup_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1176,10 +1176,10 @@ name: "Supplements"
 },
 {
 id: "4151b4dbc11",
-name: "Misoprostol_200mcg tablet_CURRENT_STOCK",
+name: "Misoprostol_200mcg tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1268,10 +1268,10 @@ name: "Anti-Malaria"
 },
 {
 id: "5cab3ee8417",
-name: "Artemether+Lumefantrine_tablet_CURRENT_STOCK",
+name: "Artemether+Lumefantrine_tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1383,10 +1383,10 @@ name: "Maternal"
 },
 {
 id: "eac12969e73",
-name: "ORS_Satchets_CURRENT_STOCK",
+name: "ORS_Satchets_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1429,10 +1429,10 @@ name: "Supplements"
 },
 {
 id: "0257b5903ac",
-name: "Folic Acid _tablet_CURRENT_STOCK",
+name: "Folic Acid _tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1590,10 +1590,10 @@ name: "Antibiotics"
 },
 {
 id: "691e68fec84",
-name: "Artesunate+Amodiaquine_50mg/135mg tablet_CURRENT_STOCK",
+name: "Artesunate+Amodiaquine_50mg/135mg tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -1774,10 +1774,10 @@ name: "Anti-diarrhea"
 },
 {
 id: "0cb5ef143ec",
-name: "Paracetamol_syrup_CURRENT_STOCK",
+name: "Paracetamol_syrup_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2211,10 +2211,10 @@ name: "Maternal"
 },
 {
 id: "0257496521e",
-name: "Cotrimoxazole_tablet_CURRENT_STOCK",
+name: "Cotrimoxazole_tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2326,10 +2326,10 @@ name: "Anti-Malaria"
 },
 {
 id: "62b351aec87",
-name: "IUCD_pieces_CURRENT_STOCK",
+name: "IUCD_pieces_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2372,10 +2372,10 @@ name: "Maternal"
 },
 {
 id: "a1065f9c269",
-name: "Amoxycillin _suspension_CURRENT_STOCK",
+name: "Amoxycillin _suspension_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2441,10 +2441,10 @@ name: "Antibiotics"
 },
 {
 id: "2849670b8c1",
-name: "Amoxycillin _250g capsule_CURRENT_STOCK",
+name: "Amoxycillin _250g capsule_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2579,10 +2579,10 @@ name: "Anti-diarrhea"
 },
 {
 id: "7df418d2bff",
-name: "Paracetamol_drops_CURRENT_STOCK",
+name: "Paracetamol_drops_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2740,10 +2740,10 @@ name: "Antibiotics"
 },
 {
 id: "a4e2df37209",
-name: "Albendazole_200mg tablet _CURRENT_STOCK",
+name: "Albendazole_200mg tablet _STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2809,10 +2809,10 @@ name: "Anti-diarrhea"
 },
 {
 id: "f59c66d4dc8",
-name: "Ampicillin/cloxacillin_capsule_CURRENT_STOCK",
+name: "Ampicillin/cloxacillin_capsule_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -2993,10 +2993,10 @@ name: "Maternal"
 },
 {
 id: "a14c8be4b88",
-name: "Dexamethasone_4mg injection_CURRENT_STOCK",
+name: "Dexamethasone_4mg injection_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3085,10 +3085,10 @@ name: "Antibiotics"
 },
 {
 id: "cdc8cfbd02d",
-name: "Cotrimoxazole_suspension_CURRENT_STOCK",
+name: "Cotrimoxazole_suspension_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3292,10 +3292,10 @@ name: "Family Planning"
 },
 {
 id: "a843036fc38",
-name: "Gentamicin _80mg injection_CURRENT_STOCK",
+name: "Gentamicin _80mg injection_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3476,10 +3476,10 @@ name: "Antibiotics"
 },
 {
 id: "87113fb0988",
-name: "Paracetamol_125g tablet_CURRENT_STOCK",
+name: "Paracetamol_125g tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3499,10 +3499,10 @@ name: "Anelgesics"
 },
 {
 id: "81630c300b3",
-name: "Implants - 3 yrs_pieces_CURRENT_STOCK",
+name: "Implants - 3 yrs_pieces_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3913,10 +3913,10 @@ name: "Antibiotics"
 },
 {
 id: "3f1d0e925e0",
-name: "Artesunate_syrup_CURRENT_STOCK",
+name: "Artesunate_syrup_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -3959,10 +3959,10 @@ name: "Antibiotics"
 },
 {
 id: "7127508afa0",
-name: "Zinc+ORS Copack_Satchets_CURRENT_STOCK",
+name: "Zinc+ORS Copack_Satchets_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -4051,10 +4051,10 @@ name: "Anti-Malaria"
 },
 {
 id: "520722015bd",
-name: "Ampicillin/cloxacillin_drops_CURRENT_STOCK",
+name: "Ampicillin/cloxacillin_drops_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -4304,10 +4304,10 @@ name: "Anti-diarrhea"
 },
 {
 id: "a61b5bf0df6",
-name: "Multivitamin_tablet_CURRENT_STOCK",
+name: "Multivitamin_tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -4396,10 +4396,10 @@ name: "Anti-Helminthis"
 },
 {
 id: "84e5632561a",
-name: "Chlorhexidine gel_Gel_CURRENT_STOCK",
+name: "Chlorhexidine gel_Gel_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -4465,10 +4465,10 @@ name: "Anti-diarrhea"
 },
 {
 id: "0e6ae67c81b",
-name: "Implants - 5 yrs_pieces_CURRENT_STOCK",
+name: "Implants - 5 yrs_pieces_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -4672,10 +4672,10 @@ name: "Anti-Helminthis"
 },
 {
 id: "dfded133664",
-name: "Ferrous sulfate_tablet_CURRENT_STOCK",
+name: "Ferrous sulfate_tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -5201,10 +5201,10 @@ name: "Anti-Malaria"
 },
 {
 id: "06497aa0128",
-name: "Zinc_tablet_CURRENT_STOCK",
+name: "Zinc_tablet_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"
@@ -5247,10 +5247,10 @@ name: "Maternal"
 },
 {
 id: "1572819a740",
-name: "Artemether + Lumefantrine_drops_CURRENT_STOCK",
+name: "Artemether + Lumefantrine_drops_STOCK_ON_HAND",
 attributeValues: [
 {
-value: "CURRENT_STOCK",
+value: "STOCK_ON_HAND",
 attribute: {
 id: "8a22cc931d5",
 name: "LMIS Activity"

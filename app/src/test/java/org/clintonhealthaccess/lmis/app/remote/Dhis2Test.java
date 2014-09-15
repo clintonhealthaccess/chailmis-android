@@ -172,7 +172,7 @@ public class Dhis2Test extends LMISTestCase {
 
         List<Commodity> commodities = new ArrayList<>();
         Commodity commodity = new Commodity("commodity");
-        CommodityActivity activity = new CommodityActivity(commodity, commodityActivityId, "commodity_receive_stock", CommodityActivity.currentStock);
+        CommodityActivity activity = new CommodityActivity(commodity, commodityActivityId, "commodity_receive_stock", CommodityActivity.stockOnHand);
         ArrayList<CommodityActivity> commodityActivities = new ArrayList<>();
         commodityActivities.add(activity);
         commodity.setCommodityActivitiesSaved(commodityActivities);
