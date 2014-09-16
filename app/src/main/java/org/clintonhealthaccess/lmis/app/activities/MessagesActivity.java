@@ -31,12 +31,15 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+
+import java.util.Arrays;
+import java.util.List;
 
 import roboguice.inject.InjectView;
 
@@ -48,9 +51,6 @@ public class MessagesActivity extends BaseActivity {
     @InjectView(R.id.listViewAlerts)
     ListView listViewAlerts;
 
-    View alertsListViewHeader;
-
-    View notificationsListViewHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +60,8 @@ public class MessagesActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_messages);
-        alertsListViewHeader = getLayoutInflater().inflate(R.layout.alerts_header_view, null);
-        notificationsListViewHeader = getLayoutInflater().inflate(R.layout.notifications_header_view, null);
-        listViewAlerts.addHeaderView(alertsListViewHeader);
-        listViewNotifications.addHeaderView(notificationsListViewHeader);
+
+        List<Commodity> commodities = Arrays.asList(new Commodity("Panadol"), new Commodity("Septrin"), new Commodity("Piriton"));
         listViewAlerts.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
         listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
     }

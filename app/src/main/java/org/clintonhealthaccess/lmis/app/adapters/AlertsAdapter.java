@@ -30,12 +30,33 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
+import java.util.List;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
 public class AlertsAdapter extends ArrayAdapter<Commodity> {
-    public AlertsAdapter(Context context, int resource) {
-        super(context, resource);
+    public AlertsAdapter(Context context, int resource, List<Commodity> alerts) {
+        super(context, resource, alerts);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+        View rowView = inflater.inflate(R.layout.alert_list_item, parent, false);
+
+        TextView textViewComodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        TextView textViewQuantity = (TextView) rowView.findViewById(R.id.textViewQuantity);
+        TextView textViewTime = (TextView) rowView.findViewById(R.id.textViewTime);
+
+        return rowView;
     }
 }

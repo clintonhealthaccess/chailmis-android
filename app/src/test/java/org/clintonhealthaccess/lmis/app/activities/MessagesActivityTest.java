@@ -82,15 +82,4 @@ public class MessagesActivityTest {
         assertThat(messagesActivity.listViewNotifications, not(nullValue()));
     }
 
-    @Test
-    public void alertsHeaderShouldNotBeNull() throws Exception {
-        MessagesActivity messagesActivity = getMessagesActivity();
-        assertThat(messagesActivity.alertsListViewHeader, not(nullValue()));
-    }
-
-    @Test
-    public void notificationsHeaderShouldNotBeNull() throws Exception {
-        MessagesActivity messagesActivity = getMessagesActivity();
-        assertThat(messagesActivity.notificationsListViewHeader, not(nullValue()));
-    }
 }
