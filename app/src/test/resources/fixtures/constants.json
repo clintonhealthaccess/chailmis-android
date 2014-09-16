@@ -1,0 +1,9 @@
+{
+constants: [
+{
+id: "592af031d86",
+name: "Monthly Stock Count Day",
+value: 20
+}
+]
+}

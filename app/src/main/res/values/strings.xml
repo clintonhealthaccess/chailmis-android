@@ -30,6 +30,7 @@
 <resources>
     <string name="app_name">DHIS2 LMIS</string>
     <integer name="sync_interval">60</integer>
+    <integer name="monthly_stock_count_day">24</integer>
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
     <string name="register_label">Please register with your LMIS credentials:</string>
@@ -120,5 +121,6 @@
     <string name="order_type">Type:</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="monthly_stock_count_search_key">Monthly Stock</string>
 
 </resources>

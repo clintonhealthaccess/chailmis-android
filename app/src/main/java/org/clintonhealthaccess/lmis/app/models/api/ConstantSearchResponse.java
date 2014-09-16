@@ -27,31 +27,15 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.remote;
-
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
+package org.clintonhealthaccess.lmis.app.models.api;
 
 import java.util.List;
-import java.util.Map;
 
-public interface LmisServer {
-    UserProfile validateLogin(User user);
+import lombok.Getter;
+import lombok.Setter;
 
-    List<Category> fetchCommodities(User user);
-
-    List<String> fetchOrderReasons(User user);
-
-    List<OrderType> fetchOrderTypes(User user);
-
-    Map<Commodity, Integer> fetchStockLevels(List<Commodity> allCommodities, User user);
-
-    DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
-
-    Integer getDayForMonthlyStockCount(User user);
+@Getter
+@Setter
+public class ConstantSearchResponse {
+    List<Constant> constants;
 }

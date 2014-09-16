@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.remote;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
@@ -42,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryOption;
+import org.clintonhealthaccess.lmis.app.models.api.ConstantSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.DHISCategory;
 import org.clintonhealthaccess.lmis.app.models.api.DHISCategoryOptionCombo;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
@@ -66,12 +68,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import roboguice.inject.InjectResource;
+
 import static android.util.Log.e;
 
 public class Dhis2 implements LmisServer {
     public static final String SYNC = "SYNC";
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
+
+    @InjectResource(R.string.monthly_stock_count_search_key)
+    private String monthlyStockCountSearchKey;
+
+    @InjectResource(R.integer.monthly_stock_count_day)
+    Integer monthlyStockCountDay;
 
     @Override
     public UserProfile validateLogin(User user) {
@@ -221,6 +231,17 @@ public class Dhis2 implements LmisServer {
     public DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.pushDataValueSet(valueSet);
+    }
+
+    @Override
+    public Integer getDayForMonthlyStockCount(User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        ConstantSearchResponse response = service.searchConstants(monthlyStockCountSearchKey, "id,name,value");
+        if (!response.getConstants().isEmpty()) {
+            return response.getConstants().get(0).getValue().intValue();
+        } else {
+            return monthlyStockCountDay;
+        }
     }
 
     public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {

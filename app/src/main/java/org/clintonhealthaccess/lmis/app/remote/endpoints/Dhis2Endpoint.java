@@ -33,6 +33,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
+import org.clintonhealthaccess.lmis.app.models.api.ConstantSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -81,5 +82,8 @@ public interface Dhis2Endpoint {
 
     @POST("/api/dataValueSets")
     DataValueSetPushResponse pushDataValueSet(@Body DataValueSet valueSet);
+
+    @GET("/api/constants")
+    ConstantSearchResponse searchConstants(@Query("query") String query, @Query("fields") String fields);
 }
   
