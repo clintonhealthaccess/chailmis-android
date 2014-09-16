@@ -168,4 +168,7 @@ public class Commodity implements Serializable {
         return null;
     }
 
+    public int getMinimumThreshold() {
+        return 100;
+    }
 }

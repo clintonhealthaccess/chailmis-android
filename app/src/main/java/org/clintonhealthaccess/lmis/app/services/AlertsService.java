@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,41 +28,27 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.adapters;
+package org.clintonhealthaccess.lmis.app.services;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.LowStockAlert;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+public class AlertsService {
 
-public class AlertsAdapter extends ArrayAdapter<LowStockAlert> {
-    public AlertsAdapter(Context context, int resource, List<LowStockAlert> alerts) {
-        super(context, resource, alerts);
-    }
+    @Inject
+    CommodityService commodityService;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.alert_list_item, parent, false);
-
-        TextView textViewComodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        TextView textViewQuantity = (TextView) rowView.findViewById(R.id.textViewQuantity);
-        TextView textViewTime = (TextView) rowView.findViewById(R.id.textViewTime);
-
-        LowStockAlert alert = (LowStockAlert)getItem(position);
-        textViewComodityName.setText(alert.getCommodity().getName());
-        textViewQuantity.setText(String.valueOf(alert.getCommodity().getStockOnHand()));
-        textViewTime.setText("30 Minutes");
-        return rowView;
+    public List<LowStockAlert> generateLowStockAlerts(){
+        List<Commodity> commodities = commodityService.all();
+        List<LowStockAlert> lowStockAlerts = new ArrayList<>();
+        for(Commodity commodity: commodities){
+            if(commodity.getStockOnHand()<commodity.getMinimumThreshold())
+                lowStockAlerts.add(new LowStockAlert(commodity));
+        }
+        return lowStockAlerts;
     }
 }

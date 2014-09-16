@@ -34,9 +34,13 @@ import android.support.v7.app.ActionBar;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
+import org.clintonhealthaccess.lmis.app.services.LowStockAlert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +55,8 @@ public class MessagesActivity extends BaseActivity {
     @InjectView(R.id.listViewAlerts)
     ListView listViewAlerts;
 
+    @Inject
+    AlertsService alertsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +67,8 @@ public class MessagesActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_messages);
 
-        List<Commodity> commodities = Arrays.asList(new Commodity("Panadol"), new Commodity("Septrin"), new Commodity("Piriton"));
-        listViewAlerts.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
+        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
+        listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
         listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
     }
 
