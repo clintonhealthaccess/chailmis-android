@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.SharedPreferences;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
@@ -67,6 +69,7 @@ import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommodityServiceTest {
+    public static final int MOCK_DAY = 15;
     @Inject
     private CategoryService categoryService;
 
@@ -75,6 +78,9 @@ public class CommodityServiceTest {
     private CommodityService spyedCommodityService;
     @Inject
     private DbUtil dbUtil;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     private Map<Commodity, Integer> mockStockLevels;
     private LmisServer mockLmisServer;
@@ -85,6 +91,7 @@ public class CommodityServiceTest {
         mockStockLevels = mock(Map.class);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.getDayForMonthlyStockCount((User) anyObject())).thenReturn(MOCK_DAY);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -146,6 +153,11 @@ public class CommodityServiceTest {
         verify(spyedCommodityService).saveStockLevels(mockStockLevels);
     }
 
+    @Test
+    public void shouldGetMonthlyStockCountDayAndSaveItToPreferences() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        assertThat(sharedPreferences.getInt(CommodityService.MONTHLY_STOCK_COUNT_DAY, 0), is(MOCK_DAY));
+    }
 
     private void verifyAllCommodityCategories() {
         List<Category> allCategories = categoryService.all();

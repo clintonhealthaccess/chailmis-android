@@ -191,7 +191,6 @@ public class Dhis2Test extends LMISTestCase {
 
     @Test
     public void shouldFallBackToDefaultIfNoContantsAreAvailable() throws Exception {
-
         setUpSuccessHttpGetRequest(200, "constantsEmpty.json");
         Integer day = dhis2.getDayForMonthlyStockCount(new User());
         assertThat(day, is(24));

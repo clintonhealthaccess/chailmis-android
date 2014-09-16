@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
@@ -53,6 +54,7 @@ import static android.util.Log.e;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
+    public static final String MONTHLY_STOCK_COUNT_DAY = "MONTHLY_STOCK_COUNT_DAY";
     @Inject
     private LmisServer lmisServer;
 
@@ -68,10 +70,14 @@ public class CommodityService {
     @Inject
     private Context context;
 
+    @Inject
+    SharedPreferences sharedPreferences;
+
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
         categoryService.clearCache();
+        fetchAndSaveMonthlyStockCountDay(user);
 
         List<Commodity> commodities = all();
         Map<Commodity, Integer> stockLevels = lmisServer.fetchStockLevels(commodities, user);
@@ -80,6 +86,13 @@ public class CommodityService {
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();
         categoryService.clearCache();
+    }
+
+    private void fetchAndSaveMonthlyStockCountDay(User user) {
+        Integer day = lmisServer.getDayForMonthlyStockCount(user);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(MONTHLY_STOCK_COUNT_DAY, day);
+        editor.commit();
     }
 
     private void createStock(final Commodity commodity, final int amount) {
