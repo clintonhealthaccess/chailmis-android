@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -49,7 +50,6 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.getDefaultCommodities;
@@ -69,6 +69,7 @@ import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommodityServiceTest {
+
     public static final int MOCK_DAY = 15;
     @Inject
     private CategoryService categoryService;
@@ -82,15 +83,15 @@ public class CommodityServiceTest {
     @Inject
     SharedPreferences sharedPreferences;
 
-    private Map<Commodity, Integer> mockStockLevels;
+    private List<CommodityActionValue> mockStockLevels;
     private LmisServer mockLmisServer;
 
     @Before
     public void setUp() throws Exception {
         mockLmisServer = mock(LmisServer.class);
-        mockStockLevels = mock(Map.class);
+        mockStockLevels = new ArrayList<>();
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(mockStockLevels);
         when(mockLmisServer.getDayForMonthlyStockCount((User) anyObject())).thenReturn(MOCK_DAY);
 
         setUpInjection(this, new AbstractModule() {
@@ -150,7 +151,7 @@ public class CommodityServiceTest {
     public void shouldSaveStockLevelsOnInitialise() throws Exception {
         spyedCommodityService = spy(commodityService);
         spyedCommodityService.initialise(new User("user", "user"));
-        verify(spyedCommodityService).saveStockLevels(mockStockLevels);
+        verify(spyedCommodityService).saveActionValues(mockStockLevels);
     }
 
     @Test

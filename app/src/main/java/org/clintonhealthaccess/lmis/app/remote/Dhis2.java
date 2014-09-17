@@ -29,6 +29,10 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
+import android.content.Context;
+
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -36,16 +40,13 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
-import org.clintonhealthaccess.lmis.app.models.api.CategoryCombo;
-import org.clintonhealthaccess.lmis.app.models.api.CategoryOption;
 import org.clintonhealthaccess.lmis.app.models.api.ConstantSearchResponse;
-import org.clintonhealthaccess.lmis.app.models.api.DHISCategory;
-import org.clintonhealthaccess.lmis.app.models.api.DHISCategoryOptionCombo;
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
 import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
@@ -57,6 +58,7 @@ import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
+import org.clintonhealthaccess.lmis.app.services.GenericDao;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.text.SimpleDateFormat;
@@ -64,9 +66,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import roboguice.inject.InjectResource;
 
@@ -82,6 +82,9 @@ public class Dhis2 implements LmisServer {
 
     @InjectResource(R.integer.monthly_stock_count_day)
     Integer monthlyStockCountDay;
+
+    @Inject
+    Context context;
 
     @Override
     public UserProfile validateLogin(User user) {
@@ -182,25 +185,9 @@ public class Dhis2 implements LmisServer {
         return types;
     }
 
-    private void getTypesFromCategories(List<OrderType> types, CategoryCombo combo, List<DHISCategory> categories) {
-        if (Helpers.collectionIsNotEmpty(categories)) {
-            for (CategoryOption option : categories.get(0).getCategoryOptions()) {
-                String name = option.getName();
-                getAndSetIdFromCategoryOptionCombos(types, combo, name);
-            }
-        }
-    }
-
-    private void getAndSetIdFromCategoryOptionCombos(List<OrderType> types, CategoryCombo combo, String name) {
-        for (DHISCategoryOptionCombo comboOption : combo.getCategoryOptionCombos()) {
-            if (comboOption.getName().equalsIgnoreCase("(" + name + ")")) {
-                types.add(new OrderType(comboOption.getId(), name));
-            }
-        }
-    }
 
     @Override
-    public Map<Commodity, Integer> fetchStockLevels(List<Commodity> commodities, User user) {
+    public List<CommodityActionValue> fetchCommodityActionValues(List<Commodity> commodities, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         Calendar calendar = Calendar.getInstance();
         DataValueSet valueSet = new DataValueSet();
@@ -212,7 +199,7 @@ public class Dhis2 implements LmisServer {
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
-        return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
+        return convertDataValuesToCommodityActions(valueSet.getDataValues());
     }
 
     private String getDataSetId(List<Commodity> commodities, String activityType) {
@@ -254,25 +241,22 @@ public class Dhis2 implements LmisServer {
     public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {
         DataValue mostRecentDataValue = null;
         for (DataValue dataValue : dataValues) {
-            if (dataValue.getDataElement().equalsIgnoreCase(abc) && (mostRecentDataValue == null || mostRecentDataValue.getPeriod() < dataValue.getPeriod())) {
+            if (dataValue.getDataElement().equalsIgnoreCase(abc) && (mostRecentDataValue == null || mostRecentDataValue.getPeriodInt() < dataValue.getPeriodInt())) {
                 mostRecentDataValue = dataValue;
             }
         }
         return mostRecentDataValue;
     }
 
-    public Map<Commodity, Integer> fetchStockLevelsForCommodities(List<Commodity> commodities, List<DataValue> values) {
-        Map<Commodity, Integer> result = new HashMap<>();
-
-        for (Commodity commodity : commodities) {
-            CommodityAction stockLevelActivity = commodity.getCommodityAction(CommodityAction.stockOnHand);
-            if (stockLevelActivity != null) {
-                DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
-                if (mostRecentDataValueForActivity != null) {
-                    result.put(commodity, Integer.parseInt(mostRecentDataValueForActivity.getValue()));
-                }
-            }
-        }
-        return result;
+    public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
+        final GenericDao<CommodityAction> commodityActionGenericDao = new GenericDao<>(CommodityAction.class, context);
+        return FluentIterable
+                .from(values).transform(new Function<DataValue, CommodityActionValue>() {
+                    @Override
+                    public CommodityActionValue apply(DataValue input) {
+                        CommodityAction commodityAction = commodityActionGenericDao.getById(input.getDataElement());
+                        return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
+                    }
+                }).toList();
     }
 }

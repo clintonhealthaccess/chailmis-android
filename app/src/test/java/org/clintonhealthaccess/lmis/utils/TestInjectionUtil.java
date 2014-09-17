@@ -40,6 +40,7 @@ import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
@@ -49,9 +50,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import roboguice.inject.RoboInjector;
 
@@ -86,7 +86,7 @@ public class TestInjectionUtil {
         final LmisServer mockLmisServer = mock(LmisServer.class);
         List<Category> categories = defaultCategories(context);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
-        when(mockLmisServer.fetchStockLevels((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testStockLevels(categories));
+        when(mockLmisServer.fetchCommodityActionValues((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testActionValues(context));
         when(mockLmisServer.pushDataValueSet((DataValueSet) anyObject(), (User) anyObject())).thenReturn(fakePushDataValuesResponse());
         Module mockedModule = new AbstractModule() {
             @Override
@@ -110,15 +110,14 @@ public class TestInjectionUtil {
         return null;
     }
 
-    private static Map<Commodity, Integer> testStockLevels(List<Category> categories) {
-        HashMap<Commodity, Integer> result = new HashMap<>();
-        for (Category category : categories) {
-            for (Commodity commodity : category.getNotSavedCommodities()) {
-                result.put(commodity, 10);
-            }
-
+    private static List<CommodityActionValue> testActionValues(Context context) throws IOException {
+        InputStream src = context.getAssets().open("default_values.json");
+        String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
+        List<CommodityActionValue> actionValues = asList(new Gson().fromJson(defaultCommoditiesAsJson, CommodityActionValue[].class));
+        for (CommodityActionValue value : actionValues) {
+            value.setDateCreated(new Date());
         }
-        return result;
+        return actionValues;
     }
 
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase) throws IOException {

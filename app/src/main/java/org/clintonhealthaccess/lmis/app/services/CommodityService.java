@@ -32,12 +32,15 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -48,7 +51,6 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static android.util.Log.e;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
@@ -80,12 +82,41 @@ public class CommodityService {
         fetchAndSaveMonthlyStockCountDay(user);
 
         List<Commodity> commodities = all();
-        Map<Commodity, Integer> stockLevels = lmisServer.fetchStockLevels(commodities, user);
-        saveStockLevels(stockLevels);
+        List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
+        saveActionValues(commodityActionValues);
+        updateStockValues();
 
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();
         categoryService.clearCache();
+    }
+
+    private void updateStockValues() {
+        List<Commodity> commodities = all();
+        List<StockItem> stockItems = FluentIterable.from(commodities).transform(new Function<Commodity, StockItem>() {
+            @Override
+            public StockItem apply(Commodity input) {
+                CommodityAction commodityAction = input.getCommodityAction(CommodityAction.stockOnHand);
+                if (commodityAction != null) {
+                    System.out.println("action " + commodityAction.getActivityType());
+                    System.out.println("action " + commodityAction.getName());
+                    System.out.println("action " + commodityAction.getActionLatestValue());
+                    System.out.println("action " + commodityAction.getCommodityActionValueList().size());
+                }
+
+                if (commodityAction != null && commodityAction.getActionLatestValue() != null) {
+                    System.out.println("some value " + input.getName());
+                    return new StockItem(input, Integer.parseInt(commodityAction.getActionLatestValue().getValue()));
+                } else {
+                    System.out.println("zero value");
+                    return new StockItem(input, 0);
+                }
+            }
+        }).toList();
+
+        for (StockItem item : stockItems) {
+            createStock(item);
+        }
     }
 
     private void fetchAndSaveMonthlyStockCountDay(User user) {
@@ -95,23 +126,30 @@ public class CommodityService {
         editor.commit();
     }
 
-    private void createStock(final Commodity commodity, final int amount) {
+    private void createStock(final StockItem item) {
         dbUtil.withDao(StockItem.class, new Operation<StockItem, Void>() {
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                StockItem stockItem = new StockItem(commodity, amount);
-                dao.create(stockItem);
+                dao.create(item);
                 return null;
             }
         });
     }
 
-    protected void saveStockLevels(Map<Commodity, Integer> stockLevels) {
-        for (Commodity commodity : all()) {
-            if (stockLevels.containsKey(commodity)) {
-                createStock(commodity, stockLevels.get(commodity));
-            } else {
-                createStock(commodity, 0);
+    private void createActionValue(final CommodityActionValue actionValue) {
+        dbUtil.withDao(CommodityActionValue.class, new Operation<CommodityActionValue, Void>() {
+            @Override
+            public Void operate(Dao<CommodityActionValue, String> dao) throws SQLException {
+                dao.createOrUpdate(actionValue);
+                return null;
+            }
+        });
+    }
+
+    protected void saveActionValues(List<CommodityActionValue> commodityActionValues) {
+        if (commodityActionValues != null) {
+            for (CommodityActionValue actionValue : commodityActionValues) {
+                createActionValue(actionValue);
             }
         }
     }

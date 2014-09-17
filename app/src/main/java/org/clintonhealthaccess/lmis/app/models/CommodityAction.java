@@ -29,12 +29,18 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +60,9 @@ public class CommodityAction {
     @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private DataSet dataSet;
 
+    @ForeignCollectionField(eager = true)
+    private ForeignCollection<CommodityActionValue> commodityActionValues;
+
     public static String stockOnHand = "STOCK_ON_HAND";
     public static String AMC = "AMC";
 
@@ -69,10 +78,34 @@ public class CommodityAction {
         this.activityType = activityType;
     }
 
+    public CommodityAction(String dataElement) {
+        this.id = dataElement;
+    }
+
     public String getPeriod() {
         String periodType = getDataSet().getPeriodType();
         OrderCycle cycle = Helpers.getOrderCycle(periodType);
         String period = cycle.getPeriod(new Date());
         return period;
+    }
+
+    public List<CommodityActionValue> getCommodityActionValueList() {
+        return new ArrayList<>(this.commodityActionValues);
+    }
+
+    public CommodityActionValue getActionLatestValue() {
+
+        List<CommodityActionValue> commodityActionValueList = getCommodityActionValueList();
+        if (commodityActionValueList != null && !commodityActionValueList.isEmpty()) {
+            Collections.sort(commodityActionValueList, new Comparator<CommodityActionValue>() {
+                @Override
+                public int compare(CommodityActionValue lhs, CommodityActionValue rhs) {
+                    return lhs.getPeriod().compareTo(rhs.getPeriod());
+                }
+            });
+
+            return commodityActionValueList.get(0);
+        }
+        return null;
     }
 }

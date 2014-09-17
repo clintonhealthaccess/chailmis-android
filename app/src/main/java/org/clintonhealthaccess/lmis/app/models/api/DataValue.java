@@ -40,7 +40,7 @@ public class DataValue {
     private String value, period, orgUnit, dataElement, categoryOptionCombo, attributeOptionCombo, storedBy;
     private Boolean followUp;
 
-    public int getPeriod() {
+    public int getPeriodInt() {
         return Integer.parseInt(period);
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,31 +28,45 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.remote;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.List;
+import java.util.Date;
 
-public interface LmisServer {
-    UserProfile validateLogin(User user);
+import lombok.Getter;
+import lombok.Setter;
 
-    List<Category> fetchCommodities(User user);
+@Getter
+@Setter
+@DatabaseTable
+public class CommodityActionValue {
 
-    List<String> fetchOrderReasons(User user);
+    @DatabaseField(uniqueIndex = true, id = true)
+    private String id;
 
-    List<OrderType> fetchOrderTypes(User user);
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
+    private CommodityAction commodityAction;
 
-    List<CommodityActionValue> fetchCommodityActionValues(List<Commodity> allCommodities, User user);
+    @DatabaseField(canBeNull = false)
+    private String value;
 
-    DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
+    @DatabaseField(canBeNull = false)
+    private String period;
 
-    Integer getDayForMonthlyStockCount(User user);
+    @DatabaseField(canBeNull = false)
+    private Date dateCreated;
+
+    public CommodityActionValue() {
+        //Orm-lite likes
+    }
+
+    public CommodityActionValue(CommodityAction commodityAction, String value, String period) {
+        this.id = period + commodityAction.getId();
+        this.commodityAction = commodityAction;
+        this.value = value;
+        this.period = period;
+        this.dateCreated = new Date();
+    }
 }

@@ -47,7 +47,17 @@
                         },
                         "id": "2c5b0af3-54ff-4852-9537-073727dfd345",
                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                    }
+                    },
+                     {
+                         "activityType": "STOCK_ON_HAND",
+                         "dataSet": {
+                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                             "name": "lmis dataset",
+                             "periodType": "Daily"
+                         },
+                         "id": "id_stock_on_hand_comm_1",
+                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+                     }
                 ],
                 "id": "1",
                 "name": "Coartem",
