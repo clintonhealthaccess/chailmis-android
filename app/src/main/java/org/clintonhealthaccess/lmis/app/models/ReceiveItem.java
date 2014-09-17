@@ -79,24 +79,24 @@ public class ReceiveItem implements Snapshotable {
     }
 
     @Override
-    public List<CommodityActivityValue> getActivitiesValues() {
-        List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
-        Collection<CommodityActivityValue> values = FluentIterable
-                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+    public List<CommoditySnapshotValue> getActivitiesValues() {
+        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        Collection<CommoditySnapshotValue> values = FluentIterable
+                .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
                     @Override
-                    public CommodityActivityValue apply(CommodityActivity input) {
-                        return new CommodityActivityValue(input, quantityReceived);
+                    public CommoditySnapshotValue apply(CommodityAction input) {
+                        return new CommoditySnapshotValue(input, quantityReceived);
                     }
-                }).filter(new Predicate<CommodityActivityValue>() {
+                }).filter(new Predicate<CommoditySnapshotValue>() {
                     @Override
-                    public boolean apply(CommodityActivityValue input) {
+                    public boolean apply(CommoditySnapshotValue input) {
                         return selectReceiveActivity(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
     }
 
-    private boolean selectReceiveActivity(CommodityActivityValue input) {
+    private boolean selectReceiveActivity(CommoditySnapshotValue input) {
         String testString = input.getActivity().getActivityType().toLowerCase();
         return testString.contains(RECEIVED);
     }

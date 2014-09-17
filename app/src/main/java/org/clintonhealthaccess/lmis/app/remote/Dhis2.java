@@ -35,7 +35,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -145,17 +145,17 @@ public class Dhis2 implements LmisServer {
                     category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
                     categories.add(category);
                 }
-                commodity.setCommodityActivities(new ArrayList<CommodityActivity>());
+                commodity.setCommodityActivities(new ArrayList<CommodityAction>());
                 commodities.add(commodity);
                 actualCommodity = commodity;
             }
             if (element.getAttributeValues().size() > 0) {
                 AttributeValue attributeValue = element.getAttributeValues().get(0);
-                CommodityActivity commodityActivity = new CommodityActivity(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
+                CommodityAction commodityAction = new CommodityAction(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
                 if (element.getDataSets() != null && element.getDataSets().size() > 0) {
-                    commodityActivity.setDataSet(element.getDataSets().get(0));
+                    commodityAction.setDataSet(element.getDataSets().get(0));
                 }
-                actualCommodity.getCommodityActivities().add(commodityActivity);
+                actualCommodity.getCommodityActivities().add(commodityAction);
             }
         }
 
@@ -206,19 +206,26 @@ public class Dhis2 implements LmisServer {
         DataValueSet valueSet = new DataValueSet();
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            valueSet = service.fetchDataValues(getDataSetId(commodities), user.getFacilityCode(), getStartDate(calendar, simpleDateFormat), getEndDate(calendar, simpleDateFormat));
+            String dataSet2 = getDataSetId(commodities, CommodityAction.AMC);
+            String dataSetId = getDataSetId(commodities, CommodityAction.stockOnHand);
+            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), getStartDate(calendar, simpleDateFormat), getEndDate(calendar, simpleDateFormat), dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
         return fetchStockLevelsForCommodities(commodities, valueSet.getDataValues());
     }
 
-    private String getDataSetId(List<Commodity> commodities) {
-        return commodities.get(0).getCommodityActivity(CommodityActivity.stockOnHand).getDataSet().getId();
+    private String getDataSetId(List<Commodity> commodities, String activityType) {
+        CommodityAction commodityAction = commodities.get(0).getCommodityAction(activityType);
+        if (commodityAction != null) {
+            return commodityAction.getDataSet().getId();
+        } else {
+            return "";
+        }
     }
 
     private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
-        calendar.add(Calendar.MONTH, -6);
+        calendar.add(Calendar.MONTH, -1);
         return simpleDateFormat.format(calendar.getTime());
     }
 
@@ -258,7 +265,7 @@ public class Dhis2 implements LmisServer {
         Map<Commodity, Integer> result = new HashMap<>();
 
         for (Commodity commodity : commodities) {
-            CommodityActivity stockLevelActivity = commodity.getCommodityActivity(CommodityActivity.stockOnHand);
+            CommodityAction stockLevelActivity = commodity.getCommodityAction(CommodityAction.stockOnHand);
             if (stockLevelActivity != null) {
                 DataValue mostRecentDataValueForActivity = findMostRecentDataValueForActivity(values, stockLevelActivity.getId());
                 if (mostRecentDataValueForActivity != null) {

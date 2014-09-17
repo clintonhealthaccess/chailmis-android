@@ -35,7 +35,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -172,8 +172,8 @@ public class Dhis2Test extends LMISTestCase {
 
         List<Commodity> commodities = new ArrayList<>();
         Commodity commodity = new Commodity("commodity");
-        CommodityActivity activity = new CommodityActivity(commodity, commodityActivityId, "commodity_receive_stock", CommodityActivity.stockOnHand);
-        ArrayList<CommodityActivity> commodityActivities = new ArrayList<>();
+        CommodityAction activity = new CommodityAction(commodity, commodityActivityId, "commodity_receive_stock", CommodityAction.stockOnHand);
+        ArrayList<CommodityAction> commodityActivities = new ArrayList<>();
         commodityActivities.add(activity);
         commodity.setCommodityActivitiesSaved(commodityActivities);
         commodities.add(commodity);

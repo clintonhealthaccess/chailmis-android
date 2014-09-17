@@ -35,8 +35,8 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivityValue;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -78,7 +78,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     DbUtil dbUtil;
     private GenericDao<Category> categoryDao;
     private GenericDao<Commodity> commodityDao;
-    private GenericDao<CommodityActivity> commodityActivityGenericDao;
+    private GenericDao<CommodityAction> commodityActivityGenericDao;
     private GenericDao<CommoditySnapshot> snapshotDao;
     private GenericDao<DataSet> dataSetGenericDao;
 
@@ -89,7 +89,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         categoryDao = new GenericDao<>(Category.class, context);
         commodityDao = new GenericDao<>(Commodity.class, context);
         snapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
-        commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
+        commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
         dataSetGenericDao = new GenericDao<>(DataSet.class, context);
         setUpInjection(this);
         generateTestCommodities();
@@ -176,10 +176,10 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
-        CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        CommodityAction commodityAction = commodityActivities.get(0);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         List<CommoditySnapshot> snapshots = Arrays.asList(snapshot1, snapshot2);
 
@@ -189,7 +189,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(valueSet.getDataValues().size(), is(2));
         assertThat(valueSet.getDataValues().get(0).getValue(), is("3"));
         assertThat(valueSet.getDataValues().get(1).getValue(), is("8"));
-        assertThat(valueSet.getDataValues().get(0).getDataElement(), is(commodityActivity.getId()));
+        assertThat(valueSet.getDataValues().get(0).getDataElement(), is(commodityAction.getId()));
     }
 
     @Test
@@ -198,10 +198,10 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
-        CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        CommodityAction commodityAction = commodityActivities.get(0);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
@@ -222,10 +222,10 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityActivity> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityActivity> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
-        CommodityActivity commodityActivity = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivity, "3");
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        CommodityAction commodityAction = commodityActivities.get(0);
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
@@ -258,9 +258,9 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Dispensing dispensing = new Dispensing(false);
         assertThat(fetchedCommodity1.getCommodityActivitiesSaved().size(), is(greaterThan(1)));
-        CommodityActivityValue activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity(DispensingItem.DISPENSE), 1);
-        CommodityActivityValue otherActivityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity(DispensingItem.ADJUSTMENTS), 2);
-        List<CommodityActivityValue> values = new ArrayList<>(Arrays.asList(activityValue, otherActivityValue));
+        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.DISPENSE), 1);
+        CommoditySnapshotValue otherActivityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.ADJUSTMENTS), 2);
+        List<CommoditySnapshotValue> values = new ArrayList<>(Arrays.asList(activityValue, otherActivityValue));
         DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
         snapshotable.setDispensing(dispensing);
         doReturn(values).when(snapshotable).getActivitiesValues();
@@ -274,8 +274,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Dispensing dispensing = new Dispensing(false);
         String reasonForUnexpectedQuantity = "work";
-        CommodityActivityValue activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity("dispense"), reasonForUnexpectedQuantity);
-        List<CommodityActivityValue> values = new ArrayList<>(Arrays.asList(activityValue));
+        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction("dispense"), reasonForUnexpectedQuantity);
+        List<CommoditySnapshotValue> values = new ArrayList<>(Arrays.asList(activityValue));
         DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
         snapshotable.setDispensing(dispensing);
         doReturn(values).when(snapshotable).getActivitiesValues();
@@ -285,7 +285,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.get(0).getValue(), is(reasonForUnexpectedQuantity));
 
         String otherReason = "other reason";
-        activityValue = new CommodityActivityValue(fetchedCommodity1.getCommodityActivity("dispense"), otherReason);
+        activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction("dispense"), otherReason);
         values = new ArrayList<>(Arrays.asList(activityValue));
         doReturn(values).when(snapshotable).getActivitiesValues();
         commoditySnapshotService.add(snapshotable);
@@ -306,13 +306,13 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity commodity2 = new Commodity("other drug", category);
         commodityDao.create(commodity);
         commodityDao.create(commodity2);
-        CommodityActivity activity = new CommodityActivity(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
-        CommodityActivity activity2 = new CommodityActivity(commodity, getID(), "Panado_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
+        CommodityAction activity = new CommodityAction(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
+        CommodityAction activity2 = new CommodityAction(commodity, getID(), "Panado_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
         activity.setDataSet(dataSet);
         activity2.setDataSet(dataSet);
         commodityActivityGenericDao.create(activity);
         commodityActivityGenericDao.create(activity2);
-        CommodityActivity activity3 = new CommodityActivity(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
+        CommodityAction activity3 = new CommodityAction(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
         activity3.setDataSet(dataSet);
         commodityActivityGenericDao.create(activity3);
     }

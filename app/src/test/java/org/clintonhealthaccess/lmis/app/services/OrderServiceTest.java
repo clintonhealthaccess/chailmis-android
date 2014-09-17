@@ -37,7 +37,7 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Order;
@@ -96,7 +96,7 @@ public class OrderServiceTest extends LMISTestCase {
     private Dao<OrderType, ?> orderTypeDao;
     private Dao<Order, String> orderDao;
     private Dao<Commodity, String> commodityDao;
-    private Dao<CommodityActivity, String> commodityActivityDao;
+    private Dao<CommodityAction, String> commodityActivityDao;
     private Dao<Category, ?> categoryDao;
     private Dao<DataSet, ?> dataSetDao;
     private GenericDao<CommoditySnapshot> snapshotGenericDao;
@@ -120,7 +120,7 @@ public class OrderServiceTest extends LMISTestCase {
         orderDao = createDao(connectionSource, Order.class);
         orderItemDao = createDao(connectionSource, OrderItem.class);
         commodityDao = createDao(connectionSource, Commodity.class);
-        commodityActivityDao = createDao(connectionSource, CommodityActivity.class);
+        commodityActivityDao = createDao(connectionSource, CommodityAction.class);
         categoryDao = createDao(connectionSource, Category.class);
         orderTypeDao = createDao(connectionSource, OrderType.class);
         dataSetDao = createDao(connectionSource, DataSet.class);
@@ -224,12 +224,12 @@ public class OrderServiceTest extends LMISTestCase {
         commodityDao.create(commodity);
         DataSet dataSet = new DataSet("asdas");
         dataSetDao.create(dataSet);
-        CommodityActivity commodityActivity = new CommodityActivity(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
-        commodityActivity.setDataSet(dataSet);
-        CommodityActivity otherActivity = new CommodityActivity(commodity, "23323", "1212", OrderItem.ORDER_REASON);
+        CommodityAction commodityAction = new CommodityAction(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
+        commodityAction.setDataSet(dataSet);
+        CommodityAction otherActivity = new CommodityAction(commodity, "23323", "1212", OrderItem.ORDER_REASON);
         otherActivity.setDataSet(dataSet);
 
-        commodityActivityDao.create(commodityActivity);
+        commodityActivityDao.create(commodityAction);
         commodityActivityDao.create(otherActivity);
 
         commodity = commodityDao.queryForId(commodity.getId());

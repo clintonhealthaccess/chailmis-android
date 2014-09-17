@@ -33,6 +33,8 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.MonthlyStockCountAlert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +44,15 @@ public class AlertsService {
     @Inject
     CommodityService commodityService;
 
-    public List<LowStockAlert> generateLowStockAlerts(){
+    public List<LowStockAlert> generateLowStockAlerts() {
         List<Commodity> commodities = commodityService.all();
         List<LowStockAlert> lowStockAlerts = new ArrayList<>();
-        for(Commodity commodity: commodities){
-            if(commodity.getStockOnHand()<commodity.getMinimumThreshold())
+        for (Commodity commodity : commodities) {
+            if (commodity.getStockOnHand() < commodity.getMinimumThreshold())
                 lowStockAlerts.add(new LowStockAlert(commodity));
         }
         return lowStockAlerts;
     }
+
+
 }

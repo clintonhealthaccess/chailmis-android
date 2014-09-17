@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,32 +28,9 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.models.alerts;
 
-import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-@RunWith(RobolectricGradleTestRunner.class)
-public class CommodityActivityTest {
-
-    @Test
-    public void shouldSetPeriodFromOrderCycle() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
-        String expectedPeriod = dateFormat.format(new Date());
-        CommodityActivity activity = new CommodityActivity();
-        DataSet dataSet = mock(DataSet.class);
-        when(dataSet.getPeriodType()).thenReturn("Monthly");
-        activity.setDataSet(dataSet);
-        assertThat(activity.getPeriod(), is(expectedPeriod));
-    }
+public interface Alert {
+    public void doAction();
 
 }

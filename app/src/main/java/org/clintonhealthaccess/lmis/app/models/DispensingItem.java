@@ -82,24 +82,24 @@ public class DispensingItem implements Serializable, Snapshotable {
     }
 
     @Override
-    public List<CommodityActivityValue> getActivitiesValues() {
-        List<CommodityActivity> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
-        Collection<CommodityActivityValue> values = FluentIterable
-                .from(fields).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+    public List<CommoditySnapshotValue> getActivitiesValues() {
+        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        Collection<CommoditySnapshotValue> values = FluentIterable
+                .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
                     @Override
-                    public CommodityActivityValue apply(CommodityActivity input) {
-                        return new CommodityActivityValue(input, quantity);
+                    public CommoditySnapshotValue apply(CommodityAction input) {
+                        return new CommoditySnapshotValue(input, quantity);
                     }
-                }).filter(new Predicate<CommodityActivityValue>() {
+                }).filter(new Predicate<CommoditySnapshotValue>() {
                     @Override
-                    public boolean apply(CommodityActivityValue input) {
+                    public boolean apply(CommoditySnapshotValue input) {
                         return selectDispenseOrAdjusments(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
     }
 
-    private boolean selectDispenseOrAdjusments(CommodityActivityValue input) {
+    private boolean selectDispenseOrAdjusments(CommoditySnapshotValue input) {
         String testString = input.getActivity().getActivityType().toLowerCase();
         if (dispensing.isDispenseToFacility()) {
             return testString.contains(ADJUSTMENTS);

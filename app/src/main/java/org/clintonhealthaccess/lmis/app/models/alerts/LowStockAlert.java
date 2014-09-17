@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,51 +28,23 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.models.alerts;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
-
-import java.util.Date;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.alerts.Alert;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
-@DatabaseTable
-public class CommodityActivity {
-    @DatabaseField(canBeNull = false, foreign = true)
+public class LowStockAlert implements Alert {
     private Commodity commodity;
-    @DatabaseField(id = true, uniqueIndex = true)
-    private String id;
-    @DatabaseField(canBeNull = false)
-    private String name;
-    @DatabaseField(canBeNull = false)
-    private String activityType;
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-    private DataSet dataSet;
 
-    public static String stockOnHand = "STOCK_ON_HAND";
-
-    public CommodityActivity() {
-        //Orm Lite likes
+    public LowStockAlert(Commodity commodity) {
+        this.commodity = commodity;
     }
 
+    @Override
+    public void doAction() {
 
-    public CommodityActivity(Commodity actualCommodity, String id, String name, String activityType) {
-        this.commodity = actualCommodity;
-        this.id = id;
-        this.name = name;
-        this.activityType = activityType;
-    }
-
-    public String getPeriod() {
-        String periodType = getDataSet().getPeriodType();
-        OrderCycle cycle = Helpers.getOrderCycle(periodType);
-        String period = cycle.getPeriod(new Date());
-        return period;
     }
 }

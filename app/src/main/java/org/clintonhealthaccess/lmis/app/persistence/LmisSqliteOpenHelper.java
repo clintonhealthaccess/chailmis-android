@@ -40,7 +40,7 @@ import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -85,7 +85,7 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             createTableIfNotExists(connectionSource, AllocationItem.class);
             createTableIfNotExists(connectionSource, Receive.class);
             createTableIfNotExists(connectionSource, ReceiveItem.class);
-            createTableIfNotExists(connectionSource, CommodityActivity.class);
+            createTableIfNotExists(connectionSource, CommodityAction.class);
             createTableIfNotExists(connectionSource, OrderType.class);
         } catch (SQLException e) {
             throw new LmisException(e);

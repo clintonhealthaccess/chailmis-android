@@ -72,7 +72,7 @@ public interface Dhis2Endpoint {
     DataSetSearchResponse searchDataSets(@Query("query") String query, @Query("fields") String fields);
 
     @GET("/api/dataValueSets")
-    DataValueSet fetchDataValues(@Query("dataSet") String dataSet, @Query("orgUnit") String orgUnit, @Query("startDate") String startDate, @Query("endDate") String endDate);
+    DataValueSet fetchDataValues(@Query("dataSet") String dataSet, @Query("orgUnit") String orgUnit, @Query("startDate") String startDate, @Query("endDate") String endDate, @Query("dataSet") String dataSet2);
 
     @GET("/api/optionSets")
     OptionSetResponse searchOptionSets(@Query("query") String query, @Query("fields") String fields);
@@ -85,5 +85,6 @@ public interface Dhis2Endpoint {
 
     @GET("/api/constants")
     ConstantSearchResponse searchConstants(@Query("query") String query, @Query("fields") String fields);
+
 }
   

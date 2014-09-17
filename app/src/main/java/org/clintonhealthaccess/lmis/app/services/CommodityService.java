@@ -37,7 +37,7 @@ import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -145,26 +145,26 @@ public class CommodityService {
                 for (Commodity commodity : category.getNotSavedCommodities()) {
                     commodity.setCategory(category);
                     dao.createOrUpdate(commodity);
-                    createCommodityActivity(commodity);
+                    createCommodityAction(commodity);
                 }
                 return null;
             }
         });
     }
 
-    private void createCommodityActivity(Commodity commodity) {
-        GenericDao<CommodityActivity> commodityActivityGenericDao = new GenericDao<>(CommodityActivity.class, context);
+    private void createCommodityAction(Commodity commodity) {
+        GenericDao<CommodityAction> commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
         GenericDao<DataSet> dataSetGenericDao = new GenericDao<>(DataSet.class, context);
 
-        for (CommodityActivity commodityActivity : commodity.getCommodityActivities()) {
-            if (commodityActivity.getDataSet() != null) {
-                dataSetGenericDao.createOrUpdate(commodityActivity.getDataSet());
+        for (CommodityAction commodityAction : commodity.getCommodityActivities()) {
+            if (commodityAction.getDataSet() != null) {
+                dataSetGenericDao.createOrUpdate(commodityAction.getDataSet());
             }
-            if (commodityActivity.getCommodity() == null) {
-                commodityActivity.setCommodity(commodity);
+            if (commodityAction.getCommodity() == null) {
+                commodityAction.setCommodity(commodity);
             }
-            e(Dhis2.SYNC, String.format("Saving activity %s %s", commodityActivity.getName(), commodityActivity.getId()));
-            commodityActivityGenericDao.createOrUpdate(commodityActivity);
+            e(Dhis2.SYNC, String.format("Saving activity %s %s", commodityAction.getName(), commodityAction.getId()));
+            commodityActivityGenericDao.createOrUpdate(commodityAction);
         }
 
     }

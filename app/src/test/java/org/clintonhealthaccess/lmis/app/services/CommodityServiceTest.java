@@ -36,7 +36,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -137,11 +137,11 @@ public class CommodityServiceTest {
 
 
     @Test
-    public void shouldSaveCommodityActivityWithDataSet() throws Exception {
+    public void shouldSaveCommodityActionWithDataSet() throws Exception {
         commodityService.initialise(new User("test", "pass"));
         Commodity testCommodity = commodityService.all().get(0);
         assertThat(testCommodity.getCommodityActivitiesSaved().size(), is(not(0)));
-        CommodityActivity actual = (CommodityActivity) testCommodity.getCommodityActivitiesSaved().toArray()[0];
+        CommodityAction actual = (CommodityAction) testCommodity.getCommodityActivitiesSaved().toArray()[0];
         assertThat(actual.getDataSet(), is(notNullValue()));
 
     }

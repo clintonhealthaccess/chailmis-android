@@ -29,63 +29,45 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@DatabaseTable
-public class CommoditySnapshot {
-
-    public static final String PERIOD = "period";
-    @DatabaseField(generatedId = true)
-    private Long id;
-
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, columnName = "commodityActivity_id")
-    private CommodityAction commodityAction;
-
-    @DatabaseField(canBeNull = false)
+public class CommoditySnapshotValue {
+    private CommodityAction activity;
     private String value;
 
-    @DatabaseField(defaultValue = "false")
-    private boolean synced;
-
-    @DatabaseField(canBeNull = false, foreign = true, uniqueCombo = true)
-    private Commodity commodity;
-
-    @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = PERIOD)
-    private String period;
-
-    @DatabaseField(canBeNull = true)
-    private String attributeOptionCombo;
-
-
-    public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value) {
-        this.commodity = commodity;
-        this.commodityAction = commodityAction;
-        this.value = value;
-        this.synced = false;
-        this.period = commodityAction.getPeriod();
+    public CommoditySnapshotValue(CommodityAction input, int quantity) {
+        this.activity = input;
+        this.value = String.valueOf(quantity);
     }
 
-    public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value, String attributeOptionComboId) {
-        this(commodity, commodityAction, value);
-        this.attributeOptionCombo = attributeOptionComboId;
+    public CommoditySnapshotValue(CommodityAction input, String reasonForUnexpectedQuantity) {
+        this.activity = input;
+        this.value = reasonForUnexpectedQuantity;
     }
 
-    public void incrementValue(String value) {
-        try {
-            int numberValue = Integer.parseInt(value);
-            int setValue = Integer.parseInt(this.value);
-            this.value = String.valueOf(numberValue + setValue);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommoditySnapshotValue)) return false;
 
-        } catch (NumberFormatException ex) {
-            this.value = value;
-        }
+        CommoditySnapshotValue value1 = (CommoditySnapshotValue) o;
+
+        if (!activity.equals(value1.activity)) return false;
+        if (!value.equals(value1.value)) return false;
+
+        return true;
     }
+
+    @Override
+    public int hashCode() {
+        int result = activity.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
+
+
 }
+

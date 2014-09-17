@@ -28,8 +28,7 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.services;
+package org.clintonhealthaccess.lmis.app.models.alerts;
 
-public interface Alert {
-    public void doAction();
+public class MonthlyStockCountAlert {
 }

@@ -43,11 +43,11 @@ import static org.mockito.Mockito.when;
 public class OrderItemTest {
 
     @Test
-    public void shouldCreateCommodityActivityForAmountAndReason() throws Exception {
+    public void shouldCreateCommodityActionForAmountAndReason() throws Exception {
 
         Commodity commodity = mock(Commodity.class);
-        CommodityActivity amountActivity = new CommodityActivity(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
-        CommodityActivity reasonActivity = new CommodityActivity(commodity, "12", "demand", OrderItem.ORDER_REASON);
+        CommodityAction amountActivity = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
+        CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
         when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<>(Arrays.asList(amountActivity, reasonActivity)));
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         String testReason = "reason";

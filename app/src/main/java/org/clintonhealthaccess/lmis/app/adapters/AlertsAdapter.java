@@ -37,8 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 
 import java.util.List;
 

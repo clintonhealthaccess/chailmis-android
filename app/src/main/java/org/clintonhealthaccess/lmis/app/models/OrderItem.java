@@ -107,33 +107,33 @@ public class OrderItem implements Snapshotable {
     }
 
     @Override
-    public List<CommodityActivityValue> getActivitiesValues() {
-        Collection<CommodityActivityValue> values = FluentIterable
-                .from(ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved())).filter(new Predicate<CommodityActivity>() {
+    public List<CommoditySnapshotValue> getActivitiesValues() {
+        Collection<CommoditySnapshotValue> values = FluentIterable
+                .from(ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved())).filter(new Predicate<CommodityAction>() {
                     @Override
-                    public boolean apply(CommodityActivity input) {
+                    public boolean apply(CommodityAction input) {
                         return filterForOrderActivities(input);
                     }
-                }).transform(new Function<CommodityActivity, CommodityActivityValue>() {
+                }).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
                     @Override
-                    public CommodityActivityValue apply(CommodityActivity input) {
-                        return getCommodityActivityValue(input);
+                    public CommoditySnapshotValue apply(CommodityAction input) {
+                        return getCommodityActionValue(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
     }
 
-    private boolean filterForOrderActivities(CommodityActivity input) {
+    private boolean filterForOrderActivities(CommodityAction input) {
         String testString = input.getActivityType().toLowerCase();
         return testString.contains(ORDERED_AMOUNT) || (testString.contains(ORDER_REASON) && reasonForUnexpectedQuantity != null);
     }
 
-    private CommodityActivityValue getCommodityActivityValue(CommodityActivity input) {
+    private CommoditySnapshotValue getCommodityActionValue(CommodityAction input) {
         String testString = input.getActivityType().toLowerCase();
         if (testString.contains(ORDERED_AMOUNT)) {
-            return new CommodityActivityValue(input, quantity);
+            return new CommoditySnapshotValue(input, quantity);
         } else {
-            return new CommodityActivityValue(input, reasonForUnexpectedQuantity.getReason());
+            return new CommoditySnapshotValue(input, reasonForUnexpectedQuantity.getReason());
         }
     }
 

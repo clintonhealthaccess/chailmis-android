@@ -29,45 +29,50 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
+
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CommodityActivityValue {
-    private CommodityActivity activity;
-    private String value;
+@DatabaseTable
+public class CommodityAction {
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Commodity commodity;
+    @DatabaseField(id = true, uniqueIndex = true)
+    private String id;
+    @DatabaseField(canBeNull = false)
+    private String name;
+    @DatabaseField(canBeNull = false)
+    private String activityType;
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    private DataSet dataSet;
 
-    public CommodityActivityValue(CommodityActivity input, int quantity) {
-        this.activity = input;
-        this.value = String.valueOf(quantity);
-    }
+    public static String stockOnHand = "STOCK_ON_HAND";
+    public static String AMC = "AMC";
 
-    public CommodityActivityValue(CommodityActivity input, String reasonForUnexpectedQuantity) {
-        this.activity = input;
-        this.value = reasonForUnexpectedQuantity;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CommodityActivityValue)) return false;
-
-        CommodityActivityValue value1 = (CommodityActivityValue) o;
-
-        if (!activity.equals(value1.activity)) return false;
-        if (!value.equals(value1.value)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = activity.hashCode();
-        result = 31 * result + value.hashCode();
-        return result;
+    public CommodityAction() {
+        //Orm Lite likes
     }
 
 
+    public CommodityAction(Commodity actualCommodity, String id, String name, String activityType) {
+        this.commodity = actualCommodity;
+        this.id = id;
+        this.name = name;
+        this.activityType = activityType;
+    }
+
+    public String getPeriod() {
+        String periodType = getDataSet().getPeriodType();
+        OrderCycle cycle = Helpers.getOrderCycle(periodType);
+        String period = cycle.getPeriod(new Date());
+        return period;
+    }
 }
-

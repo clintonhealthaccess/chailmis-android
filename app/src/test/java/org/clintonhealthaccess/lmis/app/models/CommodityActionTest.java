@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, ThoughtWorks
- *
+ * Copyright (c) 2014, Thoughtworks Inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,22 +27,32 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.services;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import lombok.Getter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-@Getter
-public class LowStockAlert implements Alert {
-    private Commodity commodity;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    public LowStockAlert(Commodity commodity) {
-        this.commodity = commodity;
+@RunWith(RobolectricGradleTestRunner.class)
+public class CommodityActionTest {
+
+    @Test
+    public void shouldSetPeriodFromOrderCycle() throws Exception {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+        String expectedPeriod = dateFormat.format(new Date());
+        CommodityAction activity = new CommodityAction();
+        DataSet dataSet = mock(DataSet.class);
+        when(dataSet.getPeriodType()).thenReturn("Monthly");
+        activity.setDataSet(dataSet);
+        assertThat(activity.getPeriod(), is(expectedPeriod));
     }
 
-    @Override
-    public void doAction() {
-
-    }
 }

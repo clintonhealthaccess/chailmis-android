@@ -44,18 +44,18 @@ public class LossItemTest {
     @Test
     public void shouldCreateActivitiesForMissingWastedAndExpiries() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityActivity wasted = new CommodityActivity(commodity, "12", "12", "waste");
-        CommodityActivity missing = new CommodityActivity(commodity, "12", "12", "missing");
-        CommodityActivity expiries = new CommodityActivity(commodity, "12", "12", "expired");
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityActivity>(Arrays.asList(wasted, missing, expiries)));
+        CommodityAction wasted = new CommodityAction(commodity, "12", "12", "waste");
+        CommodityAction missing = new CommodityAction(commodity, "12", "12", "missing");
+        CommodityAction expiries = new CommodityAction(commodity, "12", "12", "expired");
+        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(wasted, missing, expiries)));
         LossItem lossItem = new LossItem(commodity, 10);
         lossItem.setWastages(10);
         lossItem.setExpiries(20);
         lossItem.setMissing(30);
         assertThat(lossItem.getActivitiesValues().size(), is(3));
-        CommodityActivityValue wastedValue = new CommodityActivityValue(wasted, 10);
-        CommodityActivityValue expiriesValue = new CommodityActivityValue(expiries, 20);
-        CommodityActivityValue missingValue = new CommodityActivityValue(missing, 30);
+        CommoditySnapshotValue wastedValue = new CommoditySnapshotValue(wasted, 10);
+        CommoditySnapshotValue expiriesValue = new CommoditySnapshotValue(expiries, 20);
+        CommoditySnapshotValue missingValue = new CommoditySnapshotValue(missing, 30);
         assertThat(lossItem.getActivitiesValues(), containsInAnyOrder(wastedValue, expiriesValue, missingValue));
     }
 }

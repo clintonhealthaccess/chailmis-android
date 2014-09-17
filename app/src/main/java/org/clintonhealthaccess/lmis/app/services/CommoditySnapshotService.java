@@ -36,7 +36,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
-import org.clintonhealthaccess.lmis.app.models.CommodityActivityValue;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
@@ -69,7 +69,7 @@ public class CommoditySnapshotService {
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
-        for (CommodityActivityValue value : snapshotable.getActivitiesValues()) {
+        for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
             List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
             if (commoditySnapshots.isEmpty()) {
                 createNewSnaphot(value, snapshotGenericDao, snapshotable.getAttributeOptionCombo());
@@ -80,24 +80,24 @@ public class CommoditySnapshotService {
 
     }
 
-    private void updateSnapshot(CommodityActivityValue commodityActivityValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, List<CommoditySnapshot> commoditySnapshots) {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, List<CommoditySnapshot> commoditySnapshots) {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
-        commoditySnapshot.incrementValue(commodityActivityValue.getValue());
+        commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
         commoditySnapshot.setSynced(false);
         dailyCommoditySnapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnaphot(CommodityActivityValue commodityActivityValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, String attributeOptionCombo) {
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commodityActivityValue.getActivity().getCommodity(), commodityActivityValue.getActivity(), commodityActivityValue.getValue(), attributeOptionCombo);
+    private void createNewSnaphot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, String attributeOptionCombo) {
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue(), attributeOptionCombo);
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 
-    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommodityActivityValue commodityActivityValue) {
+    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommoditySnapshotValue commoditySnapshotValue) {
         return dbUtil.withDao(CommoditySnapshot.class, new DbUtil.Operation<CommoditySnapshot, List<CommoditySnapshot>>() {
             @Override
             public List<CommoditySnapshot> operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, commodityActivityValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commodityActivityValue.getActivity()).and().eq(CommoditySnapshot.PERIOD, commodityActivityValue.getActivity().getPeriod());
+                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getActivity()).and().eq(CommoditySnapshot.PERIOD, commoditySnapshotValue.getActivity().getPeriod());
                 return dao.query(queryBuilder.prepare());
             }
         });
@@ -145,7 +145,7 @@ public class CommoditySnapshotService {
         dataValueSet.setDataValues(new ArrayList<DataValue>());
         for (CommoditySnapshot snapshot : snapshotsToSync) {
             DataValue dataValue = DataValue.builder().value(String.valueOf(snapshot.getValue())).
-                    dataElement(snapshot.getCommodityActivity().getId()).
+                    dataElement(snapshot.getCommodityAction().getId()).
                     period(snapshot.getPeriod()).orgUnit(orgUnit).attributeOptionCombo(snapshot.getAttributeOptionCombo()).build();
             dataValueSet.getDataValues().add(dataValue);
         }

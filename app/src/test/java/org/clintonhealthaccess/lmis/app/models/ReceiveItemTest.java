@@ -43,8 +43,8 @@ public class ReceiveItemTest {
     @Test
     public void shouldSelectCorrectActivity() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityActivity activity = new CommodityActivity(commodity, "12", "12", "receive");
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityActivity>(Arrays.asList(activity)));
+        CommodityAction activity = new CommodityAction(commodity, "12", "12", "receive");
+        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(activity)));
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
         assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
