@@ -129,7 +129,7 @@ public class OrderActivity extends CommoditySelectableActivity {
                     OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
                     dialog.show(fm, "confirmOrder");
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_SHORT).show();
                 }
             }
         });

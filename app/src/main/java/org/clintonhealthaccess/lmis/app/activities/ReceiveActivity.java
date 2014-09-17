@@ -136,7 +136,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                     return;
                 }
                 if (!quantitiesAreValid()) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.receive_quantities_validation_error_message), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.receive_quantities_validation_error_message), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(generateReceive());

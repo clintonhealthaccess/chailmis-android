@@ -84,7 +84,7 @@ public class LossesActivity extends CommoditySelectableActivity {
                     LossesConfirmationFragment lossesConfirmationFragment = LossesConfirmationFragment.newInstance(generateLoss());
                     lossesConfirmationFragment.show(supportFragmentManager, "lossesDialog");
                 } else {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.fillInSomeLosses), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.fillInSomeLosses), Toast.LENGTH_SHORT).show();
                 }
             }
         });

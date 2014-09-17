@@ -98,7 +98,7 @@ public class LossesConfirmationFragment extends RoboDialogFragment {
             @Override
             public void onClick(View view) {
                 lossService.saveLoss(loss);
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.loss_successful), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.loss_successful), Toast.LENGTH_SHORT).show();
                 dismiss();
                 FragmentActivity activity = getActivity();
                 if (activity != null) {

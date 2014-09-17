@@ -98,7 +98,7 @@ public class ReceiveConfirmFragment extends RoboDialogFragment{
             @Override
             public void onClick(View v) {
                 receiveService.saveReceive(receive);
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_SHORT).show();
                 dismiss();
                 FragmentActivity activity = getActivity();
                 if (activity != null) {

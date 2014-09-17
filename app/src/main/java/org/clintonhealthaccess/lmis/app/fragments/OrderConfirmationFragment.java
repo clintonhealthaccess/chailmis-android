@@ -123,7 +123,7 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
     }
 
     private void showToastMessage(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
 }
