@@ -63,4 +63,16 @@ public class AlertsService {
     }
 
 
+    public int numberOfAlerts() {
+        return generateLowStockAlerts().size();
+    }
+
+    public List<LowStockAlert> getTop5LowStockAlerts() {
+        List<LowStockAlert> lowStockAlerts = generateLowStockAlerts();
+        if (lowStockAlerts.size() > 5) {
+            return lowStockAlerts.subList(0, 5);
+        } else {
+            return lowStockAlerts;
+        }
+    }
 }
