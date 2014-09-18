@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, ThoughtWorks
- *
+ * Copyright (c) 2014, Thoughtworks Inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,28 +31,37 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
-import org.clintonhealthaccess.lmis.app.models.alerts.MonthlyStockCountAlert;
+import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AlertsService {
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.application;
+
+@RunWith(RobolectricGradleTestRunner.class)
+public class AlertsServiceTest {
+    @Inject
+    AlertsService alertsService;
 
     @Inject
-    CommodityService commodityService;
+    private CommodityService commodityService;
 
-    public List<LowStockAlert> generateLowStockAlerts() {
-        List<Commodity> commodities = commodityService.all();
-        List<LowStockAlert> lowStockAlerts = new ArrayList<>();
-        for (Commodity commodity : commodities) {
-            if (commodity.getStockOnHand() < commodity.getMinimumThreshold()){
-                lowStockAlerts.add(new LowStockAlert(commodity));
-            }
-        }
-        return lowStockAlerts;
+    @Before
+    public void setUp() throws Exception {
+        setUpInjectionWithMockLmisServer(application, this);
+        commodityService.initialise(new User("test", "pass"));
     }
 
-
+    @Test
+    public void shouldCreateRoutineOrderAlertsForItemsWithStockBelowTheThreshold() throws Exception {
+        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
+        assertThat(lowStockAlerts.size(), is(1));
+    }
 }

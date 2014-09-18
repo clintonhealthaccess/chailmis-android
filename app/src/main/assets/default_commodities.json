@@ -58,6 +58,16 @@
                          "id": "id_stock_on_hand_comm_1",
                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
 
+                     },
+                     {
+                          "activityType": "MINIMUM_THRESHOLD",
+                          "dataSet": {
+                              "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                              "name": "lmis dataset",
+                              "periodType": "Daily"
+                          },
+                          "id": "id_minimum_threshold_1",
+                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                      }
                 ],
                 "id": "1",
@@ -110,7 +120,28 @@
                         },
                         "id": "e003847a-8e31-4522-855a-d97006574f14",
                         "name": "72de09aa-dbb2-40df-bf04-1395ece55516"
-                    }
+                    },
+                     {
+                         "activityType": "STOCK_ON_HAND",
+                            "dataSet": {
+                                "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
+                                "name": "lmis dataset",
+                                "periodType": "Monthly"
+                            },
+                         "id": "id_stock_on_hand_comm_2",
+                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+
+                     },
+                     {
+                          "activityType": "MINIMUM_THRESHOLD",
+                            "dataSet": {
+                                "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
+                                "name": "lmis dataset",
+                                "periodType": "Monthly"
+                            },
+                          "id": "id_minimum_threshold_2",
+                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                     }
                 ],
                 "id": "3",
                 "name": "Choloquine",

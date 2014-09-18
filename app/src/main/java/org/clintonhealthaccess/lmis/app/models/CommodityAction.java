@@ -66,6 +66,7 @@ public class CommodityAction {
     private List<CommodityActionValue> commodityActionValues = new ArrayList<>();
 
     public static String stockOnHand = "STOCK_ON_HAND";
+    public static String minimumThreshold = "MINIMUM_THRESHOLD";
     public static String AMC = "AMC";
 
     public CommodityAction() {

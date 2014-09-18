@@ -169,6 +169,13 @@ public class Commodity implements Serializable {
     }
 
     public int getMinimumThreshold() {
-        return 100;
+        CommodityAction commodityAction = getCommodityAction(CommodityAction.minimumThreshold);
+        int defaultMinimumThresHold = 0;
+        if (commodityAction != null) {
+            CommodityActionValue actionLatestValue = commodityAction.getActionLatestValue();
+            return (actionLatestValue != null) ? Integer.parseInt(actionLatestValue.getValue()) : defaultMinimumThresHold;
+        } else {
+            return defaultMinimumThresHold;
+        }
     }
 }
