@@ -47,7 +47,7 @@ public class LossItemTest {
         CommodityAction wasted = new CommodityAction(commodity, "12", "12", "waste");
         CommodityAction missing = new CommodityAction(commodity, "12", "12", "missing");
         CommodityAction expiries = new CommodityAction(commodity, "12", "12", "expired");
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(wasted, missing, expiries)));
+        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(wasted, missing, expiries)));
         LossItem lossItem = new LossItem(commodity, 10);
         lossItem.setWastages(10);
         lossItem.setExpiries(20);

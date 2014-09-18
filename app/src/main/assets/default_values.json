@@ -8,9 +8,8 @@
                          },
                          "id": "id_stock_on_hand_comm_1",
                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                     }
-                     ,
-                     "value":"10",
-                     "period":"201404",
-                     "id":"0001"}
+                     },
+   "value":"10",
+   "period":"201404",
+   "id":"0001"}
 ]

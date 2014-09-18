@@ -48,7 +48,7 @@ public class OrderItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction amountActivity = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
         CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<>(Arrays.asList(amountActivity, reasonActivity)));
+        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<>(Arrays.asList(amountActivity, reasonActivity)));
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         String testReason = "reason";
         commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));

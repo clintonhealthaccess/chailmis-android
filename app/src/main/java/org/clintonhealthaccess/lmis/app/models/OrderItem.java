@@ -109,7 +109,7 @@ public class OrderItem implements Snapshotable {
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
         Collection<CommoditySnapshotValue> values = FluentIterable
-                .from(ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved())).filter(new Predicate<CommodityAction>() {
+                .from(ImmutableList.copyOf(getCommodity().getCommodityActionsSaved())).filter(new Predicate<CommodityAction>() {
                     @Override
                     public boolean apply(CommodityAction input) {
                         return filterForOrderActivities(input);

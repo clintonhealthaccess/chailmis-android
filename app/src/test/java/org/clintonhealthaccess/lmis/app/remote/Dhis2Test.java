@@ -35,27 +35,19 @@ import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.greaterThan;
@@ -76,6 +68,7 @@ public class Dhis2Test extends LMISTestCase {
 
     @Inject
     private CategoryService categoryService;
+
 
     @Before
     public void setUp() throws Exception {
@@ -110,7 +103,6 @@ public class Dhis2Test extends LMISTestCase {
         setUpSuccessHttpGetRequest(200, "orderTypes.json");
         List<OrderType> orderTypes = dhis2.fetchOrderTypes(new User("test", "pass"));
         assertThat(orderTypes.size(), is(2));
-//        assertThat(orderTypes, contains(OrderType.ROUTINE, OrderType.EMERGENCY));
     }
 
     @Test
@@ -126,68 +118,25 @@ public class Dhis2Test extends LMISTestCase {
     }
 
     @Test
-    public void shouldGetLatestDataValueFromResultForEachDataElement() throws Exception {
+    public void shouldCreateCommodityActionValueForEachDataValue() throws Exception {
         String orgUnit = "orgnunit";
-        String DATE_FORMAT = "yyyy-MM-dd";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        String end = dateFormat.format(calendar.getTime());
-        calendar.add(Calendar.MONTH, -6);
-        String start = dateFormat.format(calendar.getTime());
-        setUpSuccessHttpGetRequest(200, "dataSets.json");
-        setUpSuccessHttpGetRequest(200, "dataValues.json");
         User user = new User();
         user.setFacilityCode(orgUnit);
+
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "dataValues.json");
+
         commodityService.saveToDatabase(dhis2.fetchCommodities(user));
         categoryService.clearCache();
         List<Commodity> commodities = commodityService.all();
         assertThat(commodities.size(), greaterThan(0));
         List<CommodityActionValue> result = dhis2.fetchCommodityActionValues(commodities, user);
-        String commodityName = "Cotrimoxazole_suspension";
-        String commodityId = "877d0e9f022";
-        Commodity commodity = new Commodity(commodityId, commodityName);
         assertThat(result.size(), is(210));
-
-        //FIXME invomplete test, check the Commodity
-                //get(commodity), is(271));
+        assertThat(result.get(0).getValue(), is("469"));
+        assertThat(result.get(0).getPeriod(), is("20131229"));
+        assertThat(result.get(0).getCommodityAction().getId(), is("f5edb97ceca"));
     }
 
-    @Test
-    public void shouldGetMostRecentDataValueForGivenActivity() throws Exception {
-        List<DataValue> dataValues = new ArrayList<>();
-        dataValues.add(DataValue.builder().value("10").period("20131225").dataElement("abc").build());
-        dataValues.add(DataValue.builder().value("11").period("201312").dataElement("abc").build());
-        dataValues.add(DataValue.builder().value("13").period("20131226").dataElement("abc").build());
-        dataValues.add(DataValue.builder().value("14").period("20131227").dataElement("abc4").build());
-        dataValues.add(DataValue.builder().value("14").period("20141227").dataElement("abc3").build());
-        assertThat(dhis2.findMostRecentDataValueForActivity(dataValues, "abc").getValue(), is("13"));
-    }
-
-    @Ignore("James")
-    @Test
-    public void shouldGetStockLevelsForCommoditiesFromDataValues() throws Exception {
-        List<DataValue> dataValues = new ArrayList<>();
-        String commodityActivityId = "abc";
-        dataValues.add(DataValue.builder().value("10").period("20131225").dataElement(commodityActivityId).build());
-        dataValues.add(DataValue.builder().value("11").period("201312").dataElement(commodityActivityId).build());
-        dataValues.add(DataValue.builder().value("13").period("20131226").dataElement(commodityActivityId).build());
-        dataValues.add(DataValue.builder().value("14").period("20131227").dataElement("abc4").build());
-        dataValues.add(DataValue.builder().value("14").period("20141227").dataElement("abc3").build());
-
-
-        List<Commodity> commodities = new ArrayList<>();
-        Commodity commodity = new Commodity("commodity");
-        CommodityAction activity = new CommodityAction(commodity, commodityActivityId, "commodity_receive_stock", CommodityAction.stockOnHand);
-        ArrayList<CommodityAction> commodityActivities = new ArrayList<>();
-        commodityActivities.add(activity);
-        commodity.setCommodityActivitiesSaved(commodityActivities);
-        commodities.add(commodity);
-        List<CommodityActionValue> result = dhis2.convertDataValuesToCommodityActions(dataValues);
-        assertThat(result.size(), is(5));
-        assertThat(result.get(2).getValue(), is("13"));
-
-    }
 
     @Test
     public void shouldSearchConstantsForMonthlyStockCountDay() throws Exception {

@@ -90,7 +90,7 @@ public class LossItem implements Serializable, Snapshotable {
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        List<CommodityAction> activities = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        List<CommodityAction> activities = ImmutableList.copyOf(getCommodity().getCommodityActionsSaved());
         List<CommoditySnapshotValue> values = new ArrayList<>();
         for (CommodityAction activity : activities) {
             selectActivity(values, activity);

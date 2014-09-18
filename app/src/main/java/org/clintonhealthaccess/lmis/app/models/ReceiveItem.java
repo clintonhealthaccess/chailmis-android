@@ -80,7 +80,7 @@ public class ReceiveItem implements Snapshotable {
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActivitiesSaved());
+        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActionsSaved());
         Collection<CommoditySnapshotValue> values = FluentIterable
                 .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
                     @Override

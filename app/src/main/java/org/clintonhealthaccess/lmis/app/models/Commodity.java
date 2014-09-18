@@ -67,9 +67,9 @@ public class Commodity implements Serializable {
     private ForeignCollection<StockItem> stockItems;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 5)
-    private Collection<CommodityAction> commodityActivitiesSaved;
+    private Collection<CommodityAction> commodityActionsSaved;
 
-    private List<CommodityAction> commodityActivities = new ArrayList<>();
+    private List<CommodityAction> commodityActions = new ArrayList<>();
 
     public Commodity() {
         // ormlite wants it
@@ -161,7 +161,7 @@ public class Commodity implements Serializable {
     }
 
     public CommodityAction getCommodityAction(String activityType) {
-        for (CommodityAction commodityAction : new ArrayList<>(commodityActivitiesSaved)) {
+        for (CommodityAction commodityAction : new ArrayList<>(commodityActionsSaved)) {
             if (commodityAction.getActivityType().equalsIgnoreCase(activityType))
                 return commodityAction;
         }

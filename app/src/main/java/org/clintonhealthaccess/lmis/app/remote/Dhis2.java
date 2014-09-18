@@ -58,7 +58,7 @@ import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
-import org.clintonhealthaccess.lmis.app.services.GenericDao;
+import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.text.SimpleDateFormat;
@@ -85,6 +85,9 @@ public class Dhis2 implements LmisServer {
 
     @Inject
     Context context;
+
+    @Inject
+    CommodityActionService commodityActionService;
 
     @Override
     public UserProfile validateLogin(User user) {
@@ -148,7 +151,7 @@ public class Dhis2 implements LmisServer {
                     category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
                     categories.add(category);
                 }
-                commodity.setCommodityActivities(new ArrayList<CommodityAction>());
+                commodity.setCommodityActions(new ArrayList<CommodityAction>());
                 commodities.add(commodity);
                 actualCommodity = commodity;
             }
@@ -158,7 +161,7 @@ public class Dhis2 implements LmisServer {
                 if (element.getDataSets() != null && element.getDataSets().size() > 0) {
                     commodityAction.setDataSet(element.getDataSets().get(0));
                 }
-                actualCommodity.getCommodityActivities().add(commodityAction);
+                actualCommodity.getCommodityActions().add(commodityAction);
             }
         }
 
@@ -238,23 +241,13 @@ public class Dhis2 implements LmisServer {
         }
     }
 
-    public DataValue findMostRecentDataValueForActivity(List<DataValue> dataValues, String abc) {
-        DataValue mostRecentDataValue = null;
-        for (DataValue dataValue : dataValues) {
-            if (dataValue.getDataElement().equalsIgnoreCase(abc) && (mostRecentDataValue == null || mostRecentDataValue.getPeriodInt() < dataValue.getPeriodInt())) {
-                mostRecentDataValue = dataValue;
-            }
-        }
-        return mostRecentDataValue;
-    }
 
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
-        final GenericDao<CommodityAction> commodityActionGenericDao = new GenericDao<>(CommodityAction.class, context);
         return FluentIterable
                 .from(values).transform(new Function<DataValue, CommodityActionValue>() {
                     @Override
                     public CommodityActionValue apply(DataValue input) {
-                        CommodityAction commodityAction = commodityActionGenericDao.getById(input.getDataElement());
+                        CommodityAction commodityAction = commodityActionService.getById(input.getDataElement());
                         return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
                     }
                 }).toList();

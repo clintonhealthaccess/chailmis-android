@@ -49,7 +49,7 @@ public class DispensingItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction dispensingActivity = new CommodityAction(commodity, "12", "12", "DISPENSE");
         CommodityAction adjustments = new CommodityAction(commodity, "12", "12", "ADJUSTMENTS");
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
+        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
         Dispensing dispensing = new Dispensing();
         dispensing.setDispenseToFacility(false);
         DispensingItem dispensingItem = new DispensingItem(commodity, 10);
@@ -64,7 +64,7 @@ public class DispensingItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction dispensingActivity = new CommodityAction(commodity, "12", "12", "DISPENSE");
         CommodityAction adjustments = new CommodityAction(commodity, "12", "12", "ADJUSTMENTS");
-        when(commodity.getCommodityActivitiesSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
+        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
         Dispensing dispensing = new Dispensing();
         dispensing.setDispenseToFacility(true);
         DispensingItem dispensingItem = new DispensingItem(commodity, 10);

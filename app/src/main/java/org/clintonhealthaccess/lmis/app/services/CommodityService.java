@@ -84,31 +84,23 @@ public class CommodityService {
         List<Commodity> commodities = all();
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
         saveActionValues(commodityActionValues);
-        updateStockValues();
+
+        categoryService.clearCache();
+        updateStockValues(all());
 
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations();
         categoryService.clearCache();
     }
 
-    private void updateStockValues() {
-        List<Commodity> commodities = all();
+    private void updateStockValues(List<Commodity> commodities) {
         List<StockItem> stockItems = FluentIterable.from(commodities).transform(new Function<Commodity, StockItem>() {
             @Override
             public StockItem apply(Commodity input) {
                 CommodityAction commodityAction = input.getCommodityAction(CommodityAction.stockOnHand);
-                if (commodityAction != null) {
-                    System.out.println("action " + commodityAction.getActivityType());
-                    System.out.println("action " + commodityAction.getName());
-                    System.out.println("action " + commodityAction.getActionLatestValue());
-                    System.out.println("action " + commodityAction.getCommodityActionValueList().size());
-                }
-
                 if (commodityAction != null && commodityAction.getActionLatestValue() != null) {
-                    System.out.println("some value " + input.getName());
                     return new StockItem(input, Integer.parseInt(commodityAction.getActionLatestValue().getValue()));
                 } else {
-                    System.out.println("zero value");
                     return new StockItem(input, 0);
                 }
             }
@@ -194,7 +186,7 @@ public class CommodityService {
         GenericDao<CommodityAction> commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
         GenericDao<DataSet> dataSetGenericDao = new GenericDao<>(DataSet.class, context);
 
-        for (CommodityAction commodityAction : commodity.getCommodityActivities()) {
+        for (CommodityAction commodityAction : commodity.getCommodityActions()) {
             if (commodityAction.getDataSet() != null) {
                 dataSetGenericDao.createOrUpdate(commodityAction.getDataSet());
             }

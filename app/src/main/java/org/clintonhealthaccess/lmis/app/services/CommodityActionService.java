@@ -27,26 +27,36 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.services;
 
-import org.junit.Test;
+import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
-public class ReceiveItemTest {
-    @Test
-    public void shouldSelectCorrectActivity() throws Exception {
-        Commodity commodity = mock(Commodity.class);
-        CommodityAction activity = new CommodityAction(commodity, "12", "12", "receive");
-        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(activity)));
-        ReceiveItem item = new ReceiveItem(commodity, 10, 20);
-        assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
-        assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
+import java.sql.SQLException;
+
+public class CommodityActionService {
+
+    @Inject
+    Context context;
+
+    @Inject
+    DbUtil dbUtil;
+
+
+    public CommodityActionService() {
+    }
+
+    public CommodityAction getById(final String id) {
+        return dbUtil.withDao(CommodityAction.class, new DbUtil.Operation<CommodityAction, CommodityAction>() {
+            @Override
+            public CommodityAction operate(Dao<CommodityAction, String> dao) throws SQLException {
+                return dao.queryForId(id);
+            }
+        });
     }
 }

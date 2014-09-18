@@ -61,7 +61,9 @@ public class CommodityAction {
     private DataSet dataSet;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<CommodityActionValue> commodityActionValues;
+    private ForeignCollection<CommodityActionValue> commodityActionValueCollection;
+
+    private List<CommodityActionValue> commodityActionValues = new ArrayList<>();
 
     public static String stockOnHand = "STOCK_ON_HAND";
     public static String AMC = "AMC";
@@ -89,12 +91,17 @@ public class CommodityAction {
         return period;
     }
 
+
+    public List<CommodityActionValue> getNotSavedCommodityActionValues() {
+        return commodityActionValues;
+    }
+
+
     public List<CommodityActionValue> getCommodityActionValueList() {
-        return new ArrayList<>(this.commodityActionValues);
+        return new ArrayList<>(this.commodityActionValueCollection);
     }
 
     public CommodityActionValue getActionLatestValue() {
-
         List<CommodityActionValue> commodityActionValueList = getCommodityActionValueList();
         if (commodityActionValueList != null && !commodityActionValueList.isEmpty()) {
             Collections.sort(commodityActionValueList, new Comparator<CommodityActionValue>() {

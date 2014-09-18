@@ -176,8 +176,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActionsSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActionsSaved());
         CommodityAction commodityAction = commodityActivities.get(0);
         CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
@@ -198,8 +198,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActionsSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActionsSaved());
         CommodityAction commodityAction = commodityActivities.get(0);
         CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
@@ -222,8 +222,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActivitiesSaved());
-        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActivitiesSaved());
+        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActionsSaved());
+        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActionsSaved());
         CommodityAction commodityAction = commodityActivities.get(0);
         CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
@@ -257,7 +257,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     public void shouldCreateOrUpdateSnapshotForEachActivityValue() throws Exception {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Dispensing dispensing = new Dispensing(false);
-        assertThat(fetchedCommodity1.getCommodityActivitiesSaved().size(), is(greaterThan(1)));
+        assertThat(fetchedCommodity1.getCommodityActionsSaved().size(), is(greaterThan(1)));
         CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.DISPENSE), 1);
         CommoditySnapshotValue otherActivityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.ADJUSTMENTS), 2);
         List<CommoditySnapshotValue> values = new ArrayList<>(Arrays.asList(activityValue, otherActivityValue));

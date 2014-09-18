@@ -2,7 +2,7 @@
     {
         "commodities": [
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -57,6 +57,7 @@
                          },
                          "id": "id_stock_on_hand_comm_1",
                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+
                      }
                 ],
                 "id": "1",
@@ -64,7 +65,7 @@
                 "orderDuration": 30
             },
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -116,7 +117,7 @@
                 "orderDuration": 90
             },
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -168,7 +169,7 @@
                 "orderDuration": 180
             },
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -220,7 +221,7 @@
                 "orderDuration": 360
             },
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -272,7 +273,7 @@
                 "orderDuration": 60
             },
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {
@@ -330,7 +331,7 @@
     {
         "commodities": [
             {
-                "commodityActivities": [
+                "commodityActions": [
                     {
                         "activityType": "dispense",
                         "commodity": {

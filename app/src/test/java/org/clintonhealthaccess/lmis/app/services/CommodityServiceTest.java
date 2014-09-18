@@ -133,7 +133,7 @@ public class CommodityServiceTest {
     public void shouldSaveCommodityCommodityActivities() {
         commodityService.initialise(new User("test", "pass"));
         Commodity testCommodity = commodityService.all().get(0);
-        assertThat(testCommodity.getCommodityActivitiesSaved().size(), is(not(0)));
+        assertThat(testCommodity.getCommodityActionsSaved().size(), is(not(0)));
     }
 
 
@@ -141,8 +141,8 @@ public class CommodityServiceTest {
     public void shouldSaveCommodityActionWithDataSet() throws Exception {
         commodityService.initialise(new User("test", "pass"));
         Commodity testCommodity = commodityService.all().get(0);
-        assertThat(testCommodity.getCommodityActivitiesSaved().size(), is(not(0)));
-        CommodityAction actual = (CommodityAction) testCommodity.getCommodityActivitiesSaved().toArray()[0];
+        assertThat(testCommodity.getCommodityActionsSaved().size(), is(not(0)));
+        CommodityAction actual = (CommodityAction) testCommodity.getCommodityActionsSaved().toArray()[0];
         assertThat(actual.getDataSet(), is(notNullValue()));
 
     }
