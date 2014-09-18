@@ -40,4 +40,5 @@
     <color name="receive_background">#FF6421</color>
     <color name="green_header">#57A127</color>
     <color name="dark_blue_header">#365F9B</color>
+    <color name="alerts_red">#990033</color>
 </resources>

@@ -31,7 +31,6 @@
 package org.clintonhealthaccess.lmis.app.models.alerts;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.alerts.Alert;
 
 import lombok.Getter;
 

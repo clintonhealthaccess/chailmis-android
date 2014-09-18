@@ -33,7 +33,7 @@
     android:layout_width="fill_parent"
     android:orientation="horizontal"
     android:background="@color/blue"
-    android:padding="@dimen/confirm_items_padding"
+    android:padding="5dp"
     android:layout_height="match_parent">
 
 
@@ -66,7 +66,7 @@
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:textSize="@dimen/header_text_size"
-        android:text="@string/alert_date" />
+        android:text="" />
 
 
 </LinearLayout>

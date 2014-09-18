@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,8 +40,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 
 import java.util.List;
 
@@ -57,6 +58,10 @@ public class MessagesActivity extends BaseActivity {
     @Inject
     AlertsService alertsService;
 
+    private View alertsListViewHeader;
+
+    private View notificationsListViewHeader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +70,10 @@ public class MessagesActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_messages);
-
+        alertsListViewHeader = getLayoutInflater().inflate(R.layout.alerts_header_view, null);
+        notificationsListViewHeader = getLayoutInflater().inflate(R.layout.notifications_header_view, null);
         List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
+        listViewAlerts.addHeaderView(alertsListViewHeader);
         listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
         listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
     }

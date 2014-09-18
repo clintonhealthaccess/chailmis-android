@@ -55,12 +55,10 @@ public class AlertsAdapter extends ArrayAdapter<LowStockAlert> {
 
         TextView textViewComodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         TextView textViewQuantity = (TextView) rowView.findViewById(R.id.textViewQuantity);
-        TextView textViewTime = (TextView) rowView.findViewById(R.id.textViewTime);
 
-        LowStockAlert alert = (LowStockAlert)getItem(position);
+        LowStockAlert alert = (LowStockAlert) getItem(position);
         textViewComodityName.setText(alert.getCommodity().getName());
         textViewQuantity.setText(String.valueOf(alert.getCommodity().getStockOnHand()));
-        textViewTime.setText("30 Minutes");
         return rowView;
     }
 }

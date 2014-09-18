@@ -31,10 +31,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:padding="15dp"
     android:orientation="horizontal"
     tools:context="org.clintonhealthaccess.lmis.app.activities.MessagesActivity">
 
@@ -50,6 +47,8 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:background="@color/alerts_red"
             android:layout_centerHorizontal="true"
             android:textSize="20sp"
             android:text="@string/alerts_title" />
@@ -74,6 +73,8 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:background="@color/alerts_red"
             android:layout_centerHorizontal="true"
             android:textSize="20sp"
             android:text="@string/notifications_title" />

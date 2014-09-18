@@ -35,11 +35,15 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
+import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 
 import java.util.List;
@@ -77,8 +81,16 @@ public class HomeActivity extends BaseActivity {
     @InjectView(R.id.buttonMessages)
     Button buttonMessages;
 
+
+    @InjectView(R.id.listViewAlerts)
+    ListView listViewAlerts;
+
+
     @Inject
     private SyncManager syncManager;
+
+    @Inject
+    AlertsService alertsService;
 
     private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
             new SparseArray<Class<? extends BaseActivity>>() {
@@ -133,6 +145,8 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupAlerts() {
+        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
+        listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
 
     }
 

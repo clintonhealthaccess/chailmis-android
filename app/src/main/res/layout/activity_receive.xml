@@ -107,6 +107,7 @@
                 android:text="@string/allocation_id" />
 
             <AutoCompleteTextView
+                android:imeOptions="flagNoExtractUi"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewAllocationId" />

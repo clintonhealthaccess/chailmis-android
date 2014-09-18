@@ -215,7 +215,7 @@ public class Dhis2 implements LmisServer {
     }
 
     private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
-        calendar.add(Calendar.MONTH, -1);
+        calendar.add(Calendar.MONTH, -2);
         return simpleDateFormat.format(calendar.getTime());
     }
 
