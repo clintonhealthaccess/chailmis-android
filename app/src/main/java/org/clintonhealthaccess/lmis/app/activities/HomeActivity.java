@@ -145,7 +145,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupAlerts() {
-        List<LowStockAlert> lowStockAlerts = alertsService.getTop5LowStockAlerts();
+        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
         listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
 
     }

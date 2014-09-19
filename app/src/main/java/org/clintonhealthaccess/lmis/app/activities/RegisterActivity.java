@@ -42,8 +42,10 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.backgroundServices.DataSyncIntentService;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -59,6 +61,15 @@ import static org.clintonhealthaccess.lmis.app.R.layout;
 public class RegisterActivity extends RoboActionBarActivity {
     @Inject
     private UserService userService;
+
+    @Inject
+    private CommodityService commodityService;
+
+    @Inject
+    private StockService stockService;
+
+    @Inject
+    private OrderService orderService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -134,14 +145,14 @@ public class RegisterActivity extends RoboActionBarActivity {
                 this.failureCause = e;
                 return false;
             }
-
+            commodityService.initialise(user);
+            orderService.syncOrderReasons();
+            orderService.syncOrderTypes();
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean succeeded) {
-            Intent syncDataServiceIntent = new Intent(getApplicationContext(), DataSyncIntentService.class);
-            startService(syncDataServiceIntent);
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }

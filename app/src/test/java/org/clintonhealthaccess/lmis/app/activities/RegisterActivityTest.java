@@ -46,7 +46,6 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowHandler;
 
 import static org.clintonhealthaccess.lmis.app.R.id;
@@ -56,10 +55,11 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -111,11 +111,15 @@ public class RegisterActivityTest {
     }
 
     @Test
-    public void shouldStartDataSyncServiceAfterRegistration() {
+    public void shouldCallInitialiseForCommoditiesOnSuccessfulRegistration() {
         performSuccessfulRegistration();
-        ShadowActivity shadowActivity = shadowOf(registerActivity);
-        Intent startedIntent = shadowActivity.getNextStartedService();
-        assertNotNull(startedIntent);
+        verify(mockCommodityService, times(1)).initialise((User) anyObject());
+    }
+
+    @Test
+    public void shouldInitialiseOrderReasonsOnSuccessfulRegistration() {
+        performSuccessfulRegistration();
+        verify(mockOrderService, times(1)).syncOrderReasons();
     }
 
     private void performSuccessfulRegistration() {

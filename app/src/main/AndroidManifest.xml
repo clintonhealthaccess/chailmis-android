@@ -133,8 +133,6 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <service android:name=".backgroundServices.DataSyncIntentService" />
-
         <provider
             android:name="org.clintonhealthaccess.lmis.app.sync.StubContentProvider"
             android:authorities="@string/sync_content_authority"

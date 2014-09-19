@@ -43,7 +43,6 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -53,9 +52,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class BaseActivity extends RoboActionBarActivity {
     @Inject
     UserService userService;
-
-    @Inject
-    AlertsService alertsService;
 
     TextView textFacilityName;
     public static final String DATE_FORMAT = "dd MMMM yyyy";
@@ -98,7 +94,7 @@ public class BaseActivity extends RoboActionBarActivity {
                 }
             });
             TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
-            updateAlertCount(alertsService.numberOfAlerts(), textViewnumberOfAlerts);
+            updateAlertCount(5, textViewnumberOfAlerts);
             menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         } catch (Exception e) {
