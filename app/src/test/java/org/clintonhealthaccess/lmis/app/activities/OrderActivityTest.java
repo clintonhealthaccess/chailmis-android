@@ -53,6 +53,7 @@ import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -111,21 +112,24 @@ public class OrderActivityTest {
             }
         });
 
-        orderActivity = getOrderActivity();
+
     }
 
     @Test
     public void testBuildActivity() throws Exception {
+        orderActivity = getOrderActivity();
         assertThat(orderActivity, not(nullValue()));
     }
 
     @Test
     public void shouldPassOrderTypesFromOrderServiceToAdapter() {
+        orderActivity = getOrderActivity();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
     @Test
     public void shouldToggleVisibilityOfSubmitButton() {
+        orderActivity = getOrderActivity();
         List<BaseCommodityViewModel> selectedCommodities = newArrayList();
         selectedCommodities.add(new OrderCommodityViewModel(new Commodity("id", "name")));
         orderActivity.onCommoditySelectionChanged(selectedCommodities);
@@ -138,6 +142,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldCreateOrderFromSelectedCommodities() {
+        orderActivity = getOrderActivity();
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
         OrderCommodityViewModel commodityViewModel2 = new OrderCommodityViewModel(new Commodity("id", "Commodity 2"), 10);
 
@@ -162,12 +167,14 @@ public class OrderActivityTest {
 
     @Test
     public void shouldDisplaySRVNumber() throws Exception {
+        orderActivity = getOrderActivity();
         assertThat(orderActivity.textViewSRVNo, is(notNullValue()));
         assertThat(orderActivity.textViewSRVNo.getText().toString(), is(TEST_SRV_NUMBER));
     }
 
     @Test
     public void shouldConfirmOrderAndOrderItemsOnSubmit() {
+        orderActivity = getOrderActivity();
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
         commodityViewModel1.setOrderPeriodEndDate(new Date());
         commodityViewModel1.setOrderPeriodStartDate(new Date());
@@ -184,6 +191,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldShowInvalidFieldsToastGivenSubmitWithEmptyFields() {
+        orderActivity = getOrderActivity();
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
         EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel1));
 
@@ -195,17 +203,20 @@ public class OrderActivityTest {
 
     @Test
     public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
+        orderActivity = getOrderActivity();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
     @Test
     public void shouldSetTheOrderTypeWhenOrderIsGenerated() throws Exception {
+        orderActivity = getOrderActivity();
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getOrderType().getName(), is(OrderType.ROUTINE));
     }
 
     @Test
     public void shouldGetCorrectOrderTypeWhenItChanges() throws Exception {
+        orderActivity = getOrderActivity();
         orderActivity.spinnerOrderType.setSelection(1);
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getOrderType().getName(), is(OrderType.EMERGENCY));
@@ -213,6 +224,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldSetUnexpectedReasonOnOrderItemsWhenCreatingAnOrder() throws Exception {
+        orderActivity = getOrderActivity();
         int testQuantity = 10;
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
         String testReason = "HIGH DEMAND";
@@ -230,6 +242,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldSetQuantityOnOrderItemsWhenCreatingAnOrder() throws Exception {
+        orderActivity = getOrderActivity();
         int testQuantity = 10;
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
 
@@ -245,6 +258,7 @@ public class OrderActivityTest {
 
     @Test
     public void shouldSetTheOrderWhenCreatingAnOrder() throws Exception {
+        orderActivity = getOrderActivity();
         int testQuantity = 10;
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), testQuantity);
 
@@ -262,7 +276,7 @@ public class OrderActivityTest {
     public void shouldSetPresetOrderTypeIfAvailable() throws Exception {
         Intent intent = new Intent();
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
-        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().get();
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.EMERGENCY));
     }
 
@@ -273,7 +287,7 @@ public class OrderActivityTest {
         orderCommodityViewModels.add(new OrderCommodityViewModel(new Commodity("Job")));
         when(alertsService.getOrderCommodityViewModelsForLowStockAlert()).thenReturn(orderCommodityViewModels);
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
-        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().get();
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(orderActivity.arrayAdapter.getCount(), is(1));
 
     }
