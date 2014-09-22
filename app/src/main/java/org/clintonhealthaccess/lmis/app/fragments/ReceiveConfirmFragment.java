@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.fragments;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -48,15 +50,17 @@ import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 
 import roboguice.fragment.RoboDialogFragment;
 
-public class ReceiveConfirmFragment extends RoboDialogFragment{
+public class ReceiveConfirmFragment extends RoboDialogFragment {
 
     public static final String RECEIVE = "RECEIVE";
+    private static final String CONTEXT = "CONTEXT";
     private Receive receive;
+
 
     @Inject
     private ReceiveService receiveService;
 
-    public static ReceiveConfirmFragment newInstance (Receive receive) {
+    public static ReceiveConfirmFragment newInstance(Receive receive) {
         ReceiveConfirmFragment receiveConfirmFragment = new ReceiveConfirmFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(RECEIVE, receive);
@@ -97,17 +101,54 @@ public class ReceiveConfirmFragment extends RoboDialogFragment{
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                receiveService.saveReceive(receive);
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_SHORT).show();
-                dismiss();
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.finish();
-                    startActivity(activity.getIntent());
-                }
+                new SaveReceiveTask(ReceiveConfirmFragment.this).execute();
             }
         });
 
         return view;
+    }
+
+    private class SaveReceiveTask extends AsyncTask<Void, Void, Boolean> {
+        private ProgressDialog dialog;
+        private ReceiveConfirmFragment fragment;
+
+        public SaveReceiveTask(ReceiveConfirmFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new ProgressDialog(getActivity());
+            this.dialog.setMessage(getString(R.string.receive_saving));
+            this.dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                receiveService.saveReceive(receive);
+            } catch (Exception ex) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if (success) {
+                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_failed), Toast.LENGTH_LONG).show();
+            }
+            this.dialog.dismiss();
+            FragmentActivity activity = fragment.getActivity();
+            fragment.dismiss();
+            if (activity != null) {
+                activity.finish();
+                fragment.startActivity(activity.getIntent());
+            }
+        }
     }
 }
