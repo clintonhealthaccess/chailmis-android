@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2014, ThoughtWorks
- *
+ * Copyright (c) 2014, Thoughtworks Inc
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,9 +27,49 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models.alerts;
+package org.clintonhealthaccess.lmis.app.backgroundServices;
 
-public interface Alert {
-    public void doAction();
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
 
+import com.google.inject.Inject;
+
+import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
+
+import roboguice.service.RoboIntentService;
+
+import static android.util.Log.i;
+
+public class AlertsGenerationIntentService extends RoboIntentService {
+    private static final int NOTIFICATION_ID = 1;
+    @Inject
+    NotificationManager notificationManager;
+
+    @Inject
+    AlertsService alertsService;
+
+    public AlertsGenerationIntentService() {
+        super("AlertsGenerationIntentService");
+    }
+
+    public AlertsGenerationIntentService(String name) {
+        super(name);
+    }
+
+    @Override
+    protected void onHandleIntent(Intent intent) {
+        i("Alert", "Generating alerts");
+        alertsService.updateLowStockAlerts();
+    }
+
+    private void sendNotificationMessage(String message) {
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this).setContentTitle("LMIS Data Sync").setContentText(message).setWhen(System.currentTimeMillis()).setSmallIcon(R.drawable.ic_launcher).setAutoCancel(true);
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(NOTIFICATION_ID, notification);
+    }
 }

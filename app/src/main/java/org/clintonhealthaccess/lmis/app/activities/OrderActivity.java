@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -48,16 +49,18 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityView
 import org.clintonhealthaccess.lmis.app.adapters.OrderTypeAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.events.OrderTypeChanged;
 import org.clintonhealthaccess.lmis.app.fragments.OrderConfirmationFragment;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -71,6 +74,9 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Inject
     OrderService orderService;
 
+    @Inject
+    AlertsService alertsService;
+
     @InjectView(R.id.buttonSubmitOrder)
     Button buttonSubmitOrder;
 
@@ -81,6 +87,8 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.spinnerOrderType)
     Spinner spinnerOrderType;
+
+    private String prepopulatedOrderType;
 
 
     private int getSelectedCommoditiesAdapterId() {
@@ -114,6 +122,8 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        prepopulatedOrderType = intent.getStringExtra(AlertClickListener.ORDER_TYPE);
         setupOrderTypes();
     }
 
@@ -133,6 +143,11 @@ public class OrderActivity extends CommoditySelectableActivity {
                 }
             }
         });
+        if (prepopulatedOrderType != null) {
+            for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert()) {
+                onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+            }
+        }
     }
 
     private void setupOrderTypes() {
@@ -141,8 +156,11 @@ public class OrderActivity extends CommoditySelectableActivity {
         spinnerOrderType.setAdapter(adapter);
 
         OrderType routine = new OrderType(OrderType.ROUTINE);
-        if (orderTypes.contains(routine)) {
-            spinnerOrderType.setSelection(orderTypes.indexOf(routine));
+        setOrderType(orderTypes, routine);
+
+        if (prepopulatedOrderType != null) {
+            OrderType preset = new OrderType(prepopulatedOrderType);
+            setOrderType(orderTypes, preset);
         }
         spinnerOrderType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -158,6 +176,12 @@ public class OrderActivity extends CommoditySelectableActivity {
         });
     }
 
+    private void setOrderType(List<OrderType> orderTypes, OrderType preset) {
+        if (orderTypes.contains(preset)) {
+            spinnerOrderType.setSelection(orderTypes.indexOf(preset));
+        }
+    }
+
 
     @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {
@@ -166,17 +190,20 @@ public class OrderActivity extends CommoditySelectableActivity {
             public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities) {
                 List<BaseCommodityViewModel> viewModels = newArrayList();
                 for (Commodity commodity : commodities) {
-                    OrderCommodityViewModel orderCommodityViewModel = new OrderCommodityViewModel(commodity);
-
-                    orderCommodityViewModel.setOrderPeriodStartDate(orderCommodityViewModel.getExpectedStartDate());
-                    Date expectedEndDate = orderCommodityViewModel.getExpectedEndDate();
-                    orderCommodityViewModel.setOrderPeriodEndDate(expectedEndDate);
+                    OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(commodity);
 
                     viewModels.add(orderCommodityViewModel);
                 }
                 return viewModels;
             }
         };
+    }
+
+    public static OrderCommodityViewModel setupOrderCommodityViewModel(Commodity commodity) {
+        OrderCommodityViewModel orderCommodityViewModel = new OrderCommodityViewModel(commodity);
+        orderCommodityViewModel.setOrderPeriodStartDate(orderCommodityViewModel.getExpectedStartDate());
+        orderCommodityViewModel.setOrderPeriodEndDate(orderCommodityViewModel.getExpectedEndDate());
+        return orderCommodityViewModel;
     }
 
     private boolean isOrderValid() {

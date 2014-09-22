@@ -27,43 +27,40 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.adapters;
+package org.clintonhealthaccess.lmis.app.listeners;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.AdapterView;
 
-import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.OrderActivity;
+import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
-import org.clintonhealthaccess.lmis.app.services.AlertsService;
 
-import java.util.List;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+public class AlertClickListener implements AdapterView.OnItemClickListener {
+    public static final String ORDER_TYPE = "ORDER_TYPE";
+    private Context context;
+    private AlertsAdapter adapter;
 
-public class AlertsAdapter extends ArrayAdapter<LowStockAlert> {
-    public AlertsAdapter(Context context, int resource, List<LowStockAlert> alerts) {
-        super(context, resource, alerts);
+    public AlertClickListener(AlertsAdapter adapter, Context context) {
+        this.adapter = adapter;
+        this.context = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.alert_list_item, parent, false);
-
-        TextView textViewComodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        TextView textViewQuantity = (TextView) rowView.findViewById(R.id.textViewQuantity);
-        TextView textViewAlertDate = (TextView) rowView.findViewById(R.id.textViewAlertDate);
-
-        LowStockAlert alert = getItem(position);
-        textViewAlertDate.setText(AlertsService.ALERT_DATE_FORMAT.format(alert.getDateCreated()));
-        textViewComodityName.setText(alert.getCommodity().getName());
-        textViewQuantity.setText(String.valueOf(alert.getCommodity().getStockOnHand()));
-
-
-        return rowView;
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        LowStockAlert alert = adapter.getItem(position);
+        if (!alert.isDisabled()) {
+            Intent intent = new Intent(context, OrderActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle data = new Bundle();
+            data.putString(ORDER_TYPE, OrderType.EMERGENCY);
+            intent.putExtras(data);
+            context.startActivity(intent);
+        }
     }
 }

@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
@@ -39,6 +40,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
@@ -72,9 +74,22 @@ public class MessagesActivity extends BaseActivity {
         setContentView(R.layout.activity_messages);
         alertsListViewHeader = getLayoutInflater().inflate(R.layout.alerts_header_view, null);
         notificationsListViewHeader = getLayoutInflater().inflate(R.layout.notifications_header_view, null);
-        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
         listViewAlerts.addHeaderView(alertsListViewHeader);
-        listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
+        AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = new AsyncTask<Void, Void, List<LowStockAlert>>() {
+            @Override
+            protected List<LowStockAlert> doInBackground(Void[] params) {
+                return alertsService.getLowStockAlerts();
+            }
+
+            @Override
+            protected void onPostExecute(List<LowStockAlert> lowStockAlerts) {
+                super.onPostExecute(lowStockAlerts);
+                AlertsAdapter adapter = new AlertsAdapter(getApplicationContext(), R.layout.alert_list_item, lowStockAlerts);
+                listViewAlerts.setAdapter(adapter);
+                listViewAlerts.setOnItemClickListener(new AlertClickListener(adapter, MessagesActivity.this));
+            }
+        };
+        getAlerts.execute();
         listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
     }
 

@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
@@ -40,12 +41,14 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedOrderCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -82,6 +85,7 @@ public class OrderActivityTest {
     private OrderActivity orderActivity;
     private OrderService orderServiceMock;
     private UserService userService;
+    private AlertsService alertsService;
 
     private OrderActivity getOrderActivity() {
         return setupActivity(OrderActivity.class);
@@ -90,6 +94,7 @@ public class OrderActivityTest {
     @Before
     public void setUp() throws Exception {
         orderServiceMock = mock(OrderService.class);
+        alertsService = mock(AlertsService.class);
         List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Losses"));
         List<OrderType> types = Arrays.asList(new OrderType(OrderType.ROUTINE), new OrderType(OrderType.EMERGENCY));
         when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
@@ -102,6 +107,7 @@ public class OrderActivityTest {
             protected void configure() {
                 bind(OrderService.class).toInstance(orderServiceMock);
                 bind(UserService.class).toInstance(userService);
+                bind(AlertsService.class).toInstance(alertsService);
             }
         });
 
@@ -250,5 +256,25 @@ public class OrderActivityTest {
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
         assertThat(actualOrder.getItems().get(0).getOrder().getSrvNumber(), is(TEST_SRV_NUMBER));
+    }
+
+    @Test
+    public void shouldSetPresetOrderTypeIfAvailable() throws Exception {
+        Intent intent = new Intent();
+        intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().get();
+        assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.EMERGENCY));
+    }
+
+    @Test
+    public void shouldPrepopulateOrderCommodityViewModelIfOrderTypeIsPreset() throws Exception {
+        Intent intent = new Intent();
+        ArrayList<OrderCommodityViewModel> orderCommodityViewModels = new ArrayList<>();
+        orderCommodityViewModels.add(new OrderCommodityViewModel(new Commodity("Job")));
+        when(alertsService.getOrderCommodityViewModelsForLowStockAlert()).thenReturn(orderCommodityViewModels);
+        intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().get();
+        assertThat(orderActivity.arrayAdapter.getCount(), is(1));
+
     }
 }

@@ -30,14 +30,19 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -53,6 +58,10 @@ public class AlertsServiceTest {
     @Inject
     private CommodityService commodityService;
 
+    @Inject
+    DbUtil dbUtil;
+
+
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
@@ -60,8 +69,49 @@ public class AlertsServiceTest {
     }
 
     @Test
-    public void shouldCreateRoutineOrderAlertsForItemsWithStockBelowTheThreshold() throws Exception {
-        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
+    public void shouldCreateLowStockAlertsForItemsWithStockBelowTheThreshold() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlerts();
         assertThat(lowStockAlerts.size(), is(1));
+    }
+
+
+    @Test
+    public void shouldCreateLowStockAlert() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        LowStockAlert alert = new LowStockAlert(commodity);
+        alertsService.createAlert(alert);
+        Long count = dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Long>() {
+            @Override
+            public Long operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                return dao.countOf();
+            }
+        });
+        assertThat(count, is(1L));
+
+    }
+
+    @Test
+    public void shouldUpdatesStockAlert() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        LowStockAlert alert = new LowStockAlert(commodity);
+        alertsService.createAlert(alert);
+        alert.setDisabled(true);
+        alertsService.updateAlert(alert);
+        LowStockAlert fetchedAlert = dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, LowStockAlert>() {
+            @Override
+            public LowStockAlert operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                return dao.queryForAll().get(0);
+            }
+        });
+        assertThat(fetchedAlert.isDisabled(), is(true));
+    }
+
+    @Test
+    public void shouldGetCommodityViewModelsForEachLowStockAlert() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert();
+        assertThat(commodityViewModels.size(), is(1));
+        assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(30));
     }
 }

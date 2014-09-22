@@ -30,37 +30,176 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+
+import static org.clintonhealthaccess.lmis.app.activities.OrderActivity.setupOrderCommodityViewModel;
 
 public class AlertsService {
 
     @Inject
     CommodityService commodityService;
 
-    public List<LowStockAlert> generateLowStockAlerts() {
-        List<Commodity> commodities = commodityService.all();
-        List<LowStockAlert> lowStockAlerts = new ArrayList<>();
-        for (Commodity commodity : commodities) {
-            if (commodity.getStockOnHand() < commodity.getMinimumThreshold()) {
-                lowStockAlerts.add(new LowStockAlert(commodity));
-            }
+    @Inject
+    DbUtil dbUtil;
+    public static SimpleDateFormat ALERT_DATE_FORMAT = new SimpleDateFormat("dd-MMM-yy");
+    private static List<LowStockAlert> lowStockAlerts;
+
+    public List<LowStockAlert> getLowStockAlerts() {
+        if (lowStockAlerts == null) {
+            List<LowStockAlert> lowStockAlerts = queryAllLowStockAlerts();
+            Collections.sort(lowStockAlerts, new Comparator<LowStockAlert>() {
+                @Override
+                public int compare(LowStockAlert lhs, LowStockAlert rhs) {
+                    return new Integer(lhs.getCommodity().getStockOnHand()).compareTo(new Integer(rhs.getCommodity().getStockOnHand()));
+                }
+            });
+            AlertsService.lowStockAlerts = lowStockAlerts;
+            return AlertsService.lowStockAlerts;
         }
-        Collections.sort(lowStockAlerts, new Comparator<LowStockAlert>() {
-            @Override
-            public int compare(LowStockAlert lhs, LowStockAlert rhs) {
-                return new Integer(lhs.getCommodity().getStockOnHand()).compareTo(new Integer(rhs.getCommodity().getStockOnHand()));
-            }
-        });
         return lowStockAlerts;
     }
 
+    private List<LowStockAlert> getEnabledAlerts() {
+        return FluentIterable.from(getLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+            @Override
+            public boolean apply(LowStockAlert input) {
+                return !input.isDisabled();
+            }
+        }).toList();
+    }
 
+
+    public int numberOfAlerts() {
+        return getLowStockAlerts().size();
+    }
+
+    public List<LowStockAlert> getTop5LowStockAlerts() {
+        List<LowStockAlert> lowStockAlerts = getLowStockAlerts();
+        if (lowStockAlerts.size() > 5) {
+            return lowStockAlerts.subList(0, 5);
+        } else {
+            return lowStockAlerts;
+        }
+    }
+
+    public void updateLowStockAlerts() {
+        checkIfExistingAlertsAreStillValid();
+        checkForNewLowStockAlerts();
+        updateCache();
+    }
+
+    private void updateCache() {
+        clearCache();
+        getLowStockAlerts();
+    }
+
+    private void checkForNewLowStockAlerts() {
+        List<Commodity> commodities = commodityService.all();
+        List<Commodity> commoditiesInAlerts = getCommoditiesInLowStockAlerts();
+        for (Commodity commodity : commodities) {
+            if (!commoditiesInAlerts.contains(commodity)) {
+                if (commodity.isBelowThreshold()) {
+                    LowStockAlert lowStockAlert = new LowStockAlert(commodity);
+                    createAlert(lowStockAlert);
+                }
+            }
+        }
+    }
+
+    private ImmutableList<Commodity> getCommoditiesInLowStockAlerts() {
+        return FluentIterable.from(queryAllLowStockAlerts()).transform(new Function<LowStockAlert, Commodity>() {
+            @Override
+            public Commodity apply(LowStockAlert input) {
+                return input.getCommodity();
+            }
+        }).toList();
+    }
+
+    public void createAlert(final LowStockAlert lowStockAlert) {
+        dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Object>() {
+            @Override
+            public Object operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                dao.create(lowStockAlert);
+                return null;
+            }
+        });
+    }
+
+    private void checkIfExistingAlertsAreStillValid() {
+        List<LowStockAlert> availableLowStockAlerts = queryAllLowStockAlerts();
+        for (LowStockAlert alert : availableLowStockAlerts) {
+            if (!alert.getCommodity().isBelowThreshold()) {
+                deleteAlert(alert);
+            }
+        }
+    }
+
+    public void disableAlert(LowStockAlert alert) {
+        alert.setDisabled(true);
+        alert.setDateDisabled(new Date());
+        updateAlert(alert);
+    }
+
+    public void deleteAlert(final LowStockAlert alert) {
+        dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Void>() {
+            @Override
+            public Void operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                dao.delete(alert);
+                return null;
+            }
+        });
+    }
+
+    private List<LowStockAlert> queryAllLowStockAlerts() {
+        return dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, List<LowStockAlert>>() {
+            @Override
+            public List<LowStockAlert> operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                return dao.queryForAll();
+            }
+        });
+    }
+
+    public void updateAlert(final LowStockAlert lowStockAlert) {
+        dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Object>() {
+            @Override
+            public Object operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                dao.update(lowStockAlert);
+                return null;
+            }
+        });
+    }
+
+    public void clearCache() {
+        this.lowStockAlerts = null;
+    }
+
+    public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
+        return FluentIterable.from(getEnabledAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
+            @Override
+            public OrderCommodityViewModel apply(LowStockAlert input) {
+                int quantity = input.getCommodity().calculatePrepopulatedQuantity();
+                OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(input.getCommodity());
+                orderCommodityViewModel.setQuantityEntered(quantity);
+                orderCommodityViewModel.setExpectedOrderQuantity(quantity);
+                return orderCommodityViewModel;
+            }
+        }).toList();
+    }
 }

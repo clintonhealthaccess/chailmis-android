@@ -30,20 +30,43 @@
 
 package org.clintonhealthaccess.lmis.app.models.alerts;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
+import java.util.Date;
+
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class LowStockAlert implements Alert {
+@Setter
+@DatabaseTable
+public class LowStockAlert {
+
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
+
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private Commodity commodity;
+
+    @DatabaseField(canBeNull = false)
+    private Date dateCreated;
+
+    @DatabaseField(canBeNull = false)
+    private boolean disabled;
+
+    @DatabaseField(canBeNull = true)
+    private Date dateDisabled;
 
     public LowStockAlert(Commodity commodity) {
         this.commodity = commodity;
+        this.disabled = false;
+        this.dateCreated = new Date();
     }
 
-    @Override
-    public void doAction() {
-
+    public LowStockAlert() {
+        //Orm likes this
     }
 }

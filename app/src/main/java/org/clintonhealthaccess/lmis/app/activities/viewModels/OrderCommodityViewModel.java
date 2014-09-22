@@ -38,6 +38,10 @@ import org.clintonhealthaccess.lmis.app.utils.Helpers;
 import java.util.Date;
 
 public class OrderCommodityViewModel extends BaseCommodityViewModel {
+    public int getExpectedOrderQuantity() {
+        return expectedOrderQuantity;
+    }
+
     private int expectedOrderQuantity;
     private Integer orderReasonPosition;
     private Date orderPeriodStartDate, orderPeriodEndDate;
@@ -54,10 +58,6 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
 
     public boolean quantityIsUnexpected() {
         return (quantityEntered > (1.1 * this.expectedOrderQuantity));
-    }
-
-    public int getExpectedOrderQuantity() {
-        return expectedOrderQuantity;
     }
 
     public void setExpectedOrderQuantity(int expectedOrderQuantity) {

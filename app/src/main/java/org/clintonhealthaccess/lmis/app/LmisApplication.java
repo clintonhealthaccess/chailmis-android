@@ -29,12 +29,20 @@
 
 package org.clintonhealthaccess.lmis.app;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
+
+import java.util.Calendar;
 
 import static roboguice.RoboGuice.DEFAULT_STAGE;
 import static roboguice.RoboGuice.getInjector;
@@ -45,13 +53,32 @@ public class LmisApplication extends Application {
     @Inject
     private CategoryService categoryService;
 
+    @Inject
+    Context context;
+
+    @Inject
+    AlarmManager alarmManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
         setBaseApplicationInjector(this, DEFAULT_STAGE, newDefaultRoboModule(this), new GuiceConfigurationModule());
         getInjector(this).injectMembersWithoutViews(this);
-
         loadAllCommoditiesToCache();
+        setupAlertsService();
+    }
+
+    private void setupAlertsService() {
+        Log.i("Alert", "Started");
+        Intent syncDataServiceIntent = new Intent(context, AlertsGenerationIntentService.class);
+        syncDataServiceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, syncDataServiceIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 10);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(), 2 * 60 * 1000, pendingIntent);
+        Log.i("Alert", "Finished");
     }
 
     private void loadAllCommoditiesToCache() {

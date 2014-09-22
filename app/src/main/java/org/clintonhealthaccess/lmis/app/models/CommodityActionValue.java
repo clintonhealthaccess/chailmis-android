@@ -33,6 +33,7 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import lombok.Getter;
@@ -41,7 +42,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @DatabaseTable
-public class CommodityActionValue {
+public class CommodityActionValue implements Serializable {
 
     @DatabaseField(uniqueIndex = true, id = true)
     private String id;

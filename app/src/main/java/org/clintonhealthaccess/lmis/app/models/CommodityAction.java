@@ -36,6 +36,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +49,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @DatabaseTable
-public class CommodityAction {
+public class CommodityAction implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Commodity commodity;
     @DatabaseField(id = true, uniqueIndex = true)
@@ -67,6 +68,7 @@ public class CommodityAction {
 
     public static String stockOnHand = "STOCK_ON_HAND";
     public static String minimumThreshold = "MINIMUM_THRESHOLD";
+    public static String maximumThreshold = "MAXIMUM_THRESHOLD";
     public static String AMC = "AMC";
 
     public CommodityAction() {
