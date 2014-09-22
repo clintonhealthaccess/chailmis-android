@@ -134,17 +134,21 @@
                 android:text="@string/submit"
                 android:visibility="invisible" />
 
-            <GridView
-                android:id="@+id/gridViewSelectedCommodities"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/buttonSubmitReceive"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:numColumns="1"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="7dp" />
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <GridView
+                    android:id="@+id/gridViewSelectedCommodities"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/buttonSubmitReceive"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:numColumns="1"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="7dp" />
+            </ScrollView>
 
         </RelativeLayout>
     </LinearLayout>

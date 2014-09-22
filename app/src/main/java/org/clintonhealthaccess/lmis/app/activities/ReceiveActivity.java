@@ -219,7 +219,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         }
     }
 
-    void populateWithAllocation(Allocation allocation) {
+    private void populateWithAllocation(Allocation allocation) {
         if (allocation != null) {
             selectedCommodities.clear();
             arrayAdapter.clear();

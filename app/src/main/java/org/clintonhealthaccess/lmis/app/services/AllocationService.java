@@ -103,20 +103,24 @@ public class AllocationService {
 
     public void syncAllocations() {
         //FIXME: Just for test purposes
+        createAllocation("UG-2004", 9);
+        createAllocation("UG-2005", 10);
+    }
+
+    private void createAllocation(String allocationId, int quantity) {
         GenericDao<Allocation> allocationGenericDao = new GenericDao<>(Allocation.class, context);
         GenericDao<AllocationItem> allocationItemGenericDao = new GenericDao<>(AllocationItem.class, context);
         GenericDao<Commodity> commodityDao = new GenericDao<>(Commodity.class, context);
         Allocation allocation = new Allocation();
         allocation.setReceived(false);
-        allocation.setAllocationId("UG-2005");
+        allocation.setAllocationId(allocationId);
         allocationGenericDao.create(allocation);
 
         AllocationItem item = new AllocationItem();
         item.setCommodity(commodityDao.queryForAll().get(0));
-        item.setQuantity(10);
+        item.setQuantity(quantity);
         item.setAllocation(allocation);
         allocationItemGenericDao.create(item);
-
     }
 
     public void update(Allocation allocation) {
