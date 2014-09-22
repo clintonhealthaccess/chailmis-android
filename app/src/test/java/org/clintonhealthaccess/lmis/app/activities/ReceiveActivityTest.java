@@ -249,13 +249,34 @@ public class ReceiveActivityTest {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
+        assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
+    }
+
+    @Test
+    public void shouldRemoveErrorOnAllocationIdIfReceiveFromFacilityChecked() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setError("Pre-set error message");
+
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+
+        assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
 
     @Test
     public void shouldEnableAllocationIfReceiveFromFacilityIsNotChecked() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.setText("INVALIDALLOCATIONID");
+
+        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
+
         receiveActivity.checkBoxReceiveFromFacility.setChecked(false);
+
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
+
+        CharSequence error = receiveActivity.textViewAllocationId.getError();
+        assertThat(error, notNullValue());
+        assertThat(error.toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
     }
 
     @Test

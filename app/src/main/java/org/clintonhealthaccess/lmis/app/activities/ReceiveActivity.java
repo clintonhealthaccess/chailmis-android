@@ -115,8 +115,12 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 textViewAllocationId.setEnabled(!isChecked);
-                if (isChecked)
+                if (isChecked) {
                     allocation = null;
+                    textViewAllocationId.setError(null);
+                } else {
+                    setAllocation(textViewAllocationId.getText().toString());
+                }
             }
         });
 
