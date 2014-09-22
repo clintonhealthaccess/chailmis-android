@@ -34,6 +34,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.models.api.DataElement;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Getter;
@@ -44,7 +45,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "datasets")
-public class DataSet {
+public class DataSet implements Serializable {
 
     @DatabaseField
     private String description;

@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
@@ -145,8 +147,22 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupAlerts() {
-        List<LowStockAlert> lowStockAlerts = alertsService.generateLowStockAlerts();
-        listViewAlerts.setAdapter(new AlertsAdapter(this, R.layout.alert_list_item, lowStockAlerts));
+        AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = new AsyncTask<Void, Void, List<LowStockAlert>>() {
+            @Override
+            protected List<LowStockAlert> doInBackground(Void[] params) {
+                return alertsService.getTop5LowStockAlerts();
+            }
+
+            @Override
+            protected void onPostExecute(List<LowStockAlert> lowStockAlerts) {
+                super.onPostExecute(lowStockAlerts);
+                AlertsAdapter adapter = new AlertsAdapter(getApplicationContext(), R.layout.alert_list_item, lowStockAlerts);
+                listViewAlerts.setAdapter(adapter);
+                listViewAlerts.setOnItemClickListener(new AlertClickListener(adapter, HomeActivity.this));
+            }
+        };
+        getAlerts.execute();
+
 
     }
 

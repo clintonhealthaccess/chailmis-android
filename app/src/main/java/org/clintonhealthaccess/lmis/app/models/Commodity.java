@@ -169,13 +169,26 @@ public class Commodity implements Serializable {
     }
 
     public int getMinimumThreshold() {
-        CommodityAction commodityAction = getCommodityAction(CommodityAction.minimumThreshold);
-        int defaultMinimumThresHold = 0;
+        return getLatestValueFromCommodityActionByName(CommodityAction.minimumThreshold);
+    }
+
+    public boolean isBelowThreshold() {
+        return getStockOnHand() < getMinimumThreshold();
+    }
+
+    public int calculatePrepopulatedQuantity() {
+        int max = getLatestValueFromCommodityActionByName(CommodityAction.maximumThreshold);
+        return max - getStockOnHand();
+    }
+
+    private int getLatestValueFromCommodityActionByName(String actionName) {
+        CommodityAction commodityAction = getCommodityAction(actionName);
+        int defaultValue = 0;
         if (commodityAction != null) {
             CommodityActionValue actionLatestValue = commodityAction.getActionLatestValue();
-            return (actionLatestValue != null) ? Integer.parseInt(actionLatestValue.getValue()) : defaultMinimumThresHold;
+            return (actionLatestValue != null) ? Integer.parseInt(actionLatestValue.getValue()) : defaultValue;
         } else {
-            return defaultMinimumThresHold;
+            return defaultValue;
         }
     }
 }

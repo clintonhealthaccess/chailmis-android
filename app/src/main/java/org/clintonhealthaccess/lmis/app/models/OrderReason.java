@@ -32,8 +32,10 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 @DatabaseTable(tableName = "orderReasons")
-public class OrderReason {
+public class OrderReason implements Serializable {
 
     public static final String ROUTINE = "Routine";
     public static final String HIGH_DEMAND = "HIGH DEMAND";

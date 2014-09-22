@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
 import roboguice.activity.RoboActionBarActivity;
@@ -52,6 +54,9 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class BaseActivity extends RoboActionBarActivity {
     @Inject
     UserService userService;
+
+    @Inject
+    AlertsService alertsService;
 
     TextView textFacilityName;
     public static final String DATE_FORMAT = "dd MMMM yyyy";
@@ -93,8 +98,21 @@ public class BaseActivity extends RoboActionBarActivity {
                     startActivity(intent);
                 }
             });
-            TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
-            updateAlertCount(5, textViewnumberOfAlerts);
+            final TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
+            updateAlertCount(0, textViewnumberOfAlerts);
+            AsyncTask<Void, Void, Integer> updateAlertCount = new AsyncTask<Void, Void, Integer>() {
+                @Override
+                protected Integer doInBackground(Void[] params) {
+                    return alertsService.numberOfAlerts();
+                }
+
+                @Override
+                protected void onPostExecute(Integer o) {
+                    super.onPostExecute(o);
+                    updateAlertCount(o, textViewnumberOfAlerts);
+                }
+            };
+            updateAlertCount.execute();
             menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         } catch (Exception e) {
@@ -106,7 +124,6 @@ public class BaseActivity extends RoboActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_alert) {
-
             return true;
         }
         return false;
