@@ -60,6 +60,7 @@
             android:name=".activities.DispenseActivity"
             android:label="@string/title_activity_dispense"
             android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -68,7 +69,7 @@
         <activity
             android:name=".activities.ReceiveActivity"
             android:label="@string/title_activity_receive"
-            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data
@@ -79,6 +80,7 @@
             android:name=".activities.LossesActivity"
             android:label="@string/title_activity_losses"
             android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -88,6 +90,7 @@
             android:name=".activities.OrderActivity"
             android:label="@string/title_activity_order"
             android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
