@@ -119,7 +119,7 @@ public class RegisterActivity extends RoboActionBarActivity {
     private class RegisterTask extends AsyncTask<Void, Void, Boolean> {
         private final String username;
         private final String password;
-        private LmisException failureCause;
+        private Exception failureCause;
 
         private ProgressDialog dialog;
 
@@ -141,13 +141,15 @@ public class RegisterActivity extends RoboActionBarActivity {
             User user;
             try {
                 user = userService.register(username, password);
-            } catch (LmisException e) {
+                commodityService.initialise(user);
+                orderService.syncOrderReasons();
+                orderService.syncOrderTypes();
+
+            } catch (Exception e) {
                 this.failureCause = e;
                 return false;
             }
-            commodityService.initialise(user);
-            orderService.syncOrderReasons();
-            orderService.syncOrderTypes();
+
             return true;
         }
 

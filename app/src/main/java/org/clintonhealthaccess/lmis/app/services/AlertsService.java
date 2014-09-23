@@ -30,6 +30,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.util.Log;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -115,9 +117,13 @@ public class AlertsService {
         List<Commodity> commoditiesInAlerts = getCommoditiesInLowStockAlerts();
         for (Commodity commodity : commodities) {
             if (!commoditiesInAlerts.contains(commodity)) {
-                if (commodity.isBelowThreshold()) {
-                    LowStockAlert lowStockAlert = new LowStockAlert(commodity);
-                    createAlert(lowStockAlert);
+                try {
+                    if (commodity.isBelowThreshold()) {
+                        LowStockAlert lowStockAlert = new LowStockAlert(commodity);
+                        createAlert(lowStockAlert);
+                    }
+                } catch (Exception ex) {
+                    Log.e("Alert service:", ex.getMessage());
                 }
             }
         }
