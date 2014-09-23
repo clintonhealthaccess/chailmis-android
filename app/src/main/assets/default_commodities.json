@@ -213,7 +213,38 @@
                         },
                         "id": "cc9941f3-9369-46f6-a9d1-ee4c88e7e757",
                         "name": "e5adfcdd-6a78-43ba-9206-059eaee4bfa1"
-                    }
+                    },
+                {
+                 "activityType": "STOCK_ON_HAND",
+                    "dataSet": {
+                        "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
+                        "name": "lmis dataset",
+                        "periodType": "Monthly"
+                    },
+                 "id": "id_stock_on_hand_comm_3",
+                 "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+
+                 },
+                 {
+                  "activityType": "MINIMUM_THRESHOLD",
+                    "dataSet": {
+                        "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
+                        "name": "lmis dataset",
+                        "periodType": "Monthly"
+                    },
+                  "id": "id_minimum_threshold_3",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                {
+                    "activityType": "MAXIMUM_THRESHOLD",
+                    "dataSet": {
+                        "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                        "name": "lmis dataset",
+                        "periodType": "Daily"
+                    },
+                    "id": "id_maximum_threshold_3",
+                    "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+               }
                 ],
                 "id": "4",
                 "name": "Quinine",

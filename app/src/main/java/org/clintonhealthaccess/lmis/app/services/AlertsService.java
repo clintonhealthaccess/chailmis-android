@@ -41,11 +41,14 @@ import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -129,6 +132,15 @@ public class AlertsService {
         }
     }
 
+    public void disableAlertsForCommodities(List<Commodity> commodities) {
+        List<LowStockAlert> lowStockAlerts = getLowStockAlertsForCommodities(commodities);
+        for(LowStockAlert alert: lowStockAlerts){
+            disableAlert(alert);
+        }
+
+        clearCache();
+    }
+
     private ImmutableList<Commodity> getCommoditiesInLowStockAlerts() {
         return FluentIterable.from(queryAllLowStockAlerts()).transform(new Function<LowStockAlert, Commodity>() {
             @Override
@@ -136,6 +148,16 @@ public class AlertsService {
                 return input.getCommodity();
             }
         }).toList();
+    }
+
+    public ImmutableList<LowStockAlert> getLowStockAlertsForCommodities(final List<Commodity> commodities) {
+        return FluentIterable
+                .from(queryAllLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+                    @Override
+                    public boolean apply(LowStockAlert input) {
+                        return commodities.contains(input.getCommodity());
+                    }
+                }).toList();
     }
 
     public void createAlert(final LowStockAlert lowStockAlert) {

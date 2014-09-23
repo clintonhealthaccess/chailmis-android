@@ -29,13 +29,18 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
+import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
@@ -55,6 +60,9 @@ public class OrderService implements OrderItemSaver {
 
     @Inject
     private CommoditySnapshotService commoditySnapshotService;
+
+    @Inject
+    private AlertsService alertsService;
 
     public List<OrderReason> syncOrderReasons() {
         final ArrayList<OrderReason> savedReasons = new ArrayList<>();
@@ -141,6 +149,19 @@ public class OrderService implements OrderItemSaver {
         });
 
         order.saveOrderItems(this);
+
+        if (!order.getOrderType().isRoutine()) {
+            alertsService.disableAlertsForCommodities(getCommoditiesInOrder(order));
+        }
+    }
+
+    private ImmutableList<Commodity> getCommoditiesInOrder(Order order) {
+        return FluentIterable.from(order.getItems()).transform(new Function<OrderItem, Commodity>() {
+            @Override
+            public Commodity apply(OrderItem input) {
+                return input.getCommodity();
+            }
+        }).toList();
     }
 
     @Override

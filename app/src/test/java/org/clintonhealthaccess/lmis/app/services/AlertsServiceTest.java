@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -72,7 +73,7 @@ public class AlertsServiceTest {
     public void shouldCreateLowStockAlertsForItemsWithStockBelowTheThreshold() throws Exception {
         alertsService.updateLowStockAlerts();
         List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlerts();
-        assertThat(lowStockAlerts.size(), is(1));
+        assertThat(lowStockAlerts.size(), is(2));
     }
 
 
@@ -111,7 +112,34 @@ public class AlertsServiceTest {
     public void shouldGetCommodityViewModelsForEachLowStockAlert() throws Exception {
         alertsService.updateLowStockAlerts();
         List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert();
-        assertThat(commodityViewModels.size(), is(1));
+        assertThat(commodityViewModels.size(), is(2));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(30));
+    }
+
+    @Test
+    public void shouldFilterLowStockAlertsForGivenCommodities() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(2));
+        Commodity commodity = alerts.get(0).getCommodity();
+        List<Commodity> commodities = Arrays.asList(commodity);
+
+        List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlertsForCommodities(commodities);
+        assertThat(lowStockAlerts.size(), is(1));
+        assertThat(lowStockAlerts.get(0).getCommodity(), is(commodity));
+    }
+
+    @Test
+    public void shouldDisableAlertsForCommodities() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
+        Commodity commodity = alerts.get(0).getCommodity();
+        List<Commodity> commodities = Arrays.asList(commodity);
+
+        alertsService.disableAlertsForCommodities(commodities);
+        List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlertsForCommodities(commodities);
+        assertThat(lowStockAlerts.size(), is(1));
+        assertThat(lowStockAlerts.get(0).isDisabled(), is(true));
+
     }
 }
