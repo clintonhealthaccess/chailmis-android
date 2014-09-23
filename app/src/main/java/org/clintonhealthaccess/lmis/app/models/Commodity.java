@@ -124,7 +124,7 @@ public class Commodity implements Serializable {
         try {
             return copyOf(stockItems).get(0);
         } catch (Exception e) {
-            throw new LmisException(String.format("Stock for commodity %s not found", name));
+            throw new LmisException(String.format("Stock for commodity %s not found", name), e);
         }
     }
 
