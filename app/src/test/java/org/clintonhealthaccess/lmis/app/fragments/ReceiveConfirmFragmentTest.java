@@ -84,7 +84,6 @@ public class ReceiveConfirmFragmentTest {
         assertFalse(dialog.isShowing());
     }
 
-    @Ignore("Jafari will investigate")
     @Test
     public void shouldSaveReceiveWhenConfirmButtonIsClicked() {
         Dialog dialog = ShadowDialog.getLatestDialog();

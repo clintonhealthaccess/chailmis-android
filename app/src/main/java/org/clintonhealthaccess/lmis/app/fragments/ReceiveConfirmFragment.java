@@ -102,6 +102,11 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
             @Override
             public void onClick(View v) {
                 new SaveReceiveTask(ReceiveConfirmFragment.this).execute();
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                    startActivity(activity.getIntent());
+                }
             }
         });
 
@@ -143,12 +148,7 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
                 Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_failed), Toast.LENGTH_LONG).show();
             }
             this.dialog.dismiss();
-            FragmentActivity activity = fragment.getActivity();
             fragment.dismiss();
-            if (activity != null) {
-                activity.finish();
-                fragment.startActivity(activity.getIntent());
-            }
         }
     }
 }
