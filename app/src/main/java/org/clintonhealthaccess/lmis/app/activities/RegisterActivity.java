@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -133,6 +134,7 @@ public class RegisterActivity extends RoboActionBarActivity {
             super.onPreExecute();
             this.dialog = new ProgressDialog(RegisterActivity.this);
             this.dialog.setMessage("Registering");
+            this.dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             this.dialog.show();
         }
 
