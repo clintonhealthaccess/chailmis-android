@@ -37,6 +37,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -52,11 +53,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import roboguice.inject.InjectResource;
+
 import static android.util.Log.e;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
     public static final String MONTHLY_STOCK_COUNT_DAY = "MONTHLY_STOCK_COUNT_DAY";
+    public static final String ROUTINE_ORDER_ALERT_DAY = "ROUTINE_ORDER_ALERT_DAY";
     @Inject
     private LmisServer lmisServer;
 
@@ -75,11 +79,17 @@ public class CommodityService {
     @Inject
     SharedPreferences sharedPreferences;
 
+    @InjectResource(R.string.monthly_stock_count_search_key)
+    private String monthlyStockCountSearchKey;
+
+    @InjectResource(R.string.routine_order_alert_day)
+    private String routineOrderAlertDay;
+
     public void initialise(User user) {
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
         saveToDatabase(allCommodities);
         categoryService.clearCache();
-        fetchAndSaveMonthlyStockCountDay(user);
+        syncConstants(user);
 
         List<Commodity> commodities = all();
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
@@ -91,6 +101,11 @@ public class CommodityService {
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
         allocationService.syncAllocations(user);
         categoryService.clearCache();
+    }
+
+    private void syncConstants(User user) {
+        fetchAndSaveIntegerConstant(user, monthlyStockCountSearchKey, MONTHLY_STOCK_COUNT_DAY);
+        fetchAndSaveIntegerConstant(user, routineOrderAlertDay, ROUTINE_ORDER_ALERT_DAY);
     }
 
     private void updateStockValues(List<Commodity> commodities) {
@@ -111,10 +126,10 @@ public class CommodityService {
         }
     }
 
-    private void fetchAndSaveMonthlyStockCountDay(User user) {
-        Integer day = lmisServer.getDayForMonthlyStockCount(user);
+    private void fetchAndSaveIntegerConstant(User user, String stockCountSearchKey, String key) {
+        Integer day = lmisServer.fetchIntegerConstant(user, stockCountSearchKey);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(MONTHLY_STOCK_COUNT_DAY, day);
+        editor.putInt(key, day);
         editor.commit();
     }
 

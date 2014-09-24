@@ -77,7 +77,7 @@ public class MessagesActivity extends BaseActivity {
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = new AsyncTask<Void, Void, List<LowStockAlert>>() {
             @Override
             protected List<LowStockAlert> doInBackground(Void[] params) {
-                return alertsService.getLowStockAlerts();
+                return alertsService.getEnabledLowStockAlerts();
             }
 
             @Override

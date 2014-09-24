@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 
+import java.util.Date;
+
 import roboguice.service.RoboIntentService;
 
 import static android.util.Log.i;
@@ -63,6 +65,7 @@ public class AlertsGenerationIntentService extends RoboIntentService {
     protected void onHandleIntent(Intent intent) {
         i("Alert", "Generating alerts");
         alertsService.updateLowStockAlerts();
+        alertsService.generateRoutineOrderAlert(new Date());
     }
 
     private void sendNotificationMessage(String message) {

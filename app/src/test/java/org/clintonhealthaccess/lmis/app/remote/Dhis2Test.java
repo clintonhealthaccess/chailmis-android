@@ -142,14 +142,14 @@ public class Dhis2Test extends LMISTestCase {
     @Test
     public void shouldSearchConstantsForMonthlyStockCountDay() throws Exception {
         setUpSuccessHttpGetRequest(200, "constants.json");
-        Integer day = dhis2.getDayForMonthlyStockCount(new User());
+        Integer day = dhis2.fetchIntegerConstant(new User(), "");
         assertThat(day, is(20));
     }
 
     @Test
     public void shouldFallBackToDefaultIfNoContantsAreAvailable() throws Exception {
         setUpSuccessHttpGetRequest(200, "constantsEmpty.json");
-        Integer day = dhis2.getDayForMonthlyStockCount(new User());
+        Integer day = dhis2.fetchIntegerConstant(new User(), "");
         assertThat(day, is(24));
     }
 

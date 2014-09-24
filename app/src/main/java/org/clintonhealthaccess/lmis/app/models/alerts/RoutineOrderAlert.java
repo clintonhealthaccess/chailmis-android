@@ -30,5 +30,25 @@
 
 package org.clintonhealthaccess.lmis.app.models.alerts;
 
-public class MonthlyStockCountAlert {
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.util.Date;
+
+@DatabaseTable
+public class RoutineOrderAlert {
+    public static final String DATE_CREATED = "dateCreated";
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
+
+    @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
+    private Date dateCreated;
+
+    public RoutineOrderAlert() {
+        //ormLite likes
+    }
+
+    public RoutineOrderAlert(Date date) {
+        this.dateCreated = date;
+    }
 }

@@ -32,7 +32,9 @@ package org.clintonhealthaccess.lmis.app.utils;
 
 import org.clintonhealthaccess.lmis.app.models.OrderCycle;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 public class Helpers {
     public static boolean collectionIsNotEmpty(Collection collection) {
@@ -47,5 +49,23 @@ public class Helpers {
             orderCycle = OrderCycle.valueOf(orderFrequency);
         }
         return orderCycle;
+    }
+
+    public static Date lastDayOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().getActualMaximum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, Calendar.getInstance().getActualMaximum(Calendar.MINUTE));
+        return cal.getTime();
+    }
+
+    public static Date firstDayOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().getActualMinimum(Calendar.HOUR_OF_DAY));
+        cal.set(Calendar.MINUTE, Calendar.getInstance().getActualMinimum(Calendar.MINUTE));
+        return cal.getTime();
     }
 }
