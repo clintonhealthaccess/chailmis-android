@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -148,6 +149,9 @@ public class AllocationService {
             allocationItem.setAllocation(allocation);
             allocationItemGenericDao.create(allocationItem);
         }
+
+        Log.i("Saved Allocation: ", allocation.getAllocationId() +
+                " with " + allocation.getTransientAllocationItems().size() + " items");
     }
 
     private List<Allocation> toAllocations(List<CommodityActionValue> actionValues) {
