@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -114,16 +115,8 @@ public class AllocationServiceTest extends LMISTestCase {
 
     @Test
     public void shouldSyncAndSaveAllocations() throws Exception {
-        // FIXME: can we mock all this?
         // given
-        String orgUnit = "orgnunit";
-        User user = new User("test", "pass");
-        user.setFacilityCode(orgUnit);
-
-        setUpSuccessHttpGetRequest(200, "dataSets.json");
-
-        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
-        categoryService.clearCache();
+        User user = setupForAllocations();
 
         setUpSuccessHttpGetRequest(200, "allocations.json");
 
@@ -142,5 +135,40 @@ public class AllocationServiceTest extends LMISTestCase {
         assertThat(allocationItems.size(), is(1));
         assertThat(allocationItems.get(0).getCommodity().getName(), is("Albendazole_200mg tablet "));
         assertThat(allocationItems.get(0).getQuantity(), is(10));
+    }
+
+
+    @Test
+    public void shouldnotSyncAndSaveDuplicateAllocations() throws Exception {
+        // given
+        User user = setupForAllocations();
+
+        assertThat(allocationDao.countOf(), is(0l));
+
+        // when
+        setUpSuccessHttpGetRequest(200, "allocations.json");
+        allocationService.syncAllocations(user);
+
+        // then
+        assertThat(allocationDao.countOf(), is(2l));
+
+        setUpSuccessHttpGetRequest(200, "allocations.json");
+        allocationService.syncAllocations(user);
+
+        assertThat(allocationDao.countOf(), is(2l));
+
+    }
+
+    private User setupForAllocations() throws IOException {
+        // FIXME: can we mock all this?
+        String orgUnit = "orgnunit";
+        User user = new User("test", "pass");
+        user.setFacilityCode(orgUnit);
+
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+
+        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        categoryService.clearCache();
+        return user;
     }
 }

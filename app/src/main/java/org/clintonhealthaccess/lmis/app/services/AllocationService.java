@@ -128,8 +128,15 @@ public class AllocationService {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
         for (Allocation allocation : allocations) {
-            createAllocation(allocation);
+            if(!isExisting(allocation)) {
+                createAllocation(allocation);
+            }
         }
+    }
+
+    private boolean isExisting(Allocation allocation) {
+        Allocation existingAllocation = getAllocationByLmisId(allocation.getAllocationId());
+        return existingAllocation != null;
     }
 
     private void createAllocation(Allocation allocation) {
