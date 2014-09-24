@@ -49,8 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderService implements OrderItemSaver {
-    List<OrderReason> orderReasons;
-    List<OrderType> orderTypes;
+    static List<OrderReason> orderReasons;
+    static List<OrderType> orderTypes;
     @Inject
     private UserService userService;
     @Inject

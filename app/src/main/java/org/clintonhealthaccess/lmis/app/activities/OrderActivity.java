@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -176,9 +177,10 @@ public class OrderActivity extends CommoditySelectableActivity {
         });
     }
 
-    private void setOrderType(List<OrderType> orderTypes, OrderType preset) {
-        if (orderTypes.contains(preset)) {
-            spinnerOrderType.setSelection(orderTypes.indexOf(preset));
+    private void setOrderType(List<OrderType> orderTypes, OrderType orderType) {
+        if (orderTypes.contains(orderType)) {
+            Log.i("Here", "Order type "+orderType.getName()+" orderType"+ orderType.getId());
+            spinnerOrderType.setSelection(orderTypes.indexOf(orderType));
         }
     }
 
@@ -221,6 +223,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         int numberOfItems = arrayAdapter.getCount();
         Order order = new Order();
         order.setOrderType(getOrderType());
+        System.out.println("Here order tpe is "+order.getOrderType().getName());
         order.setSrvNumber(nextSRVNumber);
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);

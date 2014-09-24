@@ -74,7 +74,6 @@ public class MessagesActivity extends BaseActivity {
         setContentView(R.layout.activity_messages);
         alertsListViewHeader = getLayoutInflater().inflate(R.layout.alerts_header_view, null);
         notificationsListViewHeader = getLayoutInflater().inflate(R.layout.notifications_header_view, null);
-        listViewAlerts.addHeaderView(alertsListViewHeader);
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = new AsyncTask<Void, Void, List<LowStockAlert>>() {
             @Override
             protected List<LowStockAlert> doInBackground(Void[] params) {

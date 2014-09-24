@@ -137,11 +137,6 @@ public class OrderItem implements Snapshotable {
         }
     }
 
-    @Override
-    public String getAttributeOptionCombo() {
-        return order.getOrderType().getId();
-    }
-
     public OrderReason getReasonForUnexpectedQuantity() {
         return reasonForUnexpectedQuantity;
     }

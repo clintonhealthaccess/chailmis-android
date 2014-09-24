@@ -163,7 +163,7 @@ public class OrderServiceTest extends LMISTestCase {
     public void shouldGenerateSRVNumber() throws Exception {
 
         assertThat(orderService.getNextSRVNumber(), is("AU-0001"));
-        OrderType type = new OrderType("123", "routine");
+        OrderType type = new OrderType("routine");
         orderTypeDao.create(type);
         final Order order = new Order("AU-0001");
         order.setOrderType(type);
@@ -244,7 +244,7 @@ public class OrderServiceTest extends LMISTestCase {
         OrderReason highDemand = new OrderReason("High demand");
         reasonDao.create(highDemand);
         commodityViewModel.setReasonForUnexpectedOrderQuantity(highDemand);
-        OrderType type = new OrderType("123", "routine");
+        OrderType type = new OrderType("routine");
         orderTypeDao.create(type);
 
         OrderItem orderItem = new OrderItem(commodityViewModel);

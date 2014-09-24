@@ -72,7 +72,7 @@ public class CommoditySnapshotService {
         for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
             List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
             if (commoditySnapshots.isEmpty()) {
-                createNewSnaphot(value, snapshotGenericDao, snapshotable.getAttributeOptionCombo());
+                createNewSnaphot(value, snapshotGenericDao);
             } else {
                 updateSnapshot(value, snapshotGenericDao, commoditySnapshots);
             }
@@ -87,8 +87,8 @@ public class CommoditySnapshotService {
         dailyCommoditySnapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnaphot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, String attributeOptionCombo) {
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue(), attributeOptionCombo);
+    private void createNewSnaphot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao ) {
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue());
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 

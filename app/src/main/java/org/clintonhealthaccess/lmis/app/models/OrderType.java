@@ -43,8 +43,8 @@ public class OrderType {
 
     public static final String ROUTINE = "ROUTINE";
     public static final String EMERGENCY = "EMERGENCY";
-    @DatabaseField(uniqueIndex = true, id = true)
-    private String id;
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
 
     @DatabaseField(canBeNull = false)
     private String name;
@@ -73,11 +73,6 @@ public class OrderType {
 
     public OrderType(String name) {
         this.name = name;
-    }
-
-    public OrderType(String id, String name) {
-        this.name = name;
-        this.id = id;
     }
 
     public boolean isRoutine() {

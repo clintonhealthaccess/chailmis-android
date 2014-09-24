@@ -53,10 +53,55 @@
             android:textSize="20sp"
             android:text="@string/alerts_title" />
 
+        <LinearLayout
+            android:id="@+id/alertsHeaderView"
+            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:background="@color/blue"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewAlertsTitle">
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/commodity"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/header_text_size"
+                android:id="@+id/textViewHeaderCommodityName" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/header_text_size"
+                android:text="@string/current_stock" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/header_text_size"
+                android:text="@string/alert_date" />
+
+
+        </LinearLayout>
+
         <ListView
-            android:layout_below="@id/textViewAlertsTitle"
+            android:layout_below="@id/alertsHeaderView"
             android:id="@+id/listViewAlerts"
             android:layout_width="fill_parent"
+            android:background="@color/blue"
             android:layout_height="wrap_content">
 
         </ListView>

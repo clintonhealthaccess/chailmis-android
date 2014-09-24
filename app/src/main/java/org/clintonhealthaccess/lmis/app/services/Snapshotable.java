@@ -36,8 +36,5 @@ import java.util.List;
 
 public interface Snapshotable {
     Commodity getCommodity();
-
     List<CommoditySnapshotValue> getActivitiesValues();
-
-    String getAttributeOptionCombo();
 }

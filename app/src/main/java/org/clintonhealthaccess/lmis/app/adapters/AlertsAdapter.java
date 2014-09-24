@@ -66,4 +66,5 @@ public class AlertsAdapter extends ArrayAdapter<LowStockAlert> {
 
         return rowView;
     }
+
 }

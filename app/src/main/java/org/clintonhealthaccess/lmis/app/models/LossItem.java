@@ -112,9 +112,4 @@ public class LossItem implements Serializable, Snapshotable {
             values.add(new CommoditySnapshotValue(activity, expiries));
         }
     }
-
-    @Override
-    public String getAttributeOptionCombo() {
-        return null;
-    }
 }

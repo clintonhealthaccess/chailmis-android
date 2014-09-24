@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmOrderAdapter;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 
@@ -116,7 +118,9 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
                 FragmentActivity activity = getActivity();
                 if (activity != null) {
                     activity.finish();
-                    startActivity(activity.getIntent());
+                    Intent intent = activity.getIntent();
+                    intent.removeExtra(AlertClickListener.ORDER_TYPE);
+                    startActivity(intent);
                 }
             }
         });

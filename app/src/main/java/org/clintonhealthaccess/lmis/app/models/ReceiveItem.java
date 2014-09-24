@@ -101,8 +101,4 @@ public class ReceiveItem implements Snapshotable {
         return testString.contains(RECEIVED);
     }
 
-    @Override
-    public String getAttributeOptionCombo() {
-        return null;
-    }
 }
