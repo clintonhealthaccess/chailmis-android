@@ -166,7 +166,11 @@ public class Dhis2Test extends LMISTestCase {
         List<Commodity> commodities = commodityService.all();
 
         setUpSuccessHttpGetRequest(200, "allocations.json");
-        List<Allocation> allocations = dhis2.fetchAllocations(commodities, user);
-        assertThat(allocations.size(), is(2));
+        List<CommodityActionValue> allocationActionValues = dhis2.fetchAllocations(commodities, user);
+        assertThat(allocationActionValues.size(), is(4));
+//
+//        Allocation firstAllocation = allocations.get(0);
+//        assertThat(firstAllocation.getAllocationId(), is("12345"));
+//        assertThat(firstAllocation.getAllocationItems().size(), is(1));
     }
 }

@@ -89,7 +89,7 @@ public class CommodityService {
         updateStockValues(all());
 
         //FIXME: https://github.com/chailmis/chailmis-android/issues/36
-        allocationService.syncAllocations();
+        allocationService.syncAllocations(user);
         categoryService.clearCache();
     }
 

@@ -29,7 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
-import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -56,5 +55,5 @@ public interface LmisServer {
 
     Integer getDayForMonthlyStockCount(User user);
 
-    List<Allocation> fetchAllocations(List<Commodity> commodities, User user);
+    List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user);
 }

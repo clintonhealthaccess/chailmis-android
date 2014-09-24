@@ -33,18 +33,14 @@ import android.content.Context;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -219,7 +215,7 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<Allocation> fetchAllocations(List<Commodity> commodities, User user) {
+    public List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
@@ -228,32 +224,7 @@ public class Dhis2 implements LmisServer {
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
-        List<CommodityActionValue> actionValues = convertDataValuesToCommodityActions(valueSet.getDataValues());
-        return toAllocations(actionValues);
-    }
-
-    private List<Allocation> toAllocations(List<CommodityActionValue> actionValues) {
-        ImmutableList<Collection<CommodityActionValue>> groups = index(actionValues, new Function<CommodityActionValue, String>() {
-            @Override
-            public String apply(CommodityActionValue input) {
-                return input.getPeriod();
-            }
-        }).asMap().values().asList();
-
-        return transform(groups, new Function<Collection<CommodityActionValue>, Allocation>() {
-            @Override
-            public Allocation apply(Collection<CommodityActionValue> commodityActionValues) {
-                Collection<CommodityActionValue> filteredForAllocationId = filter(commodityActionValues, new Predicate<CommodityActionValue>() {
-                    @Override
-                    public boolean apply(CommodityActionValue commodityActionValue) {
-                        return "ALLOCATION_ID".equals(commodityActionValue.getCommodityAction().getName());
-                    }
-                });
-                CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
-
-                return new Allocation(allocationIdValue.getValue());
-            }
-        });
+        return convertDataValuesToCommodityActions(valueSet.getDataValues());
     }
 
     private String getDataSetId(List<Commodity> commodities, String activityType) {

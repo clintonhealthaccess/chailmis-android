@@ -33,6 +33,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.remote.Dhis2;
+import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +48,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class AllocationServiceTest {
+public class AllocationServiceTest extends LMISTestCase {
+    @Inject
+    private Dhis2 dhis2;
+
+    @Inject
+    private CommodityService commodityService;
+
+    @Inject
+    private CategoryService categoryService;
 
     @Inject
     private AllocationService allocationService;
@@ -99,7 +110,26 @@ public class AllocationServiceTest {
     }
 
     @Test
-    public void should() throws Exception {
+    public void shouldSyncAndSaveAllocations() throws Exception {
+        // FIXME: can we mock all this?
+        // given
+        String orgUnit = "orgnunit";
+        User user = new User("test", "pass");
+        user.setFacilityCode(orgUnit);
 
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+
+        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        categoryService.clearCache();
+
+        setUpSuccessHttpGetRequest(200, "allocations.json");
+
+        assertThat(allocationDao.countOf(), is(0l));
+
+        // when
+        allocationService.syncAllocations(user);
+
+        // then
+        assertThat(allocationDao.countOf(), is(2l));
     }
 }
