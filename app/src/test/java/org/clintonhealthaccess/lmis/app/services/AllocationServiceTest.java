@@ -33,6 +33,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
@@ -41,6 +42,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+
+import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
@@ -131,5 +134,13 @@ public class AllocationServiceTest extends LMISTestCase {
 
         // then
         assertThat(allocationDao.countOf(), is(2l));
+        List<Allocation> allocations = allocationDao.queryForAll();
+        Allocation firstAllocation = allocations.get(0);
+        assertThat(firstAllocation.getAllocationId(), is("12345"));
+
+        List<AllocationItem> allocationItems = firstAllocation.getAllocationItems();
+        assertThat(allocationItems.size(), is(1));
+        assertThat(allocationItems.get(0).getCommodity().getName(), is("Albendazole_200mg tablet "));
+        assertThat(allocationItems.get(0).getQuantity(), is(10));
     }
 }

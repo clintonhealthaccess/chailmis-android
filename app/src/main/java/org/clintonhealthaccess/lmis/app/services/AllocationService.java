@@ -48,6 +48,7 @@ import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,6 +56,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Multimaps.index;
+import static java.lang.Integer.parseInt;
 
 public class AllocationService {
     @Inject
@@ -126,24 +128,19 @@ public class AllocationService {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
         for (Allocation allocation : allocations) {
-            createAllocation(allocation.getAllocationId(), 9);
+            createAllocation(allocation);
         }
     }
 
-    private void createAllocation(String allocationId, int quantity) {
+    private void createAllocation(Allocation allocation) {
         GenericDao<Allocation> allocationGenericDao = new GenericDao<>(Allocation.class, context);
-        GenericDao<AllocationItem> allocationItemGenericDao = new GenericDao<>(AllocationItem.class, context);
-        GenericDao<Commodity> commodityDao = new GenericDao<>(Commodity.class, context);
-        Allocation allocation = new Allocation();
-        allocation.setReceived(false);
-        allocation.setAllocationId(allocationId);
         allocationGenericDao.create(allocation);
 
-        AllocationItem item = new AllocationItem();
-        item.setCommodity(commodityDao.queryForAll().get(0));
-        item.setQuantity(quantity);
-        item.setAllocation(allocation);
-        allocationItemGenericDao.create(item);
+        GenericDao<AllocationItem> allocationItemGenericDao = new GenericDao<>(AllocationItem.class, context);
+        for (AllocationItem allocationItem : allocation.getTransientAllocationItems()) {
+            allocationItem.setAllocation(allocation);
+            allocationItemGenericDao.create(allocationItem);
+        }
     }
 
     private List<Allocation> toAllocations(List<CommodityActionValue> actionValues) {
@@ -172,16 +169,18 @@ public class AllocationService {
         CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
         Allocation allocation = new Allocation(allocationIdValue.getValue());
 
-//        ArrayList<CommodityActionValue> allocationActionValues = newArrayList(commodityActionValues);
-//        allocationActionValues.remove(allocationIdValue);
-//        List<AllocationItem> allocationItems = transform(allocationActionValues, new Function<CommodityActionValue, AllocationItem>() {
-//            @Override
-//            public AllocationItem apply(CommodityActionValue input) {
-//                // FIXME: need know what commodity it is
-//                return new AllocationItem();
-//            }
-//        });
-//        allocation.addItems(allocationItems);
+        ArrayList<CommodityActionValue> allocationActionValues = newArrayList(commodityActionValues);
+        allocationActionValues.remove(allocationIdValue);
+        List<AllocationItem> allocationItems = transform(allocationActionValues, new Function<CommodityActionValue, AllocationItem>() {
+            @Override
+            public AllocationItem apply(CommodityActionValue input) {
+                AllocationItem allocationItem = new AllocationItem();
+                allocationItem.setQuantity(parseInt(input.getValue()));
+                allocationItem.setCommodity(input.getCommodityAction().getCommodity());
+                return allocationItem;
+            }
+        });
+        allocation.addTransientItems(allocationItems);
 
         return allocation;
     }

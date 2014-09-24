@@ -61,11 +61,17 @@ public class Allocation {
     @ForeignCollectionField(eager = true, maxEagerLevel = 3)
     private ForeignCollection<AllocationItem> allocationItems;
 
+    private List<AllocationItem> transientAllocationItems;
+
     public Allocation(String allocationId) {
         this.allocationId = allocationId;
     }
 
     public List<AllocationItem> getAllocationItems() {
         return ImmutableList.copyOf(allocationItems);
+    }
+
+    public void addTransientItems(List<AllocationItem> allocationItems) {
+        this.transientAllocationItems = allocationItems;
     }
 }
