@@ -66,10 +66,11 @@ public class CommodityAction implements Serializable {
 
     private List<CommodityActionValue> commodityActionValues = new ArrayList<>();
 
-    public static String stockOnHand = "STOCK_ON_HAND";
-    public static String minimumThreshold = "MINIMUM_THRESHOLD";
-    public static String maximumThreshold = "MAXIMUM_THRESHOLD";
-    public static String AMC = "AMC";
+    public static final String STOCK_ON_HAND = "STOCK_ON_HAND";
+    public static final String MINIMUN_THRESHOLD = "MINIMUM_THRESHOLD";
+    public static final String MAXIMUM_THRESHOLD = "MAXIMUM_THRESHOLD";
+    public static final String AMC = "AMC";
+    public static final String ALLOCATED = "ALLOCATED";
 
     public CommodityAction() {
         //Orm Lite likes

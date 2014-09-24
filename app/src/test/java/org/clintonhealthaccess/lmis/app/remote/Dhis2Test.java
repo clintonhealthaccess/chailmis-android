@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -150,5 +151,22 @@ public class Dhis2Test extends LMISTestCase {
         setUpSuccessHttpGetRequest(200, "constantsEmpty.json");
         Integer day = dhis2.getDayForMonthlyStockCount(new User());
         assertThat(day, is(24));
+    }
+
+    @Test
+    public void shouldFetchAllAllocationsInLastTwoMonths() throws Exception {
+        String orgUnit = "orgnunit";
+        User user = new User();
+        user.setFacilityCode(orgUnit);
+
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+
+        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        categoryService.clearCache();
+        List<Commodity> commodities = commodityService.all();
+
+        setUpSuccessHttpGetRequest(200, "allocations.json");
+        List<Allocation> allocations = dhis2.fetchAllocations(commodities, user);
+        assertThat(allocations.size(), is(2));
     }
 }

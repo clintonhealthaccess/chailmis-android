@@ -97,4 +97,9 @@ public class AllocationServiceTest {
         allocationDao.create(firstAllocation);
         assertThat(allocationService.getAllocationByLmisId(lmisId).getAllocationId(), is(lmisId));
     }
+
+    @Test
+    public void should() throws Exception {
+
+    }
 }

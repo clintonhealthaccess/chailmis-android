@@ -169,25 +169,4 @@ public class CommodityServiceTest {
         assertThat(antiMalarialCategory.getCommodities().size(), is(6));
         assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
     }
-
-
-    private List<Category> getTestCategories() {
-
-        DataSet dataSet = new DataSet();
-        dataSet.setId("12324L");
-        dataSet.setDescription("consumption data set");
-        dataSet.setName("consumption");
-
-        List<Category> categories = new ArrayList<>();
-        Category category = new Category("named cat");
-        Commodity commodity = new Commodity("cat food");
-        Commodity commodityDogFood = new Commodity("dog food");
-
-
-        category.addCommodity(commodity);
-        category.addCommodity(commodityDogFood);
-
-        categories.add(category);
-        return categories;
-    }
 }

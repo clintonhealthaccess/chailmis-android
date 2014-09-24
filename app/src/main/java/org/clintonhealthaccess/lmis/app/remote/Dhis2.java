@@ -32,11 +32,19 @@ package org.clintonhealthaccess.lmis.app.remote;
 import android.content.Context;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -65,15 +73,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
+import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.transform;
+import static com.google.common.collect.Multimaps.index;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
 
 public class Dhis2 implements LmisServer {
     public static final String SYNC = "SYNC";
+    public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
 
@@ -192,17 +207,53 @@ public class Dhis2 implements LmisServer {
     @Override
     public List<CommodityActionValue> fetchCommodityActionValues(List<Commodity> commodities, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        Calendar calendar = Calendar.getInstance();
         DataValueSet valueSet = new DataValueSet();
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String dataSet2 = getDataSetId(commodities, CommodityAction.AMC);
-            String dataSetId = getDataSetId(commodities, CommodityAction.stockOnHand);
-            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), getStartDate(calendar, simpleDateFormat), getEndDate(calendar, simpleDateFormat), dataSet2);
+            String dataSetId = getDataSetId(commodities, CommodityAction.STOCK_ON_HAND);
+            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today(), dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
         return convertDataValuesToCommodityActions(valueSet.getDataValues());
+    }
+
+    @Override
+    public List<Allocation> fetchAllocations(List<Commodity> commodities, User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        DataValueSet valueSet = new DataValueSet();
+        try {
+            String dataSetId = getDataSetId(commodities, ALLOCATED);
+            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today());
+        } catch (LmisException exception) {
+            e(SYNC, "error syncing allocations");
+        }
+        List<CommodityActionValue> actionValues = convertDataValuesToCommodityActions(valueSet.getDataValues());
+        return toAllocations(actionValues);
+    }
+
+    private List<Allocation> toAllocations(List<CommodityActionValue> actionValues) {
+        ImmutableList<Collection<CommodityActionValue>> groups = index(actionValues, new Function<CommodityActionValue, String>() {
+            @Override
+            public String apply(CommodityActionValue input) {
+                return input.getPeriod();
+            }
+        }).asMap().values().asList();
+
+        return transform(groups, new Function<Collection<CommodityActionValue>, Allocation>() {
+            @Override
+            public Allocation apply(Collection<CommodityActionValue> commodityActionValues) {
+                Collection<CommodityActionValue> filteredForAllocationId = filter(commodityActionValues, new Predicate<CommodityActionValue>() {
+                    @Override
+                    public boolean apply(CommodityActionValue commodityActionValue) {
+                        return "ALLOCATION_ID".equals(commodityActionValue.getCommodityAction().getName());
+                    }
+                });
+                CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
+
+                return new Allocation(allocationIdValue.getValue());
+            }
+        });
     }
 
     private String getDataSetId(List<Commodity> commodities, String activityType) {
@@ -214,14 +265,16 @@ public class Dhis2 implements LmisServer {
         }
     }
 
-    private String getStartDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
+    private String twoMonthsAgo() {
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -2);
-        return simpleDateFormat.format(calendar.getTime());
+        return SIMPLE_DATE_FORMAT.format(calendar.getTime());
     }
 
-    private String getEndDate(Calendar calendar, SimpleDateFormat simpleDateFormat) {
+    private String today() {
+        Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        return simpleDateFormat.format(calendar.getTime());
+        return SIMPLE_DATE_FORMAT.format(calendar.getTime());
     }
 
     @Override
@@ -241,15 +294,20 @@ public class Dhis2 implements LmisServer {
         }
     }
 
-
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
         return FluentIterable
                 .from(values).transform(new Function<DataValue, CommodityActionValue>() {
                     @Override
                     public CommodityActionValue apply(DataValue input) {
                         CommodityAction commodityAction = commodityActionService.getById(input.getDataElement());
+                        if (commodityAction == null) {
+                            System.out.println("Data element: " + input.getDataElement());
+                            System.out.println("Data value: " + input.getValue());
+                            commodityAction = new CommodityAction(null, input.getDataElement(), "ALLOCATION_ID", ALLOCATED);
+                        }
                         return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
                     }
                 }).toList();
     }
+
 }

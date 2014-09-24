@@ -56,9 +56,12 @@ public class Allocation {
     @DatabaseField(canBeNull = false)
     private boolean received;
 
-
     @ForeignCollectionField(eager = true, maxEagerLevel = 3)
     private ForeignCollection<AllocationItem> allocationItems;
+
+    public Allocation(String allocationId) {
+        this.allocationId = allocationId;
+    }
 
     public List<AllocationItem> getAllocationItems() {
         return ImmutableList.copyOf(allocationItems);

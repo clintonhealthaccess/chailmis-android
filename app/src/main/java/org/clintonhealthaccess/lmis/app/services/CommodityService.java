@@ -97,7 +97,7 @@ public class CommodityService {
         List<StockItem> stockItems = FluentIterable.from(commodities).transform(new Function<Commodity, StockItem>() {
             @Override
             public StockItem apply(Commodity input) {
-                CommodityAction commodityAction = input.getCommodityAction(CommodityAction.stockOnHand);
+                CommodityAction commodityAction = input.getCommodityAction(CommodityAction.STOCK_ON_HAND);
                 if (commodityAction != null && commodityAction.getActionLatestValue() != null) {
                     return new StockItem(input, Integer.parseInt(commodityAction.getActionLatestValue().getValue()));
                 } else {
