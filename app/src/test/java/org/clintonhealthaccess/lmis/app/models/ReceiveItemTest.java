@@ -31,9 +31,7 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -44,8 +42,11 @@ public class ReceiveItemTest {
     public void shouldSelectCorrectActivity() throws Exception {
         Commodity commodity = mock(Commodity.class);
         CommodityAction activity = new CommodityAction(commodity, "12", "12", "receive");
-        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(activity)));
+        when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(activity));
+
+        Receive receive = new Receive(true, null);
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
+        item.setReceive(receive);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
         assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
     }

@@ -72,7 +72,7 @@ public class ReceiveServiceTest {
     public void shouldSaveReceiveAndReceiveItems() {
         Commodity commodity = commodityService.all().get(0);
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
-        Receive receive = new Receive();
+        Receive receive = new Receive(true, null);
         receive.addReceiveItem(receiveItem);
 
         receiveService.saveReceive(receive);
@@ -87,7 +87,7 @@ public class ReceiveServiceTest {
         int newStockOnHand = commodity.getStockOnHand() + QUANTITY_RECEIVED;
 
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
-        Receive receive = new Receive();
+        Receive receive = new Receive(true, null);
         receive.addReceiveItem(receiveItem);
 
         receiveService.saveReceive(receive);
@@ -103,8 +103,7 @@ public class ReceiveServiceTest {
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
         Receive receive = new Receive();
 
-        Allocation allocation = new Allocation();
-        allocation.setAllocationId("UG-002");
+        Allocation allocation = new Allocation("UG-002", "20140901");
         allocation.setReceived(false);
         allocation = allocationsDao.create(allocation);
 

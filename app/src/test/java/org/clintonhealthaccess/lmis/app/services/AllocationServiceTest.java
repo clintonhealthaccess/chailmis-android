@@ -79,11 +79,9 @@ public class AllocationServiceTest extends LMISTestCase {
 
     @Test
     public void getReceivedAllocationIdsShouldGetIdsOfReceivedAllocations() throws Exception {
-        Allocation firstAllocation = new Allocation();
-        firstAllocation.setAllocationId("UG-2013");
+        Allocation firstAllocation = new Allocation("UG-2013", "20140901");
         firstAllocation.setReceived(false);
-        Allocation secondAllocation = new Allocation();
-        secondAllocation.setAllocationId("UG-2012");
+        Allocation secondAllocation = new Allocation("UG-2012", "20140901");
         secondAllocation.setReceived(true);
         allocationDao.create(firstAllocation);
         allocationDao.create(secondAllocation);
@@ -92,11 +90,9 @@ public class AllocationServiceTest extends LMISTestCase {
 
     @Test
     public void getYetToBeReceivedAllocationIdsShouldOnlyListIdsOfYetToBeReceivedAllocations() throws Exception {
-        Allocation firstAllocation = new Allocation();
-        firstAllocation.setAllocationId("UG-2013");
+        Allocation firstAllocation = new Allocation("UG-2013", "20140901");
         firstAllocation.setReceived(false);
-        Allocation secondAllocation = new Allocation();
-        secondAllocation.setAllocationId("UG-2012");
+        Allocation secondAllocation = new Allocation("UG-2012", "20140901");
         secondAllocation.setReceived(true);
         allocationDao.create(firstAllocation);
         allocationDao.create(secondAllocation);
@@ -106,7 +102,7 @@ public class AllocationServiceTest extends LMISTestCase {
     @Test
     public void shouldGetAllocationByLmisId() throws Exception {
         String lmisId = "UG-2013";
-        Allocation firstAllocation = new Allocation();
+        Allocation firstAllocation = new Allocation(lmisId, "20140901");
         firstAllocation.setAllocationId(lmisId);
         firstAllocation.setReceived(false);
         allocationDao.create(firstAllocation);
