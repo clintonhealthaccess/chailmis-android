@@ -52,6 +52,7 @@ import java.util.List;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
+import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
 
 public class CommoditySnapshotService {
 
@@ -72,7 +73,7 @@ public class CommoditySnapshotService {
         for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
             List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
             if (commoditySnapshots.isEmpty()) {
-                createNewSnaphot(value, snapshotGenericDao);
+                createNewSnapshot(value, snapshotGenericDao);
             } else {
                 updateSnapshot(value, snapshotGenericDao, commoditySnapshots);
             }
@@ -87,8 +88,8 @@ public class CommoditySnapshotService {
         dailyCommoditySnapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnaphot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao ) {
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue());
+    private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao) {
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue);
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 
@@ -97,7 +98,7 @@ public class CommoditySnapshotService {
             @Override
             public List<CommoditySnapshot> operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getActivity()).and().eq(CommoditySnapshot.PERIOD, commoditySnapshotValue.getActivity().getPeriod());
+                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getActivity()).and().eq(PERIOD, commoditySnapshotValue.getActivity().getPeriod());
                 return dao.query(queryBuilder.prepare());
             }
         });

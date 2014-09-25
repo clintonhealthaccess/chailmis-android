@@ -56,6 +56,9 @@ public class Allocation {
     private String allocationId;
 
     @DatabaseField(canBeNull = false)
+    private String period;
+
+    @DatabaseField(canBeNull = false)
     private boolean received;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 3)
@@ -63,8 +66,9 @@ public class Allocation {
 
     private List<AllocationItem> transientAllocationItems;
 
-    public Allocation(String allocationId) {
+    public Allocation(String allocationId, String period) {
         this.allocationId = allocationId;
+        this.period = period;
     }
 
     public List<AllocationItem> getAllocationItems() {

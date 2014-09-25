@@ -33,14 +33,18 @@ import android.content.Context;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
-import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -53,8 +57,10 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
@@ -69,6 +75,7 @@ import static org.mockito.Mockito.spy;
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommoditySnapshotServiceTest extends LMISTestCase {
     public static final String DISPENSING = "DISPENSING";
+    public static final SimpleDateFormat PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     @Inject
     CommoditySnapshotService commoditySnapshotService;
 
@@ -131,6 +138,44 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
         assertThat(commoditySnapshots.size(), is(1));
         assertThat(commoditySnapshots.get(0).getValue(), is("9"));
+    }
+
+    @Test
+    public void shouldCreateCommoditySnapshotForReceiving() throws Exception {
+        Commodity commodity = commodityDao.queryForAll().get(0);
+        ReceiveItem receiveItem = new ReceiveItem(commodity, 10, 10);
+        receiveItem.setReceive(new Receive(true, null));
+
+        commoditySnapshotService.add(receiveItem);
+
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        CommoditySnapshot firstSnapshot = commoditySnapshots.get(0);
+        assertThat(firstSnapshot.getValue(), is("10"));
+        assertThat(firstSnapshot.getPeriod(), is(PERIOD_DATE_FORMAT.format(new Date())));
+    }
+
+    @Test
+    public void shouldCreateCommoditySnapshotForReceivingWithAllocatedPeriod() throws Exception {
+        String allocatedPeriod = "20140827";
+
+        Commodity commodity = commodityDao.queryForAll().get(0);
+        Allocation allocation = new Allocation("UG-12345", allocatedPeriod);
+        AllocationItem allocationItem = new AllocationItem();
+        allocationItem.setAllocation(allocation);
+        allocationItem.setCommodity(commodity);
+        allocationItem.setQuantity(10);
+
+        ReceiveItem receiveItem = new ReceiveItem(commodity, 10, 10);
+        receiveItem.setReceive(new Receive(false, allocation));
+
+        commoditySnapshotService.add(receiveItem);
+
+        List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
+        assertThat(commoditySnapshots.size(), is(1));
+        CommoditySnapshot firstSnapshot = commoditySnapshots.get(0);
+        assertThat(firstSnapshot.getValue(), is("10"));
+        assertThat(firstSnapshot.getPeriod(), is(allocatedPeriod));
     }
 
     @Test
@@ -304,19 +349,23 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Category category = new Category("commodities");
         categoryDao.create(category);
 
-        Commodity commodity = new Commodity("Panado", category);
-        Commodity commodity2 = new Commodity("other drug", category);
+        generateTestCommodity(dataSet, category, "Panado");
+        generateTestCommodity(dataSet, category, "other drug");
+    }
+
+    private void generateTestCommodity(DataSet dataSet, Category category, String commodityName) {
+        Commodity commodity = new Commodity(commodityName, category);
         commodityDao.create(commodity);
-        commodityDao.create(commodity2);
-        CommodityAction activity = new CommodityAction(commodity, getID(), "Panado_DISPENSING", DispensingItem.DISPENSE);
-        CommodityAction activity2 = new CommodityAction(commodity, getID(), "Panado_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
-        activity.setDataSet(dataSet);
-        activity2.setDataSet(dataSet);
-        commodityActivityGenericDao.create(activity);
-        commodityActivityGenericDao.create(activity2);
-        CommodityAction activity3 = new CommodityAction(commodity2, getID(), "other drug_DISPENSING", DispensingItem.DISPENSE);
-        activity3.setDataSet(dataSet);
-        commodityActivityGenericDao.create(activity3);
+
+        CommodityAction actionDispense = new CommodityAction(commodity, getID(), commodityName + "_DISPENSING", DispensingItem.DISPENSE);
+        CommodityAction actionAdjustments = new CommodityAction(commodity, getID(), commodityName + "_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
+        CommodityAction actionReceived = new CommodityAction(commodity, getID(), commodityName + "_RECEIVED", ReceiveItem.RECEIVED);
+        actionDispense.setDataSet(dataSet);
+        actionAdjustments.setDataSet(dataSet);
+        actionReceived.setDataSet(dataSet);
+        commodityActivityGenericDao.create(actionDispense);
+        commodityActivityGenericDao.create(actionAdjustments);
+        commodityActivityGenericDao.create(actionReceived);
     }
 
 

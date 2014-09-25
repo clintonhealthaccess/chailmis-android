@@ -73,6 +73,13 @@ public class CommoditySnapshot {
         this.period = commodityAction.getPeriod();
     }
 
+    public CommoditySnapshot(CommoditySnapshotValue commoditySnapshotValue) {
+        this(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue());
+        if(commoditySnapshotValue.getPeriod() != null) {
+            this.period = commoditySnapshotValue.getPeriod();
+        }
+    }
+
     public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value, String attributeOptionComboId) {
         this(commodity, commodityAction, value);
         this.attributeOptionCombo = attributeOptionComboId;

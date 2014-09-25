@@ -178,7 +178,7 @@ public class AllocationService {
             }
         });
         CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
-        Allocation allocation = new Allocation(allocationIdValue.getValue());
+        Allocation allocation = new Allocation(allocationIdValue.getValue(), allocationIdValue.getPeriod());
 
         ArrayList<CommodityActionValue> allocationActionValues = newArrayList(commodityActionValues);
         allocationActionValues.remove(allocationIdValue);

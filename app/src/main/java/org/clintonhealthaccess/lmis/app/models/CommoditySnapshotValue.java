@@ -37,10 +37,16 @@ import lombok.Setter;
 public class CommoditySnapshotValue {
     private CommodityAction activity;
     private String value;
+    private String period;
 
     public CommoditySnapshotValue(CommodityAction input, int quantity) {
+        this(input, quantity, null);
+    }
+
+    public CommoditySnapshotValue(CommodityAction input, int quantity, String period) {
         this.activity = input;
         this.value = String.valueOf(quantity);
+        this.period = period;
     }
 
     public CommoditySnapshotValue(CommodityAction input, String reasonForUnexpectedQuantity) {

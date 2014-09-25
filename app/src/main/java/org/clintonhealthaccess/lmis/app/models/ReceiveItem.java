@@ -85,7 +85,11 @@ public class ReceiveItem implements Snapshotable {
                 .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
                     @Override
                     public CommoditySnapshotValue apply(CommodityAction input) {
-                        return new CommoditySnapshotValue(input, quantityReceived);
+                        if (receive.isReceiveFromFacility()) {
+                            return new CommoditySnapshotValue(input, quantityReceived);
+                        } else {
+                            return new CommoditySnapshotValue(input, quantityReceived, receive.getAllocation().getPeriod());
+                        }
                     }
                 }).filter(new Predicate<CommoditySnapshotValue>() {
                     @Override

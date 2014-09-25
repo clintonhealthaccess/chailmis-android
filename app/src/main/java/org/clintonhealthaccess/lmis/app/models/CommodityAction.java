@@ -91,8 +91,7 @@ public class CommodityAction implements Serializable {
     public String getPeriod() {
         String periodType = getDataSet().getPeriodType();
         OrderCycle cycle = Helpers.getOrderCycle(periodType);
-        String period = cycle.getPeriod(new Date());
-        return period;
+        return cycle.getPeriod(new Date());
     }
 
 
