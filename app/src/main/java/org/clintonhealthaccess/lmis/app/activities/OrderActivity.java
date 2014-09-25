@@ -145,9 +145,12 @@ public class OrderActivity extends CommoditySelectableActivity {
             }
         });
         if (prepopulatedOrderType != null) {
-            for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert()) {
-                onEvent(new CommodityToggledEvent(orderCommodityViewModel));
-            }
+
+
+                for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert(prepopulatedOrderType)) {
+                    onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+                }
+
         }
     }
 
@@ -179,7 +182,7 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     private void setOrderType(List<OrderType> orderTypes, OrderType orderType) {
         if (orderTypes.contains(orderType)) {
-            Log.i("Here", "Order type "+orderType.getName()+" orderType"+ orderType.getId());
+            Log.i("Here", "Order type " + orderType.getName() + " orderType" + orderType.getId());
             spinnerOrderType.setSelection(orderTypes.indexOf(orderType));
         }
     }
@@ -223,7 +226,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         int numberOfItems = arrayAdapter.getCount();
         Order order = new Order();
         order.setOrderType(getOrderType());
-        System.out.println("Here order tpe is "+order.getOrderType().getName());
+        System.out.println("Here order tpe is " + order.getOrderType().getName());
         order.setSrvNumber(nextSRVNumber);
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);

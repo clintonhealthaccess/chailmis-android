@@ -74,6 +74,7 @@ public class CommodityAction implements Serializable {
     public static final String ALLOCATED = "ALLOCATED";
     public static final String RECEIVED = "RECEIVED";
     public static final String RECEIVE_DATE = "RECEIVE_DATE";
+    public static final String PROJECTED_ORDER_AMOUNT = "PROJECTED_ORDER_AMOUNT";
 
     public CommodityAction() {
         //Orm Lite likes

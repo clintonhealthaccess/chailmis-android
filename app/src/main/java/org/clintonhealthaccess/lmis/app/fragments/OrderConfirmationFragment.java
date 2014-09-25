@@ -30,7 +30,9 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmOrderAdapter;
+import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
 import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
@@ -112,16 +115,52 @@ public class OrderConfirmationFragment extends RoboDialogFragment {
         buttonOrderConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                orderService.saveOrder(order);
-                showToastMessage(getString(R.string.order_successful));
-                dismiss();
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.finish();
-                    Intent intent = activity.getIntent();
-                    intent.removeExtra(AlertClickListener.ORDER_TYPE);
-                    startActivity(intent);
-                }
+
+
+                AsyncTask<Void, Void, Boolean> saveOrderTask = new AsyncTask<Void, Void, Boolean>() {
+                    private ProgressDialog dialog;
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        this.dialog = new ProgressDialog(getActivity());
+                        this.dialog.setMessage(getString(R.string.order_saving));
+                        this.dialog.show();
+                    }
+
+                    @Override
+                    protected Boolean doInBackground(Void... params) {
+
+                        try {
+                            orderService.saveOrder(order);
+                        } catch (Exception ex) {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Boolean success) {
+                        super.onPostExecute(success);
+                        if (success) {
+                            showToastMessage(getString(R.string.order_successful));
+                            FragmentActivity activity = getActivity();
+                            if (activity != null) {
+                                activity.finish();
+                                Intent intent = activity.getIntent();
+                                intent.removeExtra(AlertClickListener.ORDER_TYPE);
+                                startActivity(intent);
+                            }
+                        } else {
+                            showToastMessage(getString(R.string.order_failed));
+                        }
+                        this.dialog.dismiss();
+                        dismiss();
+                    }
+                };
+
+                saveOrderTask.execute();
+
             }
         });
     }

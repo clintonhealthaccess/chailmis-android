@@ -28,12 +28,28 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models.alerts;
+package org.clintonhealthaccess.lmis.app.listeners;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.AdapterView;
 
-public interface NotificationMessage {
-    public String getMessage();
+import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
+import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 
-    public void onClick(Context context);
+public class NotificationClickListener implements AdapterView.OnItemClickListener {
+    private NotificationMessageAdapter adapter;
+    private Context context;
+
+    public NotificationClickListener(NotificationMessageAdapter adapter, Context context) {
+        this.adapter = adapter;
+        this.context = context;
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        NotificationMessage message = adapter.getItem(position);
+        message.onClick(context);
+    }
 }

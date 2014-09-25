@@ -176,7 +176,7 @@ public class Commodity implements Serializable {
         return getStockOnHand() < getMinimumThreshold();
     }
 
-    public int calculatePrepopulatedQuantity() {
+    public int calculateEmergencyPrepopulatedQuantity() {
         int max = getLatestValueFromCommodityActionByName(CommodityAction.MAXIMUM_THRESHOLD);
         return max - getStockOnHand();
     }
@@ -190,5 +190,9 @@ public class Commodity implements Serializable {
         } else {
             return defaultValue;
         }
+    }
+
+    public int calculateRoutinePrePopulatedQuantityl() {
+        return getLatestValueFromCommodityActionByName(CommodityAction.PROJECTED_ORDER_AMOUNT);
     }
 }

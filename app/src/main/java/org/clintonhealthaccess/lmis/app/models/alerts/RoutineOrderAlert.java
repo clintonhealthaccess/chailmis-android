@@ -30,10 +30,17 @@
 
 package org.clintonhealthaccess.lmis.app.models.alerts;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import org.clintonhealthaccess.lmis.app.activities.OrderActivity;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,12 +54,16 @@ public class RoutineOrderAlert implements NotificationMessage {
     @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
     private Date dateCreated;
 
+    @DatabaseField(canBeNull = false)
+    private boolean disabled;
+
     public RoutineOrderAlert() {
         //ormLite likes
     }
 
     public RoutineOrderAlert(Date date) {
         this.dateCreated = date;
+        this.disabled = false;
     }
 
     @Override
@@ -62,7 +73,15 @@ public class RoutineOrderAlert implements NotificationMessage {
     }
 
     @Override
-    public void onClick() {
+    public void onClick(Context context) {
         Log.i("Routine order alert clicked", getMessage());
+        if (!disabled) {
+            Intent intent = new Intent(context, OrderActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle data = new Bundle();
+            data.putString(AlertClickListener.ORDER_TYPE, OrderType.ROUTINE);
+            intent.putExtras(data);
+            context.startActivity(intent);
+        }
     }
 }

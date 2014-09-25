@@ -41,6 +41,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
 import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
+import org.clintonhealthaccess.lmis.app.listeners.NotificationClickListener;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
@@ -98,7 +99,9 @@ public class MessagesActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(List<? extends NotificationMessage> notificationMessages) {
-                listViewNotifications.setAdapter(new NotificationMessageAdapter(getApplicationContext(), R.layout.notification_message_item, notificationMessages));
+                NotificationMessageAdapter adapter = new NotificationMessageAdapter(getApplicationContext(), R.layout.notification_message_item, notificationMessages);
+                listViewNotifications.setAdapter(adapter);
+                listViewNotifications.setOnItemClickListener(new NotificationClickListener(adapter, MessagesActivity.this));
             }
         };
 

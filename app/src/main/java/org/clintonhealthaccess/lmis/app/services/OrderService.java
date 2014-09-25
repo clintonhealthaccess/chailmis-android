@@ -40,7 +40,6 @@ import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
-import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
@@ -152,6 +151,8 @@ public class OrderService implements OrderItemSaver {
 
         if (!order.getOrderType().isRoutine()) {
             alertsService.disableAlertsForCommodities(getCommoditiesInOrder(order));
+        } else if (order.getOrderType().isRoutine()) {
+            alertsService.disableAllRoutineOrderAlerts();
         }
     }
 

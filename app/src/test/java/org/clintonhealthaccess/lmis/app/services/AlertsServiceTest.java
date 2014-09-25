@@ -36,6 +36,7 @@ import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
@@ -119,9 +120,17 @@ public class AlertsServiceTest {
     @Test
     public void shouldGetCommodityViewModelsForEachLowStockAlert() throws Exception {
         alertsService.updateLowStockAlerts();
-        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert();
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert(OrderType.EMERGENCY);
         assertThat(commodityViewModels.size(), is(2));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(30));
+    }
+
+    @Test
+    public void shouldGetCommodityViewModelsWithCorrect() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert(OrderType.ROUTINE);
+        assertThat(commodityViewModels.size(), is(2));
+        assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
     }
 
     @Test
@@ -240,6 +249,16 @@ public class AlertsServiceTest {
         Integer day = 12;
         setRoutineOrderDay(day);
         assertThat(alertsService.getRoutineOrderAlertDay(), is(12));
+    }
+
+    @Test
+    public void shouldDisableAllRoutineOrderAlerts() throws Exception {
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        assertThat(alertsService.getNotificationMessages().size(), is(2));
+        alertsService.disableAllRoutineOrderAlerts();
+        assertThat(alertsService.getNotificationMessages().size(), is(0));
+
     }
 
     private void setRoutineOrderDay(Integer day) {

@@ -61,8 +61,9 @@ public class NotificationMessageAdapter extends ArrayAdapter<NotificationMessage
         TextView textViewMessage = (TextView) view.findViewById(R.id.textViewMessage);
 
         NotificationMessage notificationMessage = getItem(position);
-
-        textViewMessage.setText(notificationMessage.getMessage());
+        if (notificationMessage != null) {
+            textViewMessage.setText(notificationMessage.getMessage());
+        }
 
         return view;
     }

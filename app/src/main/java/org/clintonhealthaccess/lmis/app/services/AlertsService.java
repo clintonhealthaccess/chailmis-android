@@ -39,9 +39,12 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
@@ -61,6 +64,7 @@ import static org.clintonhealthaccess.lmis.app.activities.OrderActivity.setupOrd
 
 public class AlertsService {
 
+    public static final String DISABLED = "disabled";
     @Inject
     CommodityService commodityService;
 
@@ -75,16 +79,20 @@ public class AlertsService {
 
     public List<LowStockAlert> getLowStockAlerts() {
         if (lowStockAlerts == null) {
-            List<LowStockAlert> lowStockAlerts = queryAllLowStockAlerts();
-            Collections.sort(lowStockAlerts, new Comparator<LowStockAlert>() {
-                @Override
-                public int compare(LowStockAlert lhs, LowStockAlert rhs) {
-                    return new Integer(lhs.getCommodity().getStockOnHand()).compareTo(new Integer(rhs.getCommodity().getStockOnHand()));
-                }
-            });
-            AlertsService.lowStockAlerts = lowStockAlerts;
+            AlertsService.lowStockAlerts = queryLowStockAlertsFromDB();
             return AlertsService.lowStockAlerts;
         }
+        return lowStockAlerts;
+    }
+
+    private List<LowStockAlert> queryLowStockAlertsFromDB() {
+        List<LowStockAlert> lowStockAlerts = queryAllLowStockAlerts();
+        Collections.sort(lowStockAlerts, new Comparator<LowStockAlert>() {
+            @Override
+            public int compare(LowStockAlert lhs, LowStockAlert rhs) {
+                return new Integer(lhs.getCommodity().getStockOnHand()).compareTo(new Integer(rhs.getCommodity().getStockOnHand()));
+            }
+        });
         return lowStockAlerts;
     }
 
@@ -117,9 +125,10 @@ public class AlertsService {
         updateCache();
     }
 
-    private void updateCache() {
-        clearLowStockCache();
-        getLowStockAlerts();
+    public void updateCache() {
+        List<LowStockAlert> alerts = queryLowStockAlertsFromDB();
+        this.lowStockAlerts = null;
+        AlertsService.lowStockAlerts = alerts;
     }
 
     private void checkForNewLowStockAlerts() {
@@ -145,7 +154,19 @@ public class AlertsService {
             disableLowStockAlert(alert);
         }
 
-        clearLowStockCache();
+        AlertsService.lowStockAlerts = null;
+    }
+
+    public void disableAllRoutineOrderAlerts() {
+        dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Integer>() {
+            @Override
+            public Integer operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                UpdateBuilder<RoutineOrderAlert, String> updateBuilder = dao.updateBuilder();
+                updateBuilder.where().eq(DISABLED, false);
+                updateBuilder.updateColumnValue(DISABLED, true);
+                return updateBuilder.update();
+            }
+        });
     }
 
     private ImmutableList<Commodity> getCommoditiesInLowStockAlerts() {
@@ -221,15 +242,16 @@ public class AlertsService {
         });
     }
 
-    public void clearLowStockCache() {
-        this.lowStockAlerts = null;
-    }
-
-    public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
+    public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert(final String orderTypeName) {
         return FluentIterable.from(getEnabledLowStockAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(LowStockAlert input) {
-                int quantity = input.getCommodity().calculatePrepopulatedQuantity();
+                int quantity = 0;
+                if (orderTypeName.equalsIgnoreCase(OrderType.EMERGENCY)) {
+                    quantity = input.getCommodity().calculateEmergencyPrepopulatedQuantity();
+                } else if (orderTypeName.equalsIgnoreCase(OrderType.ROUTINE)) {
+                    quantity = input.getCommodity().calculateRoutinePrePopulatedQuantityl();
+                }
                 OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(input.getCommodity());
                 orderCommodityViewModel.setQuantityEntered(quantity);
                 orderCommodityViewModel.setExpectedOrderQuantity(quantity);
@@ -292,7 +314,7 @@ public class AlertsService {
         return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, List<RoutineOrderAlert>>() {
             @Override
             public List<RoutineOrderAlert> operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
-                return dao.queryForAll();
+                return dao.queryBuilder().where().eq(DISABLED, false).query();
             }
         });
     }
@@ -301,7 +323,9 @@ public class AlertsService {
         return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, RoutineOrderAlert>() {
             @Override
             public RoutineOrderAlert operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
-                return dao.queryBuilder().orderBy(RoutineOrderAlert.DATE_CREATED, true).queryForFirst();
+                QueryBuilder<RoutineOrderAlert, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().eq(DISABLED, false);
+                return queryBuilder.orderBy(RoutineOrderAlert.DATE_CREATED, true).queryForFirst();
             }
         });
     }
