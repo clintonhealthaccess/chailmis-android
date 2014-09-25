@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewAlertsTitle">
 
-
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
@@ -93,7 +92,6 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="@dimen/header_text_size"
                 android:text="@string/alert_date" />
-
 
         </LinearLayout>
 
@@ -127,10 +125,12 @@
         <ListView
             android:layout_below="@id/textViewNotificationsTitle"
             android:id="@+id/listViewNotifications"
+            android:background="@color/blue"
+            android:padding="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-
         </ListView>
+
     </RelativeLayout>
 
 </LinearLayout>

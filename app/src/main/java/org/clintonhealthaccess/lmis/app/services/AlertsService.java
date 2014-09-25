@@ -43,12 +43,14 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -97,7 +99,7 @@ public class AlertsService {
 
 
     public int numberOfAlerts() {
-        return getEnabledLowStockAlerts().size() + getRoutineOrderAlerts(new Date()).size();
+        return getEnabledLowStockAlerts().size() + getAllRoutineOrderAlerts().size();
     }
 
     public List<LowStockAlert> getTop5LowStockAlerts() {
@@ -240,7 +242,31 @@ public class AlertsService {
         return sharedPreferences.getInt(CommodityService.ROUTINE_ORDER_ALERT_DAY, 24);
     }
 
-    public List<RoutineOrderAlert> getRoutineOrderAlerts(final Date date) {
+    public void generateRoutineOrderAlert(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        if (cal.get(Calendar.DAY_OF_MONTH) < getRoutineOrderAlertDay()) {
+            return;
+        }
+
+        if (getRoutineOrderAlertsInCurrentMonth(date).size() == 0) {
+            RoutineOrderAlert routineOrderAlert = new RoutineOrderAlert(date);
+            createRoutineOrderAlert(routineOrderAlert);
+        }
+    }
+
+    public List<? extends NotificationMessage> getNotificationMessagesForHomePage() {
+        List<NotificationMessage> messages = new ArrayList<>();
+        messages.add(getLatestRoutineOrderAlerts());
+        return messages;
+    }
+
+    public List<? extends NotificationMessage> getNotificationMessages() {
+        return getAllRoutineOrderAlerts();
+    }
+
+    protected List<RoutineOrderAlert> getRoutineOrderAlertsInCurrentMonth(final Date date) {
         return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, List<RoutineOrderAlert>>() {
             @Override
             public List<RoutineOrderAlert> operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
@@ -252,26 +278,30 @@ public class AlertsService {
 
     }
 
-    public void generateRoutineOrderAlert(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        if (cal.get(Calendar.DAY_OF_MONTH) < getRoutineOrderAlertDay()) {
-            return;
-        }
-
-        if (getRoutineOrderAlerts(date).size() == 0) {
-            RoutineOrderAlert routineOrderAlert = new RoutineOrderAlert(date);
-            createRoutineOrderAlert(routineOrderAlert);
-        }
-    }
-
     private void createRoutineOrderAlert(final RoutineOrderAlert routineOrderAlert) {
         dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
             @Override
             public Object operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
                 dao.create(routineOrderAlert);
                 return null;
+            }
+        });
+    }
+
+    private List<RoutineOrderAlert> getAllRoutineOrderAlerts() {
+        return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, List<RoutineOrderAlert>>() {
+            @Override
+            public List<RoutineOrderAlert> operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                return dao.queryForAll();
+            }
+        });
+    }
+
+    private RoutineOrderAlert getLatestRoutineOrderAlerts() {
+        return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, RoutineOrderAlert>() {
+            @Override
+            public RoutineOrderAlert operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                return dao.queryBuilder().orderBy(RoutineOrderAlert.DATE_CREATED, true).queryForFirst();
             }
         });
     }

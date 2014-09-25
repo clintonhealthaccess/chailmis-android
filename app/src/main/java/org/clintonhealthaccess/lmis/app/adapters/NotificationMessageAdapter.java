@@ -28,41 +28,42 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models.alerts;
+package org.clintonhealthaccess.lmis.app.adapters;
 
-import android.util.Log;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
-@DatabaseTable
-public class RoutineOrderAlert implements NotificationMessage {
-    public static final String DATE_CREATED = "dateCreated";
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+import static com.google.common.collect.Lists.newArrayList;
 
-    @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
-    private Date dateCreated;
+public class NotificationMessageAdapter extends ArrayAdapter<NotificationMessage> {
 
-    public RoutineOrderAlert() {
-        //ormLite likes
-    }
-
-    public RoutineOrderAlert(Date date) {
-        this.dateCreated = date;
+    public NotificationMessageAdapter(Context context, int resource, List<? extends NotificationMessage> alerts) {
+        super(context, resource, newArrayList(alerts));
     }
 
     @Override
-    public String getMessage() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM");
-        return "Place Routine Order for " + simpleDateFormat.format(dateCreated);
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-    @Override
-    public void onClick() {
-        Log.i("Routine order alert clicked", getMessage());
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        View view = inflater.inflate(R.layout.notification_message_item, parent, false);
+
+        TextView textViewMessage = (TextView) view.findViewById(R.id.textViewMessage);
+
+        NotificationMessage notificationMessage = getItem(position);
+
+        textViewMessage.setText(notificationMessage.getMessage());
+
+        return view;
     }
 }

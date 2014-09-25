@@ -33,16 +33,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
+import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
 import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 
 import java.util.List;
@@ -89,7 +89,21 @@ public class MessagesActivity extends BaseActivity {
             }
         };
         getAlerts.execute();
-        listViewNotifications.setAdapter(new ArrayAdapter<Commodity>(this, R.layout.commodity_list_item));
+
+        AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = new AsyncTask<Void, Void, List<? extends NotificationMessage>>() {
+            @Override
+            protected List<? extends NotificationMessage> doInBackground(Void... params) {
+                return alertsService.getNotificationMessages();
+            }
+
+            @Override
+            protected void onPostExecute(List<? extends NotificationMessage> notificationMessages) {
+                listViewNotifications.setAdapter(new NotificationMessageAdapter(getApplicationContext(), R.layout.notification_message_item, notificationMessages));
+            }
+        };
+
+        getNotificationsMessageTask.execute();
+
     }
 
 

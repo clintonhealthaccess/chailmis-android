@@ -30,39 +30,8 @@
 
 package org.clintonhealthaccess.lmis.app.models.alerts;
 
-import android.util.Log;
+public interface NotificationMessage {
+    public String getMessage();
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-@DatabaseTable
-public class RoutineOrderAlert implements NotificationMessage {
-    public static final String DATE_CREATED = "dateCreated";
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
-    private Date dateCreated;
-
-    public RoutineOrderAlert() {
-        //ormLite likes
-    }
-
-    public RoutineOrderAlert(Date date) {
-        this.dateCreated = date;
-    }
-
-    @Override
-    public String getMessage() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM");
-        return "Place Routine Order for " + simpleDateFormat.format(dateCreated);
-    }
-
-    @Override
-    public void onClick() {
-        Log.i("Routine order alert clicked", getMessage());
-    }
+    public void onClick();
 }

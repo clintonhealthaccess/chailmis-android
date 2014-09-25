@@ -128,6 +128,12 @@ public class HomeActivityTest {
     }
 
     @Test
+    public void testListViewNotificationsExists() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.listViewNotifications, not(nullValue()));
+    }
+
+    @Test
     public void testClickDispenseButtonNavigatesToDispenseActivity() {
 
         setRegistrationStatus(true);

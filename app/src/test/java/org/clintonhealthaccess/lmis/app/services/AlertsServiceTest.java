@@ -48,6 +48,7 @@ import org.junit.runner.RunWith;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -162,40 +163,40 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldNotGenerateRoutineOrderAlert() throws Exception {
-        Calendar calendar= Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 24);
 
         setRoutineOrderDay(25);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
-        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(0));
     }
 
     @Test
     public void shouldGenerateRoutineOrderAlertWhenDateIsRoutineOrderDay() throws Exception {
-        Calendar calendar= Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 25);
 
         setRoutineOrderDay(25);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
-        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(1));
     }
 
     @Test
     public void shouldGenerateRoutineOrderAlertWhenDateIsPastRoutineOrderAlertDay() throws Exception {
-        Calendar calendar= Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 27);
 
         setRoutineOrderDay(25);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
-        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(1));
     }
 
     @Test
     public void shouldNotReGenerateRoutineOrderAlertOnceGenerated() throws Exception {
-        Calendar calendar= Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 25);
 
         setRoutineOrderDay(25);
@@ -204,8 +205,34 @@ public class AlertsServiceTest {
         calendar.set(2025, Calendar.JULY, 27);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
 
-        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldReturnAllExistingAlerts() throws Exception {
+        assertThat(alertsService.getNotificationMessages().size(), is(0));
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        assertThat(alertsService.getNotificationMessages().size(), is(2));
+    }
+
+    @Test
+    public void shouldOnlyReturnTheLatestRoutineOrderAlertOnTheHomePage() throws Exception {
+
+        assertThat(alertsService.getNotificationMessages().size(), is(0));
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        createRoutineOrderAlert(new RoutineOrderAlert(new Date()));
+        assertThat(alertsService.getNotificationMessagesForHomePage().size(), is(1));
+    }
+
+    private void createRoutineOrderAlert(final RoutineOrderAlert data) {
+        dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
+            @Override
+            public Object operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                return dao.create(data);
+            }
+        });
     }
 
     @Test
