@@ -88,11 +88,10 @@ public class Dhis2 implements LmisServer {
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
 
-    @InjectResource(R.string.monthly_stock_count_search_key)
-    private String monthlyStockCountSearchKey;
+
 
     @InjectResource(R.integer.monthly_stock_count_day)
-    Integer monthlyStockCountDay;
+    Integer defaultValue;
 
     @Inject
     Context context;
@@ -254,14 +253,15 @@ public class Dhis2 implements LmisServer {
         return service.pushDataValueSet(valueSet);
     }
 
+
     @Override
-    public Integer getDayForMonthlyStockCount(User user) {
+    public Integer fetchIntegerConstant(User user, String constantKey) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        ConstantSearchResponse response = service.searchConstants(monthlyStockCountSearchKey, "id,name,value");
+        ConstantSearchResponse response = service.searchConstants(constantKey, "id,name,value");
         if (!response.getConstants().isEmpty()) {
             return response.getConstants().get(0).getValue().intValue();
         } else {
-            return monthlyStockCountDay;
+            return defaultValue;
         }
     }
 

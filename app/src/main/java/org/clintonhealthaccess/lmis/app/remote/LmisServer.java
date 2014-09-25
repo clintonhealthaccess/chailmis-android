@@ -53,7 +53,7 @@ public interface LmisServer {
 
     DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
 
-    Integer getDayForMonthlyStockCount(User user);
+    Integer fetchIntegerConstant(User user, String monthlyStockCountSearchKey1);
 
     List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user);
 }

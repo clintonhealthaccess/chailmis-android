@@ -124,5 +124,6 @@
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="monthly_stock_count_search_key">Monthly Stock</string>
+    <string name="routine_order_alert_day">Routine Order Alert Day</string>
 
 </resources>

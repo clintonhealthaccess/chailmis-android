@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.SharedPreferences;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
@@ -36,6 +38,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityView
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
@@ -44,6 +47,7 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -61,6 +65,9 @@ public class AlertsServiceTest {
 
     @Inject
     DbUtil dbUtil;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
 
     @Before
@@ -98,7 +105,7 @@ public class AlertsServiceTest {
         LowStockAlert alert = new LowStockAlert(commodity);
         alertsService.createAlert(alert);
         alert.setDisabled(true);
-        alertsService.updateAlert(alert);
+        alertsService.updateLowStockAlert(alert);
         LowStockAlert fetchedAlert = dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, LowStockAlert>() {
             @Override
             public LowStockAlert operate(Dao<LowStockAlert, String> dao) throws SQLException {
@@ -140,6 +147,77 @@ public class AlertsServiceTest {
         List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlertsForCommodities(commodities);
         assertThat(lowStockAlerts.size(), is(1));
         assertThat(lowStockAlerts.get(0).isDisabled(), is(true));
+    }
 
+    @Test
+    public void shouldReturnEnabledAlerts() throws Exception {
+        alertsService.updateLowStockAlerts();
+        List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(2));
+
+        alertsService.disableLowStockAlert(alerts.get(0));
+        alerts = alertsService.getEnabledLowStockAlerts();
+        assertThat(alerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldNotGenerateRoutineOrderAlert() throws Exception {
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(2025, Calendar.JULY, 24);
+
+        setRoutineOrderDay(25);
+        alertsService.generateRoutineOrderAlert(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        assertThat(routineOrderAlerts.size(), is(0));
+    }
+
+    @Test
+    public void shouldGenerateRoutineOrderAlertWhenDateIsRoutineOrderDay() throws Exception {
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(2025, Calendar.JULY, 25);
+
+        setRoutineOrderDay(25);
+        alertsService.generateRoutineOrderAlert(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        assertThat(routineOrderAlerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldGenerateRoutineOrderAlertWhenDateIsPastRoutineOrderAlertDay() throws Exception {
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setRoutineOrderDay(25);
+        alertsService.generateRoutineOrderAlert(calendar.getTime());
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        assertThat(routineOrderAlerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldNotReGenerateRoutineOrderAlertOnceGenerated() throws Exception {
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(2025, Calendar.JULY, 25);
+
+        setRoutineOrderDay(25);
+        alertsService.generateRoutineOrderAlert(calendar.getTime());
+
+        calendar.set(2025, Calendar.JULY, 27);
+        alertsService.generateRoutineOrderAlert(calendar.getTime());
+
+        List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlerts(calendar.getTime());
+        assertThat(routineOrderAlerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldGetRoutineOrderAlertDayFromPreferences() throws Exception {
+        Integer day = 12;
+        setRoutineOrderDay(day);
+        assertThat(alertsService.getRoutineOrderAlertDay(), is(12));
+    }
+
+    private void setRoutineOrderDay(Integer day) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(CommodityService.ROUTINE_ORDER_ALERT_DAY, day);
+        editor.commit();
     }
 }

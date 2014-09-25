@@ -30,6 +30,7 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.common.base.Function;
@@ -41,14 +42,14 @@ import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
-import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -63,6 +64,10 @@ public class AlertsService {
 
     @Inject
     DbUtil dbUtil;
+
+    @Inject
+    SharedPreferences sharedPreferences;
+
     public static SimpleDateFormat ALERT_DATE_FORMAT = new SimpleDateFormat("dd-MMM-yy");
     private static List<LowStockAlert> lowStockAlerts;
 
@@ -81,7 +86,7 @@ public class AlertsService {
         return lowStockAlerts;
     }
 
-    private List<LowStockAlert> getEnabledAlerts() {
+    public List<LowStockAlert> getEnabledLowStockAlerts() {
         return FluentIterable.from(getLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
             @Override
             public boolean apply(LowStockAlert input) {
@@ -92,11 +97,11 @@ public class AlertsService {
 
 
     public int numberOfAlerts() {
-        return getLowStockAlerts().size();
+        return getEnabledLowStockAlerts().size() + getRoutineOrderAlerts(new Date()).size();
     }
 
     public List<LowStockAlert> getTop5LowStockAlerts() {
-        List<LowStockAlert> lowStockAlerts = getLowStockAlerts();
+        List<LowStockAlert> lowStockAlerts = getEnabledLowStockAlerts();
         if (lowStockAlerts.size() > 5) {
             return lowStockAlerts.subList(0, 5);
         } else {
@@ -105,13 +110,13 @@ public class AlertsService {
     }
 
     public void updateLowStockAlerts() {
-        checkIfExistingAlertsAreStillValid();
+        checkIfExistingLowStockAlertsAreStillValid();
         checkForNewLowStockAlerts();
         updateCache();
     }
 
     private void updateCache() {
-        clearCache();
+        clearLowStockCache();
         getLowStockAlerts();
     }
 
@@ -134,11 +139,11 @@ public class AlertsService {
 
     public void disableAlertsForCommodities(List<Commodity> commodities) {
         List<LowStockAlert> lowStockAlerts = getLowStockAlertsForCommodities(commodities);
-        for(LowStockAlert alert: lowStockAlerts){
-            disableAlert(alert);
+        for (LowStockAlert alert : lowStockAlerts) {
+            disableLowStockAlert(alert);
         }
 
-        clearCache();
+        clearLowStockCache();
     }
 
     private ImmutableList<Commodity> getCommoditiesInLowStockAlerts() {
@@ -170,22 +175,22 @@ public class AlertsService {
         });
     }
 
-    private void checkIfExistingAlertsAreStillValid() {
+    private void checkIfExistingLowStockAlertsAreStillValid() {
         List<LowStockAlert> availableLowStockAlerts = queryAllLowStockAlerts();
         for (LowStockAlert alert : availableLowStockAlerts) {
             if (!alert.getCommodity().isBelowThreshold()) {
-                deleteAlert(alert);
+                deleteLowStockAlert(alert);
             }
         }
     }
 
-    public void disableAlert(LowStockAlert alert) {
+    public void disableLowStockAlert(LowStockAlert alert) {
         alert.setDisabled(true);
         alert.setDateDisabled(new Date());
-        updateAlert(alert);
+        updateLowStockAlert(alert);
     }
 
-    public void deleteAlert(final LowStockAlert alert) {
+    public void deleteLowStockAlert(final LowStockAlert alert) {
         dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Void>() {
             @Override
             public Void operate(Dao<LowStockAlert, String> dao) throws SQLException {
@@ -204,7 +209,7 @@ public class AlertsService {
         });
     }
 
-    public void updateAlert(final LowStockAlert lowStockAlert) {
+    public void updateLowStockAlert(final LowStockAlert lowStockAlert) {
         dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Object>() {
             @Override
             public Object operate(Dao<LowStockAlert, String> dao) throws SQLException {
@@ -214,12 +219,12 @@ public class AlertsService {
         });
     }
 
-    public void clearCache() {
+    public void clearLowStockCache() {
         this.lowStockAlerts = null;
     }
 
     public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
-        return FluentIterable.from(getEnabledAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
+        return FluentIterable.from(getEnabledLowStockAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(LowStockAlert input) {
                 int quantity = input.getCommodity().calculatePrepopulatedQuantity();
@@ -229,5 +234,45 @@ public class AlertsService {
                 return orderCommodityViewModel;
             }
         }).toList();
+    }
+
+    public int getRoutineOrderAlertDay() {
+        return sharedPreferences.getInt(CommodityService.ROUTINE_ORDER_ALERT_DAY, 24);
+    }
+
+    public List<RoutineOrderAlert> getRoutineOrderAlerts(final Date date) {
+        return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, List<RoutineOrderAlert>>() {
+            @Override
+            public List<RoutineOrderAlert> operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                Date firstDay = Helpers.firstDayOfMonth(date);
+                Date lastDay = Helpers.lastDayOfMonth(date);
+                return dao.queryBuilder().where().between(RoutineOrderAlert.DATE_CREATED, firstDay, lastDay).query();
+            }
+        });
+
+    }
+
+    public void generateRoutineOrderAlert(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        if (cal.get(Calendar.DAY_OF_MONTH) < getRoutineOrderAlertDay()) {
+            return;
+        }
+
+        if (getRoutineOrderAlerts(date).size() == 0) {
+            RoutineOrderAlert routineOrderAlert = new RoutineOrderAlert(date);
+            createRoutineOrderAlert(routineOrderAlert);
+        }
+    }
+
+    private void createRoutineOrderAlert(final RoutineOrderAlert routineOrderAlert) {
+        dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
+            @Override
+            public Object operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                dao.create(routineOrderAlert);
+                return null;
+            }
+        });
     }
 }

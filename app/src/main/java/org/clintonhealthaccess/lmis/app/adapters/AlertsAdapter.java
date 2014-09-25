@@ -59,9 +59,17 @@ public class AlertsAdapter extends ArrayAdapter<LowStockAlert> {
         TextView textViewAlertDate = (TextView) rowView.findViewById(R.id.textViewAlertDate);
 
         LowStockAlert alert = getItem(position);
+        int stockOnHand = alert.getCommodity().getStockOnHand();
+
         textViewAlertDate.setText(AlertsService.ALERT_DATE_FORMAT.format(alert.getDateCreated()));
         textViewComodityName.setText(alert.getCommodity().getName());
-        textViewQuantity.setText(String.valueOf(alert.getCommodity().getStockOnHand()));
+        textViewQuantity.setText(String.valueOf(stockOnHand));
+
+        if (stockOnHand == 0) {
+            textViewComodityName.setTextColor(getContext().getResources().getColor(R.color.alerts_bright_red));
+            textViewAlertDate.setTextColor(getContext().getResources().getColor(R.color.alerts_bright_red));
+            textViewQuantity.setTextColor(getContext().getResources().getColor(R.color.alerts_bright_red));
+        }
 
 
         return rowView;

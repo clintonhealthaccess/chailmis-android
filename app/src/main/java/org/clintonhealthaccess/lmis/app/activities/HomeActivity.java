@@ -162,8 +162,6 @@ public class HomeActivity extends BaseActivity {
             }
         };
         getAlerts.execute();
-
-
     }
 
     private void setupGraph() {
