@@ -58,6 +58,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Multimaps.index;
 import static java.lang.Integer.parseInt;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
 
 public class AllocationService {
     @Inject
@@ -174,7 +175,7 @@ public class AllocationService {
         Collection<CommodityActionValue> filteredForAllocationId = filter(commodityActionValues, new Predicate<CommodityActionValue>() {
             @Override
             public boolean apply(CommodityActionValue commodityActionValue) {
-                return "ALLOCATION_ID".equals(commodityActionValue.getCommodityAction().getName());
+                return ALLOCATION_ID.equals(commodityActionValue.getCommodityAction().getName());
             }
         });
         CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);

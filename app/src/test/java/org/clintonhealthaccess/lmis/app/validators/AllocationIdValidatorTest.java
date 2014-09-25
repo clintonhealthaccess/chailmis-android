@@ -48,7 +48,7 @@ public class AllocationIdValidatorTest {
     public void shouldBeInValidIfIdIsInWrongFormat() throws Exception {
         AllocationIdValidator validator = new AllocationIdValidator();
         assertFalse(validator.isValid("SOMEONES NAME"));
-        assertFalse(validator.isValid("ALLOCATION_ID"));
+        assertFalse(validator.isValid("SOME_ID"));
         assertFalse(validator.isValid("jks-0009"));
         assertFalse(validator.isValid("ja-0009w892"));
         assertFalse(validator.isValid("1223"));

@@ -70,7 +70,10 @@ public class CommodityAction implements Serializable {
     public static final String MINIMUN_THRESHOLD = "MINIMUM_THRESHOLD";
     public static final String MAXIMUM_THRESHOLD = "MAXIMUM_THRESHOLD";
     public static final String AMC = "AMC";
+    public static final String ALLOCATION_ID = "ALLOCATION_ID";
     public static final String ALLOCATED = "ALLOCATED";
+    public static final String RECEIVED = "RECEIVED";
+    public static final String RECEIVE_DATE = "RECEIVE_DATE";
 
     public CommodityAction() {
         //Orm Lite likes

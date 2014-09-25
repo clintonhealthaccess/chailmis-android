@@ -32,27 +32,30 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.ImmutableList.copyOf;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVED;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVE_DATE;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "receive_items")
 public class ReceiveItem implements Snapshotable {
-
-    public static final String RECEIVED = "receive";
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -80,29 +83,47 @@ public class ReceiveItem implements Snapshotable {
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActionsSaved());
-        Collection<CommoditySnapshotValue> values = FluentIterable
-                .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
-                    @Override
-                    public CommoditySnapshotValue apply(CommodityAction input) {
-                        if (receive.isReceiveFromFacility()) {
-                            return new CommoditySnapshotValue(input, quantityReceived);
-                        } else {
-                            return new CommoditySnapshotValue(input, quantityReceived, receive.getAllocation().getPeriod());
-                        }
-                    }
-                }).filter(new Predicate<CommoditySnapshotValue>() {
-                    @Override
-                    public boolean apply(CommoditySnapshotValue input) {
-                        return selectReceiveActivity(input);
-                    }
-                }).toList();
-        return new ArrayList<>(values);
+        Function<CommodityAction, CommoditySnapshotValue> forReceivedAction = new Function<CommodityAction, CommoditySnapshotValue>() {
+            @Override
+            public CommoditySnapshotValue apply(CommodityAction input) {
+                if (receive.isReceiveFromFacility()) {
+                    return new CommoditySnapshotValue(input, quantityReceived);
+                } else {
+                    return new CommoditySnapshotValue(input, quantityReceived, receive.getAllocation().getPeriod());
+                }
+            }
+        };
+        Function<CommodityAction, CommoditySnapshotValue> forReceiveDateAction = new Function<CommodityAction, CommoditySnapshotValue>() {
+            @Override
+            public CommoditySnapshotValue apply(CommodityAction input) {
+                String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                if (receive.isReceiveFromFacility()) {
+                    return new CommoditySnapshotValue(input, today);
+                } else {
+                    return new CommoditySnapshotValue(input, today, receive.getAllocation().getPeriod());
+                }
+            }
+        };
+
+        List<CommoditySnapshotValue> receivedValues = filterCommodityActions(RECEIVED).transform(forReceivedAction).toList();
+        List<CommoditySnapshotValue> receiveDateValues = filterCommodityActions(RECEIVE_DATE).transform(forReceiveDateAction).toList();
+        List<CommoditySnapshotValue> result = newArrayList(receivedValues);
+        result.addAll(receiveDateValues);
+        return result;
     }
 
-    private boolean selectReceiveActivity(CommoditySnapshotValue input) {
-        String testString = input.getActivity().getActivityType().toLowerCase();
-        return testString.contains(RECEIVED);
+    private FluentIterable<CommodityAction> filterCommodityActions(final String type) {
+        List<CommodityAction> fields = copyOf(getCommodity().getCommodityActionsSaved());
+        return from(fields).filter(new Predicate<CommodityAction>() {
+            @Override
+            public boolean apply(CommodityAction input) {
+                return selectActivity(input, type);
+            }
+        });
+    }
+
+    private boolean selectActivity(CommodityAction input, String type) {
+        return input.getActivityType().contains(type);
     }
 
 }

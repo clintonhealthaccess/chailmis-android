@@ -74,7 +74,6 @@ import static org.mockito.Mockito.spy;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommoditySnapshotServiceTest extends LMISTestCase {
-    public static final String DISPENSING = "DISPENSING";
     public static final SimpleDateFormat PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     @Inject
     CommoditySnapshotService commoditySnapshotService;
@@ -149,10 +148,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         commoditySnapshotService.add(receiveItem);
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
-        assertThat(commoditySnapshots.size(), is(1));
-        CommoditySnapshot firstSnapshot = commoditySnapshots.get(0);
-        assertThat(firstSnapshot.getValue(), is("10"));
-        assertThat(firstSnapshot.getPeriod(), is(PERIOD_DATE_FORMAT.format(new Date())));
+        assertThat(commoditySnapshots.size(), is(2));
+
+        CommoditySnapshot receivedValueSnapshot = commoditySnapshots.get(0);
+        assertThat(receivedValueSnapshot.getValue(), is("10"));
+        assertThat(receivedValueSnapshot.getPeriod(), is(PERIOD_DATE_FORMAT.format(new Date())));
+
+        CommoditySnapshot receiveDateSnapshot = commoditySnapshots.get(1);
+        assertThat(receiveDateSnapshot.getValue(), is(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
     }
 
     @Test
@@ -172,10 +175,15 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         commoditySnapshotService.add(receiveItem);
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
-        assertThat(commoditySnapshots.size(), is(1));
-        CommoditySnapshot firstSnapshot = commoditySnapshots.get(0);
-        assertThat(firstSnapshot.getValue(), is("10"));
-        assertThat(firstSnapshot.getPeriod(), is(allocatedPeriod));
+        assertThat(commoditySnapshots.size(), is(2));
+
+        CommoditySnapshot receivedValueSnapshot = commoditySnapshots.get(0);
+        assertThat(receivedValueSnapshot.getValue(), is("10"));
+        assertThat(receivedValueSnapshot.getPeriod(), is(allocatedPeriod));
+
+        CommoditySnapshot receiveDateSnapshot = commoditySnapshots.get(1);
+        assertThat(receiveDateSnapshot.getValue(), is(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+        assertThat(receiveDateSnapshot.getPeriod(), is(allocatedPeriod));
     }
 
     @Test
@@ -357,15 +365,16 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity commodity = new Commodity(commodityName, category);
         commodityDao.create(commodity);
 
-        CommodityAction actionDispense = new CommodityAction(commodity, getID(), commodityName + "_DISPENSING", DispensingItem.DISPENSE);
-        CommodityAction actionAdjustments = new CommodityAction(commodity, getID(), commodityName + "_ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
-        CommodityAction actionReceived = new CommodityAction(commodity, getID(), commodityName + "_RECEIVED", ReceiveItem.RECEIVED);
+        generateCommodityAction(dataSet, commodity, "DISPENSING", DispensingItem.DISPENSE);
+        generateCommodityAction(dataSet, commodity, "ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
+        generateCommodityAction(dataSet, commodity, "RECEIVED", CommodityAction.RECEIVED);
+        generateCommodityAction(dataSet, commodity, "RECEIVE_DATE", CommodityAction.RECEIVE_DATE);
+    }
+
+    private void generateCommodityAction(DataSet dataSet, Commodity commodity, String nameTag, String type) {
+        CommodityAction actionDispense = new CommodityAction(commodity, getID(), commodity.getName() + " " + nameTag, type);
         actionDispense.setDataSet(dataSet);
-        actionAdjustments.setDataSet(dataSet);
-        actionReceived.setDataSet(dataSet);
         commodityActivityGenericDao.create(actionDispense);
-        commodityActivityGenericDao.create(actionAdjustments);
-        commodityActivityGenericDao.create(actionReceived);
     }
 
 

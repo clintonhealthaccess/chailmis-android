@@ -31,7 +31,12 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVED;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVE_DATE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -41,7 +46,7 @@ public class ReceiveItemTest {
     @Test
     public void shouldSelectCorrectActivity() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityAction activity = new CommodityAction(commodity, "12", "12", "receive");
+        CommodityAction activity = new CommodityAction(commodity, "12", "12", RECEIVED);
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(activity));
 
         Receive receive = new Receive(true, null);
@@ -49,5 +54,26 @@ public class ReceiveItemTest {
         item.setReceive(receive);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
         assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
+    }
+
+    @Test
+    public void shouldConvertFieldsToCommoditySnapshotValues() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        CommodityAction receivedActivity = new CommodityAction(commodity, "1", "0.05ml Syringe x 1 RECEIVED", RECEIVED);
+        CommodityAction receiveDateActivity = new CommodityAction(commodity, "2", "0.05ml Syringe x 1 RECEIVE_DATE", RECEIVE_DATE);
+        when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(receivedActivity, receiveDateActivity));
+
+        Receive receive = new Receive(true, null);
+        ReceiveItem item = new ReceiveItem(commodity, 10, 20);
+        item.setReceive(receive);
+
+        assertThat(item.getActivitiesValues().size(), is(2));
+        CommoditySnapshotValue receivedValue = item.getActivitiesValues().get(0);
+        assertThat(receivedValue.getActivity(), is(receivedActivity));
+        assertThat(receivedValue.getValue(), is("20"));
+
+        CommoditySnapshotValue receiveDateValue = item.getActivitiesValues().get(1);
+        assertThat(receiveDateValue.getActivity(), is(receiveDateActivity));
+        assertThat(receiveDateValue.getValue(), is(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
     }
 }

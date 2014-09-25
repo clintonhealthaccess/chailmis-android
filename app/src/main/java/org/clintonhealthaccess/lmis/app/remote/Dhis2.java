@@ -30,17 +30,14 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.Allocation;
-import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -69,18 +66,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
-import static com.google.common.collect.Collections2.filter;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.collect.Lists.transform;
-import static com.google.common.collect.Multimaps.index;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
 
 public class Dhis2 implements LmisServer {
     public static final String SYNC = "SYNC";
@@ -249,6 +242,11 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user) {
+        Log.i("pushing DataValueSet", valueSet.toString());
+        for (DataValue dataValue : valueSet.getDataValues()) {
+            Log.i("DataValue", dataValue.getDataElement() + " : " + dataValue.getValue());
+            Log.i("info", dataValue.getOrgUnit() + " : " + dataValue.getPeriod());
+        }
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.pushDataValueSet(valueSet);
     }
@@ -274,7 +272,7 @@ public class Dhis2 implements LmisServer {
                         if (commodityAction == null) {
                             System.out.println("Data element: " + input.getDataElement());
                             System.out.println("Data value: " + input.getValue());
-                            commodityAction = new CommodityAction(null, input.getDataElement(), "ALLOCATION_ID", ALLOCATED);
+                            commodityAction = new CommodityAction(null, input.getDataElement(), ALLOCATION_ID, ALLOCATED);
                         }
                         return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
                     }
