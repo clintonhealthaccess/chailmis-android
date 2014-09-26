@@ -130,7 +130,7 @@ public class AllocationService {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
         for (Allocation allocation : allocations) {
-            if(!isExisting(allocation)) {
+            if (!isExisting(allocation)) {
                 createAllocation(allocation);
             }
         }
@@ -190,7 +190,7 @@ public class AllocationService {
                 try {
                     allocationItem.setQuantity(parseInt(input.getValue()));
                 } catch (NumberFormatException e) {
-                    allocationItem.setQuantity(0);
+                    Log.i("Not Integer", input.getCommodityAction().getActivityType() + " - " + input.getValue());
                 }
                 allocationItem.setCommodity(input.getCommodityAction().getCommodity());
                 return allocationItem;

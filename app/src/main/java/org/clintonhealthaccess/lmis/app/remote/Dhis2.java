@@ -33,7 +33,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -72,6 +72,7 @@ import java.util.List;
 import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
+import static com.google.common.collect.FluentIterable.from;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
 
@@ -205,7 +206,7 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user) {
+    public List<CommodityActionValue> fetchAllocations(final List<Commodity> commodities, User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
@@ -214,16 +215,27 @@ public class Dhis2 implements LmisServer {
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
-        return convertDataValuesToCommodityActions(valueSet.getDataValues());
+
+        List<CommodityActionValue> commodityActionValues = convertDataValuesToCommodityActions(valueSet.getDataValues());
+        return from(commodityActionValues).filter(new Predicate<CommodityActionValue>() {
+            @Override
+            public boolean apply(CommodityActionValue input) {
+                return input.getCommodityAction().getActivityType().equals(ALLOCATED);
+            }
+        }).toList();
     }
 
     private String getDataSetId(List<Commodity> commodities, String activityType) {
-        CommodityAction commodityAction = commodities.get(0).getCommodityAction(activityType);
+        CommodityAction commodityAction = getAllocatedCommodityAction(commodities, activityType);
         if (commodityAction != null) {
             return commodityAction.getDataSet().getId();
         } else {
             return "";
         }
+    }
+
+    private CommodityAction getAllocatedCommodityAction(List<Commodity> commodities, String activityType) {
+        return commodities.get(0).getCommodityAction(activityType);
     }
 
     private String twoMonthsAgo() {
@@ -243,7 +255,7 @@ public class Dhis2 implements LmisServer {
         Log.i("pushing DataValueSet", valueSet.toString());
         for (DataValue dataValue : valueSet.getDataValues()) {
             Log.i("DataValue", dataValue.getDataElement() + " : " + dataValue.getValue());
-            Log.i("info", dataValue.getOrgUnit() + " : " + dataValue.getPeriod());
+            Log.i("more info", "org unit: " + dataValue.getOrgUnit() + ", " + "period: " + dataValue.getPeriod());
         }
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.pushDataValueSet(valueSet);
@@ -262,19 +274,18 @@ public class Dhis2 implements LmisServer {
     }
 
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
-        return FluentIterable
-                .from(values).transform(new Function<DataValue, CommodityActionValue>() {
-                    @Override
-                    public CommodityActionValue apply(DataValue input) {
-                        CommodityAction commodityAction = commodityActionService.getById(input.getDataElement());
-                        if (commodityAction == null) {
-                            System.out.println("Data element: " + input.getDataElement());
-                            System.out.println("Data value: " + input.getValue());
-                            commodityAction = new CommodityAction(null, input.getDataElement(), ALLOCATION_ID, ALLOCATED);
-                        }
-                        return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
-                    }
-                }).toList();
+        return from(values).transform(new Function<DataValue, CommodityActionValue>() {
+            @Override
+            public CommodityActionValue apply(DataValue input) {
+                CommodityAction commodityAction = commodityActionService.getById(input.getDataElement());
+                if (commodityAction == null) {
+                    System.out.println("Data element: " + input.getDataElement());
+                    System.out.println("Data value: " + input.getValue());
+                    commodityAction = new CommodityAction(null, input.getDataElement(), ALLOCATION_ID, ALLOCATED);
+                }
+                return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
+            }
+        }).toList();
     }
 
 }

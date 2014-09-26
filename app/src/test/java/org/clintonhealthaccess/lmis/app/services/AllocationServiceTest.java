@@ -73,7 +73,7 @@ public class AllocationServiceTest extends LMISTestCase {
             protected void configure() {
             }
         });
-        allocationDao = new GenericDao<Allocation>(Allocation.class, Robolectric.application);
+        allocationDao = new GenericDao<>(Allocation.class, Robolectric.application);
 
     }
 
@@ -133,9 +133,8 @@ public class AllocationServiceTest extends LMISTestCase {
         assertThat(allocationItems.get(0).getQuantity(), is(10));
     }
 
-
     @Test
-    public void shouldnotSyncAndSaveDuplicateAllocations() throws Exception {
+    public void shouldNotSyncAndSaveDuplicateAllocations() throws Exception {
         // given
         User user = setupForAllocations();
 

@@ -33,7 +33,6 @@ import com.google.inject.Inject;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
-import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -50,6 +49,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -168,9 +168,8 @@ public class Dhis2Test extends LMISTestCase {
         setUpSuccessHttpGetRequest(200, "allocations.json");
         List<CommodityActionValue> allocationActionValues = dhis2.fetchAllocations(commodities, user);
         assertThat(allocationActionValues.size(), is(4));
-//
-//        Allocation firstAllocation = allocations.get(0);
-//        assertThat(firstAllocation.getAllocationId(), is("12345"));
-//        assertThat(firstAllocation.getAllocationItems().size(), is(1));
+        for (CommodityActionValue allocationActionValue : allocationActionValues) {
+            assertThat(allocationActionValue.getCommodityAction().getActivityType(), is(ALLOCATED));
+        }
     }
 }
