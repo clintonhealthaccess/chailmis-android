@@ -90,35 +90,47 @@ public class BaseActivity extends RoboActionBarActivity {
             MenuInflater menuInflater = getMenuInflater();
             super.onCreateOptionsMenu(menu);
             menuInflater.inflate(R.menu.home, menu);
-            final View menu_hotlist = menu.findItem(R.id.action_alert).getActionView();
-            menu_hotlist.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
-                    startActivity(intent);
-                }
-            });
-            final TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
-            updateAlertCount(0, textViewnumberOfAlerts);
-            AsyncTask<Void, Void, Integer> updateAlertCount = new AsyncTask<Void, Void, Integer>() {
-                @Override
-                protected Integer doInBackground(Void[] params) {
-                    return alertsService.numberOfAlerts();
-                }
-
-                @Override
-                protected void onPostExecute(Integer o) {
-                    super.onPostExecute(o);
-                    updateAlertCount(o, textViewnumberOfAlerts);
-                }
-            };
-            updateAlertCount.execute();
+            final View alert_menu_item = menu.findItem(R.id.action_alert).getActionView();
+            setupAlertButton(alert_menu_item);
+            setupAlertCount(alert_menu_item);
             menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         } catch (Exception e) {
             //Exception when running tests
         }
         return true;
+    }
+
+    private void setupAlertButton(View menu_hotlist) {
+        menu_hotlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MessagesActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupAlertCount(View menu_hotlist) {
+        final TextView textViewnumberOfAlerts = (TextView) menu_hotlist.findViewById(R.id.textViewAlertNumber);
+        updateAlertCount(0, textViewnumberOfAlerts);
+        AsyncTask<Void, Void, Integer> updateAlertCount = getAlertsCountUpdateTask(textViewnumberOfAlerts);
+        updateAlertCount.execute();
+    }
+
+    private AsyncTask<Void, Void, Integer> getAlertsCountUpdateTask(final TextView textViewnumberOfAlerts) {
+        return new AsyncTask<Void, Void, Integer>() {
+                    @Override
+                    protected Integer doInBackground(Void[] params) {
+                        return alertsService.numberOfAlerts();
+                    }
+
+                    @Override
+                    protected void onPostExecute(Integer o) {
+                        super.onPostExecute(o);
+                        updateAlertCount(o, textViewnumberOfAlerts);
+                    }
+                };
     }
 
     @Override

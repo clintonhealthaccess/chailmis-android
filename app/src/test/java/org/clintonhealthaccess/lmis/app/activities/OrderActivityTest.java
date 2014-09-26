@@ -57,6 +57,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
+import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowToast;
 
 import java.util.ArrayList;
@@ -290,5 +291,25 @@ public class OrderActivityTest {
         orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(orderActivity.arrayAdapter.getCount(), is(1));
 
+    }
+
+    @Test
+    public void shouldShowMessageAboutOutstandingAlertsIfAny() throws Exception {
+        Intent intent = new Intent();
+        when(alertsService.getNumberOfRoutineOrderAlerts()).thenReturn(2);
+        intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.ROUTINE);
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getString(R.string.outstanding_routine_order_alerts_message)));
+    }
+
+    @Test
+    public void shouldNotShowMessageAboutOutstandingAlertsIfItIsOnlyOne() throws Exception {
+        Intent intent = new Intent();
+        when(alertsService.getNumberOfRoutineOrderAlerts()).thenReturn(1);
+        intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.ROUTINE);
+        orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
+        ShadowHandler.idleMainLooper();
+        assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
     }
 }

@@ -115,8 +115,9 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
             return true;
         }
         if (actualDate != null && dateText != null && typeIsRoutine) {
-            if (!dateText.equalsIgnoreCase(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(actualDate)))
+            if (!dateText.equalsIgnoreCase(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(actualDate))) {
                 return true;
+            }
         }
 
         return this.quantityIsUnexpected();

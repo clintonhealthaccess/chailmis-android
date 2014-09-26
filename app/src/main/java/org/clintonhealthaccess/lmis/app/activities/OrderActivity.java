@@ -147,9 +147,9 @@ public class OrderActivity extends CommoditySelectableActivity {
         if (prepopulatedOrderType != null) {
 
 
-                for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert(prepopulatedOrderType)) {
-                    onEvent(new CommodityToggledEvent(orderCommodityViewModel));
-                }
+            for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert(prepopulatedOrderType)) {
+                onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+            }
 
         }
     }
@@ -165,6 +165,9 @@ public class OrderActivity extends CommoditySelectableActivity {
         if (prepopulatedOrderType != null) {
             OrderType preset = new OrderType(prepopulatedOrderType);
             setOrderType(orderTypes, preset);
+            if (preset.isRoutine() && alertsService.getNumberOfRoutineOrderAlerts() > 1) {
+                Toast.makeText(getApplicationContext(), getString(R.string.outstanding_routine_order_alerts_message), Toast.LENGTH_LONG).show();
+            }
         }
         spinnerOrderType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

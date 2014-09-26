@@ -128,5 +128,6 @@
     <string name="routine_order_alert_day">Routine Order Alert Day</string>
     <string name="alert_icon">Alert Icon</string>
     <string name="order_failed">Order Failed</string>
+    <string name="outstanding_routine_order_alerts_message">Outstanding previous orders will be combined with this order</string>
 
 </resources>

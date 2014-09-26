@@ -107,7 +107,11 @@ public class AlertsService {
 
 
     public int numberOfAlerts() {
-        return getEnabledLowStockAlerts().size() + getAllRoutineOrderAlerts().size();
+        return getEnabledLowStockAlerts().size() + getNumberOfRoutineOrderAlerts();
+    }
+
+    public int getNumberOfRoutineOrderAlerts() {
+        return getAllRoutineOrderAlerts().size();
     }
 
     public List<LowStockAlert> getTop5LowStockAlerts() {
@@ -245,19 +249,24 @@ public class AlertsService {
     public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert(final String orderTypeName) {
         return FluentIterable.from(getEnabledLowStockAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
             @Override
-            public OrderCommodityViewModel apply(LowStockAlert input) {
+            public OrderCommodityViewModel apply(LowStockAlert lowStockAlert) {
                 int quantity = 0;
                 if (orderTypeName.equalsIgnoreCase(OrderType.EMERGENCY)) {
-                    quantity = input.getCommodity().calculateEmergencyPrepopulatedQuantity();
+                    quantity = lowStockAlert.getCommodity().calculateEmergencyPrepopulatedQuantity();
                 } else if (orderTypeName.equalsIgnoreCase(OrderType.ROUTINE)) {
-                    quantity = input.getCommodity().calculateRoutinePrePopulatedQuantityl();
+                    quantity = lowStockAlert.getCommodity().calculateRoutinePrePopulatedQuantityl();
                 }
-                OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(input.getCommodity());
-                orderCommodityViewModel.setQuantityEntered(quantity);
-                orderCommodityViewModel.setExpectedOrderQuantity(quantity);
+                OrderCommodityViewModel orderCommodityViewModel = createOrderCommodityViewModel(lowStockAlert, quantity);
                 return orderCommodityViewModel;
             }
         }).toList();
+    }
+
+    private OrderCommodityViewModel createOrderCommodityViewModel(LowStockAlert input, int quantity) {
+        OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(input.getCommodity());
+        orderCommodityViewModel.setQuantityEntered(quantity);
+        orderCommodityViewModel.setExpectedOrderQuantity(quantity);
+        return orderCommodityViewModel;
     }
 
     public int getRoutineOrderAlertDay() {

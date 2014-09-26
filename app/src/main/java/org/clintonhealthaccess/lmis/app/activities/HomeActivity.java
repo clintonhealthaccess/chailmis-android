@@ -133,12 +133,20 @@ public class HomeActivity extends BaseActivity {
             }
         };
 
+        asignListenerToButtons(onClickListener);
+
+        setupAdjustmentsButton();
+    }
+
+    private void asignListenerToButtons(OnClickListener onClickListener) {
         List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
                 buttonLosses, buttonMessages, buttonReports);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }
+    }
 
+    private void setupAdjustmentsButton() {
         buttonAdjustments.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +160,16 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupAlerts() {
-        AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = new AsyncTask<Void, Void, List<LowStockAlert>>() {
+        AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = createAlertsTask();
+        getAlerts.execute();
+
+        AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = createNotifcationsMessageTask();
+
+        getNotificationsMessageTask.execute();
+    }
+
+    private AsyncTask<Void, Void, List<LowStockAlert>> createAlertsTask() {
+        return new AsyncTask<Void, Void, List<LowStockAlert>>() {
             @Override
             protected List<LowStockAlert> doInBackground(Void[] params) {
                 return alertsService.getTop5LowStockAlerts();
@@ -166,9 +183,10 @@ public class HomeActivity extends BaseActivity {
                 listViewAlerts.setOnItemClickListener(new AlertClickListener(adapter, HomeActivity.this));
             }
         };
-        getAlerts.execute();
+    }
 
-        AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = new AsyncTask<Void, Void, List<? extends NotificationMessage>>() {
+    private AsyncTask<Void, Void, List<? extends NotificationMessage>> createNotifcationsMessageTask() {
+        return new AsyncTask<Void, Void, List<? extends NotificationMessage>>() {
             @Override
             protected List<? extends NotificationMessage> doInBackground(Void... params) {
                 return alertsService.getNotificationMessagesForHomePage();
@@ -181,11 +199,10 @@ public class HomeActivity extends BaseActivity {
                 listViewNotifications.setOnItemClickListener(new NotificationClickListener(adapter, HomeActivity.this));
             }
         };
-
-        getNotificationsMessageTask.execute();
     }
 
     private void setupGraph() {
+        //FIXME: setup the graph on the home page
 
 
     }
