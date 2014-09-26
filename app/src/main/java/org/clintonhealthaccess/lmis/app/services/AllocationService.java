@@ -187,7 +187,11 @@ public class AllocationService {
             @Override
             public AllocationItem apply(CommodityActionValue input) {
                 AllocationItem allocationItem = new AllocationItem();
-                allocationItem.setQuantity(parseInt(input.getValue()));
+                try {
+                    allocationItem.setQuantity(parseInt(input.getValue()));
+                } catch (NumberFormatException e) {
+                    allocationItem.setQuantity(0);
+                }
                 allocationItem.setCommodity(input.getCommodityAction().getCommodity());
                 return allocationItem;
             }

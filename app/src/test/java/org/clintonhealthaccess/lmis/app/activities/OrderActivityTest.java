@@ -286,7 +286,7 @@ public class OrderActivityTest {
         Intent intent = new Intent();
         ArrayList<OrderCommodityViewModel> orderCommodityViewModels = new ArrayList<>();
         orderCommodityViewModels.add(new OrderCommodityViewModel(new Commodity("Job")));
-        when(alertsService.getOrderCommodityViewModelsForLowStockAlert(anyString())).thenReturn(orderCommodityViewModels);
+        when(alertsService.getOrderCommodityViewModelsForLowStockAlert()).thenReturn(orderCommodityViewModels);
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
         orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(orderActivity.arrayAdapter.getCount(), is(1));

@@ -81,8 +81,6 @@ public class Dhis2 implements LmisServer {
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
 
-
-
     @InjectResource(R.integer.monthly_stock_count_day)
     Integer defaultValue;
 

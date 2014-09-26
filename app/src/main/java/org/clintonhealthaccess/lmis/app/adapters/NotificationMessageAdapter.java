@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -59,10 +60,13 @@ public class NotificationMessageAdapter extends ArrayAdapter<NotificationMessage
         View view = inflater.inflate(R.layout.notification_message_item, parent, false);
 
         TextView textViewMessage = (TextView) view.findViewById(R.id.textViewMessage);
+        ImageView imageViewInfoButton = (ImageView) view.findViewById(R.id.imageInfo);
 
         NotificationMessage notificationMessage = getItem(position);
         if (notificationMessage != null) {
             textViewMessage.setText(notificationMessage.getMessage());
+        } else {
+            imageViewInfoButton.setVisibility(View.INVISIBLE);
         }
 
         return view;

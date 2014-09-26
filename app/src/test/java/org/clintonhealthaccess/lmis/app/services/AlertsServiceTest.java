@@ -120,16 +120,17 @@ public class AlertsServiceTest {
     @Test
     public void shouldGetCommodityViewModelsForEachLowStockAlert() throws Exception {
         alertsService.updateLowStockAlerts();
-        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert(OrderType.EMERGENCY);
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert();
         assertThat(commodityViewModels.size(), is(2));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(30));
     }
 
     @Test
-    public void shouldGetCommodityViewModelsWithCorrect() throws Exception {
+    public void shouldGetCommodityViewModelsForEachCommodityForRoutineOrderAlert() throws Exception {
         alertsService.updateLowStockAlerts();
-        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert(OrderType.ROUTINE);
-        assertThat(commodityViewModels.size(), is(2));
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderViewModelsForRoutineOrderAlert();
+        int numberOfCommodities = 7;
+        assertThat(commodityViewModels.size(), is(numberOfCommodities));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
     }
 

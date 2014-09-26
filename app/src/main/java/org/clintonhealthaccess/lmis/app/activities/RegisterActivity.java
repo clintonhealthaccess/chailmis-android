@@ -33,15 +33,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
@@ -150,6 +149,8 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             } catch (Exception e) {
                 this.failureCause = e;
+                Log.e("Registration Error", e.getLocalizedMessage());
+                e.printStackTrace();
                 return false;
             }
 
@@ -168,6 +169,7 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
             Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
+            Log.e("Registration", toastMessage);
         }
     }
 }

@@ -50,6 +50,8 @@ public class NotificationClickListener implements AdapterView.OnItemClickListene
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         NotificationMessage message = adapter.getItem(position);
-        message.onClick(context);
+        if (message != null) {
+            message.onClick(context);
+        }
     }
 }

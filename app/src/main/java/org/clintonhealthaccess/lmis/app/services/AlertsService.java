@@ -44,7 +44,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
@@ -246,24 +245,19 @@ public class AlertsService {
         });
     }
 
-    public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert(final String orderTypeName) {
+    public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
         return FluentIterable.from(getEnabledLowStockAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(LowStockAlert lowStockAlert) {
-                int quantity = 0;
-                if (orderTypeName.equalsIgnoreCase(OrderType.EMERGENCY)) {
-                    quantity = lowStockAlert.getCommodity().calculateEmergencyPrepopulatedQuantity();
-                } else if (orderTypeName.equalsIgnoreCase(OrderType.ROUTINE)) {
-                    quantity = lowStockAlert.getCommodity().calculateRoutinePrePopulatedQuantityl();
-                }
-                OrderCommodityViewModel orderCommodityViewModel = createOrderCommodityViewModel(lowStockAlert, quantity);
+                int quantity = lowStockAlert.getCommodity().calculateEmergencyPrepopulatedQuantity();
+                OrderCommodityViewModel orderCommodityViewModel = createOrderCommodityViewModel(quantity, lowStockAlert.getCommodity());
                 return orderCommodityViewModel;
             }
         }).toList();
     }
 
-    private OrderCommodityViewModel createOrderCommodityViewModel(LowStockAlert input, int quantity) {
-        OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(input.getCommodity());
+    private OrderCommodityViewModel createOrderCommodityViewModel(int quantity, Commodity commodity) {
+        OrderCommodityViewModel orderCommodityViewModel = setupOrderCommodityViewModel(commodity);
         orderCommodityViewModel.setQuantityEntered(quantity);
         orderCommodityViewModel.setExpectedOrderQuantity(quantity);
         return orderCommodityViewModel;
@@ -289,7 +283,10 @@ public class AlertsService {
 
     public List<? extends NotificationMessage> getNotificationMessagesForHomePage() {
         List<NotificationMessage> messages = new ArrayList<>();
-        messages.add(getLatestRoutineOrderAlerts());
+        RoutineOrderAlert latestRoutineOrderAlerts = getLatestRoutineOrderAlerts();
+        if (latestRoutineOrderAlerts != null) {
+            messages.add(latestRoutineOrderAlerts);
+        }
         return messages;
     }
 
@@ -334,8 +331,19 @@ public class AlertsService {
             public RoutineOrderAlert operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
                 QueryBuilder<RoutineOrderAlert, String> queryBuilder = dao.queryBuilder();
                 queryBuilder.where().eq(DISABLED, false);
-                return queryBuilder.orderBy(RoutineOrderAlert.DATE_CREATED, true).queryForFirst();
+                return queryBuilder.orderBy(RoutineOrderAlert.DATE_CREATED, false).queryForFirst();
             }
         });
+    }
+
+    public List<OrderCommodityViewModel> getOrderViewModelsForRoutineOrderAlert() {
+        return FluentIterable.from(commodityService.all()).transform(new Function<Commodity, OrderCommodityViewModel>() {
+            @Override
+            public OrderCommodityViewModel apply(Commodity commodity) {
+                int quantity = commodity.calculateRoutinePrePopulatedQuantityl();
+                OrderCommodityViewModel orderCommodityViewModel = createOrderCommodityViewModel(quantity, commodity);
+                return orderCommodityViewModel;
+            }
+        }).toList();
     }
 }

@@ -145,11 +145,16 @@ public class OrderActivity extends CommoditySelectableActivity {
             }
         });
         if (prepopulatedOrderType != null) {
-
-
-            for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert(prepopulatedOrderType)) {
-                onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+            if (prepopulatedOrderType.equalsIgnoreCase(OrderType.EMERGENCY)) {
+                for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderCommodityViewModelsForLowStockAlert()) {
+                    onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+                }
+            } else if (prepopulatedOrderType.equalsIgnoreCase(OrderType.ROUTINE)) {
+                for (OrderCommodityViewModel orderCommodityViewModel : alertsService.getOrderViewModelsForRoutineOrderAlert()) {
+                    onEvent(new CommodityToggledEvent(orderCommodityViewModel));
+                }
             }
+
 
         }
     }

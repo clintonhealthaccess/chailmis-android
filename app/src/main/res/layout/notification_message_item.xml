@@ -44,6 +44,7 @@
 
 
     <ImageView
+        android:id="@+id/imageInfo"
         android:layout_width="25dp"
         android:src="@drawable/ic_info_icon"
         android:layout_height="25dp"
