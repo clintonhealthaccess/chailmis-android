@@ -190,7 +190,7 @@ public class AllocationService {
                 try {
                     allocationItem.setQuantity(parseInt(input.getValue()));
                 } catch (NumberFormatException e) {
-                    Log.i("Not Integer", input.getCommodityAction().getActivityType() + " - " + input.getValue());
+                    Log.i("Allocation Amount Not Integer", input.getCommodityAction().getActivityType() + " - " + input.getValue());
                 }
                 allocationItem.setCommodity(input.getCommodityAction().getCommodity());
                 return allocationItem;
