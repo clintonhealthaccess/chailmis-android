@@ -129,5 +129,6 @@
     <string name="alert_icon">Alert Icon</string>
     <string name="order_failed">Order Failed</string>
     <string name="outstanding_routine_order_alerts_message">Outstanding previous orders will be combined with this order</string>
+    <string name="stock_on_hand">Stock On Hand</string>
 
 </resources>

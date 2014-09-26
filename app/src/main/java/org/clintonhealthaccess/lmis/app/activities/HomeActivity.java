@@ -50,6 +50,9 @@ import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
+import org.eazegraph.lib.charts.StackedBarChart;
+import org.eazegraph.lib.models.BarModel;
+import org.eazegraph.lib.models.StackedBarModel;
 
 import java.util.List;
 
@@ -202,7 +205,42 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupGraph() {
-        //FIXME: setup the graph on the home page
+        StackedBarChart mStackedBarChart = (StackedBarChart) findViewById(R.id.stackedbarchart);
+
+        StackedBarModel s1 = new StackedBarModel("Panadol");
+
+        s1.addBar(new BarModel(2.3f, 0xFF63CBB0));
+        s1.addBar(new BarModel(2.3f, 0xFF56B7F1));
+        s1.addBar(new BarModel(2.3f, 0xFFCDA67F));
+
+        StackedBarModel s2 = new StackedBarModel("Coatem");
+        s2.addBar(new BarModel(1.1f, 0xFF63CBB0));
+        s2.addBar(new BarModel(2.7f, 0xFF56B7F1));
+        s2.addBar(new BarModel(0.7f, 0xFFCDA67F));
+
+        StackedBarModel s3 = new StackedBarModel("Septrin");
+
+        s3.addBar(new BarModel(2.3f, 0xFF63CBB0));
+        s3.addBar(new BarModel(2.f, 0xFF56B7F1));
+        s3.addBar(new BarModel(3.3f, 0xFFCDA67F));
+
+        StackedBarModel s4 = new StackedBarModel("Hedex");
+        s4.addBar(new BarModel(1.f, 0xFF63CBB0));
+        s4.addBar(new BarModel(4.2f, 0xFF56B7F1));
+        s4.addBar(new BarModel(2.1f, 0xFFCDA67F));
+
+        StackedBarModel s5 = new StackedBarModel("Amoxyl");
+        s5.addBar(new BarModel("MIN", 0.2f, 0xFF63CBB0));
+        s5.addBar(new BarModel("OAX",1.2f, 0xFF56B7F1));
+        s5.addBar(new BarModel("MAX",1.1f, 0xFFCDA67F));
+
+        mStackedBarChart.addBar(s1);
+        mStackedBarChart.addBar(s2);
+        mStackedBarChart.addBar(s3);
+        mStackedBarChart.addBar(s4);
+        mStackedBarChart.addBar(s5);
+
+        mStackedBarChart.startAnimation();
 
 
     }

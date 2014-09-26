@@ -41,6 +41,9 @@ apply plugin: 'crashlytics'
 
 repositories {
     maven { url 'http://download.crashlytics.com/maven' }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 
@@ -157,7 +160,8 @@ dependencies {
             'com.android.support:appcompat-v7:19.1.+',
             'de.greenrobot:eventbus:2.2.1',
             'com.squareup.retrofit:retrofit:1.6.1'
-    compile files('libs/GraphView-3.1.2.jar')
+    compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.crashlytics.android:crashlytics:1.+'
     provided "org.projectlombok:lombok:1.12.6"
+    compile(name:'eazegraph-1.1.21', ext:'aar')
 }

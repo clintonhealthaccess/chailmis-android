@@ -71,12 +71,14 @@
             android:text="@string/losses"
             android:layout_weight="1"
             android:id="@+id/buttonLosses" />
+
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/adjustments"
             android:layout_weight="1"
             android:id="@+id/buttonAdjustments" />
+
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -98,7 +100,29 @@
         android:layout_height="wrap_content"
         android:id="@+id/layoutGraph"
         android:padding="10dp"
-        android:orientation="horizontal" />
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:text="@string/stock_on_hand"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#000"
+            android:textSize="22sp"
+            android:padding="20dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
+
+        <org.eazegraph.lib.charts.StackedBarChart xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/stackedbarchart"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            app:egFixedBarWidth="true"
+            app:egBarWidth="50dp"
+            app:egShowValues="true"
+            app:egLegendHeight="40dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:background="@color/blue"
@@ -138,8 +162,7 @@
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listViewNotifications">
-        </ListView>
+            android:id="@+id/listViewNotifications"></ListView>
 
     </LinearLayout>
 </LinearLayout>

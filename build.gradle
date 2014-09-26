@@ -3,7 +3,11 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://github.com/rockerhieu/mvn-repo/raw/master/' }
+        maven {
+            url 'https://github.com/rockerhieu/mvn-repo/raw/master/'
+            url 'https://oss.sonatype.org/content/groups/public'
+        }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.12.+'
