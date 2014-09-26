@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.widget.ImageButton;
 
 import com.google.inject.AbstractModule;
@@ -51,6 +52,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowToast;
@@ -355,6 +357,27 @@ public class ReceiveActivityTest {
 
         Receive receive = receiveActivity.generateReceive();
         assertThat(receive.getAllocation().getAllocationId(), is(allocation.getAllocationId()));
+    }
+
+    @Test
+    public void shouldPrepopulateWithSetAllocationIdIfAvailable() throws Exception {
+        String item1 = VALID_ALLOCATION_ID;
+        Allocation allocation = mock(Allocation.class);
+
+        AllocationItem item = new AllocationItem();
+        item.setCommodity(new Commodity("food"));
+        item.setQuantity(10);
+        item.setAllocation(allocation);
+        when(allocation.getAllocationId()).thenReturn(VALID_ALLOCATION_ID);
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
+        when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.isReceived()).thenReturn(false);
+        when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
+        Intent intent = new Intent();
+        intent.putExtra(ReceiveActivity.ALLOCATION_ID, item1);
+        ReceiveActivity receiveActivity = Robolectric.buildActivity(ReceiveActivity.class).withIntent(intent).create().start().resume().visible().get();
+        assertThat(receiveActivity.allocation, is(notNullValue()));
+        assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
     }
 
     private void performSubmitWithValidFields() {

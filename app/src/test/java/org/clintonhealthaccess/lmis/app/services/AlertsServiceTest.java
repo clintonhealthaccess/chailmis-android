@@ -35,9 +35,10 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -236,14 +237,6 @@ public class AlertsServiceTest {
         assertThat(alertsService.getNotificationMessagesForHomePage().size(), is(1));
     }
 
-    private void createRoutineOrderAlert(final RoutineOrderAlert data) {
-        dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
-            @Override
-            public Object operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
-                return dao.create(data);
-            }
-        });
-    }
 
     @Test
     public void shouldGetRoutineOrderAlertDayFromPreferences() throws Exception {
@@ -262,9 +255,71 @@ public class AlertsServiceTest {
 
     }
 
+    @Test
+    public void shouldGenerateAllocationAlertsForAllocationsThatHaveNoAlertsAndHaveNotYetBeenReceived() throws Exception {
+        Allocation allocation = new Allocation("job", "now");
+        allocation.setReceived(true);
+        Allocation allocation1 = new Allocation("james", "then");
+        createAllocation(allocation);
+        createAllocation(allocation1);
+        alertsService.generateAllocationAlerts();
+        List<AllocationAlert> allocationAlerts = alertsService.getAllocationAlerts();
+        assertThat(allocationAlerts.size(), is(1));
+
+    }
+
+    @Test
+    public void shouldGetAllAllocationAlerts() throws Exception {
+        assertThat(alertsService.getNotificationMessages().size(), is(0));
+        Allocation allocation = new Allocation("james", "then");
+        createAllocation(allocation);
+        createAllocationAlert(new AllocationAlert(allocation));
+        assertThat(alertsService.getAllocationAlerts().size(), is(1));
+    }
+
+    private void createRoutineOrderAlert(final RoutineOrderAlert data) {
+        dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
+            @Override
+            public Object operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                return dao.create(data);
+            }
+        });
+    }
+
     private void setRoutineOrderDay(Integer day) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(CommodityService.ROUTINE_ORDER_ALERT_DAY, day);
         editor.commit();
     }
+
+    private void createAllocation(final Allocation data) {
+        dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, Object>() {
+            @Override
+            public Object operate(Dao<Allocation, String> dao) throws SQLException {
+                return dao.create(data);
+            }
+        });
+    }
+
+    @Test
+    public void shouldDeleteAllocationAlertGivenTheAllocation() throws Exception {
+        Allocation allocation = new Allocation("james", "then");
+        createAllocation(allocation);
+        createAllocationAlert(new AllocationAlert(allocation));
+        assertThat(alertsService.getAllocationAlerts().size(), is(1));
+
+        alertsService.deleteAllocationAlert(allocation);
+        assertThat(alertsService.getAllocationAlerts().size(), is(0));
+    }
+
+
+    private void createAllocationAlert(final AllocationAlert data) {
+        dbUtil.withDao(AllocationAlert.class, new DbUtil.Operation<AllocationAlert, Object>() {
+            @Override
+            public Object operate(Dao<AllocationAlert, String> dao) throws SQLException {
+                return dao.create(data);
+            }
+        });
+    }
+
 }

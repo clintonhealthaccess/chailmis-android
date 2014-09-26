@@ -66,6 +66,7 @@ public class AlertsGenerationIntentService extends RoboIntentService {
         i("Alert", "Generating alerts");
         alertsService.updateLowStockAlerts();
         alertsService.generateRoutineOrderAlert(new Date());
+        alertsService.generateAllocationAlerts();
     }
 
     private void sendNotificationMessage(String message) {

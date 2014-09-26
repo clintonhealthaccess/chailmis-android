@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
@@ -50,6 +51,7 @@ import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
+import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -68,6 +70,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 public class ReceiveActivity extends CommoditySelectableActivity {
+    public static final String ALLOCATION_ID = "ALLOCATION_ID";
     @InjectView(R.id.buttonSubmitReceive)
     Button buttonSubmitReceive;
 
@@ -83,6 +86,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     Allocation allocation;
 
     private List<String> completedAllocationIds;
+    private String presetAllocationId;
 
 
     @Override
@@ -124,11 +128,16 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             }
         });
 
+        if(presetAllocationId != null){
+            textViewAllocationId.setText(presetAllocationId);
+        }
+
     }
 
     @Override
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-
+        Intent intent = getIntent();
+        presetAllocationId = intent.getStringExtra(ALLOCATION_ID);
     }
 
     private void setupReceiveButton() {

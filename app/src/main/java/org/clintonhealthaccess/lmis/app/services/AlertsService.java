@@ -39,11 +39,14 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
@@ -59,22 +62,22 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.activities.OrderActivity.setupOrderCommodityViewModel;
 
 public class AlertsService {
 
     public static final String DISABLED = "disabled";
-    @Inject
-    CommodityService commodityService;
-
-    @Inject
-    DbUtil dbUtil;
-
-    @Inject
-    SharedPreferences sharedPreferences;
-
     public static SimpleDateFormat ALERT_DATE_FORMAT = new SimpleDateFormat("dd-MMM-yy");
     private static List<LowStockAlert> lowStockAlerts;
+    @Inject
+    CommodityService commodityService;
+    @Inject
+    AllocationService allocationService;
+    @Inject
+    DbUtil dbUtil;
+    @Inject
+    SharedPreferences sharedPreferences;
 
     public List<LowStockAlert> getLowStockAlerts() {
         if (lowStockAlerts == null) {
@@ -106,7 +109,7 @@ public class AlertsService {
 
 
     public int numberOfAlerts() {
-        return getEnabledLowStockAlerts().size() + getNumberOfRoutineOrderAlerts();
+        return getEnabledLowStockAlerts().size() + getNumberOfRoutineOrderAlerts() + getAllocationAlerts().size();
     }
 
     public int getNumberOfRoutineOrderAlerts() {
@@ -287,11 +290,18 @@ public class AlertsService {
         if (latestRoutineOrderAlerts != null) {
             messages.add(latestRoutineOrderAlerts);
         }
+        messages.addAll(getAllocationAlerts());
+        if (messages.size() > 5) {
+            return messages.subList(0, 5);
+        }
         return messages;
     }
 
     public List<? extends NotificationMessage> getNotificationMessages() {
-        return getAllRoutineOrderAlerts();
+        List<NotificationMessage> messages = new ArrayList<>();
+        messages.addAll(getAllRoutineOrderAlerts());
+        messages.addAll(getAllocationAlerts());
+        return newArrayList(messages);
     }
 
     protected List<RoutineOrderAlert> getRoutineOrderAlertsInCurrentMonth(final Date date) {
@@ -345,5 +355,56 @@ public class AlertsService {
                 return orderCommodityViewModel;
             }
         }).toList();
+    }
+
+    public void generateAllocationAlerts() {
+        List<Allocation> availableAllocations = allocationService.getYetToBeReceivedAllocations();
+        List<Allocation> allocationsWithAlerts = getAllocationsFromAlerts(getAllocationAlerts());
+        for (Allocation allocation : availableAllocations) {
+            if (!allocationsWithAlerts.contains(allocation)) {
+                AllocationAlert allocationAlert = new AllocationAlert(allocation);
+                createAllocationAlert(allocationAlert);
+            }
+        }
+    }
+
+    private void createAllocationAlert(final AllocationAlert allocationAlert) {
+        dbUtil.withDao(AllocationAlert.class, new DbUtil.Operation<AllocationAlert, Void>() {
+            @Override
+            public Void operate(Dao<AllocationAlert, String> dao) throws SQLException {
+                dao.create(allocationAlert);
+                return null;
+            }
+        });
+    }
+
+    private List<Allocation> getAllocationsFromAlerts(List<AllocationAlert> allocationAlerts) {
+        return FluentIterable.from(allocationAlerts).transform(new Function<AllocationAlert, Allocation>() {
+            @Override
+            public Allocation apply(AllocationAlert input) {
+                return input.getAllocation();
+            }
+        }).toList();
+    }
+
+    public List<AllocationAlert> getAllocationAlerts() {
+        return dbUtil.withDao(AllocationAlert.class, new DbUtil.Operation<AllocationAlert, List<AllocationAlert>>() {
+            @Override
+            public List<AllocationAlert> operate(Dao<AllocationAlert, String> dao) throws SQLException {
+                return dao.queryForAll();
+            }
+        });
+    }
+
+    public void deleteAllocationAlert(final Allocation allocation) {
+        dbUtil.withDao(AllocationAlert.class, new DbUtil.Operation<AllocationAlert, Void>() {
+            @Override
+            public Void operate(Dao<AllocationAlert, String> dao) throws SQLException {
+                DeleteBuilder<AllocationAlert, String> deleteBuilder = dao.deleteBuilder();
+                deleteBuilder.where().eq(AllocationAlert.ALLOCATION_ID_COLUMN, allocation.getId());
+                deleteBuilder.delete();
+                return null;
+            }
+        });
     }
 }

@@ -50,6 +50,8 @@ public class ReceiveService {
     StockService stockService;
     @Inject
     AllocationService allocationService;
+    @Inject
+    AlertsService alertsService;
 
     @Inject
     CommoditySnapshotService commoditySnapshotService;
@@ -69,6 +71,8 @@ public class ReceiveService {
             Allocation allocation = receive.getAllocation();
             allocation.setReceived(true);
             allocationService.update(allocation);
+
+            alertsService.deleteAllocationAlert(allocation);
         }
         saveReceiveItems(receive.getReceiveItems());
     }

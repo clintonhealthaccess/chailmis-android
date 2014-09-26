@@ -56,6 +56,7 @@ import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 
@@ -93,6 +94,7 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             createTableIfNotExists(connectionSource, CommodityActionValue.class);
             createTableIfNotExists(connectionSource, LowStockAlert.class);
             createTableIfNotExists(connectionSource, RoutineOrderAlert.class);
+            createTableIfNotExists(connectionSource, AllocationAlert.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

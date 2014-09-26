@@ -78,4 +78,21 @@ public class Allocation {
     public void addTransientItems(List<AllocationItem> allocationItems) {
         this.transientAllocationItems = allocationItems;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Allocation)) return false;
+
+        Allocation that = (Allocation) o;
+
+        if (!allocationId.equals(that.allocationId)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return allocationId.hashCode();
+    }
 }

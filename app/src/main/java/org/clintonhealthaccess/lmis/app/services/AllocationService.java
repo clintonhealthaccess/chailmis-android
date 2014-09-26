@@ -200,4 +200,13 @@ public class AllocationService {
 
         return allocation;
     }
+
+    public List<Allocation> getYetToBeReceivedAllocations() {
+        return dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, List<Allocation>>() {
+            @Override
+            public List<Allocation> operate(Dao<Allocation, String> dao) throws SQLException {
+                return queryAllocationsByReceived(dao, false);
+            }
+        });
+    }
 }
