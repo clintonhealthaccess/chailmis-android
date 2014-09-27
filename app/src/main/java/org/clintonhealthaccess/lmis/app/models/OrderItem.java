@@ -29,17 +29,12 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -108,34 +103,17 @@ public class OrderItem implements Snapshotable {
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        Collection<CommoditySnapshotValue> values = FluentIterable
-                .from(ImmutableList.copyOf(getCommodity().getCommodityActionsSaved())).filter(new Predicate<CommodityAction>() {
-                    @Override
-                    public boolean apply(CommodityAction input) {
-                        return filterForOrderActivities(input);
-                    }
-                }).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
-                    @Override
-                    public CommoditySnapshotValue apply(CommodityAction input) {
-                        return getCommodityActionValue(input);
-                    }
-                }).toList();
-        return new ArrayList<>(values);
-    }
-
-    private boolean filterForOrderActivities(CommodityAction input) {
-        String testString = input.getActivityType().toLowerCase();
-        return testString.contains(ORDERED_AMOUNT) || (testString.contains(ORDER_REASON) && reasonForUnexpectedQuantity != null);
-    }
-
-    private CommoditySnapshotValue getCommodityActionValue(CommodityAction input) {
-        String testString = input.getActivityType().toLowerCase();
-        if (testString.contains(ORDERED_AMOUNT)) {
-            return new CommoditySnapshotValue(input, quantity);
-        } else {
-            return new CommoditySnapshotValue(input, reasonForUnexpectedQuantity.getReason());
+        List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>();
+        if (order.getOrderType().isRoutine()) {
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.ORDERED_AMOUNT), getQuantity()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.REASON_FOR_ORDER), getReasonForUnexpectedQuantity().getReason()));
+        } else if (order.getOrderType().isEmergency()) {
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT), getQuantity()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER), getReasonForUnexpectedQuantity().getReason()));
         }
+        return commoditySnapshotValues;
     }
+
 
     public OrderReason getReasonForUnexpectedQuantity() {
         return reasonForUnexpectedQuantity;

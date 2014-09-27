@@ -100,7 +100,7 @@ public class DispensingItem implements Serializable, Snapshotable {
     }
 
     private boolean selectDispenseOrAdjusments(CommoditySnapshotValue input) {
-        String testString = input.getActivity().getActivityType().toLowerCase();
+        String testString = input.getCommodityAction().getActivityType().toLowerCase();
         if (dispensing.isDispenseToFacility()) {
             return testString.contains(ADJUSTMENTS);
         } else {

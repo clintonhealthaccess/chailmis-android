@@ -55,7 +55,7 @@ public class DispensingItemTest {
         DispensingItem dispensingItem = new DispensingItem(commodity, 10);
         dispensingItem.setDispensing(dispensing);
         dispensing.addItem(dispensingItem);
-        assertThat(dispensingItem.getActivitiesValues().get(0).getActivity().getActivityType(), is("DISPENSE"));
+        assertThat(dispensingItem.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("DISPENSE"));
     }
 
 
@@ -70,7 +70,7 @@ public class DispensingItemTest {
         DispensingItem dispensingItem = new DispensingItem(commodity, 10);
         dispensingItem.setDispensing(dispensing);
         dispensing.addItem(dispensingItem);
-        assertThat(dispensingItem.getActivitiesValues().get(0).getActivity().getActivityType(), is("ADJUSTMENTS"));
+        assertThat(dispensingItem.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("ADJUSTMENTS"));
 
     }
 }

@@ -75,6 +75,10 @@ public class CommodityAction implements Serializable {
     public static final String RECEIVED = "RECEIVED";
     public static final String RECEIVE_DATE = "RECEIVE_DATE";
     public static final String PROJECTED_ORDER_AMOUNT = "PROJECTED_ORDER_AMOUNT";
+    public static final String EMERGENCY_ORDERED_AMOUNT = "EMERGENCY_ORDERED_AMOUNT";
+    public static final String EMERGENCY_REASON_FOR_ORDER = "EMERGENCY_REASON_FOR_ORDER";
+    public static final String ORDERED_AMOUNT = "ORDERED_AMOUNT";
+    public static final String REASON_FOR_ORDER = "REASON_FOR_ORDER";
 
     public CommodityAction() {
         //Orm Lite likes
@@ -121,5 +125,13 @@ public class CommodityAction implements Serializable {
             return commodityActionValueList.get(0);
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "CommodityAction{" +
+                "activityType='" + activityType + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

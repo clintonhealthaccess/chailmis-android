@@ -78,4 +78,8 @@ public class OrderType {
     public boolean isRoutine() {
         return getName().equalsIgnoreCase(ROUTINE);
     }
+
+    public boolean isEmergency() {
+        return getName().equalsIgnoreCase(EMERGENCY);
+    }
 }

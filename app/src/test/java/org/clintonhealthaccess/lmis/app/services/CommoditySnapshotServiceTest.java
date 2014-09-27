@@ -194,7 +194,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getActivity(), "3");
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getCommodityAction(), "3");
         commoditySnapshot.setSynced(true);
         snapshotDao.create(commoditySnapshot);
         commoditySnapshotService.add(dispensingItem);
@@ -213,7 +213,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Dispensing dispensing = new Dispensing(false);
         dispensingItem.setDispensing(dispensing);
 
-        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getActivity(), "3");
+        CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getCommodityAction(), "3");
         commoditySnapshot.setSynced(true);
         snapshotDao.create(commoditySnapshot);
 

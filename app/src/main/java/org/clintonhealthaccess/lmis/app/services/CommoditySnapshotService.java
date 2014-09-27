@@ -98,7 +98,7 @@ public class CommoditySnapshotService {
             @Override
             public List<CommoditySnapshot> operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
                 QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getActivity().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getActivity()).and().eq(PERIOD, commoditySnapshotValue.getActivity().getPeriod());
+                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getCommodityAction().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getCommodityAction()).and().eq(PERIOD, commoditySnapshotValue.getCommodityAction().getPeriod());
                 return dao.query(queryBuilder.prepare());
             }
         });

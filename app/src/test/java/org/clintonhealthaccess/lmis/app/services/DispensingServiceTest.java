@@ -33,7 +33,6 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -98,7 +97,7 @@ public class DispensingServiceTest {
         Dispensing dispensing = new Dispensing(false);
         DispensingItem item1 = new DispensingItem(commodity, 1);
         item1.setDispensing(dispensing);
-        assertThat(item1.getActivitiesValues().get(0).getActivity().getActivityType(), is("dispense"));
+        assertThat(item1.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("dispense"));
         dispensing.addItem(item1);
         dispensingService.addDispensing(dispensing);
 

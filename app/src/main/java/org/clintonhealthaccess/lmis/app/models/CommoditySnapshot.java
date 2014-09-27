@@ -74,7 +74,7 @@ public class CommoditySnapshot {
     }
 
     public CommoditySnapshot(CommoditySnapshotValue commoditySnapshotValue) {
-        this(commoditySnapshotValue.getActivity().getCommodity(), commoditySnapshotValue.getActivity(), commoditySnapshotValue.getValue());
+        this(commoditySnapshotValue.getCommodityAction().getCommodity(), commoditySnapshotValue.getCommodityAction(), commoditySnapshotValue.getValue());
         if(commoditySnapshotValue.getPeriod() != null) {
             this.period = commoditySnapshotValue.getPeriod();
         }

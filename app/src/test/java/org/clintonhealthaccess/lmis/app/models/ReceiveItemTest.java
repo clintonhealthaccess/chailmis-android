@@ -53,7 +53,7 @@ public class ReceiveItemTest {
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         item.setReceive(receive);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
-        assertThat(item.getActivitiesValues().get(0).getActivity(), is(activity));
+        assertThat(item.getActivitiesValues().get(0).getCommodityAction(), is(activity));
     }
 
     @Test
@@ -69,11 +69,11 @@ public class ReceiveItemTest {
 
         assertThat(item.getActivitiesValues().size(), is(2));
         CommoditySnapshotValue receivedValue = item.getActivitiesValues().get(0);
-        assertThat(receivedValue.getActivity(), is(receivedActivity));
+        assertThat(receivedValue.getCommodityAction(), is(receivedActivity));
         assertThat(receivedValue.getValue(), is("20"));
 
         CommoditySnapshotValue receiveDateValue = item.getActivitiesValues().get(1);
-        assertThat(receiveDateValue.getActivity(), is(receiveDateActivity));
+        assertThat(receiveDateValue.getCommodityAction(), is(receiveDateActivity));
         assertThat(receiveDateValue.getValue(), is(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
     }
 }

@@ -161,7 +161,7 @@ public class Commodity implements Serializable {
     }
 
     public CommodityAction getCommodityAction(String activityType) {
-        for (CommodityAction commodityAction : new ArrayList<>(commodityActionsSaved)) {
+        for (CommodityAction commodityAction : new ArrayList<>(getCommodityActionsSaved())) {
             if (commodityAction.getActivityType().equalsIgnoreCase(activityType))
                 return commodityAction;
         }

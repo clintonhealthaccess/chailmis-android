@@ -37,7 +37,7 @@ import static java.lang.String.valueOf;
 @Getter
 @Setter
 public class CommoditySnapshotValue {
-    private CommodityAction activity;
+    private CommodityAction commodityAction;
     private String value;
     private String period;
 
@@ -50,12 +50,12 @@ public class CommoditySnapshotValue {
     }
 
     public CommoditySnapshotValue(CommodityAction input, String reasonForUnexpectedQuantity) {
-        this.activity = input;
+        this.commodityAction = input;
         this.value = reasonForUnexpectedQuantity;
     }
 
     public CommoditySnapshotValue(CommodityAction input, String value, String period) {
-        this.activity = input;
+        this.commodityAction = input;
         this.value = value;
         this.period = period;
     }
@@ -67,7 +67,7 @@ public class CommoditySnapshotValue {
 
         CommoditySnapshotValue value1 = (CommoditySnapshotValue) o;
 
-        if (!activity.equals(value1.activity)) return false;
+        if (!commodityAction.equals(value1.commodityAction)) return false;
         if (!value.equals(value1.value)) return false;
 
         return true;
@@ -75,7 +75,7 @@ public class CommoditySnapshotValue {
 
     @Override
     public int hashCode() {
-        int result = activity.hashCode();
+        int result = commodityAction.hashCode();
         result = 31 * result + value.hashCode();
         return result;
     }

@@ -32,9 +32,6 @@ package org.clintonhealthaccess.lmis.app.models;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -48,13 +45,49 @@ public class OrderItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction amountActivity = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
         CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
-        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<>(Arrays.asList(amountActivity, reasonActivity)));
+        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_REASON_FOR_ORDER);
+        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_ORDERED_AMOUNT);
+        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT)).thenReturn(emergencyOrder);
+        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER)).thenReturn(emergencyReason);
+        when(commodity.getCommodityAction(CommodityAction.ORDERED_AMOUNT)).thenReturn(amountActivity);
+        when(commodity.getCommodityAction(CommodityAction.REASON_FOR_ORDER)).thenReturn(reasonActivity);
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         String testReason = "reason";
         commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));
+        Order order = new Order();
+        order.setOrderType(new OrderType(OrderType.ROUTINE));
         OrderItem item = new OrderItem(commodityViewModel);
+        item.setOrder(order);
         assertThat(item.getActivitiesValues().size(), is(2));
         assertThat(item.getActivitiesValues().get(0).getValue(), is("10"));
         assertThat(item.getActivitiesValues().get(1).getValue(), is(testReason));
+        assertThat(item.getActivitiesValues().get(0).getCommodityAction(), is(amountActivity));
+        assertThat(item.getActivitiesValues().get(1).getCommodityAction(), is(reasonActivity));
+    }
+
+    @Test
+    public void orderItemShouldCreateCommodityActionSnapShotValueForEmergencyOrder() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        CommodityAction commodityActionRoutineAmountOrdered = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
+        CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
+        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_REASON_FOR_ORDER);
+        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_ORDERED_AMOUNT);
+        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT)).thenReturn(emergencyOrder);
+        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER)).thenReturn(emergencyReason);
+        when(commodity.getCommodityAction(CommodityAction.ORDERED_AMOUNT)).thenReturn(commodityActionRoutineAmountOrdered);
+        when(commodity.getCommodityAction(CommodityAction.REASON_FOR_ORDER)).thenReturn(reasonActivity);
+        OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
+        String testReason = "reason";
+        commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));
+        Order order = new Order();
+        order.setOrderType(new OrderType(OrderType.EMERGENCY));
+        OrderItem item = new OrderItem(commodityViewModel);
+        item.setOrder(order);
+        assertThat(item.getActivitiesValues().size(), is(2));
+        assertThat(item.getActivitiesValues().get(0).getValue(), is("10"));
+        assertThat(item.getActivitiesValues().get(1).getValue(), is(testReason));
+        assertThat(item.getActivitiesValues().get(0).getCommodityAction(), is(emergencyOrder));
+        assertThat(item.getActivitiesValues().get(1).getCommodityAction(), is(emergencyReason));
+
     }
 }
