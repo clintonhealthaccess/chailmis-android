@@ -113,14 +113,14 @@
             android:layout_height="wrap_content"
             android:textAlignment="center" />
 
-        <org.eazegraph.lib.charts.StackedBarChart xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/stackedbarchart"
+
+        <org.eazegraph.lib.charts.BarChart xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/barchart"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
             android:padding="10dp"
             app:egFixedBarWidth="true"
             app:egBarWidth="50dp"
-            app:egShowValues="true"
             app:egLegendHeight="40dp" />
     </LinearLayout>
 

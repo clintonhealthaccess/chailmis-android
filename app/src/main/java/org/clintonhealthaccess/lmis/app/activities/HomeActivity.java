@@ -46,15 +46,19 @@ import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
 import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.listeners.NotificationClickListener;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
-import org.eazegraph.lib.charts.StackedBarChart;
+import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
-import org.eazegraph.lib.models.StackedBarModel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -101,6 +105,9 @@ public class HomeActivity extends BaseActivity {
 
     @Inject
     AlertsService alertsService;
+
+    @Inject
+    CommodityService commodityService;
 
     private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
             new SparseArray<Class<? extends BaseActivity>>() {
@@ -205,42 +212,36 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupGraph() {
-        StackedBarChart mStackedBarChart = (StackedBarChart) findViewById(R.id.stackedbarchart);
+        final BarChart mBarChart = (BarChart) findViewById(R.id.barchart);
+        final Map<Integer, Integer> colors = new HashMap<>();
+        colors.put(0, 0xFF123456);
+        colors.put(1, 0xFF343456);
+        colors.put(2, 0xFF563456);
+        colors.put(3, 0xFF873F56);
+        colors.put(4, 0xFF56B7F1);
+        colors.put(5, 0xFF343456);
+        AsyncTask<Void, Void, List<BarModel>> getCommoditiesForChartTask = new AsyncTask<Void, Void, List<BarModel>>() {
+            @Override
+            protected List<BarModel> doInBackground(Void... params) {
+                List<BarModel> models = new ArrayList<>();
+                int count = 0;
+                for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
+                    models.add(new BarModel(commodity.getName(), commodity.getStockOnHand(), colors.get(count)));
+                    count++;
+                }
+                return models;
+            }
 
-        StackedBarModel s1 = new StackedBarModel("Panadol");
+            @Override
+            protected void onPostExecute(List<BarModel> barModels) {
+                for (BarModel model : barModels) {
+                    mBarChart.addBar(model);
+                }
+                mBarChart.startAnimation();
 
-        s1.addBar(new BarModel(2.3f, 0xFF63CBB0));
-        s1.addBar(new BarModel(2.3f, 0xFF56B7F1));
-        s1.addBar(new BarModel(2.3f, 0xFFCDA67F));
-
-        StackedBarModel s2 = new StackedBarModel("Coatem");
-        s2.addBar(new BarModel(1.1f, 0xFF63CBB0));
-        s2.addBar(new BarModel(2.7f, 0xFF56B7F1));
-        s2.addBar(new BarModel(0.7f, 0xFFCDA67F));
-
-        StackedBarModel s3 = new StackedBarModel("Septrin");
-
-        s3.addBar(new BarModel(2.3f, 0xFF63CBB0));
-        s3.addBar(new BarModel(2.f, 0xFF56B7F1));
-        s3.addBar(new BarModel(3.3f, 0xFFCDA67F));
-
-        StackedBarModel s4 = new StackedBarModel("Hedex");
-        s4.addBar(new BarModel(1.f, 0xFF63CBB0));
-        s4.addBar(new BarModel(4.2f, 0xFF56B7F1));
-        s4.addBar(new BarModel(2.1f, 0xFFCDA67F));
-
-        StackedBarModel s5 = new StackedBarModel("Amoxyl");
-        s5.addBar(new BarModel("MIN", 0.2f, 0xFF63CBB0));
-        s5.addBar(new BarModel("OAX",1.2f, 0xFF56B7F1));
-        s5.addBar(new BarModel("MAX",1.1f, 0xFFCDA67F));
-
-        mStackedBarChart.addBar(s1);
-        mStackedBarChart.addBar(s2);
-        mStackedBarChart.addBar(s3);
-        mStackedBarChart.addBar(s4);
-        mStackedBarChart.addBar(s5);
-
-        mStackedBarChart.startAnimation();
+            }
+        };
+        getCommoditiesForChartTask.execute();
 
 
     }

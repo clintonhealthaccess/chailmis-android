@@ -214,5 +214,14 @@ public class CommodityService {
 
     }
 
+    public List<Commodity> getMost5HighlyConsumedCommodities() {
+        List<Commodity> commodities = all();
+        if (commodities.size() > 5) {
+            return commodities.subList(0, 5);
+        } else {
+            return commodities;
+        }
+    }
+
 
 }
