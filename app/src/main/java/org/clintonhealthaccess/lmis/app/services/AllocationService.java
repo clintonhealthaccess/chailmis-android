@@ -40,6 +40,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -190,7 +191,7 @@ public class AllocationService {
                 try {
                     allocationItem.setQuantity(parseInt(input.getValue()));
                 } catch (NumberFormatException e) {
-                    Log.e("Allocation Amount Not Integer", input.getCommodityAction().getActivityType() + " - " + input.getValue());
+                    throw new LmisException("Allocation Amount Not Integer: " + input.getCommodityAction().getActivityType() + " - " + input.getValue(), e);
                 }
                 allocationItem.setCommodity(input.getCommodityAction().getCommodity());
                 return allocationItem;
