@@ -55,6 +55,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Multimaps.index;
@@ -74,39 +75,48 @@ public class AllocationService {
     @Inject
     private CommodityService commodityService;
 
+    private Dao<Allocation, String> dao;
+    private static List<Allocation> allAllocations;
+
+    public AllocationService(DbUtil dbUtil) {
+        this.dbUtil = dbUtil;
+    }
+
+    public AllocationService() {
+        //needed
+    }
+
+
     public List<String> getYetToBeReceivedAllocationIds() {
-        return dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, List<String>>() {
-            @Override
-            public List<String> operate(Dao<Allocation, String> dao) throws SQLException {
-                return transform(queryAllocationsByReceived(dao, false), new Function<Allocation, String>() {
+        return from(queryAllocationsByReceived(false))
+                .transform(new Function<Allocation, String>() {
                     @Override
                     public String apply(Allocation input) {
                         return input.getAllocationId();
                     }
-                });
-            }
-        });
+                }).toList();
     }
 
-    private List<Allocation> queryAllocationsByReceived(Dao<Allocation, String> dao, boolean value) throws SQLException {
-        QueryBuilder<Allocation, String> allocationStringQueryBuilder = dao.queryBuilder();
-        allocationStringQueryBuilder.where().eq("received", value);
-        PreparedQuery<Allocation> query = allocationStringQueryBuilder.prepare();
-        return dao.query(query);
+    private List<Allocation> queryAllocationsByReceived(final boolean value) {
+        return from(all()).filter(
+                new Predicate<Allocation>() {
+                    @Override
+                    public boolean apply(Allocation input) {
+                        return input.isReceived() == value;
+                    }
+                }
+        ).toList();
     }
 
     public List<String> getReceivedAllocationIds() {
-        return dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, List<String>>() {
-            @Override
-            public List<String> operate(Dao<Allocation, String> dao) throws SQLException {
-                return transform(queryAllocationsByReceived(dao, true), new Function<Allocation, String>() {
+        return from(queryAllocationsByReceived(true)).transform(
+                new Function<Allocation, String>() {
                     @Override
                     public String apply(Allocation input) {
                         return input.getAllocationId();
                     }
-                });
-            }
-        });
+                }
+        ).toList();
     }
 
     public Allocation getAllocationByLmisId(final String allocationID) {
@@ -130,11 +140,21 @@ public class AllocationService {
         List<Commodity> commodities = commodityService.all();
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
+        boolean changed = false;
         for (Allocation allocation : allocations) {
             if (!isExisting(allocation)) {
                 createAllocation(allocation);
+                changed = true;
             }
         }
+        if (changed) {
+            resetCache();
+        }
+    }
+
+    private void resetCache() {
+        clearCache();
+        all();
     }
 
     private boolean isExisting(Allocation allocation) {
@@ -203,11 +223,22 @@ public class AllocationService {
     }
 
     public List<Allocation> getYetToBeReceivedAllocations() {
-        return dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, List<Allocation>>() {
-            @Override
-            public List<Allocation> operate(Dao<Allocation, String> dao) throws SQLException {
-                return queryAllocationsByReceived(dao, false);
-            }
-        });
+        return queryAllocationsByReceived(false);
+    }
+
+    public List<Allocation> all() {
+        if (allAllocations == null) {
+            allAllocations = dbUtil.withDao(Allocation.class, new DbUtil.Operation<Allocation, List<Allocation>>() {
+                @Override
+                public List<Allocation> operate(Dao<Allocation, String> dao) throws SQLException {
+                    return dao.queryForAll();
+                }
+            });
+        }
+        return allAllocations;
+    }
+
+    public static void clearCache() {
+        allAllocations = null;
     }
 }

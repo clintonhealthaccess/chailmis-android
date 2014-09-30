@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
+import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.Calendar;
@@ -59,12 +60,16 @@ public class LmisApplication extends Application {
     @Inject
     AlarmManager alarmManager;
 
+    @Inject
+    private AllocationService allocationService;
+
     @Override
     public void onCreate() {
         super.onCreate();
         setBaseApplicationInjector(this, DEFAULT_STAGE, newDefaultRoboModule(this), new GuiceConfigurationModule());
         getInjector(this).injectMembersWithoutViews(this);
         loadAllCommoditiesToCache();
+        loadAllAllocationstoCache();
         setupAlertsService();
     }
 
@@ -83,5 +88,9 @@ public class LmisApplication extends Application {
 
     private void loadAllCommoditiesToCache() {
         categoryService.all();
+    }
+
+    private void loadAllAllocationstoCache() {
+        allocationService.all();
     }
 }

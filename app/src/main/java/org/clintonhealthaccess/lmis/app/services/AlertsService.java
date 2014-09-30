@@ -358,6 +358,7 @@ public class AlertsService {
     }
 
     public void generateAllocationAlerts() {
+        allocationService.clearCache();
         List<Allocation> availableAllocations = allocationService.getYetToBeReceivedAllocations();
         List<Allocation> allocationsWithAlerts = getAllocationsFromAlerts(getAllocationAlerts());
         for (Allocation allocation : availableAllocations) {

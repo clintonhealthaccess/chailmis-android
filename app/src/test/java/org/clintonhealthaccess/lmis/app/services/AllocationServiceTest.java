@@ -35,6 +35,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -44,12 +45,22 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class AllocationServiceTest extends LMISTestCase {
@@ -74,7 +85,7 @@ public class AllocationServiceTest extends LMISTestCase {
             }
         });
         allocationDao = new GenericDao<>(Allocation.class, Robolectric.application);
-
+        AllocationService.clearCache();
     }
 
     @Test
@@ -86,6 +97,7 @@ public class AllocationServiceTest extends LMISTestCase {
         allocationDao.create(firstAllocation);
         allocationDao.create(secondAllocation);
         assertThat(allocationService.getReceivedAllocationIds(), contains("UG-2012"));
+        assertThat(allocationService.getReceivedAllocationIds(), not(contains("UG-2013")));
     }
 
     @Test
@@ -97,13 +109,13 @@ public class AllocationServiceTest extends LMISTestCase {
         allocationDao.create(firstAllocation);
         allocationDao.create(secondAllocation);
         assertThat(allocationService.getYetToBeReceivedAllocationIds(), contains("UG-2013"));
+        assertThat(allocationService.getYetToBeReceivedAllocationIds(), not(contains("UG-2012")));
     }
 
     @Test
     public void shouldGetAllocationByLmisId() throws Exception {
         String lmisId = "UG-2013";
         Allocation firstAllocation = new Allocation(lmisId, "20140901");
-        firstAllocation.setAllocationId(lmisId);
         firstAllocation.setReceived(false);
         allocationDao.create(firstAllocation);
         assertThat(allocationService.getAllocationByLmisId(lmisId).getAllocationId(), is(lmisId));
@@ -166,4 +178,50 @@ public class AllocationServiceTest extends LMISTestCase {
         categoryService.clearCache();
         return user;
     }
+
+    @Test
+    public void shouldGetAllocationsByRecieved() throws Exception {
+        DbUtil dbUtil = mock(DbUtil.class);
+
+        AllocationService allocationService1 = new AllocationService(dbUtil);
+
+        allocationService1.all();
+
+        verify(dbUtil, atLeast(1)).withDao(eq(Allocation.class), any(DbUtil.Operation.class));
+    }
+
+
+    @Test
+    public void shouldGetAndCacheAllocationsByRecieved() throws Exception {
+        List<Allocation> returnedAllocations = new ArrayList<>(Arrays.asList(new Allocation("UG-2013", "20140901")));
+
+        DbUtil dbUtil = mock(DbUtil.class);
+        AllocationService allocationService1 = new AllocationService(dbUtil);
+
+        when(dbUtil.withDao(eq(Allocation.class), any(DbUtil.Operation.class))).thenReturn(returnedAllocations);
+
+        allocationService1.all();
+        allocationService1.all();
+
+        verify(dbUtil, atMost(1)).withDao(eq(Allocation.class), any(DbUtil.Operation.class));
+
+    }
+
+    @Test
+    public void shouldClearCache() throws Exception {
+        List<Allocation> returnedAllocations = new ArrayList<>(Arrays.asList(new Allocation("UG-2013", "20140901")));
+
+        DbUtil dbUtil = mock(DbUtil.class);
+        AllocationService allocationService1 = new AllocationService(dbUtil);
+
+        when(dbUtil.withDao(eq(Allocation.class), any(DbUtil.Operation.class))).thenReturn(returnedAllocations);
+
+        allocationService1.all();
+        allocationService1.clearCache();
+        allocationService1.all();
+
+        verify(dbUtil, atLeast(2)).withDao(eq(Allocation.class), any(DbUtil.Operation.class));
+
+    }
+
 }
