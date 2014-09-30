@@ -42,4 +42,11 @@
     <color name="dark_blue_header">#365F9B</color>
     <color name="alerts_red">#990033</color>
     <color name="alerts_bright_red">#ffff0000</color>
+    <color name="chart0">#16a085</color>
+    <color name="chart1">#c0392b</color>
+    <color name="chart2">#2c3e50</color>
+    <color name="chart3">#7f8c8d</color>
+    <color name="chart4">#f39c12</color>
+    <color name="chart5">#2980b9</color>
+    <color name="chart6">#bdc3c7</color>
 </resources>

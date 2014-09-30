@@ -52,13 +52,13 @@ import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
-import org.eazegraph.lib.charts.BarChart;
-import org.eazegraph.lib.models.BarModel;
+import org.clintonhealthaccess.lmis.app.views.graphs.StockOnHandGraphBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -212,38 +212,37 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void setupGraph() {
-        final BarChart mBarChart = (BarChart) findViewById(R.id.barchart);
-        final Map<Integer, Integer> colors = new HashMap<>();
-        colors.put(0, 0xFF123456);
-        colors.put(1, 0xFF343456);
-        colors.put(2, 0xFF563456);
-        colors.put(3, 0xFF873F56);
-        colors.put(4, 0xFF56B7F1);
-        colors.put(5, 0xFF343456);
-        AsyncTask<Void, Void, List<BarModel>> getCommoditiesForChartTask = new AsyncTask<Void, Void, List<BarModel>>() {
-            @Override
-            protected List<BarModel> doInBackground(Void... params) {
-                List<BarModel> models = new ArrayList<>();
-                int count = 0;
-                for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-                    models.add(new BarModel(commodity.getName(), commodity.getStockOnHand(), colors.get(count)));
-                    count++;
-                }
-                return models;
-            }
+        List<StockOnHandGraphBar> bars = new ArrayList<>();
 
-            @Override
-            protected void onPostExecute(List<BarModel> barModels) {
-                for (BarModel model : barModels) {
-                    mBarChart.addBar(model);
-                }
-                mBarChart.startAnimation();
+        Map<Integer, Integer> colors = new HashMap<>();
+        colors.put(0, getResources().getColor(R.color.chart0));
+        colors.put(1, getResources().getColor(R.color.chart1));
+        colors.put(2, getResources().getColor(R.color.chart2));
+        colors.put(3, getResources().getColor(R.color.chart3));
+        colors.put(4, getResources().getColor(R.color.chart4));
+        colors.put(5, getResources().getColor(R.color.chart5));
 
-            }
-        };
-        getCommoditiesForChartTask.execute();
+        int count = 0;
+        for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
+            int randomMAx = randThres();
+            bars.add(new StockOnHandGraphBar(commodity.getName(), randThres(randomMAx), randomMAx, commodity.getStockOnHand(), colors.get(count)));
+            count++;
+        }
+        LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
+        for (StockOnHandGraphBar bar : bars) {
+            barChartLayout.addView(bar.getView(getApplicationContext()));
+        }
 
+    }
 
+    private int randThres() {
+        Random rand = new Random();
+        return rand.nextInt(300);
+    }
+
+    private int randThres(int value) {
+        Random rand = new Random();
+        return rand.nextInt(value);
     }
 
 }
