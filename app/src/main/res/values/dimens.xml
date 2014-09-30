@@ -34,6 +34,6 @@
     <dimen name="header_text_size">18sp</dimen>
     <dimen name="confirm_item_text_size">15sp</dimen>
     <dimen name="confirm_items_padding">10dp</dimen>
-    <dimen name="bar_width">90dp</dimen>
+    <dimen name="bar_width">70dp</dimen>
 
 </resources>

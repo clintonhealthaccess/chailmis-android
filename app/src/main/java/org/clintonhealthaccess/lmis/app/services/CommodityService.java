@@ -51,6 +51,8 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
@@ -215,13 +217,19 @@ public class CommodityService {
     }
 
     public List<Commodity> getMost5HighlyConsumedCommodities() {
+
         List<Commodity> commodities = all();
+        Collections.sort(commodities, new Comparator<Commodity>() {
+            @Override
+            public int compare(Commodity lhs, Commodity rhs) {
+                return rhs.getAMC().compareTo(lhs.getAMC());
+            }
+        });
         if (commodities.size() > 5) {
             return commodities.subList(0, 5);
         } else {
             return commodities;
         }
     }
-
 
 }

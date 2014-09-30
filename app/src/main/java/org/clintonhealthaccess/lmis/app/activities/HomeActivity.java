@@ -30,10 +30,14 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -227,11 +231,36 @@ public class HomeActivity extends BaseActivity {
             count++;
         }
         LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
-        for (StockOnHandGraphBar bar : bars) {
-            barChartLayout.addView(bar.getView(getApplicationContext()));
-        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        int graphHeight = 2 * height / 3;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, graphHeight);
+        barChartLayout.setLayoutParams(params);
+        int biggestValue = getBigestValue(bars);
 
+        for (StockOnHandGraphBar bar : bars) {
+            barChartLayout.addView(bar.getView(getApplicationContext(), biggestValue, graphHeight));
+        }
     }
 
-   
+    private int getBigestValue(List<StockOnHandGraphBar> bars) {
+        int biggestValue = 0;
+        for (StockOnHandGraphBar bar : bars) {
+            biggestValue = checkValue(biggestValue, bar.getMaximumThreshold());
+            biggestValue = checkValue(biggestValue, bar.getMinimumThreshold());
+            biggestValue = checkValue(biggestValue, bar.getStockOnHand());
+        }
+        return biggestValue;
+    }
+
+    private int checkValue(int biggestValue, int maximumThreshold) {
+        if (biggestValue < maximumThreshold) {
+            biggestValue = maximumThreshold;
+        }
+        return biggestValue;
+    }
+
+
 }

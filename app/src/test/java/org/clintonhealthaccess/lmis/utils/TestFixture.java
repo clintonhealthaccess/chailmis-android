@@ -79,6 +79,8 @@ public class TestFixture {
         return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
     }
 
+
+
     public static List<Commodity> getDefaultCommodities(Context context) throws IOException {
         List<Commodity> defaultCommodities = new ArrayList<>();
         for(Category category : defaultCategories(context)) {

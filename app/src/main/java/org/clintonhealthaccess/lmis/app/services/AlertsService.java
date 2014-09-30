@@ -350,7 +350,7 @@ public class AlertsService {
         return FluentIterable.from(commodityService.all()).transform(new Function<Commodity, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(Commodity commodity) {
-                int quantity = commodity.calculateRoutinePrePopulatedQuantityl();
+                int quantity = commodity.calculateRoutinePrePopulatedQuantity();
                 OrderCommodityViewModel orderCommodityViewModel = createOrderCommodityViewModel(quantity, commodity);
                 return orderCommodityViewModel;
             }

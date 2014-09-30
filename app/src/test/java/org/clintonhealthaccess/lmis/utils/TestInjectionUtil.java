@@ -111,7 +111,7 @@ public class TestInjectionUtil {
         return null;
     }
 
-    private static List<CommodityActionValue> testActionValues(Context context) throws IOException {
+    public static List<CommodityActionValue> testActionValues(Context context) throws IOException {
         InputStream src = context.getAssets().open("default_values.json");
         String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
         List<CommodityActionValue> actionValues = asList(new Gson().fromJson(defaultCommoditiesAsJson, CommodityActionValue[].class));

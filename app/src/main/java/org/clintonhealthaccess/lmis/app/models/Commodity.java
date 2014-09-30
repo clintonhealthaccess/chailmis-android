@@ -196,7 +196,11 @@ public class Commodity implements Serializable {
         }
     }
 
-    public int calculateRoutinePrePopulatedQuantityl() {
+    public int calculateRoutinePrePopulatedQuantity() {
         return getLatestValueFromCommodityActionByName(CommodityAction.PROJECTED_ORDER_AMOUNT);
+    }
+
+    public Integer getAMC() {
+        return getLatestValueFromCommodityActionByName(CommodityAction.AMC);
     }
 }

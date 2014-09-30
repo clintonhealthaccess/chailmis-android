@@ -89,6 +89,16 @@
                                 "id": "id_PROJECTED_ORDER_AMOUNT_1",
                                 "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                            }
+                     ,{
+                          "activityType": "AMC",
+                          "dataSet": {
+                              "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                              "name": "lmis dataset",
+                              "periodType": "Daily"
+                          },
+                          "id": "id_AMC_1",
+                          "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                     }
                 ],
                 "id": "1",
                 "name": "Coartem",
@@ -182,6 +192,16 @@
                                 "id": "id_PROJECTED_ORDER_AMOUNT_2",
                                 "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                            }
+                           ,{
+                             "activityType": "AMC",
+                             "dataSet": {
+                                 "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                                 "name": "lmis dataset",
+                                 "periodType": "Daily"
+                             },
+                             "id": "id_AMC_2",
+                             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                        }
                 ],
                 "id": "3",
                 "name": "Choloquine",

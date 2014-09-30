@@ -53,12 +53,14 @@ import java.util.List;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.getDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -89,9 +91,9 @@ public class CommodityServiceTest {
     @Before
     public void setUp() throws Exception {
         mockLmisServer = mock(LmisServer.class);
-        mockStockLevels = new ArrayList<>();
+        mockStockLevels = testActionValues(application);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchCommodityActionValues((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
         when(mockLmisServer.fetchIntegerConstant((User) anyObject(), anyString())).thenReturn(MOCK_DAY);
 
         setUpInjection(this, new AbstractModule() {
@@ -158,6 +160,18 @@ public class CommodityServiceTest {
     public void shouldGetMonthlyStockCountDayAndSaveItToPreferences() throws Exception {
         commodityService.initialise(new User("test", "pass"));
         assertThat(sharedPreferences.getInt(CommodityService.MONTHLY_STOCK_COUNT_DAY, 0), is(MOCK_DAY));
+    }
+
+    @Test
+    public void shouldReturnMostConsumedCommodities() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+        List<Commodity> commodities = commodityService.getMost5HighlyConsumedCommodities();
+        for (Commodity commodity : commodities) {
+            System.out.println(commodity.getName() + " -- " + commodity.getAMC());
+        }
+        assertThat(commodities.get(0).getAMC(), is(125));
+        assertThat(commodities.get(0).getName(), is("Choloquine"));
     }
 
     private void verifyAllCommodityCategories() {
