@@ -172,6 +172,10 @@ public class Commodity implements Serializable {
         return getLatestValueFromCommodityActionByName(CommodityAction.MINIMUN_THRESHOLD);
     }
 
+    public int getMaximuThreshold() {
+        return getLatestValueFromCommodityActionByName(CommodityAction.MAXIMUM_THRESHOLD);
+    }
+
     public boolean isBelowThreshold() {
         return getStockOnHand() < getMinimumThreshold();
     }

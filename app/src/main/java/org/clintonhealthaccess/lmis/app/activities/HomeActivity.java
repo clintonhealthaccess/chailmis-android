@@ -58,7 +58,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
@@ -224,8 +223,7 @@ public class HomeActivity extends BaseActivity {
 
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            int randomMAx = randThres();
-            bars.add(new StockOnHandGraphBar(commodity.getName(), randThres(randomMAx), randomMAx, commodity.getStockOnHand(), colors.get(count)));
+            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getMinimumThreshold(), commodity.getMaximuThreshold(), commodity.getStockOnHand(), colors.get(count)));
             count++;
         }
         LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
@@ -235,14 +233,5 @@ public class HomeActivity extends BaseActivity {
 
     }
 
-    private int randThres() {
-        Random rand = new Random();
-        return rand.nextInt(300);
-    }
-
-    private int randThres(int value) {
-        Random rand = new Random();
-        return rand.nextInt(value);
-    }
-
+   
 }
