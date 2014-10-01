@@ -74,7 +74,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
@@ -150,7 +149,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1, commodityViewModel2);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
 
         OrderItem orderItem2 = new OrderItem(commodityViewModel1);
         OrderItem orderItem1 = new OrderItem(commodityViewModel2);
@@ -234,7 +233,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
@@ -250,7 +249,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
@@ -266,7 +265,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));

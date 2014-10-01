@@ -106,12 +106,20 @@ public class OrderItem implements Snapshotable {
         List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>();
         if (order.getOrderType().isRoutine()) {
             commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.ORDERED_AMOUNT), getQuantity()));
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.REASON_FOR_ORDER), getReasonForUnexpectedQuantity().getReason()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.REASON_FOR_ORDER), getReasonOrEmptyString()));
         } else if (order.getOrderType().isEmergency()) {
             commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT), getQuantity()));
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER), getReasonForUnexpectedQuantity().getReason()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER), getReasonOrEmptyString()));
         }
         return commoditySnapshotValues;
+    }
+
+    private String getReasonOrEmptyString() {
+        OrderReason reason = getReasonForUnexpectedQuantity();
+        if (reason == null) {
+            return "";
+        }
+        return reason.getReason();
     }
 
 

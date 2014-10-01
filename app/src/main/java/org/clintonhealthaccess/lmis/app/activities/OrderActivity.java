@@ -29,14 +29,22 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.InputType;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,7 +98,10 @@ public class OrderActivity extends CommoditySelectableActivity {
     Spinner spinnerOrderType;
 
     private String prepopulatedOrderType;
-
+    private Keyboard keyBoard;
+    private KeyboardView keyBoardView;
+    public final static int CodeDelete = -5; // Keyboard.KEYCODE_DELETE
+    public final static int CodeCancel = -3; // Keyboard.KEYCODE_CANCEL
 
     private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_order_commodity_list_item;
@@ -109,7 +120,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedOrderCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType());
+                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType(), this);
     }
 
     private OrderType getOrderType() {
@@ -123,6 +134,15 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+        keyBoard = new Keyboard(OrderActivity.this, R.xml.keyboard);
+        keyBoardView = (KeyboardView) findViewById(R.id.keyBoardView);
+        keyBoardView.setKeyboard(keyBoard);
+        keyBoardView.setPreviewEnabled(false);
+        keyBoardView.setOnKeyboardActionListener(new MyOnKeyboardActionListener());
+
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
         Intent intent = getIntent();
         prepopulatedOrderType = intent.getStringExtra(AlertClickListener.ORDER_TYPE);
         setupOrderTypes();
@@ -157,6 +177,57 @@ public class OrderActivity extends CommoditySelectableActivity {
 
 
         }
+
+
+    }
+
+    public void setupEditTextForNumberInput(View edittext) {
+        edittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) showCustomKeyboard(v);
+                else hideCustomKeyboard();
+            }
+        });
+        edittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomKeyboard(v);
+            }
+        });
+        edittext.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                EditText edittext = (EditText) v;
+                int inType = edittext.getInputType();       // Backup the input type
+                edittext.setInputType(InputType.TYPE_NULL); // Disable standard keyboard
+                edittext.onTouchEvent(event);               // Call native handler
+                edittext.setInputType(inType);              // Restore input type
+                return true; // Consume touch event
+            }
+        });
+    }
+
+    public void hideCustomKeyboard() {
+        keyBoardView.setVisibility(View.GONE);
+        keyBoardView.setEnabled(false);
+    }
+
+    public void showCustomKeyboard(View v) {
+        keyBoardView.setVisibility(View.VISIBLE);
+        keyBoardView.setEnabled(true);
+        if (v != null)
+            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    public boolean isCustomKeyboardVisible() {
+        return keyBoardView.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isCustomKeyboardVisible()) hideCustomKeyboard();
+        else this.finish();
     }
 
     private void setupOrderTypes() {
@@ -244,5 +315,61 @@ public class OrderActivity extends CommoditySelectableActivity {
             order.addItem(orderItem);
         }
         return order;
+    }
+
+    private class MyOnKeyboardActionListener implements KeyboardView.OnKeyboardActionListener {
+        @Override
+        public void onPress(int primaryCode) {
+
+        }
+
+        @Override
+        public void onRelease(int primaryCode) {
+
+        }
+
+        @Override
+        public void onKey(int primaryCode, int[] keyCodes) {
+
+
+            View focusCurrent = OrderActivity.this.getWindow().getCurrentFocus();
+            if (focusCurrent == null || focusCurrent.getClass() != EditText.class) return;
+            EditText edittext = (EditText) focusCurrent;
+            Editable editable = edittext.getText();
+            int start = edittext.getSelectionStart();
+            // Handle key
+            if (primaryCode == CodeCancel) {
+                hideCustomKeyboard();
+            } else if (primaryCode == CodeDelete) {
+                if (editable != null && start > 0) editable.delete(start - 1, start);
+            } else {// Insert character
+                editable.insert(start, Character.toString((char) primaryCode));
+            }
+        }
+
+        @Override
+        public void onText(CharSequence text) {
+
+        }
+
+        @Override
+        public void swipeLeft() {
+
+        }
+
+        @Override
+        public void swipeRight() {
+
+        }
+
+        @Override
+        public void swipeDown() {
+
+        }
+
+        @Override
+        public void swipeUp() {
+
+        }
     }
 }

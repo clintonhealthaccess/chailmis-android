@@ -39,13 +39,20 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.inject.AbstractModule;
+
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.OrderActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.OrderCycle;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
@@ -56,6 +63,7 @@ import org.robolectric.shadows.ShadowDatePickerDialog;
 import org.robolectric.shadows.ShadowDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -71,6 +79,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class SelectedOrderCommoditiesAdapterTest {
@@ -85,16 +94,42 @@ public class SelectedOrderCommoditiesAdapterTest {
     private OrderReason expiries = new OrderReason("expiries");
     private OrderCommodityViewModel commodityViewModel;
     private ArrayList<OrderCommodityViewModel> commodities;
+    public static final String TEST_SRV_NUMBER = "AU-0009";
+
 
     OrderType routine = new OrderType(OrderType.ROUTINE);
     OrderType emergency = new OrderType(OrderType.EMERGENCY);
+    OrderActivity orderActivity;
+    private OrderService orderServiceMock;
+    private UserService userServiceMock;
+    private AlertsService alertsServiceMock;
 
     @Before
     public void setUp() {
-        setUpInjection(this);
+        orderServiceMock = mock(OrderService.class);
+        List<OrderReason> emergencyReason = Arrays.asList(new OrderReason("Losses"));
+        List<OrderType> types = Arrays.asList(new OrderType(OrderType.ROUTINE), new OrderType(OrderType.EMERGENCY));
+        when(orderServiceMock.allOrderReasons()).thenReturn(emergencyReason);
+        when(orderServiceMock.getNextSRVNumber()).thenReturn(TEST_SRV_NUMBER);
+        when(orderServiceMock.allOrderTypes()).thenReturn(types);
+        userServiceMock = mock(UserService.class);
+        when(userServiceMock.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        alertsServiceMock = mock(AlertsService.class);
+        setUpInjection(this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(OrderService.class).toInstance(orderServiceMock);
+                bind(UserService.class).toInstance(userServiceMock);
+                bind(AlertsService.class).toInstance(alertsServiceMock);
+            }
+        });
         Commodity commodity = mock(Commodity.class);
         when(commodity.getName()).thenReturn("Aspirin");
         when(commodity.getStockItem()).thenReturn(new StockItem(commodity, 20));
+
+        orderActivity = getOrderActivity();
+
+
 
         commodities = new ArrayList<>();
         commodityViewModel = new OrderCommodityViewModel(commodity, 10);
@@ -103,7 +138,11 @@ public class SelectedOrderCommoditiesAdapterTest {
         orderReasons.add(losses);
         orderReasons.add(highDemand);
         orderReasons.add(adjustments);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
+    }
+
+    private OrderActivity getOrderActivity() {
+        return setupActivity(OrderActivity.class);
     }
 
     @Test
@@ -264,7 +303,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldShowSpinnerForUnExpectedOrderReasonsIfOrderTypeIsNotRoutine() throws Exception {
         commodityViewModel.setExpectedOrderQuantity(10);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, emergency);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, emergency, orderActivity);
         View rowView = getRowView();
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isVisible();
@@ -273,7 +312,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldHideSpinnerForUnExpectedOrderReasonsIfOrderTypeIsRoutine() throws Exception {
         commodityViewModel.setExpectedOrderQuantity(10);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
         View rowView = getRowView();
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isNotVisible();
@@ -281,7 +320,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldDefaultToBlankForUnExpectedReasons() throws Exception {
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
         View rowView = getRowView();
 
 
@@ -296,7 +335,7 @@ public class SelectedOrderCommoditiesAdapterTest {
         commodities = new ArrayList<>();
         commodityViewModel.setOrderPeriodStartDate(currentDate);
         commodities.add(commodityViewModel);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine);
+        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
         View rowView = getRowView();
 
         TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
