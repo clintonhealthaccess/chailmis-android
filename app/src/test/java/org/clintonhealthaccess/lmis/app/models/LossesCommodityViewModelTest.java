@@ -36,7 +36,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class LossesCommodityViewModelTest {
-
     @Test
     public void shouldSumAllLosses() {
         LossesCommodityViewModel viewModel = new LossesCommodityViewModel(new Commodity("Food"));
@@ -47,5 +46,16 @@ public class LossesCommodityViewModelTest {
 
         viewModel.setMissing(2);
         assertThat(viewModel.totalLosses(), is(32));
+    }
+
+    @Test
+    public void shouldReturnLossItem() throws Exception {
+        LossesCommodityViewModel viewModel = new LossesCommodityViewModel(new Commodity("Food"));
+        viewModel.setExpiries(10);
+        viewModel.setWastages(20);
+
+        LossItem lossItem = viewModel.getLossItem();
+
+        assertThat(lossItem.getTotalLosses(), is(30));
     }
 }

@@ -74,8 +74,7 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public LossItem getLossItem() {
-        LossItem lossItem = new LossItem();
-        lossItem.setCommodity(getCommodity());
+        LossItem lossItem = new LossItem(getCommodity());
         lossItem.setExpiries(expiries);
         lossItem.setMissing(missing);
         lossItem.setWastages(wastage);

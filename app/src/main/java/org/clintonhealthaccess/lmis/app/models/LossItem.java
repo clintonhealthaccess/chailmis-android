@@ -39,19 +39,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import static com.google.common.collect.Lists.newArrayList;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @DatabaseTable(tableName = "loss_items")
 public class LossItem implements Serializable, Snapshotable {
 
     public static final String WASTED = "waste";
     public static final String MISSING = "missing";
     public static final String EXPIRED = "expire";
+
+    private List<LossItemDetail> lossItemDetails;
+
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -61,22 +59,23 @@ public class LossItem implements Serializable, Snapshotable {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Loss loss;
 
-    @DatabaseField(canBeNull = false)
-    private int wastages;
-
-    @DatabaseField(canBeNull = false)
-    private int missing;
-
-    @DatabaseField(canBeNull = false)
-    private int expiries;
+    @Deprecated
+    public LossItem() {
+        this(null, 0);
+    }
 
     public LossItem(Commodity commodity) {
-        this.commodity = commodity;
+        this(commodity, 0);
     }
 
     public LossItem(Commodity commodity, int expiries) {
-        this(commodity);
-        this.expiries = expiries;
+        lossItemDetails = newArrayList(
+                new LossItemDetail(this, WASTED),
+                new LossItemDetail(this, MISSING),
+                new LossItemDetail(this, EXPIRED)
+        );
+        this.commodity = commodity;
+        this.setExpiries(expiries);
     }
 
     public int getNewStockOnHand() {
@@ -84,9 +83,14 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     public int getTotalLosses() {
-        return missing + wastages + expiries;
+        return getMissing() + getWastages() + getExpiries();
     }
 
+
+    @Override
+    public Commodity getCommodity() {
+        return commodity;
+    }
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
@@ -101,15 +105,51 @@ public class LossItem implements Serializable, Snapshotable {
     private void selectActivity(List<CommoditySnapshotValue> values, CommodityAction activity) {
         String activityType = activity.getActivityType().toLowerCase();
         if (activityType.contains(WASTED)) {
-            values.add(new CommoditySnapshotValue(activity, wastages));
+            values.add(new CommoditySnapshotValue(activity, getWastages()));
         }
 
         if (activityType.contains(MISSING)) {
-            values.add(new CommoditySnapshotValue(activity, missing));
+            values.add(new CommoditySnapshotValue(activity, getMissing()));
         }
 
         if (activityType.contains(EXPIRED)) {
-            values.add(new CommoditySnapshotValue(activity, expiries));
+            values.add(new CommoditySnapshotValue(activity, getExpiries()));
         }
+    }
+
+    public void setWastages(int wastages) {
+        lossItemDetails.get(0).setValue(wastages);
+    }
+
+    public void setMissing(int missing) {
+        lossItemDetails.get(1).setValue(missing);
+    }
+
+    public void setExpiries(int expiries) {
+        lossItemDetails.get(2).setValue(expiries);
+    }
+
+    public void setLoss(Loss loss) {
+        this.loss = loss;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
+    }
+
+    private int getWastages() {
+        return lossItemDetails.get(0).getValue();
+    }
+
+    private int getMissing() {
+        return lossItemDetails.get(1).getValue();
+    }
+
+    private int getExpiries() {
+        return lossItemDetails.get(2).getValue();
+    }
+
+    public List<LossItemDetail> getLossItemDetails() {
+        return lossItemDetails;
     }
 }

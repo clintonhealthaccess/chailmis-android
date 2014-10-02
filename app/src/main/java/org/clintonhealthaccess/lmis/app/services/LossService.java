@@ -35,6 +35,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.clintonhealthaccess.lmis.app.models.LossItemDetail;
 
 import java.util.List;
 
@@ -59,9 +60,17 @@ public class LossService {
         GenericDao<LossItem> lossItemDao = new GenericDao<>(LossItem.class, context);
         for (LossItem lossItem : lossItems) {
             lossItemDao.create(lossItem);
+            saveLossItemDetails(lossItem.getLossItemDetails());
             adjustStockLevel(lossItem);
             snapshotService.add(lossItem);
 
+        }
+    }
+
+    private void saveLossItemDetails(List<LossItemDetail> lossItemDetails) {
+        GenericDao<LossItemDetail> lossItemDetailDao = new GenericDao<>(LossItemDetail.class, context);
+        for (LossItemDetail lossItemDetail : lossItemDetails) {
+            lossItemDetailDao.create(lossItemDetail);
         }
     }
 

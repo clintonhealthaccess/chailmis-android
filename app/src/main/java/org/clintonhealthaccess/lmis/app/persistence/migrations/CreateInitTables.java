@@ -17,6 +17,7 @@ import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.clintonhealthaccess.lmis.app.models.LossItemDetail;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
@@ -51,6 +52,7 @@ public class CreateInitTables implements Migration {
             createTableIfNotExists(connectionSource, DataSet.class);
             createTableIfNotExists(connectionSource, Loss.class);
             createTableIfNotExists(connectionSource, LossItem.class);
+            createTableIfNotExists(connectionSource, LossItemDetail.class);
             createTableIfNotExists(connectionSource, Allocation.class);
             createTableIfNotExists(connectionSource, AllocationItem.class);
             createTableIfNotExists(connectionSource, Receive.class);

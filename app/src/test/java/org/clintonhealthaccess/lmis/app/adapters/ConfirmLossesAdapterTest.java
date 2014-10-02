@@ -66,8 +66,7 @@ public class ConfirmLossesAdapterTest {
         when(commodity.getName()).thenReturn(COMMODITY_NAME);
         when(commodity.getStockOnHand()).thenReturn(20);
 
-        LossItem lossItem = new LossItem();
-        lossItem.setCommodity(commodity);
+        LossItem lossItem = new LossItem(commodity);
         lossItem.setWastages(2);
         lossItem.setExpiries(3);
 

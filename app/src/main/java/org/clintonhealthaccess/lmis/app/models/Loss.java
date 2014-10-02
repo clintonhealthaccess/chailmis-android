@@ -51,7 +51,7 @@ public class Loss implements Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = true, maxEagerLevel = 3)
     private ForeignCollection<LossItem> lossItemsCollection;
 
     private List<LossItem> lossItems = new ArrayList<>();
