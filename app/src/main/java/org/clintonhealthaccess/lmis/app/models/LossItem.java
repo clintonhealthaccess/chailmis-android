@@ -73,7 +73,7 @@ public class LossItem implements Serializable, Snapshotable {
         lossItemDetails = from(getLossCommodityActions(commodity)).transform(new Function<CommodityAction, LossItemDetail>() {
             @Override
             public LossItemDetail apply(CommodityAction input) {
-                return new LossItemDetail(LossItem.this, LossReason.valueOf(input.getActivityType()));
+                return new LossItemDetail(LossItem.this, LossReason.of(input));
             }
         }).toList();
         this.commodity = commodity;
@@ -108,8 +108,7 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     private void selectActivity(List<CommoditySnapshotValue> values, CommodityAction activity) {
-        final String activityType = activity.getActivityType();
-        LossItemDetail lossItemDetailForActivityType = getLossItemDetail(LossReason.valueOf(activityType));
+        LossItemDetail lossItemDetailForActivityType = getLossItemDetail(LossReason.of(activity));
         values.add(new CommoditySnapshotValue(activity, lossItemDetailForActivityType.getValue()));
     }
 

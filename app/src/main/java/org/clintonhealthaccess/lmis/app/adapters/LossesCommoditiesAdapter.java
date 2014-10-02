@@ -41,15 +41,29 @@ import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesViewModelCommands;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesViewModelCommand;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.models.LossReason;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
+import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
+
 public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewModel> {
+    private static final Map<LossReason, Integer> LOSS_REASON_TO_EDIT_TEXT_ID = new HashMap() {
+        {
+            put(WASTED, R.id.editTextWastages);
+            put(EXPIRED, R.id.editTextExpiries);
+            put(MISSING, R.id.editTextMissing);
+        }
+    };
 
     private final int resource;
 
@@ -66,33 +80,22 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(viewModel.getName());
 
-        setUpWastages(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextWastages));
-        setUpExpiries(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextExpiries));
-        setUpMissing(textViewCommodityName, viewModel, (EditText) rowView.findViewById(R.id.editTextMissing));
+        for (LossReason lossReason : viewModel.getLossReasons()) {
+            int editTextId = LOSS_REASON_TO_EDIT_TEXT_ID.get(lossReason);
+            setUpLosses(textViewCommodityName, viewModel, (EditText) rowView.findViewById(editTextId), lossReason);
+        }
+
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), viewModel);
         return rowView;
     }
 
-    private void setUpWastages(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextWastages) {
-        if (viewModel.getWastage() != 0)
-            editTextWastages.setText(String.valueOf(viewModel.getWastage()));
-        setupTextWatcher(textViewCommodityName, editTextWastages, new LossesViewModelCommands.SetWastageCommand(), viewModel);
+    private void setUpLosses(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editText, LossReason lossReason) {
+        if (viewModel.getLoss(lossReason) != 0)
+            editText.setText(String.valueOf(viewModel.getLoss(lossReason)));
+        setupTextWatcher(textViewCommodityName, editText, new LossesViewModelCommand(lossReason), viewModel);
     }
 
-
-    private void setUpExpiries(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextExpiries) {
-        if (viewModel.getExpiries() != 0)
-            editTextExpiries.setText(String.valueOf(viewModel.getExpiries()));
-        setupTextWatcher(textViewCommodityName, editTextExpiries, new LossesViewModelCommands.SetExpiriesCommand(), viewModel);
-    }
-
-    private void setUpMissing(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editTextMissing) {
-        if (viewModel.getMissing() != 0)
-            editTextMissing.setText(String.valueOf(viewModel.getMissing()));
-        setupTextWatcher(textViewCommodityName, editTextMissing, new LossesViewModelCommands.SetMissingCommand(), viewModel);
-    }
-
-    private void setupTextWatcher(final TextView textViewCommodityName, final EditText editText, final LossesViewModelCommands.Command command, final LossesCommodityViewModel viewModel) {
+    private void setupTextWatcher(final TextView textViewCommodityName, final EditText editText, final LossesViewModelCommand command, final LossesCommodityViewModel viewModel) {
         editText.addTextChangedListener(new LmisTextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {

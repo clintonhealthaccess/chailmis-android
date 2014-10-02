@@ -34,60 +34,52 @@ import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.LossReason;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
-import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
-import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.models.LossReason.getLossCommodityActions;
 
 public class LossesCommodityViewModel extends BaseCommodityViewModel {
-    private Map<LossReason, Integer> losses = new HashMap<>();
+    private Map<LossReason, Integer> losses = new LinkedHashMap<>();
 
     public LossesCommodityViewModel(Commodity commodity) {
         super(commodity);
         for (CommodityAction commodityAction : getLossCommodityActions(commodity)) {
-            losses.put(LossReason.valueOf(commodityAction.getActivityType()), 0);
+            LossReason lossReason = LossReason.of(commodityAction);
+            losses.put(lossReason, 0);
         }
     }
 
-    public int getWastage() {
-        return losses.get(WASTED);
+    public List<LossReason> getLossReasons() {
+        return newArrayList(losses.keySet());
     }
 
-    public int getMissing() {
-        return losses.get(MISSING);
+    public int getLoss(LossReason reason) {
+        return losses.get(reason);
     }
 
-    public int getExpiries() {
-        return losses.get(EXPIRED);
-    }
-
-    public void setMissing(int missing) {
-        losses.put(MISSING, missing);
-    }
-
-    public void setWastages(int wastage) {
-        losses.put(WASTED, wastage);
-    }
-
-    public void setExpiries(int expired) {
-        losses.put(EXPIRED, expired);
+    public void setLoss(LossReason reason, int amount) {
+        losses.put(reason, amount);
     }
 
     public int totalLosses() {
-        return getWastage() + getExpiries() + getMissing();
+        int result = 0;
+        for (Integer lossAmount : losses.values()) {
+            result += lossAmount;
+        }
+        return result;
     }
 
     public boolean isValid() {
-        return !(getMissing() == 0 && getExpiries() == 0 && getWastage() == 0) && totalLosses() <= getStockOnHand();
+        return totalLosses() > 0 && totalLosses() <= getStockOnHand();
     }
 
     public LossItem getLossItem() {
         LossItem lossItem = new LossItem(getCommodity());
         for (CommodityAction commodityAction : getLossCommodityActions(getCommodity())) {
-            LossReason lossReason = LossReason.valueOf(commodityAction.getActivityType());
+            LossReason lossReason = LossReason.of(commodityAction);
             lossItem.setLossAmount(lossReason, losses.get(lossReason));
         }
         return lossItem;

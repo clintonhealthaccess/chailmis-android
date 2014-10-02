@@ -51,6 +51,9 @@ import de.greenrobot.event.EventBus;
 
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.buildMockCommodity;
@@ -82,9 +85,9 @@ public class LossesCommoditiesAdapterTest {
 
         LossesCommodityViewModel viewModel = adapter.getItem(0);
 
-        assertThat(viewModel.getWastage(), is(10));
-        assertThat(viewModel.getMissing(), is(20));
-        assertThat(viewModel.getExpiries(), is(30));
+        assertThat(viewModel.getLoss(WASTED), is(10));
+        assertThat(viewModel.getLoss(MISSING), is(20));
+        assertThat(viewModel.getLoss(EXPIRED), is(30));
     }
 
     @Test
@@ -100,9 +103,9 @@ public class LossesCommoditiesAdapterTest {
     public void shouldPreLoadEditTextsWithValuesInViewModels() {
         Commodity commodity = buildMockCommodity();
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(commodity);
-        lossesCommodityViewModel.setMissing(1);
-        lossesCommodityViewModel.setWastages(3);
-        lossesCommodityViewModel.setExpiries(4);
+        lossesCommodityViewModel.setLoss(MISSING, 1);
+        lossesCommodityViewModel.setLoss(WASTED, 3);
+        lossesCommodityViewModel.setLoss(EXPIRED, 4);
         List<LossesCommodityViewModel> commodities = Arrays.asList(lossesCommodityViewModel);
         list_item_layout = R.layout.losses_commodity_list_item;
         adapter = new LossesCommoditiesAdapter(Robolectric.application, list_item_layout, commodities);

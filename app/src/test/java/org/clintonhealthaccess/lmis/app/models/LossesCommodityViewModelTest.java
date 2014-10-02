@@ -57,20 +57,20 @@ public class LossesCommodityViewModelTest {
     @Test
     public void shouldSumAllLosses() {
         LossesCommodityViewModel viewModel = new LossesCommodityViewModel(commodity);
-        viewModel.setExpiries(10);
-        viewModel.setWastages(20);
+        viewModel.setLoss(EXPIRED, 10);
+        viewModel.setLoss(WASTED, 20);
 
         assertThat(viewModel.totalLosses(), is(30));
 
-        viewModel.setMissing(2);
+        viewModel.setLoss(MISSING, 2);
         assertThat(viewModel.totalLosses(), is(32));
     }
 
     @Test
     public void shouldReturnLossItem() throws Exception {
         LossesCommodityViewModel viewModel = new LossesCommodityViewModel(commodity);
-        viewModel.setExpiries(10);
-        viewModel.setWastages(20);
+        viewModel.setLoss(EXPIRED, 10);
+        viewModel.setLoss(WASTED, 20);
 
         LossItem lossItem = viewModel.getLossItem();
 

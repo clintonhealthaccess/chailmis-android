@@ -51,6 +51,7 @@ import org.robolectric.shadows.ShadowToast;
 
 import de.greenrobot.event.EventBus;
 
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.buildMockCommodity;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -100,7 +101,7 @@ public class LossesActivityTest {
         when(mockCommodity.getStockOnHand()).thenReturn(10);
 
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(mockCommodity);
-        lossesCommodityViewModel.setMissing(1);
+        lossesCommodityViewModel.setLoss(MISSING, 1);
 
         EventBus.getDefault().post(new CommodityToggledEvent(lossesCommodityViewModel));
         Button submitButton = lossesActivity.getSubmitButton();

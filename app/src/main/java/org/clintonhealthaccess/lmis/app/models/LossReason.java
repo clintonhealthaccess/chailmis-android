@@ -11,13 +11,8 @@ public enum LossReason {
     MISSING,
     EXPIRED;
 
-    private static boolean isValidLossReason(String activityType) {
-        try {
-            valueOf(activityType);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+    public static LossReason of(CommodityAction commodityAction) {
+        return valueOf(commodityAction.getActivityType());
     }
 
     public static List<CommodityAction> getLossCommodityActions(Commodity commodity) {
@@ -28,5 +23,14 @@ public enum LossReason {
                 return LossReason.isValidLossReason(activityType);
             }
         }).toList();
+    }
+
+    private static boolean isValidLossReason(String activityType) {
+        try {
+            valueOf(activityType);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }
