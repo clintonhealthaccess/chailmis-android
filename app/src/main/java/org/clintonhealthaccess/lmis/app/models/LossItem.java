@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -39,6 +40,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
 @DatabaseTable(tableName = "loss_items")
@@ -83,7 +85,11 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     public int getTotalLosses() {
-        return getMissing() + getWastages() + getExpiries();
+        int result = 0;
+        for (LossItemDetail lossItemDetail : lossItemDetails) {
+            result += lossItemDetail.getValue();
+        }
+        return result;
     }
 
 
@@ -103,17 +109,15 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     private void selectActivity(List<CommoditySnapshotValue> values, CommodityAction activity) {
-        String activityType = activity.getActivityType().toLowerCase();
-        if (activityType.contains(WASTED)) {
-            values.add(new CommoditySnapshotValue(activity, getWastages()));
-        }
-
-        if (activityType.contains(MISSING)) {
-            values.add(new CommoditySnapshotValue(activity, getMissing()));
-        }
-
-        if (activityType.contains(EXPIRED)) {
-            values.add(new CommoditySnapshotValue(activity, getExpiries()));
+        final String activityType = activity.getActivityType().toLowerCase();
+        List<LossItemDetail> lossItemDetailsForActivityType = from(lossItemDetails).filter(new Predicate<LossItemDetail>() {
+            @Override
+            public boolean apply(LossItemDetail input) {
+                return activityType.contains(input.getReason());
+            }
+        }).toList();
+        if(lossItemDetailsForActivityType.size() == 1) {
+            values.add(new CommoditySnapshotValue(activity, lossItemDetailsForActivityType.get(0).getValue()));
         }
     }
 
@@ -135,18 +139,6 @@ public class LossItem implements Serializable, Snapshotable {
 
     public void setCommodity(Commodity commodity) {
         this.commodity = commodity;
-    }
-
-    private int getWastages() {
-        return lossItemDetails.get(0).getValue();
-    }
-
-    private int getMissing() {
-        return lossItemDetails.get(1).getValue();
-    }
-
-    private int getExpiries() {
-        return lossItemDetails.get(2).getValue();
     }
 
     public List<LossItemDetail> getLossItemDetails() {
