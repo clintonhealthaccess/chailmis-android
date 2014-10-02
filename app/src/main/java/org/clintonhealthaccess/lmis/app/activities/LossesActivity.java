@@ -46,7 +46,6 @@ import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -71,7 +70,7 @@ public class LossesActivity extends CommoditySelectableActivity {
 
     @Override
     protected ArrayAdapter getArrayAdapter() {
-        return new LossesCommoditiesAdapter(this, R.layout.losses_commodity_list_item, new ArrayList<LossesCommodityViewModel>());
+        return new LossesCommoditiesAdapter(this, R.layout.losses_commodity_list_item);
     }
 
     @Override

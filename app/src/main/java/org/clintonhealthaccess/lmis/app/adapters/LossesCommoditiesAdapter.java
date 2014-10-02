@@ -31,12 +31,15 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -46,30 +49,24 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.LossReason;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
-import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
-import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
-import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewModel> {
-    private static final Map<LossReason, Integer> LOSS_REASON_TO_EDIT_TEXT_ID = new HashMap() {
-        {
-            put(WASTED, R.id.editTextWastages);
-            put(EXPIRED, R.id.editTextExpiries);
-            put(MISSING, R.id.editTextMissing);
-        }
-    };
-
     private final int resource;
 
     public LossesCommoditiesAdapter(Context context, int resource, List<LossesCommodityViewModel> commodities) {
         super(context, resource, commodities);
         this.resource = resource;
+    }
+
+    public LossesCommoditiesAdapter(Context context, int resource) {
+        this(context, resource, new ArrayList<LossesCommodityViewModel>());
     }
 
     @Override
@@ -81,17 +78,35 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         textViewCommodityName.setText(viewModel.getName());
 
         for (LossReason lossReason : viewModel.getLossReasons()) {
-            int editTextId = LOSS_REASON_TO_EDIT_TEXT_ID.get(lossReason);
-            setUpLosses(textViewCommodityName, viewModel, (EditText) rowView.findViewById(editTextId), lossReason);
+            EditText editText = createLossAmountEditText(rowView, lossReason);
+            setUpLosses(textViewCommodityName, viewModel, editText, lossReason);
         }
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), viewModel);
         return rowView;
     }
 
+    private EditText createLossAmountEditText(View rowView, LossReason lossReason) {
+        LinearLayout lossAmountsLayout = (LinearLayout) rowView.findViewById(R.id.layoutLossAmounts);
+        TextView label = new TextView(getContext());
+        label.setText(lossReason.getLabel());
+        label.setTextSize(COMPLEX_UNIT_SP, 16);
+
+        EditText editText = new EditText(getContext());
+        TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 1);
+        editText.setLayoutParams(layoutParams);
+        editText.setTextSize(COMPLEX_UNIT_SP, 16);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        lossAmountsLayout.addView(label);
+        lossAmountsLayout.addView(editText);
+        return editText;
+    }
+
     private void setUpLosses(TextView textViewCommodityName, LossesCommodityViewModel viewModel, EditText editText, LossReason lossReason) {
-        if (viewModel.getLoss(lossReason) != 0)
+        if (viewModel.getLoss(lossReason) != 0) {
             editText.setText(String.valueOf(viewModel.getLoss(lossReason)));
+        }
         setupTextWatcher(textViewCommodityName, editText, new LossesViewModelCommand(lossReason), viewModel);
     }
 

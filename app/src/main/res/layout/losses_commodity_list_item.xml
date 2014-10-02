@@ -56,6 +56,7 @@
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <LinearLayout
+        android:id="@+id/layoutLossAmounts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewCommodityName"
@@ -63,53 +64,53 @@
         android:orientation="horizontal"
         android:paddingTop="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/wastage"
-            android:textSize="16sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/wastage"-->
+            <!--android:textSize="16sp" />-->
 
-        <EditText
-            android:id="@+id/editTextWastages"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:hint="@string/hint_quantity"
-            android:inputType="number"
-            android:textSize="16sp" />
+        <!--<EditText-->
+            <!--android:id="@+id/editTextWastages"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_weight="1"-->
+            <!--android:hint="@string/hint_quantity"-->
+            <!--android:inputType="number"-->
+            <!--android:textSize="16sp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/expired"
-            android:textSize="16sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/expired"-->
+            <!--android:textSize="16sp" />-->
 
-        <EditText
-            android:id="@+id/editTextExpiries"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:hint="@string/hint_quantity"
-            android:inputType="number"
-            android:textSize="16sp" />
+        <!--<EditText-->
+            <!--android:id="@+id/editTextExpiries"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_weight="1"-->
+            <!--android:hint="@string/hint_quantity"-->
+            <!--android:inputType="number"-->
+            <!--android:textSize="16sp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/missing"
-            android:textSize="16sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/missing"-->
+            <!--android:textSize="16sp" />-->
 
-        <EditText
-            android:id="@+id/editTextMissing"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:hint="@string/hint_quantity"
-            android:inputType="number"
-            android:textSize="16sp" />
+        <!--<EditText-->
+            <!--android:id="@+id/editTextMissing"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_weight="1"-->
+            <!--android:hint="@string/hint_quantity"-->
+            <!--android:inputType="number"-->
+            <!--android:textSize="16sp" />-->
 
 
     </LinearLayout>

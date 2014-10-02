@@ -34,15 +34,17 @@ import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.LossReason;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Maps.newHashMap;
 import static org.clintonhealthaccess.lmis.app.models.LossReason.getLossCommodityActions;
 
 public class LossesCommodityViewModel extends BaseCommodityViewModel {
-    private Map<LossReason, Integer> losses = new LinkedHashMap<>();
+    private Map<LossReason, Integer> losses = newHashMap();
 
     public LossesCommodityViewModel(Commodity commodity) {
         super(commodity);
@@ -53,7 +55,9 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public List<LossReason> getLossReasons() {
-        return newArrayList(losses.keySet());
+        ArrayList<LossReason> lossReasons = newArrayList(losses.keySet());
+        Collections.sort(lossReasons);
+        return lossReasons;
     }
 
     public int getLoss(LossReason reason) {

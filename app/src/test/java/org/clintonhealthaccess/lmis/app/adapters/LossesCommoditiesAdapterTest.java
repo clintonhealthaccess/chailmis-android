@@ -29,8 +29,13 @@
 
 package org.clintonhealthaccess.lmis.app.adapters;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -49,6 +54,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
@@ -81,7 +87,10 @@ public class LossesCommoditiesAdapterTest {
 
     @Test
     public void shouldSetViewModelParametersOnEditTextInput() {
-        enterValues(adapter);
+        List<EditText> allInputFields = getAllInputFields(adapter, list_item_layout);
+        allInputFields.get(0).setText("10");
+        allInputFields.get(1).setText("20");
+        allInputFields.get(2).setText("30");
 
         LossesCommodityViewModel viewModel = adapter.getItem(0);
 
@@ -103,19 +112,21 @@ public class LossesCommoditiesAdapterTest {
     public void shouldPreLoadEditTextsWithValuesInViewModels() {
         Commodity commodity = buildMockCommodity();
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(commodity);
-        lossesCommodityViewModel.setLoss(MISSING, 1);
         lossesCommodityViewModel.setLoss(WASTED, 3);
+        lossesCommodityViewModel.setLoss(MISSING, 1);
         lossesCommodityViewModel.setLoss(EXPIRED, 4);
         List<LossesCommodityViewModel> commodities = Arrays.asList(lossesCommodityViewModel);
         list_item_layout = R.layout.losses_commodity_list_item;
         adapter = new LossesCommoditiesAdapter(Robolectric.application, list_item_layout, commodities);
 
-        int missing = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).getText().toString());
-        int wastages = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextWastages)).getText().toString());
-        int expiries = getIntFromString(((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextExpiries)).getText().toString());
+        List<EditText> allInputFields = getAllInputFields(adapter, list_item_layout);
 
-        assertThat(missing, is(1));
+        int wastages = getIntFromString(allInputFields.get(0).getText().toString());
+        int missing = getIntFromString(allInputFields.get(1).getText().toString());
+        int expiries = getIntFromString(allInputFields.get(2).getText().toString());
+
         assertThat(wastages, is(3));
+        assertThat(missing, is(1));
         assertThat(expiries, is(4));
     }
 
@@ -124,7 +135,8 @@ public class LossesCommoditiesAdapterTest {
     public void shouldSetErrorsOnCommodityIfTotalLossesAreGreaterThanStockOnHand() {
         when(mockCommodity.getStockOnHand()).thenReturn(10);
 
-        ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).setText("8");
+        List<EditText> allInputFields = getAllInputFields(adapter, list_item_layout);
+        allInputFields.get(1).setText("8");
 
         TextView textViewCommodityName = (TextView)getViewFromListRow(adapter, list_item_layout, R.id.textViewCommodityName);
         assertNull(textViewCommodityName.getError());
@@ -141,9 +153,20 @@ public class LossesCommoditiesAdapterTest {
         }
     }
 
-    private void enterValues(LossesCommoditiesAdapter adapter) {
-        ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextWastages)).setText("10");
-        ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextMissing)).setText("20");
-        ((EditText) getViewFromListRow(adapter, list_item_layout, R.id.editTextExpiries)).setText("30");
+    private List<EditText> getAllInputFields(ArrayAdapter adapter, int row_layout) {
+        List<EditText> results = newArrayList();
+
+        ViewGroup genericLayout = new LinearLayout(Robolectric.application);
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(row_layout, null);
+        ViewGroup row = (ViewGroup) adapter.getView(0, convertView, genericLayout);
+        LinearLayout inputsLinearLayout = (LinearLayout) row.getChildAt(2);
+
+        for (int i = 0; i < inputsLinearLayout.getChildCount(); i++) {
+            View childView = inputsLinearLayout.getChildAt(i);
+            if (childView instanceof EditText) {
+                results.add((EditText) childView);
+            }
+        }
+        return results;
     }
 }

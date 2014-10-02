@@ -7,9 +7,20 @@ import java.util.List;
 import static com.google.common.collect.FluentIterable.from;
 
 public enum LossReason {
-    WASTED,
-    MISSING,
-    EXPIRED;
+    WASTED("Wastage"),
+    MISSING("Missing"),
+    EXPIRED("Expired"),
+    VVM_CHANGE("VVM Change"),
+    BREAKAGE("Breakage"),
+    FROZEN("Frozen"),
+    LABEL_REMOVED("Label Removed"),
+    OTHERS("Others");
+
+    private String label;
+
+    LossReason(String label) {
+        this.label = label;
+    }
 
     public static LossReason of(CommodityAction commodityAction) {
         return valueOf(commodityAction.getActivityType());
@@ -32,5 +43,9 @@ public enum LossReason {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public String getLabel() {
+        return label;
     }
 }
