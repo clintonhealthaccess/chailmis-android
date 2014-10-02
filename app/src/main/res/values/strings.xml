@@ -130,5 +130,7 @@
     <string name="order_failed">Order Failed</string>
     <string name="outstanding_routine_order_alerts_message">Outstanding previous orders will be combined with this order</string>
     <string name="stock_on_hand">Stock On Hand</string>
+    <string name="adjustment_type_validation_message">Make sure an adjustment reason is selected</string>
+
 
 </resources>

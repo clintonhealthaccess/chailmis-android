@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.View;
@@ -121,6 +120,7 @@ public class HomeActivity extends BaseActivity {
                     put(R.id.buttonLosses, LossesActivity.class);
                     put(R.id.buttonMessages, MessagesActivity.class);
                     put(R.id.buttonReports, ReportsActivity.class);
+                    put(R.id.buttonAdjustments, AdjustmentsActivity.class);
                 }
             };
 
@@ -148,29 +148,16 @@ public class HomeActivity extends BaseActivity {
 
         asignListenerToButtons(onClickListener);
 
-        setupAdjustmentsButton();
     }
 
     private void asignListenerToButtons(OnClickListener onClickListener) {
         List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
-                buttonLosses, buttonMessages, buttonReports);
+                buttonLosses, buttonAdjustments, buttonMessages, buttonReports);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }
     }
 
-    private void setupAdjustmentsButton() {
-        buttonAdjustments.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putBoolean(IS_ADJUSTMENT, true);
-                Intent intent = new Intent(getApplicationContext(), DispenseActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-    }
 
     private void setupAlerts() {
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = createAlertsTask();

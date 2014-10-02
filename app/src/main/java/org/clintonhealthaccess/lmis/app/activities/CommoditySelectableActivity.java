@@ -36,9 +36,12 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -57,9 +60,34 @@ import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
+import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
+
+    protected final ViewValidator<EditText> INVALID_AMOUNT = new ViewValidator<EditText>(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            try {
+                return Integer.parseInt(editTextQuantity.getText().toString()) <= 0;
+            } catch (NumberFormatException ex) {
+                return false;
+            }
+
+        }
+    }, R.id.editTextQuantity);
+    protected final ViewValidator<EditText> EMPTY = new ViewValidator<EditText>(R.string.dispense_submit_validation_message_filled, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            return editTextQuantity.getText().toString().isEmpty();
+        }
+    }, R.id.editTextQuantity);
+    protected final ViewValidator<EditText> HAS_ERROR = new ViewValidator<EditText>(R.string.dispense_submit_validation_message_errors, new Predicate<EditText>() {
+        @Override
+        public boolean apply(EditText editTextQuantity) {
+            return editTextQuantity.getError() != null;
+        }
+    }, R.id.editTextQuantity);
     @InjectView(R.id.gridViewSelectedCommodities)
     GridView gridViewSelectedCommodities;
     ArrayAdapter arrayAdapter;
@@ -115,6 +143,26 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected Button getSubmitButton();
 
+    protected boolean hasInvalidEditTextField(List<ViewValidator<EditText>> validators) {
+        for (final ViewValidator validator : validators) {
+            if (!validator.isValid()) {
+                showToastMessage(validator.toastMessage());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean hasInvalidSpinnerField(List<ViewValidator<Spinner>> validators) {
+        for (final ViewValidator validator : validators) {
+            if (!validator.isValid()) {
+                showToastMessage(validator.toastMessage());
+                return true;
+            }
+        }
+        return false;
+    }
+
     abstract protected int getLayoutId();
 
     abstract protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy();
@@ -161,5 +209,39 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     protected interface SelectedCommodityHandler {
         void operate(View view, BaseCommodityViewModel commodityViewModel);
+    }
+
+    public class ViewValidator<T extends View> {
+        private final Predicate<T> predicate;
+        private int toastMessageStringId;
+        private int viewId;
+
+        public ViewValidator(int stringId, Predicate<T> predicate, int viewId) {
+            toastMessageStringId = stringId;
+            this.predicate = predicate;
+            this.viewId = viewId;
+        }
+
+        private boolean isValid() {
+            return filter(wrap(gridViewSelectedCommodities), new Predicate<View>() {
+                @Override
+                public boolean apply(View view) {
+                    T childView = (T) view.findViewById(viewId);
+                    return predicate.apply(childView);
+                }
+            }).isEmpty();
+        }
+
+        private List<View> wrap(GridView gridView) {
+            List<View> result = newArrayList();
+            for (int i = 0; i < gridView.getChildCount(); i++) {
+                result.add(gridView.getChildAt(i));
+            }
+            return result;
+        }
+
+        public String toastMessage() {
+            return getString(toastMessageStringId);
+        }
     }
 }

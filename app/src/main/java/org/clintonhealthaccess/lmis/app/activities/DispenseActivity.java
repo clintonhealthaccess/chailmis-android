@@ -37,10 +37,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.TextView;
 
-import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -60,7 +58,6 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
-import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
@@ -68,29 +65,6 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 
 
 public class DispenseActivity extends CommoditySelectableActivity {
-    private final QuantityValidator INVALID_AMOUNT = new QuantityValidator(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
-        @Override
-        public boolean apply(EditText editTextQuantity) {
-            try {
-                return Integer.parseInt(editTextQuantity.getText().toString()) <= 0;
-            } catch (NumberFormatException ex) {
-                return false;
-            }
-
-        }
-    });
-    private final QuantityValidator EMPTY = new QuantityValidator(R.string.dispense_submit_validation_message_filled, new Predicate<EditText>() {
-        @Override
-        public boolean apply(EditText editTextQuantity) {
-            return editTextQuantity.getText().toString().isEmpty();
-        }
-    });
-    private final QuantityValidator HAS_ERROR = new QuantityValidator(R.string.dispense_submit_validation_message_errors, new Predicate<EditText>() {
-        @Override
-        public boolean apply(EditText editTextQuantity) {
-            return editTextQuantity.getError() != null;
-        }
-    });
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
@@ -112,15 +86,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @Inject
     DispensingService dispensingService;
 
-    private boolean hasInvalidField(List<QuantityValidator> validators) {
-        for (final QuantityValidator validator : validators) {
-            if (!validator.isValid()) {
-                showToastMessage(validator.toastMessage());
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     protected int getLayoutId() {
@@ -148,7 +113,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (hasInvalidField(of(INVALID_AMOUNT, EMPTY, HAS_ERROR))) {
+                        if (hasInvalidEditTextField(of(INVALID_AMOUNT, EMPTY, HAS_ERROR))) {
                             return;
                         }
 
@@ -232,35 +197,5 @@ public class DispenseActivity extends CommoditySelectableActivity {
         return dispensing;
     }
 
-    private class QuantityValidator {
-        private final Predicate<EditText> predicate;
-        private int toastMessageStringId;
 
-        public QuantityValidator(int stringId, Predicate<EditText> predicate) {
-            toastMessageStringId = stringId;
-            this.predicate = predicate;
-        }
-
-        private boolean isValid() {
-            return filter(wrap(gridViewSelectedCommodities), new Predicate<View>() {
-                @Override
-                public boolean apply(View view) {
-                    EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                    return predicate.apply(editTextQuantity);
-                }
-            }).isEmpty();
-        }
-
-        private List<View> wrap(GridView gridView) {
-            List<View> result = newArrayList();
-            for (int i = 0; i < gridView.getChildCount(); i++) {
-                result.add(gridView.getChildAt(i));
-            }
-            return result;
-        }
-
-        public String toastMessage() {
-            return getString(toastMessageStringId);
-        }
-    }
 }

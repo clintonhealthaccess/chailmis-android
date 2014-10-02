@@ -66,6 +66,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.HomeActivity" />
         </activity>
+
+        <activity
+            android:name=".activities.AdjustmentsActivity"
+            android:label="@string/adjustments"
+            android:parentActivityName=".activities.HomeActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
         <activity
             android:name=".activities.ReceiveActivity"
             android:label="@string/title_activity_receive"
@@ -137,6 +148,7 @@
         </service>
 
         <service android:name=".backgroundServices.AlertsGenerationIntentService" />
+
         <provider
             android:name="org.clintonhealthaccess.lmis.app.sync.StubContentProvider"
             android:authorities="@string/sync_content_authority"
