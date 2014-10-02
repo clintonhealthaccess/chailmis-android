@@ -32,6 +32,9 @@ package org.clintonhealthaccess.lmis.app.models;
 import org.junit.Test;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
@@ -42,14 +45,14 @@ public class LossItemTest {
     @Test
     public void shouldCreateActivitiesForMissingWastedAndExpiries() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityAction wasted = new CommodityAction(commodity, "12", "12", "waste");
-        CommodityAction missing = new CommodityAction(commodity, "12", "12", "missing");
-        CommodityAction expiries = new CommodityAction(commodity, "12", "12", "expired");
+        CommodityAction wasted = new CommodityAction(commodity, "12", "12", WASTED.name());
+        CommodityAction missing = new CommodityAction(commodity, "12", "12", MISSING.name());
+        CommodityAction expiries = new CommodityAction(commodity, "12", "12", EXPIRED.name());
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(wasted, missing, expiries));
         LossItem lossItem = new LossItem(commodity, 10);
-        lossItem.setWastages(10);
-        lossItem.setExpiries(20);
-        lossItem.setMissing(30);
+        lossItem.setLossAmount(WASTED, 10);
+        lossItem.setLossAmount(EXPIRED, 20);
+        lossItem.setLossAmount(MISSING, 30);
         assertThat(lossItem.getActivitiesValues().size(), is(3));
         CommoditySnapshotValue wastedValue = new CommoditySnapshotValue(wasted, 10);
         CommoditySnapshotValue expiriesValue = new CommoditySnapshotValue(expiries, 20);

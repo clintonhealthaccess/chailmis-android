@@ -8,6 +8,7 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
@@ -26,9 +27,9 @@ public class LossItemDetail implements Serializable {
     @DatabaseField(canBeNull = false)
     private String reason;
 
-    public LossItemDetail(LossItem lossItem, String reason) {
+    public LossItemDetail(LossItem lossItem, LossReason reason) {
         this.lossItem = lossItem;
-        this.reason = reason;
+        this.reason = reason.name();
         this.value = 0;
     }
 }

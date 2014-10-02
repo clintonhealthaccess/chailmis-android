@@ -30,15 +30,33 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
+import org.junit.Before;
 import org.junit.Test;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class LossesCommodityViewModelTest {
+    private Commodity commodity;
+
+    @Before
+    public void setUp() throws Exception {
+        commodity = mock(Commodity.class);
+        CommodityAction wasted = new CommodityAction(commodity, "fake_id_1", "commodity WASTED", WASTED.name());
+        CommodityAction missing = new CommodityAction(commodity, "fake_id_2", "commodity MISSING", MISSING.name());
+        CommodityAction expiries = new CommodityAction(commodity, "fake_id_3", "commodity EXPIRED", EXPIRED.name());
+        when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(wasted, missing, expiries));
+    }
+
     @Test
     public void shouldSumAllLosses() {
-        LossesCommodityViewModel viewModel = new LossesCommodityViewModel(new Commodity("Food"));
+        LossesCommodityViewModel viewModel = new LossesCommodityViewModel(commodity);
         viewModel.setExpiries(10);
         viewModel.setWastages(20);
 
@@ -50,7 +68,7 @@ public class LossesCommodityViewModelTest {
 
     @Test
     public void shouldReturnLossItem() throws Exception {
-        LossesCommodityViewModel viewModel = new LossesCommodityViewModel(new Commodity("Food"));
+        LossesCommodityViewModel viewModel = new LossesCommodityViewModel(commodity);
         viewModel.setExpiries(10);
         viewModel.setWastages(20);
 

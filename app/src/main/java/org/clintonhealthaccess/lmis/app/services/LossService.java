@@ -63,7 +63,6 @@ public class LossService {
             saveLossItemDetails(lossItem.getLossItemDetails());
             adjustStockLevel(lossItem);
             snapshotService.add(lossItem);
-
         }
     }
 

@@ -53,9 +53,9 @@ import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
+import static org.clintonhealthaccess.lmis.utils.TestFixture.buildMockCommodity;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -68,7 +68,7 @@ public class LossesCommoditiesAdapterTest {
 
     @Before
     public void setUp() {
-        mockCommodity = mock(Commodity.class);
+        mockCommodity = buildMockCommodity();
         when(mockCommodity.getStockOnHand()).thenReturn(10000);
         List<LossesCommodityViewModel> commodities = Arrays.asList(new LossesCommodityViewModel(mockCommodity));
         list_item_layout = R.layout.losses_commodity_list_item;
@@ -98,7 +98,7 @@ public class LossesCommoditiesAdapterTest {
 
     @Test
     public void shouldPreLoadEditTextsWithValuesInViewModels() {
-        Commodity commodity = new Commodity("Commodity");
+        Commodity commodity = buildMockCommodity();
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(commodity);
         lossesCommodityViewModel.setMissing(1);
         lossesCommodityViewModel.setWastages(3);

@@ -51,6 +51,7 @@ import org.robolectric.shadows.ShadowToast;
 
 import de.greenrobot.event.EventBus;
 
+import static org.clintonhealthaccess.lmis.utils.TestFixture.buildMockCommodity;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -95,8 +96,9 @@ public class LossesActivityTest {
 
     @Test
     public void shouldOpenConfirmDialogIfLossesAreValid() throws Exception {
-        Commodity mockCommodity = mock(Commodity.class);
+        Commodity mockCommodity = buildMockCommodity();
         when(mockCommodity.getStockOnHand()).thenReturn(10);
+
         LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(mockCommodity);
         lossesCommodityViewModel.setMissing(1);
 
@@ -110,7 +112,7 @@ public class LossesActivityTest {
 
     @Test
     public void shouldNotOpenConfirmDialogIfLossesAreInvalid() {
-        LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(new Commodity("Panado"));
+        LossesCommodityViewModel lossesCommodityViewModel = new LossesCommodityViewModel(buildMockCommodity());
         EventBus.getDefault().post(new CommodityToggledEvent(lossesCommodityViewModel));
         Button submitButton = lossesActivity.getSubmitButton();
         submitButton.performClick();

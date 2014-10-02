@@ -30,43 +30,54 @@
 package org.clintonhealthaccess.lmis.app.activities.viewmodels;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.clintonhealthaccess.lmis.app.models.LossReason;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.clintonhealthaccess.lmis.app.models.LossReason.EXPIRED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.MISSING;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.WASTED;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.getLossCommodityActions;
 
 public class LossesCommodityViewModel extends BaseCommodityViewModel {
-
-    private int wastage, expiries, missing;
+    private Map<LossReason, Integer> losses = new HashMap<>();
 
     public LossesCommodityViewModel(Commodity commodity) {
         super(commodity);
-    }
-
-    public void setWastages(int wastage) {
-        this.wastage = wastage;
+        for (CommodityAction commodityAction : getLossCommodityActions(commodity)) {
+            losses.put(LossReason.valueOf(commodityAction.getActivityType()), 0);
+        }
     }
 
     public int getWastage() {
-        return wastage;
+        return losses.get(WASTED);
     }
 
     public int getMissing() {
-        return missing;
+        return losses.get(MISSING);
+    }
+
+    public int getExpiries() {
+        return losses.get(EXPIRED);
     }
 
     public void setMissing(int missing) {
-        this.missing = missing;
+        losses.put(MISSING, missing);
     }
 
-
-    public int getExpiries() {
-        return expiries;
+    public void setWastages(int wastage) {
+        losses.put(WASTED, wastage);
     }
 
     public void setExpiries(int expired) {
-        this.expiries = expired;
+        losses.put(EXPIRED, expired);
     }
 
     public int totalLosses() {
-        return wastage + expiries + missing;
+        return getWastage() + getExpiries() + getMissing();
     }
 
     public boolean isValid() {
@@ -75,9 +86,10 @@ public class LossesCommodityViewModel extends BaseCommodityViewModel {
 
     public LossItem getLossItem() {
         LossItem lossItem = new LossItem(getCommodity());
-        lossItem.setExpiries(expiries);
-        lossItem.setMissing(missing);
-        lossItem.setWastages(wastage);
+        for (CommodityAction commodityAction : getLossCommodityActions(getCommodity())) {
+            LossReason lossReason = LossReason.valueOf(commodityAction.getActivityType());
+            lossItem.setLossAmount(lossReason, losses.get(lossReason));
+        }
         return lossItem;
     }
 }

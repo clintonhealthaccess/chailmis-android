@@ -139,7 +139,6 @@ public class Commodity implements Serializable {
         return true;
     }
 
-
     public int getStockOnHand() {
         return getStockItem().getQuantity();
     }

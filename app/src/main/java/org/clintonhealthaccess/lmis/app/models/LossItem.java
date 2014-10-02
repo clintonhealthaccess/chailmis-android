@@ -29,11 +29,12 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
 import java.io.Serializable;
@@ -41,14 +42,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.ImmutableList.copyOf;
+import static java.lang.String.format;
+import static org.clintonhealthaccess.lmis.app.models.LossReason.getLossCommodityActions;
 
 @DatabaseTable(tableName = "loss_items")
 public class LossItem implements Serializable, Snapshotable {
-
-    public static final String WASTED = "waste";
-    public static final String MISSING = "missing";
-    public static final String EXPIRED = "expire";
 
     private List<LossItemDetail> lossItemDetails;
 
@@ -63,7 +62,7 @@ public class LossItem implements Serializable, Snapshotable {
 
     @Deprecated
     public LossItem() {
-        this(null, 0);
+
     }
 
     public LossItem(Commodity commodity) {
@@ -71,13 +70,14 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     public LossItem(Commodity commodity, int expiries) {
-        lossItemDetails = newArrayList(
-                new LossItemDetail(this, WASTED),
-                new LossItemDetail(this, MISSING),
-                new LossItemDetail(this, EXPIRED)
-        );
+        lossItemDetails = from(getLossCommodityActions(commodity)).transform(new Function<CommodityAction, LossItemDetail>() {
+            @Override
+            public LossItemDetail apply(CommodityAction input) {
+                return new LossItemDetail(LossItem.this, LossReason.valueOf(input.getActivityType()));
+            }
+        }).toList();
         this.commodity = commodity;
-        this.setExpiries(expiries);
+        setLossAmount(LossReason.EXPIRED, expiries);
     }
 
     public int getNewStockOnHand() {
@@ -92,7 +92,6 @@ public class LossItem implements Serializable, Snapshotable {
         return result;
     }
 
-
     @Override
     public Commodity getCommodity() {
         return commodity;
@@ -100,7 +99,7 @@ public class LossItem implements Serializable, Snapshotable {
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        List<CommodityAction> activities = ImmutableList.copyOf(getCommodity().getCommodityActionsSaved());
+        List<CommodityAction> activities = copyOf(getLossCommodityActions(getCommodity()));
         List<CommoditySnapshotValue> values = new ArrayList<>();
         for (CommodityAction activity : activities) {
             selectActivity(values, activity);
@@ -109,28 +108,29 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     private void selectActivity(List<CommoditySnapshotValue> values, CommodityAction activity) {
-        final String activityType = activity.getActivityType().toLowerCase();
+        final String activityType = activity.getActivityType();
+        LossItemDetail lossItemDetailForActivityType = getLossItemDetail(LossReason.valueOf(activityType));
+        values.add(new CommoditySnapshotValue(activity, lossItemDetailForActivityType.getValue()));
+    }
+
+    private LossItemDetail getLossItemDetail(final LossReason lossReason) {
         List<LossItemDetail> lossItemDetailsForActivityType = from(lossItemDetails).filter(new Predicate<LossItemDetail>() {
             @Override
             public boolean apply(LossItemDetail input) {
-                return activityType.contains(input.getReason());
+                return lossReason.name().contains(input.getReason());
             }
         }).toList();
-        if(lossItemDetailsForActivityType.size() == 1) {
-            values.add(new CommoditySnapshotValue(activity, lossItemDetailsForActivityType.get(0).getValue()));
+        LossItemDetail lossItemDetailForActivityType;
+        try {
+            lossItemDetailForActivityType = lossItemDetailsForActivityType.get(0);
+        } catch (IndexOutOfBoundsException e) {
+            throw new LmisException(format("Cannot find loss item detail for %s", lossReason), e);
         }
+        return lossItemDetailForActivityType;
     }
 
-    public void setWastages(int wastages) {
-        lossItemDetails.get(0).setValue(wastages);
-    }
-
-    public void setMissing(int missing) {
-        lossItemDetails.get(1).setValue(missing);
-    }
-
-    public void setExpiries(int expiries) {
-        lossItemDetails.get(2).setValue(expiries);
+    public void setLossAmount(LossReason reason, int amount) {
+        getLossItemDetail(reason).setValue(amount);
     }
 
     public void setLoss(Loss loss) {

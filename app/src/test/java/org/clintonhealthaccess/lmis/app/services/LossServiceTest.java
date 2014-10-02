@@ -103,13 +103,14 @@ public class LossServiceTest {
     public void shouldUpdateSnapShotWhenLossItemIsSaved() throws Exception {
         Commodity commodity = commodityService.all().get(0);
         assertThat(snapshotGenericDao.queryForAll().size(), is(0));
+
         int stockOnHand = commodity.getStockOnHand();
         int expectedStockOnHand = stockOnHand - 1;
         Loss loss = new Loss();
         loss.addLossItem(new LossItem(commodity, 1));
         lossService.saveLoss(loss);
         commodity = commodityService.all().get(0);
-        assertThat(snapshotGenericDao.queryForAll().size(), is(3));
-
+        assertThat(commodity.getStockOnHand(), is(expectedStockOnHand));
+        assertThat(snapshotGenericDao.queryForAll().size(), is(2));
     }
 }
