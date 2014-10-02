@@ -30,14 +30,16 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
@@ -45,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.AdjustmentsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 
@@ -105,14 +108,24 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                             return;
                         }
 
-                        Toast.makeText(getApplicationContext(), "IT IS VALID", Toast.LENGTH_SHORT).show();
-
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        List<Adjustment> adjustments = getAdjustments();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
 //                        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
 //                        dialog.show(fragmentManager, "confirmDispensing");
                     }
                 }
         );
+    }
+
+    private List<Adjustment> getAdjustments() {
+        return FluentIterable.from(selectedCommodities).transform(new Function<BaseCommodityViewModel, Adjustment>() {
+            @Override
+            public Adjustment apply(BaseCommodityViewModel input) {
+                AdjustmentsViewModel model = (AdjustmentsViewModel) input;
+
+                return new Adjustment(model.getCommodity(), model.getQuantityEntered(), model.isPositive(), model.getAdjustmentReason().getName());
+            }
+        }).toList();
     }
 
     private void setUpSpinnerAdjustmentReason() {
