@@ -32,8 +32,14 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.clintonhealthaccess.lmis.app.services.Snapshotable;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @DatabaseTable
-public class Adjustment {
+public class Adjustment implements Serializable, Snapshotable {
     public Adjustment() {
         //orm likes
     }
@@ -53,11 +59,54 @@ public class Adjustment {
     @DatabaseField(canBeNull = false)
     private String reason;
 
-
     public Adjustment(Commodity commodity, int quantityEntered, boolean positive, String reason) {
         this.commodity = commodity;
         this.quantity = quantityEntered;
         this.positive = positive;
         this.reason = reason;
+    }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    @Override
+    public List<CommoditySnapshotValue> getActivitiesValues() {
+        List<CommoditySnapshotValue> values = new ArrayList<>();
+        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENTS), quantity));
+        //FIXME clarify on how to submit adjustments data esp reason
+//        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENT_REASON), reason));
+        return values;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public boolean isPositive() {
+        return positive;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public String getType() {
+        if (positive) {
+            return "+";
+        }
+        return "-";
+    }
+
+    public int getNewStockOnHand() {
+        int stock = commodity.getStockOnHand();
+        if (positive) {
+            return stock + quantity;
+        }
+        return stock - quantity;
     }
 }

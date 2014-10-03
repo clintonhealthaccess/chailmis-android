@@ -100,8 +100,8 @@ public class OrderActivity extends CommoditySelectableActivity {
     private String prepopulatedOrderType;
     private Keyboard keyBoard;
     private KeyboardView keyBoardView;
-    public final static int CodeDelete = -5; // Keyboard.KEYCODE_DELETE
-    public final static int CodeCancel = -3; // Keyboard.KEYCODE_CANCEL
+    public final static int CodeDelete = -5;
+    public final static int CodeCancel = -3;
 
     private int getSelectedCommoditiesAdapterId() {
         return R.layout.selected_order_commodity_list_item;
@@ -204,11 +204,11 @@ public class OrderActivity extends CommoditySelectableActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 EditText edittext = (EditText) v;
-                int inType = edittext.getInputType();       // Backup the input type
-                edittext.setInputType(InputType.TYPE_NULL); // Disable standard keyboard
-                edittext.onTouchEvent(event);               // Call native handler
-                edittext.setInputType(inType);              // Restore input type
-                return true; // Consume touch event
+                int inType = edittext.getInputType();
+                edittext.setInputType(InputType.TYPE_NULL);
+                edittext.onTouchEvent(event);
+                edittext.setInputType(inType);
+                return true;
             }
         });
     }

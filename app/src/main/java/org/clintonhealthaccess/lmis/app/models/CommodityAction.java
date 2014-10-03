@@ -79,6 +79,8 @@ public class CommodityAction implements Serializable {
     public static final String EMERGENCY_REASON_FOR_ORDER = "EMERGENCY_REASON_FOR_ORDER";
     public static final String ORDERED_AMOUNT = "ORDERED_AMOUNT";
     public static final String REASON_FOR_ORDER = "REASON_FOR_ORDER";
+    public static final String ADJUSTMENTS = "ADJUSTMENTS";
+    public static final String ADJUSTMENT_REASON = "ADJUSTMENT_REASON";
 
     public CommodityAction() {
         //Orm Lite likes

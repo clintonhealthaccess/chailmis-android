@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.AdjustmentsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.fragments.ConfirmAdjustmentsFragment;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -115,8 +116,8 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
                         List<Adjustment> adjustments = getAdjustments();
                         FragmentManager fragmentManager = getSupportFragmentManager();
-//                        DispenseConfirmationFragment dialog = DispenseConfirmationFragment.newInstance(getDispensing());
-//                        dialog.show(fragmentManager, "confirmDispensing");
+                        ConfirmAdjustmentsFragment dialog = ConfirmAdjustmentsFragment.newInstance(new ArrayList<Adjustment>(adjustments));
+                        dialog.show(fragmentManager, "confirmAdjustments");
                     }
                 }
         );

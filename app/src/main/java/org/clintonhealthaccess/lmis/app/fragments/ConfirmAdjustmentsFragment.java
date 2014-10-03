@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.fragments;
 
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,116 +45,115 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.ConfirmReceiveAdapter;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.services.ReceiveService;
+import org.clintonhealthaccess.lmis.app.adapters.ConfirmAdjustmentsAdapter;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
+
+import java.util.ArrayList;
 
 import roboguice.fragment.RoboDialogFragment;
 
-public class ReceiveConfirmFragment extends RoboDialogFragment {
 
-    public static final String RECEIVE = "RECEIVE";
-    private static final String CONTEXT = "CONTEXT";
-    private Receive receive;
+public class ConfirmAdjustmentsFragment extends RoboDialogFragment {
 
+    private static final String ADJUSTMENTS = "adjustments";
+    private ArrayList<Adjustment> adjustments;
 
     @Inject
-    private ReceiveService receiveService;
+    AdjustmentService adjustmentService;
 
-    public static ReceiveConfirmFragment newInstance(Receive receive) {
-        ReceiveConfirmFragment receiveConfirmFragment = new ReceiveConfirmFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(RECEIVE, receive);
-        receiveConfirmFragment.setArguments(bundle);
-        return receiveConfirmFragment;
+
+    public static ConfirmAdjustmentsFragment newInstance(ArrayList<Adjustment> adjustments) {
+        ConfirmAdjustmentsFragment fragment = new ConfirmAdjustmentsFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ADJUSTMENTS, adjustments);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public ConfirmAdjustmentsFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            receive = (Receive) getArguments().get(RECEIVE);
+            adjustments = (ArrayList<Adjustment>) getArguments().getSerializable(ADJUSTMENTS);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_receive_confirmation, container, false);
-
-        Button confirmButton = (Button) view.findViewById(R.id.button_receive_confirm);
-        Button backButton = (Button) view.findViewById(R.id.button_receive_go_back);
-        ListView listViewReceiveItems = (ListView) view.findViewById(R.id.listViewConfirmReceive);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_confirm_adjustments, container, false);
+        Button buttonConfirmAdjustments = (Button) view.findViewById(R.id.buttonAdjustmentConfirm);
+        Button buttonCancelAdjustments = (Button) view.findViewById(R.id.buttonAdjustmentGoBack);
+        ListView listViewConfirmItems = (ListView) view.findViewById(R.id.listViewConfirmItems);
 
         getDialog().setCanceledOnTouchOutside(false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        ConfirmReceiveAdapter confirmReceiveAdapter = new ConfirmReceiveAdapter(getActivity().getApplicationContext(), R.layout.receive_confirm_list_item, receive.getReceiveItems());
-        listViewReceiveItems.addHeaderView(inflater.inflate(R.layout.confirm_receive_header, container));
-        listViewReceiveItems.setAdapter(confirmReceiveAdapter);
+        listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header_adjustment, container));
+        listViewConfirmItems.setAdapter(new ConfirmAdjustmentsAdapter(getActivity().getApplicationContext(), R.layout.confirm_adjustment_list_item, adjustments));
 
-        backButton.setOnClickListener(new View.OnClickListener() {
+        buttonConfirmAdjustments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                new AdjustmentSaveTask().execute();
+            }
+        });
+
+        buttonCancelAdjustments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dismiss();
             }
         });
-
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SaveReceiveTask(ReceiveConfirmFragment.this).execute();
-
-            }
-        });
-
         return view;
     }
 
-    private class SaveReceiveTask extends AsyncTask<Void, Void, Boolean> {
-        private ProgressDialog dialog;
-        private ReceiveConfirmFragment fragment;
 
-        public SaveReceiveTask(ReceiveConfirmFragment fragment) {
-            this.fragment = fragment;
-        }
+    private class AdjustmentSaveTask extends AsyncTask<Void, Void, Boolean> {
+
+        private ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            this.dialog = new ProgressDialog(getActivity());
-            this.dialog.setMessage(getString(R.string.receive_saving));
-            this.dialog.show();
+            dialog = new ProgressDialog(getActivity());
+            dialog.setMessage("Saving...");
+            dialog.show();
         }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-                receiveService.saveReceive(receive);
-            } catch (Exception ex) {
-                return false;
+                adjustmentService.save(adjustments);
+                return true;
+            } catch (Exception e) {
+
+                throw e;
             }
-            return true;
         }
 
         @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            if (success) {
-                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_LONG).show();
-
-
-                fragment.dismiss();
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if (result) {
+                Toast.makeText(getActivity().getApplicationContext(), "Adjustments Saved!", Toast.LENGTH_LONG).show();
+                dismiss();
                 FragmentActivity activity = getActivity();
                 if (activity != null) {
                     activity.finish();
                     startActivity(activity.getIntent());
                 }
             } else {
-                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_failed), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Failed to save Adjustments", Toast.LENGTH_LONG).show();
             }
-
-            this.dialog.dismiss();
-
+            dialog.dismiss();
         }
     }
+
+
 }

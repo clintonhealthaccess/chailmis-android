@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.j256.ormlite.support.ConnectionSource;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -63,6 +64,7 @@ public class CreateInitTables implements Migration {
             createTableIfNotExists(connectionSource, LowStockAlert.class);
             createTableIfNotExists(connectionSource, RoutineOrderAlert.class);
             createTableIfNotExists(connectionSource, AllocationAlert.class);
+            createTableIfNotExists(connectionSource, Adjustment.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

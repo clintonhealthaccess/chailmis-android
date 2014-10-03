@@ -89,7 +89,7 @@ public class ReceiveItem implements Snapshotable {
                 if (receive.isReceiveFromFacility()) {
                     return new CommoditySnapshotValue(input, quantityReceived);
                 } else {
-                    return new CommoditySnapshotValue(input, quantityReceived, receive.getAllocation().getPeriod());
+                    return new CommoditySnapshotValue(input, quantityReceived, getAllocationPeriod());
                 }
             }
         };
@@ -100,7 +100,7 @@ public class ReceiveItem implements Snapshotable {
                 if (receive.isReceiveFromFacility()) {
                     return new CommoditySnapshotValue(input, today);
                 } else {
-                    return new CommoditySnapshotValue(input, today, receive.getAllocation().getPeriod());
+                    return new CommoditySnapshotValue(input, today, getAllocationPeriod());
                 }
             }
         };
@@ -110,6 +110,15 @@ public class ReceiveItem implements Snapshotable {
         List<CommoditySnapshotValue> result = newArrayList(receivedValues);
         result.addAll(receiveDateValues);
         return result;
+    }
+
+    private String getAllocationPeriod() {
+        Allocation allocation = receive.getAllocation();
+        if (allocation != null) {
+            return allocation.getPeriod();
+        }
+        return "";
+
     }
 
     private FluentIterable<CommodityAction> filterCommodityActions(final String type) {

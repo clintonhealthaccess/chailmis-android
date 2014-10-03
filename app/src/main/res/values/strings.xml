@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
   ~
@@ -25,12 +26,14 @@
   ~ The views and conclusions contained in the software and documentation are those
   ~ of the authors and should not be interpreted as representing official policies,
   ~ either expressed or implied, of the FreeBSD Project.
-  -->
-
+-->
 <resources>
+
     <string name="app_name">DHIS2 LMIS</string>
+
     <integer name="sync_interval">60</integer>
     <integer name="monthly_stock_count_day">24</integer>
+
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
     <string name="register_label">Please register with your LMIS credentials:</string>
@@ -132,6 +135,6 @@
     <string name="outstanding_routine_order_alerts_message">Outstanding previous orders will be combined with this order</string>
     <string name="stock_on_hand">Stock On Hand</string>
     <string name="adjustment_type_validation_message">Make sure an adjustment reason is selected</string>
-
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
