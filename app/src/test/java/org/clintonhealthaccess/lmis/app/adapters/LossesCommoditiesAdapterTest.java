@@ -94,9 +94,9 @@ public class LossesCommoditiesAdapterTest {
 
         LossesCommodityViewModel viewModel = adapter.getItem(0);
 
-        assertThat(viewModel.getLoss(WASTED), is(10));
-        assertThat(viewModel.getLoss(MISSING), is(20));
-        assertThat(viewModel.getLoss(EXPIRED), is(30));
+        assertThat(viewModel.getLoss(EXPIRED), is(10));
+        assertThat(viewModel.getLoss(WASTED), is(20));
+        assertThat(viewModel.getLoss(MISSING), is(30));
     }
 
     @Test
@@ -121,9 +121,9 @@ public class LossesCommoditiesAdapterTest {
 
         List<EditText> allInputFields = getAllInputFields(adapter, list_item_layout);
 
-        int wastages = getIntFromString(allInputFields.get(0).getText().toString());
-        int missing = getIntFromString(allInputFields.get(1).getText().toString());
-        int expiries = getIntFromString(allInputFields.get(2).getText().toString());
+        int expiries = getIntFromString(allInputFields.get(0).getText().toString());
+        int wastages = getIntFromString(allInputFields.get(1).getText().toString());
+        int missing = getIntFromString(allInputFields.get(2).getText().toString());
 
         assertThat(wastages, is(3));
         assertThat(missing, is(1));
