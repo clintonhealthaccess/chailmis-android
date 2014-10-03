@@ -7,9 +7,9 @@ import java.util.List;
 import static com.google.common.collect.FluentIterable.from;
 
 public enum LossReason {
+    EXPIRED("Expired"),
     WASTED("Wastage"),
     MISSING("Missing"),
-    EXPIRED("Expired"),
     VVM_CHANGE("VVM Change"),
     BREAKAGE("Breakage"),
     FROZEN("Frozen"),

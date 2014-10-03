@@ -29,9 +29,11 @@
 
 package org.clintonhealthaccess.lmis.app.adapters;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -77,17 +80,46 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(viewModel.getName());
 
+        int i = 0;
+        RelativeLayout relativeLayoutContainer = (RelativeLayout) rowView.findViewById(R.id.relativeLayoutContainer);
+        LinearLayout linearLayout = addLinearLayout(relativeLayoutContainer, 1, textViewCommodityName.getId(), R.id.imageButtonCancel);
         for (LossReason lossReason : viewModel.getLossReasons()) {
-            EditText editText = createLossAmountEditText(rowView, lossReason);
+            EditText editText = createLossAmountEditText(linearLayout, lossReason);
             setUpLosses(textViewCommodityName, viewModel, editText, lossReason);
+            i++;
+            if (i % 3 == 0) {
+                linearLayout = addLinearLayout(relativeLayoutContainer, i/3+1, linearLayout.getId(), R.id.imageButtonCancel);
+            }
         }
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), viewModel);
         return rowView;
     }
 
-    private EditText createLossAmountEditText(View rowView, LossReason lossReason) {
-        LinearLayout lossAmountsLayout = (LinearLayout) rowView.findViewById(R.id.layoutLossAmounts);
+    private LinearLayout addLinearLayout(RelativeLayout container, int idNo, int belowId, int leftOfId) {
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.BELOW, belowId);
+        layoutParams.addRule(RelativeLayout.LEFT_OF, leftOfId);
+
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.setPadding(10, 10, 10, 10);
+        setId(linearLayout, idNo);
+        container.addView(linearLayout, layoutParams);
+        return linearLayout;
+    }
+
+    private void setId(View view, int idNo){
+        if(idNo==1)
+            view.setId(R.id.dynamicLinearLayout1);
+        if(idNo==2)
+            view.setId(R.id.dynamicLinearLayout2);
+        if(idNo==3)
+            view.setId(R.id.dynamicLinearLayout3);
+    }
+
+    private EditText createLossAmountEditText(LinearLayout lossAmountsLayout, LossReason lossReason) {
         TextView label = new TextView(getContext());
         label.setText(lossReason.getLabel());
         label.setTextSize(COMPLEX_UNIT_SP, 16);

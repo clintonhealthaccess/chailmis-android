@@ -30,4 +30,7 @@
 <resources>
     <item name="imageMaximumThreshold" type="id" />
     <item name="textViewCommodityname" type="id" />
+    <item name="dynamicLinearLayout1" type="id"/>
+    <item name="dynamicLinearLayout2" type="id"/>
+    <item name="dynamicLinearLayout3" type="id"/>
 </resources>
