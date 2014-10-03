@@ -29,16 +29,32 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
+import com.google.common.base.Function;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.google.common.collect.FluentIterable.from;
+
 @Getter
 @Setter
 public class DataValueSet {
     private List<DataValue> dataValues = new ArrayList<>();
     private String dataSet;
+
+    public SmsValueSet toSmsValueSet() {
+        SmsValueSet smsValueSet = new SmsValueSet(dataSet);
+        List<SmsValue> smsValues = from(dataValues).transform(new Function<DataValue, SmsValue>() {
+            @Override
+            public SmsValue apply(DataValue input) {
+                return new SmsValue(input.getDataElement(), input.getValue());
+            }
+        }).toList();
+        smsValueSet.addValues(smsValues);
+        return smsValueSet;
+    }
 }
 
