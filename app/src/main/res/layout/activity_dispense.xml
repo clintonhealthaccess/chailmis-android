@@ -103,7 +103,7 @@
                 android:layout_toLeftOf="@+id/textViewPrescriptionId"
                 android:textColor="@color/white"
                 android:padding="10dp"
-                android:text="@string/prescription"
+                android:text="@string/dispense_no"
                 android:textSize="18sp" />
 
 

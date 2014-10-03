@@ -41,6 +41,7 @@
     <string name="order">Order</string>
     <string name="receive">Receive</string>
     <string name="dispense">Dispense</string>
+    <string name="dispense_no">Dispense No:</string>
     <string name="alerts">Alerts</string>
     <string name="Notifications">Notifications</string>
     <string name="title_activity_register">Register</string>
