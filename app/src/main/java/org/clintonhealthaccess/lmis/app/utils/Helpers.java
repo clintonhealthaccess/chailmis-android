@@ -37,8 +37,8 @@ import java.util.Collection;
 import java.util.Date;
 
 public class Helpers {
-    public static boolean collectionIsNotEmpty(Collection collection) {
-        return collection != null && !collection.isEmpty();
+    public static boolean isEmpty(Collection collection) {
+        return collection == null || collection.isEmpty();
     }
 
     public static OrderCycle getOrderCycle(String orderFrequency) {

@@ -60,7 +60,6 @@ import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,6 +74,7 @@ import static android.util.Log.e;
 import static com.google.common.collect.FluentIterable.from;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
+import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
 public class Dhis2 implements LmisServer {
     public static final String SYNC = "SYNC";
@@ -176,7 +176,7 @@ public class Dhis2 implements LmisServer {
         OptionSetResponse optionSetResponse = service.searchOptionSets("order", "name,id,options");
         List<String> optionSets = new ArrayList<>();
         List<OptionSet> optionSetList = optionSetResponse.getOptionSets();
-        if (Helpers.collectionIsNotEmpty(optionSetList)) {
+        if (!isEmpty(optionSetList)) {
             optionSets = optionSetList.get(0).getOptions();
         }
         return optionSets;
@@ -260,7 +260,6 @@ public class Dhis2 implements LmisServer {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.pushDataValueSet(valueSet);
     }
-
 
     @Override
     public Integer fetchIntegerConstant(User user, String constantKey) {

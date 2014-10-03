@@ -36,15 +36,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
-import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ import java.util.List;
 import static android.util.Log.e;
 import static android.util.Log.i;
 import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
+import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
 public class CommoditySnapshotService {
 
@@ -117,7 +117,7 @@ public class CommoditySnapshotService {
 
     public void syncWithServer(User user) {
         List<CommoditySnapshot> snapshotsToSync = getUnSyncedSnapshots();
-        if (Helpers.collectionIsNotEmpty(snapshotsToSync)) {
+        if (!isEmpty(snapshotsToSync)) {
             i("==> Syncing...........", snapshotsToSync.size() + " snapshots");
             DataValueSet valueSet = getDataValueSetFromSnapshots(snapshotsToSync, user.getFacilityCode());
             try {
@@ -132,13 +132,11 @@ public class CommoditySnapshotService {
     }
 
     private void markSnapShotsAsSynced(final List<CommoditySnapshot> snapshotsToSync) {
-
         GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
         for (CommoditySnapshot snapshot : snapshotsToSync) {
             snapshot.setSynced(true);
             dailyCommoditySnapshotDao.update(snapshot);
         }
-
     }
 
     protected DataValueSet getDataValueSetFromSnapshots(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {

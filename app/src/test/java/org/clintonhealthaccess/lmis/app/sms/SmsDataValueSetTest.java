@@ -1,6 +1,10 @@
-package org.clintonhealthaccess.lmis.app.models.api;
+package org.clintonhealthaccess.lmis.app.sms;
 
+import org.clintonhealthaccess.lmis.app.models.api.DataValue;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.junit.Test;
+
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,7 +19,7 @@ public class SmsDataValueSetTest {
         dataValueSet.setDataSet("set_1");
         dataValueSet.setDataValues(newArrayList(dataValue1, dataValue2));
 
-        SmsValueSet smsValueSet = dataValueSet.toSmsValueSet();
-        assertThat(smsValueSet.toString(), is("set_1 element_1.11.element_2.22"));
+        List<SmsValueSet> smsValueSet = SmsValueSet.build(dataValueSet);
+        assertThat(smsValueSet.get(0).toString(), is("set_1 element_1.11.element_2.22"));
     }
 }

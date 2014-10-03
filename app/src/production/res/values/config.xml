@@ -30,4 +30,5 @@
 
 <resources>
     <string name="dhis2_base_url">http://lmisdev.dhis2.org</string>
+    <string name="dhis2_sms_number">+256785000000</string>
 </resources>

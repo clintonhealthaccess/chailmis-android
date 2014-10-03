@@ -46,6 +46,7 @@ public class GenericDao<Model> {
     DbUtil dbUtil;
     private Class<Model> type;
 
+    // FIXME: is it better to inject context instead of passing it as constructor parameter?
     public GenericDao(Class<Model> type, Context context) {
         this.type = type;
         RoboGuice.getInjector(context).injectMembers(this);
