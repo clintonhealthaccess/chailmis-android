@@ -6,7 +6,7 @@ public class SmsValue {
     private String dataElement;
     private String value;
 
-    public SmsValue(DataValue dataValue) {
+    SmsValue(DataValue dataValue) {
         this.dataElement = dataValue.getDataElement();
         this.value = dataValue.getValue();
     }

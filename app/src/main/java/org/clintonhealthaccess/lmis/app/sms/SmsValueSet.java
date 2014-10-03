@@ -11,22 +11,28 @@ import java.util.List;
 import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.partition;
 
 public class SmsValueSet {
     private final String dataSet;
     private final List<SmsValue> values;
 
-    public static List<SmsValueSet> build(DataValueSet dataValueSet) {
-        return newArrayList(new SmsValueSet(dataValueSet));
+    public static List<SmsValueSet> build(final DataValueSet dataValueSet) {
+        List<List<DataValue>> dataValueLists = partition(dataValueSet.getDataValues(), 6);
+        return from(dataValueLists).transform(new Function<List<DataValue>, SmsValueSet>() {
+            @Override
+            public SmsValueSet apply(List<DataValue> dataValueList) {
+                return new SmsValueSet(dataValueSet.getDataSet(), dataValueList);
+            }
+        }).toList();
     }
 
-    private SmsValueSet(DataValueSet dataValueSet) {
-        this.dataSet = dataValueSet.getDataSet();
-        values = from(dataValueSet.getDataValues()).transform(new Function<DataValue, SmsValue>() {
+    private SmsValueSet(String dataSet, List<DataValue> dataValueList) {
+        this.dataSet = dataSet;
+        this.values = from(dataValueList).transform(new Function<DataValue, SmsValue>() {
             @Override
-            public SmsValue apply(DataValue dataValue) {
-                return new SmsValue(dataValue);
+            public SmsValue apply(DataValue input) {
+                return new SmsValue(input);
             }
         }).toList();
     }
