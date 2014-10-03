@@ -95,6 +95,11 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected String getActivityName() {
+        return "Receive";
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_receive;
     }

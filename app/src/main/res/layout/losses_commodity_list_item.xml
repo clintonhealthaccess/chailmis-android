@@ -56,23 +56,4 @@
         android:padding="1dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
-    <!--<LinearLayout
-        android:id="@+id/layoutLossAmounts"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewCommodityName"
-        android:layout_toLeftOf="@id/imageButtonCancel"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layoutLossAmounts2"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layoutLossAmounts"
-        android:layout_toLeftOf="@id/imageButtonCancel"
-        android:orientation="horizontal"
-        android:paddingTop="10dp">
-    </LinearLayout>-->
-
 </RelativeLayout>

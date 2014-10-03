@@ -64,6 +64,11 @@ public class LossesActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected String getActivityName() {
+        return "Losses";
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_losses;
     }

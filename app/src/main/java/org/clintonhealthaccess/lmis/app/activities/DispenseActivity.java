@@ -108,6 +108,11 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected String getActivityName() {
+        return "Dispense";
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         buttonSubmitDispense.setOnClickListener(
                 new OnClickListener() {

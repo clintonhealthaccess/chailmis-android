@@ -98,7 +98,7 @@ public class ItemSelectFragmentTest {
 
         Category antiMalarialCategory = categoryService.all().get(0);
         itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory,
-                new ArrayList<BaseCommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
+                new ArrayList<BaseCommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
     }
 
@@ -155,7 +155,7 @@ public class ItemSelectFragmentTest {
         ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         Commodity firstCommodity = commodityService.all().get(0);
         commodities.add(new BaseCommodityViewModel(firstCommodity));
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
@@ -175,7 +175,7 @@ public class ItemSelectFragmentTest {
         ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
         currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
 
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter());
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();

@@ -79,6 +79,11 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected String getActivityName() {
+        return "Adjustments";
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_adjustments;
     }

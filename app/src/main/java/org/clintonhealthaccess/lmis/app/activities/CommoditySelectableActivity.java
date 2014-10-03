@@ -143,6 +143,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected Button getSubmitButton();
 
+    abstract protected String getActivityName();
+
     protected boolean hasInvalidEditTextField(List<ViewValidator<EditText>> validators) {
         for (final ViewValidator validator : validators) {
             if (!validator.isValid()) {
@@ -200,7 +202,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             public void onClick(View view) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,
-                        getCheckBoxVisibilityStrategy(), getViewModelConverter());
+                        getCheckBoxVisibilityStrategy(), getViewModelConverter(), getActivityName());
                 dialog.show(fragmentManager, "selectCommodities");
             }
         });
