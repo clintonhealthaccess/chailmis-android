@@ -164,4 +164,5 @@ dependencies {
     compile 'com.crashlytics.android:crashlytics:1.+'
     provided "org.projectlombok:lombok:1.12.6"
     compile(name:'eazegraph-1.1.21', ext:'aar')
+    compile project(":dhis2-models")
 }
