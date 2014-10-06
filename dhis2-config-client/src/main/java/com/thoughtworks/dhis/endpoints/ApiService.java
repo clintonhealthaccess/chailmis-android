@@ -33,6 +33,9 @@ public interface ApiService {
     @GET("/dataSets/{id}")
     DataSet getDataSet(@Path("id") String id);
 
+    @GET("/dataSets/{id}")
+    DataSet getDataSetWithDetails(@Path("id") String id,@Query("fields") String fields);
+
     @POST("/dataValueSets")
     Object submitValueSet(@Body DataValueSet set);
 

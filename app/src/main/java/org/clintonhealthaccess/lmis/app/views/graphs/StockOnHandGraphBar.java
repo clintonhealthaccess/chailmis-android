@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.views.graphs;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +42,16 @@ import org.clintonhealthaccess.lmis.app.R;
 
 import lombok.Getter;
 
+import static java.lang.Math.abs;
+
 @Getter
 public class StockOnHandGraphBar {
     private String commodityName;
     private int maximumThreshold, minimumThreshold, stockOnHand, color;
+    private int heightOfColorHolder;
+    private int heightForMinThreshold;
+    private int heightForMaxThreshold;
+    private int sohHeight;
 
     public StockOnHandGraphBar(String commodityName, int min, int max, int soh, int color) {
         this.commodityName = commodityName;
@@ -58,15 +63,18 @@ public class StockOnHandGraphBar {
 
     public StockOnHandGraphBar() {
 
-
     }
 
 
     public RelativeLayout getView(Context applicationContext, int biggestValue, int height) {
         int barWidth = Math.round(applicationContext.getResources().getDimension(R.dimen.bar_width));
         int barLegendHeight = 70;
-        int barHeight = height - barLegendHeight-50;
+        int barHeight = height - barLegendHeight - 50;
+        sohHeight = barWidth;
 
+        heightForMinThreshold = getHeightForMinThreshold(barHeight, biggestValue);
+
+        heightForMaxThreshold = getHeightForMaxThreshold(barHeight, biggestValue);
 
         RelativeLayout relativeLayout = getRelativeLayout(applicationContext);
 
@@ -74,15 +82,37 @@ public class StockOnHandGraphBar {
 
         relativeLayout.addView(getColorViewHolder(applicationContext, biggestValue, barWidth, barHeight));
 
-        relativeLayout.addView(getImageViewForMinimumThreshold(applicationContext, biggestValue, barWidth, barHeight));
 
-        relativeLayout.addView(getImageViewForMaximumThreshold(applicationContext, biggestValue, barWidth, barHeight));
+        if (heightForMaxThreshold > heightForMinThreshold) {
+            ImageView imageViewSpaceBorderLeft = getImageViewForSpace(applicationContext, barWidth);
+            relativeLayout.addView(imageViewSpaceBorderLeft);
+            relativeLayout.addView(getMaxTextView(applicationContext, barWidth));
+        }
 
-        relativeLayout.addView(getMaxTextView(applicationContext, barWidth));
 
         relativeLayout.addView(getSOHTextView(applicationContext, barWidth));
 
+
+        // if height of  max is greater than colorHolder
+        // draw a vertical line from max to the holder
+
+
         return relativeLayout;
+    }
+
+    private ImageView getImageViewForSpace(Context applicationContext, int barWidth) {
+        ImageView imageViewSpaceBorderLeft = new ImageView(applicationContext);
+        imageViewSpaceBorderLeft.setBackgroundDrawable(applicationContext.getResources().getDrawable(R.drawable.graph_border));
+        imageViewSpaceBorderLeft.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        int heightForBorder = heightForMaxThreshold - heightForMinThreshold;
+        int widthForBorder = barWidth;
+        RelativeLayout.LayoutParams maxParams = new RelativeLayout.LayoutParams(widthForBorder, heightForBorder);
+        maxParams.setMargins(0, 0, 0, heightForMinThreshold);
+        maxParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        maxParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
+        imageViewSpaceBorderLeft.setLayoutParams(maxParams);
+        imageViewSpaceBorderLeft.setId(R.id.imageViewSpaceBorderLeft);
+        return imageViewSpaceBorderLeft;
     }
 
     private RelativeLayout getRelativeLayout(Context applicationContext) {
@@ -94,7 +124,8 @@ public class StockOnHandGraphBar {
 
     private TextView getSOHTextView(Context applicationContext, int barWidth) {
         TextView textViewSOH = new TextView(applicationContext);
-        RelativeLayout.LayoutParams textViewSOHParams = new RelativeLayout.LayoutParams(barWidth, barWidth);
+
+        RelativeLayout.LayoutParams textViewSOHParams = new RelativeLayout.LayoutParams(barWidth, sohHeight);
         textViewSOHParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
         textViewSOH.setLayoutParams(textViewSOHParams);
         textViewSOH.setText(getSOH());
@@ -108,7 +139,10 @@ public class StockOnHandGraphBar {
     private TextView getMaxTextView(Context applicationContext, int barWidth) {
         TextView textViewMax = new TextView(applicationContext);
         RelativeLayout.LayoutParams maxTextViewParams = new RelativeLayout.LayoutParams(barWidth, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        maxTextViewParams.addRule(RelativeLayout.ABOVE, R.id.imageMaximumThreshold);
+        maxTextViewParams.addRule(RelativeLayout.ABOVE, R.id.imageViewSpaceBorderLeft);
+        if (abs(heightForMaxThreshold - sohHeight) <= 20) {
+            maxTextViewParams.setMargins(0, 0, 0, 20);
+        }
         textViewMax.setLayoutParams(maxTextViewParams);
         textViewMax.setText("Max");
         textViewMax.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -117,33 +151,11 @@ public class StockOnHandGraphBar {
         return textViewMax;
     }
 
-    private ImageView getImageViewForMaximumThreshold(Context applicationContext, int biggestValue, int barWidth, int barHeight) {
-        ImageView imageViewMaximumThreshold = new ImageView(applicationContext);
-        imageViewMaximumThreshold.setImageDrawable(applicationContext.getResources().getDrawable(R.drawable.dotted));
-        imageViewMaximumThreshold.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        RelativeLayout.LayoutParams maxParams = new RelativeLayout.LayoutParams(barWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        maxParams.setMargins(0, 0, 0, getHeightForMaxThreshold(barHeight, biggestValue));
-        maxParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
-        imageViewMaximumThreshold.setLayoutParams(maxParams);
-        imageViewMaximumThreshold.setId(R.id.imageMaximumThreshold);
-        return imageViewMaximumThreshold;
-    }
-
-    private ImageView getImageViewForMinimumThreshold(Context applicationContext, int biggestValue, int barWidth, int barHeight) {
-        ImageView imageViewMinimumThreshold = new ImageView(applicationContext);
-        imageViewMinimumThreshold.setImageDrawable(applicationContext.getResources().getDrawable(R.drawable.dotted));
-        imageViewMinimumThreshold.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(barWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
-        int heightForMinThreshold = getHeightForMinThreshold(barHeight, biggestValue);
-        params.setMargins(0, 0, 0, heightForMinThreshold);
-        imageViewMinimumThreshold.setLayoutParams(params);
-        return imageViewMinimumThreshold;
-    }
 
     private View getColorViewHolder(Context applicationContext, int biggestValue, int barWidth, int barHeight) {
         View colorHolderView = new View(applicationContext);
-        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(barWidth, getHeightForHolder(barHeight, biggestValue));
+        heightOfColorHolder = getHeightForHolder(barHeight, biggestValue);
+        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(barWidth, heightOfColorHolder);
         params1.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
         colorHolderView.setLayoutParams(params1);
         colorHolderView.setBackgroundColor(color);

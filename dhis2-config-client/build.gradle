@@ -28,16 +28,43 @@
  */
 
 apply plugin: 'java'
+apply plugin: 'application'
 
+mainClassName = "com.thoughtworks.dhis.App"
 
 configurations {
     provided
 }
+
 sourceSets {
     main {
         compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
+    }
+    test {
+        compileClasspath += configurations.provided
+        runtimeClasspath += configurations.provided
     }
 }
+
+jar {
+
+    manifest {
+        attributes "Implementation-Title": "dhis-config-client"
+        attributes "Main-Class" : mainClassName
+    }
+
+    doFirst {
+        from (configurations.runtime.resolve().collect { it.isDirectory() ? it : zipTree(it) }) {
+            exclude 'META-INF/MANIFEST.MF'
+            exclude 'META-INF/*.SF'
+            exclude 'META-INF/*.DSA'
+            exclude 'META-INF/*.RSA'
+        }
+    }
+}
+
+
 dependencies {
     compile project(":dhis2-models")
     compile fileTree(dir: 'libs', include: ['*.jar'])

@@ -29,7 +29,21 @@
 
 package com.thoughtworks.dhis.configurations;
 
-import com.thoughtworks.dhis.models.*;
+import com.thoughtworks.dhis.models.Attribute;
+import com.thoughtworks.dhis.models.AttributeValue;
+import com.thoughtworks.dhis.models.CategoryCombo;
+import com.thoughtworks.dhis.models.CategoryOptionCombo;
+import com.thoughtworks.dhis.models.Constant;
+import com.thoughtworks.dhis.models.DataElement;
+import com.thoughtworks.dhis.models.DataElementGroup;
+import com.thoughtworks.dhis.models.DataElementGroupSet;
+import com.thoughtworks.dhis.models.DataElementType;
+import com.thoughtworks.dhis.models.DataSet;
+import com.thoughtworks.dhis.models.ExcelCategory;
+import com.thoughtworks.dhis.models.ExcelCommodity;
+import com.thoughtworks.dhis.models.Indicator;
+import com.thoughtworks.dhis.models.IndicatorType;
+import com.thoughtworks.dhis.models.OptionSet;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -40,7 +54,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -148,7 +166,7 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     private void setupDefaultDataElements(List<ExcelCategory> categories) {
-        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED, DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS));
+        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED, DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
         List<DataElementType> activitiesLosses = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EXPIRED, DataElementType.WASTED, DataElementType.MISSING));
         List<DataElementType> activitiesLossesForVaccine = new ArrayList<DataElementType>(Arrays.asList(
                 DataElementType.EXPIRED, DataElementType.VVM_CHANGE, DataElementType.BREAKAGE, DataElementType.FROZEN,

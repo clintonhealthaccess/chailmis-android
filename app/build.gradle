@@ -63,6 +63,7 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE'
     }
 
     productFlavors {

@@ -44,5 +44,5 @@ sourceSets {
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided "org.projectlombok:lombok:1.12.6"
+    compile "org.projectlombok:lombok:1.12.6"
 }

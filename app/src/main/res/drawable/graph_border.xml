@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
   ~
@@ -27,12 +29,14 @@
   ~ either expressed or implied, of the FreeBSD Project.
   -->
 
-<resources>
-    <item name="imageMaximumThreshold" type="id" />
-    <item name="textViewCommodityname" type="id" />
-    <item name="dynamicLinearLayout1" type="id"/>
-    <item name="dynamicLinearLayout2" type="id"/>
-    <item name="dynamicLinearLayout3" type="id"/>
-    <item name="imageViewSpaceBorderLeft" type="id" />
-    <item name="imageViewSpaceBorderRight" type="id" />
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid />
+
+    <stroke
+        android:width="1dp"
+        android:dashGap="3dp"
+        android:dashWidth="8dp"
+        android:color="#FFFFFF" />
+
+
+</shape>

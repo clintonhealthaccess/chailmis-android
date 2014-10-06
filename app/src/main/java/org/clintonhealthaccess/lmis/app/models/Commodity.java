@@ -34,6 +34,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 
@@ -168,11 +169,11 @@ public class Commodity implements Serializable {
     }
 
     public int getMinimumThreshold() {
-        return getLatestValueFromCommodityActionByName(CommodityAction.MINIMUN_THRESHOLD);
+        return getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
     }
 
     public int getMaximuThreshold() {
-        return getLatestValueFromCommodityActionByName(CommodityAction.MAXIMUM_THRESHOLD);
+        return getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
     }
 
     public boolean isBelowThreshold() {
@@ -180,7 +181,7 @@ public class Commodity implements Serializable {
     }
 
     public int calculateEmergencyPrepopulatedQuantity() {
-        int max = getLatestValueFromCommodityActionByName(CommodityAction.MAXIMUM_THRESHOLD);
+        int max = getMaximuThreshold();
         return max - getStockOnHand();
     }
 
@@ -196,10 +197,14 @@ public class Commodity implements Serializable {
     }
 
     public int calculateRoutinePrePopulatedQuantity() {
-        return getLatestValueFromCommodityActionByName(CommodityAction.PROJECTED_ORDER_AMOUNT);
+        return getLatestValueFromCommodityActionByName(DataElementType.PROJECTED_ORDER_AMOUNT.toString());
     }
 
     public Integer getAMC() {
-        return getLatestValueFromCommodityActionByName(CommodityAction.AMC);
+        return getLatestValueFromCommodityActionByName(DataElementType.AMC.toString());
+    }
+
+    public int getMonthsOfSOH() {
+        return getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
     }
 }
