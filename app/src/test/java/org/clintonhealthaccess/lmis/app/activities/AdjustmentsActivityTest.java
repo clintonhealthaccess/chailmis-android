@@ -29,27 +29,100 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+
 import junit.framework.TestCase;
 
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.StockService;
+import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.application;
+import static org.robolectric.Robolectric.setupActivity;
+
 @RunWith(RobolectricGradleTestRunner.class)
 public class AdjustmentsActivityTest extends TestCase {
 
+    @Inject
+    private CommodityService commodityService;
+    private AdjustmentService adjustmentService;
+    private UserService userService;
+    private StockService stockService;
 
-    //FIXME test that the activity loads without errors
-    //FIXME test that some views are not null
-    //FIXME test that you can setup the adjustment reasons
-    //FIXME test that when you change the reason the type in the adapter changes
+
+    public static AdjustmentsActivity getAdjustmentsActivity() {
+        return setupActivity(AdjustmentsActivity.class);
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        userService = mock(UserService.class);
+        stockService = mock(StockService.class);
+        when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(StockService.class).toInstance(stockService);
+                bind(UserService.class).toInstance(userService);
+            }
+        });
+        commodityService.initialise(new User("test", "pass"));
+    }
+
+    @Test
+    public void testBuildActivity() throws Exception {
+        AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
+        assertThat(adjustmentsActivity, not(nullValue()));
+    }
+
+    @Test
+    public void shouldSetupAdjustmentReasons() throws Exception {
+        AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
+        assertThat(adjustmentsActivity.spinnerAdjustmentReason.getAdapter().getCount(), is(greaterThan(0)));
+    }
+
+    @Test
+    public void shouldChangeTypeInAdapterWhenReasonChanges() throws Exception {
+        AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
+
+        List<Commodity> commodityList = commodityService.all();
+        adjustmentsActivity.onEvent(new CommodityToggledEvent(new AdjustmentsViewModel(commodityList.get(0))));
+        adjustmentsActivity.onEvent(new CommodityToggledEvent(new AdjustmentsViewModel(commodityList.get(1))));
+
+        String reason = "Received from another facility";
+        assertThat(((AdjustmentReason) adjustmentsActivity.spinnerAdjustmentReason.getAdapter().getItem(2)).getName(), is(reason));
+        adjustmentsActivity.spinnerAdjustmentReason.setSelection(2);
+
+        AdjustmentsViewModel adjustmentsViewModel = (AdjustmentsViewModel) adjustmentsActivity.selectedCommodities.get(1);
+        assertThat(adjustmentsViewModel.getAdjustmentReason().getName(), is(reason));
+    }
+
     //FIXME test that the validation works
+
+
     //FIXME test that the dialog shows when you submit
 
-    @Ignore
-    @Test
-    public void fakeTest() throws Exception {
-        assertTrue(true);
-    }
 }
