@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
@@ -48,12 +49,14 @@ import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
@@ -70,7 +73,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class CommoditySnapshotServiceTest extends LMISTestCase {
@@ -89,6 +94,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     private GenericDao<CommoditySnapshot> snapshotDao;
     private GenericDao<DataSet> dataSetGenericDao;
 
+    private SmsSyncService mockSmsSyncService;
 
     @Before
     public void setUp() {
@@ -98,14 +104,20 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         snapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
         commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
         dataSetGenericDao = new GenericDao<>(DataSet.class, context);
-        setUpInjection(this);
+
+        mockSmsSyncService = mock(SmsSyncService.class);
+        when(mockSmsSyncService.send(Matchers.<DataValueSet>any())).thenReturn(false);
+        setUpInjection(this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(SmsSyncService.class).toInstance(mockSmsSyncService);
+            }
+        });
         generateTestCommodities();
     }
 
     @Test
     public void shouldCreateNewDailyCommoditySnapshotIfNotExist() throws SQLException {
-
-
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
@@ -239,7 +251,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
         DataValueSet valueSet = commoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
 
-        assertThat(valueSet, is(notNullValue()));
+        assertThat(valueSet, notNullValue());
+        assertThat(valueSet.getDataSet(), notNullValue());
         assertThat(valueSet.getDataValues().size(), is(2));
         assertThat(valueSet.getDataValues().get(0).getValue(), is("3"));
         assertThat(valueSet.getDataValues().get(1).getValue(), is("8"));
@@ -260,7 +273,9 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         snapshotDao.create(snapshot1);
         snapshotDao.create(snapshot2);
 
-        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+        List<CommoditySnapshot> unSyncedSnapshots = commoditySnapshotService.getUnSyncedSnapshots();
+        assertThat(unSyncedSnapshots.size(), is(2));
+        assertThat(unSyncedSnapshots.get(0).getCommodityAction().getDataSet(), notNullValue());
 
         commoditySnapshotService.syncWithServer(new User("user", "user"));
 
@@ -372,9 +387,9 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     }
 
     private void generateCommodityAction(DataSet dataSet, Commodity commodity, String nameTag, String type) {
-        CommodityAction actionDispense = new CommodityAction(commodity, getID(), commodity.getName() + " " + nameTag, type);
-        actionDispense.setDataSet(dataSet);
-        commodityActivityGenericDao.create(actionDispense);
+        CommodityAction activity = new CommodityAction(commodity, getID(), commodity.getName() + " " + nameTag, type);
+        activity.setDataSet(dataSet);
+        commodityActivityGenericDao.create(activity);
     }
 
 

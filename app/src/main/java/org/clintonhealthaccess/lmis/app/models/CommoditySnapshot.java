@@ -46,7 +46,7 @@ public class CommoditySnapshot {
     @DatabaseField(generatedId = true)
     private Long id;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, foreign = true, columnName = "commodityActivity_id")
+    @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = "commodityActivity_id", foreign = true, foreignAutoRefresh = true)
     private CommodityAction commodityAction;
 
     @DatabaseField(canBeNull = false)

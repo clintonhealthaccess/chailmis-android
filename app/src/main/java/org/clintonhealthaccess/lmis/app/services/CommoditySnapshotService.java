@@ -44,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -67,6 +68,8 @@ public class CommoditySnapshotService {
     @Inject
     private LmisServer lmisServer;
 
+    @Inject
+    SmsSyncService smsSyncService;
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
@@ -124,15 +127,26 @@ public class CommoditySnapshotService {
                 DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
                 if (response.isSuccess()) {
                     markSnapShotsAsSynced(snapshotsToSync);
+                } else {
+                    syncThroughSms(snapshotsToSync, user);
                 }
             } catch (LmisException ex) {
                 e("==> Syncing...........", snapshotsToSync.size() + " snapshots failed");
+                syncThroughSms(snapshotsToSync, user);
             }
         }
     }
 
+    private void syncThroughSms(List<CommoditySnapshot> snapshotsToSync, User user) {
+        DataValueSet valueSet = getDataValueSetFromSnapshots(snapshotsToSync, user.getFacilityCode());
+        boolean sentBySms = smsSyncService.send(valueSet);
+        if(sentBySms) {
+            markSnapShotsAsSynced(snapshotsToSync);
+        }
+    }
+
     private void markSnapShotsAsSynced(final List<CommoditySnapshot> snapshotsToSync) {
-        GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
+        GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
         for (CommoditySnapshot snapshot : snapshotsToSync) {
             snapshot.setSynced(true);
             dailyCommoditySnapshotDao.update(snapshot);
@@ -141,6 +155,7 @@ public class CommoditySnapshotService {
 
     protected DataValueSet getDataValueSetFromSnapshots(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
         DataValueSet dataValueSet = new DataValueSet();
+        dataValueSet.setDataSet(snapshotsToSync.get(0).getCommodityAction().getDataSet().getId());
         dataValueSet.setDataValues(new ArrayList<DataValue>());
         for (CommoditySnapshot snapshot : snapshotsToSync) {
             DataValue dataValue = DataValue.builder().value(String.valueOf(snapshot.getValue())).
