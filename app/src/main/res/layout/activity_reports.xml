@@ -27,19 +27,153 @@
   ~ either expressed or implied, of the FreeBSD Project.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="org.clintonhealthaccess.lmis.app.activities.ReportsActivity">
 
     <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="Reports"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_weight="2.5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="STORE REQUISITION/ISSUE VOUCHER"
+                android:id="@+id/buttonReportStoreRequisition" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="COMMODITY RECEIVED / ISSUED"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportCommodityReceived" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="STORE RECORD REGISTER (SRR)"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportStoreRecordRegister" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="TREATMENT/DISPENSE REPORT"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportTreatmentDispenseReport" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="DAILY DRUG UTILIZATION SUMMARY REGISTER"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportDailyDrugUntilisationSummaryRegister" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="STOCK UPDATE FORM"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportStockUpdateForm" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="LOSSES &amp; EXPIRIES REPORT"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportLossesAndExpiries" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="2.5"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/linearLayout"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="COMMODITY RECEIPT BIN CARD"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportCommodityReceiptBinCard" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="COMMODITY ISSUED BIN CARD"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportCommodityIssuedBinCard" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Facility Stock Report for Malaria"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportFacilityStockReportForMalaria" />
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Facility Stock Report for Martenal Neonatal Child Health (MNCH)"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportFacilityStockReportForMartenal" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Facility Stock Report for Reproductory Health"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportFacilityStockReportForReproductory" />
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="MONTHLY HEALTH FACILITY VACCINES UTILIZATION REPORT"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportMonthlyHealthFacilityVaccinesUtilization" />
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="MONTHLY HEALTH FACILITY DEVICES/ OTHER MATERIALS UTILIZATION REPORT"
+                android:layout_weight="1"
+                android:id="@+id/buttonReportMonthlyHealthFacilityDevicesUtilization" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
+
