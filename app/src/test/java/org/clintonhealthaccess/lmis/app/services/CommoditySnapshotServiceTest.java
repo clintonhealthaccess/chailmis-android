@@ -56,7 +56,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
@@ -66,15 +65,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -88,6 +91,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
     @Inject
     DbUtil dbUtil;
+
     private GenericDao<Category> categoryDao;
     private GenericDao<Commodity> commodityDao;
     private GenericDao<CommodityAction> commodityActivityGenericDao;
@@ -106,7 +110,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         dataSetGenericDao = new GenericDao<>(DataSet.class, context);
 
         mockSmsSyncService = mock(SmsSyncService.class);
-        when(mockSmsSyncService.send(Matchers.<DataValueSet>any())).thenReturn(false);
+        when(mockSmsSyncService.send(any(DataValueSet.class))).thenReturn(true);
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
@@ -247,7 +251,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         CommodityAction commodityAction = commodityActivities.get(0);
         CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
-        List<CommoditySnapshot> snapshots = Arrays.asList(snapshot1, snapshot2);
+        List<CommoditySnapshot> snapshots = newArrayList(snapshot1, snapshot2);
 
         DataValueSet valueSet = commoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
 
@@ -262,16 +266,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     @Test
     public void shouldMarkSnapshotsAsSyncedIfSyncIsSuccessful() throws Exception {
         setUpSuccessHttpPostRequest(200, "successfulSnapshotPush.json");
-        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
-        Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
-
-        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActionsSaved());
-        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActionsSaved());
-        CommodityAction commodityAction = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
-        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
-        snapshotDao.create(snapshot1);
-        snapshotDao.create(snapshot2);
+        createTwoSnapshotsInSameDataSet();
 
         List<CommoditySnapshot> unSyncedSnapshots = commoditySnapshotService.getUnSyncedSnapshots();
         assertThat(unSyncedSnapshots.size(), is(2));
@@ -288,22 +283,39 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     public void shouldNotMarkSnapshotsAsSyncedIfSyncFails() throws Exception {
 
         setUpSuccessHttpPostRequest(200, "failureSnapshotPush.json");
-        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
-        Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
-
-        List<CommodityAction> commodityActivities = new ArrayList<>(fetchedCommodity1.getCommodityActionsSaved());
-        List<CommodityAction> commodityActivities1 = new ArrayList<>(fetchedCommodity2.getCommodityActionsSaved());
-        CommodityAction commodityAction = commodityActivities.get(0);
-        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityAction, "3");
-        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
-        snapshotDao.create(snapshot1);
-        snapshotDao.create(snapshot2);
+        createTwoSnapshotsInSameDataSet();
 
         assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
 
         commoditySnapshotService.syncWithServer(new User("user", "user"));
 
         assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+    }
+
+    @Test
+    public void shouldSyncThroughSms() throws Exception {
+        createTwoSnapshotsInSameDataSet();
+
+        assertThat(commoditySnapshotService.getSmsReadySnapshots().size(), is(2));
+
+        commoditySnapshotService.syncWithServerThroughSms(new User("user", "user"));
+
+        verify(mockSmsSyncService, times(1)).send(any(DataValueSet.class));
+        assertThat(commoditySnapshotService.getSmsReadySnapshots().size(), is(0));
+    }
+
+    private List<CommoditySnapshot> createTwoSnapshotsInSameDataSet() {
+        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
+        Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
+
+        List<CommodityAction> commodityActivities = newArrayList(fetchedCommodity1.getCommodityActionsSaved());
+        List<CommodityAction> commodityActivities1 = newArrayList(fetchedCommodity2.getCommodityActionsSaved());
+        CommoditySnapshot snapshot1 = new CommoditySnapshot(fetchedCommodity1, commodityActivities.get(0), "3");
+        CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
+        snapshotDao.create(snapshot1);
+        snapshotDao.create(snapshot2);
+
+        return newArrayList(snapshot1, snapshot2);
     }
 
     @Ignore

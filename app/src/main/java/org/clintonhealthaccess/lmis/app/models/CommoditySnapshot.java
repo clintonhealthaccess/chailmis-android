@@ -55,6 +55,9 @@ public class CommoditySnapshot {
     @DatabaseField(defaultValue = "false")
     private boolean synced;
 
+    @DatabaseField(defaultValue = "false")
+    private boolean smsSent;
+
     @DatabaseField(canBeNull = false, foreign = true, uniqueCombo = true)
     private Commodity commodity;
 
@@ -63,7 +66,6 @@ public class CommoditySnapshot {
 
     @DatabaseField(canBeNull = true)
     private String attributeOptionCombo;
-
 
     public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value) {
         this.commodity = commodity;

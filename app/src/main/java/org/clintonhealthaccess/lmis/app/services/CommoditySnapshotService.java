@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -52,6 +53,7 @@ import java.util.List;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
+import static com.google.common.collect.FluentIterable.from;
 import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
@@ -69,7 +71,7 @@ public class CommoditySnapshotService {
     private LmisServer lmisServer;
 
     @Inject
-    SmsSyncService smsSyncService;
+    private SmsSyncService smsSyncService;
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
@@ -118,6 +120,16 @@ public class CommoditySnapshotService {
         });
     }
 
+    public List<CommoditySnapshot> getSmsReadySnapshots() {
+        List<CommoditySnapshot> unSyncedSnapshots = getUnSyncedSnapshots();
+        return from(unSyncedSnapshots).filter(new Predicate<CommoditySnapshot>() {
+            @Override
+            public boolean apply(CommoditySnapshot input) {
+                return !input.isSmsSent();
+            }
+        }).toList();
+    }
+
     public void syncWithServer(User user) {
         List<CommoditySnapshot> snapshotsToSync = getUnSyncedSnapshots();
         if (!isEmpty(snapshotsToSync)) {
@@ -127,21 +139,28 @@ public class CommoditySnapshotService {
                 DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
                 if (response.isSuccess()) {
                     markSnapShotsAsSynced(snapshotsToSync);
-                } else {
-                    syncThroughSms(snapshotsToSync, user);
                 }
             } catch (LmisException ex) {
                 e("==> Syncing...........", snapshotsToSync.size() + " snapshots failed");
-                syncThroughSms(snapshotsToSync, user);
             }
         }
     }
 
-    private void syncThroughSms(List<CommoditySnapshot> snapshotsToSync, User user) {
-        DataValueSet valueSet = getDataValueSetFromSnapshots(snapshotsToSync, user.getFacilityCode());
-        boolean sentBySms = smsSyncService.send(valueSet);
-        if(sentBySms) {
-            markSnapShotsAsSynced(snapshotsToSync);
+    public void syncWithServerThroughSms(User user) {
+        List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
+        if(!isEmpty(snapshots)) {
+            DataValueSet valueSet = getDataValueSetFromSnapshots(snapshots, user.getFacilityCode());
+            if(smsSyncService.send(valueSet)) {
+                markSnapShotsAsSmsSent(snapshots);
+            }
+        }
+    }
+
+    private void markSnapShotsAsSmsSent(List<CommoditySnapshot> snapshots) {
+        GenericDao<CommoditySnapshot> dao = new GenericDao<>(CommoditySnapshot.class, context);
+        for (CommoditySnapshot snapshot : snapshots) {
+            snapshot.setSmsSent(true);
+            dao.update(snapshot);
         }
     }
 
@@ -153,7 +172,7 @@ public class CommoditySnapshotService {
         }
     }
 
-    protected DataValueSet getDataValueSetFromSnapshots(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
+    DataValueSet getDataValueSetFromSnapshots(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
         DataValueSet dataValueSet = new DataValueSet();
         dataValueSet.setDataSet(snapshotsToSync.get(0).getCommodityAction().getDataSet().getId());
         dataValueSet.setDataValues(new ArrayList<DataValue>());
