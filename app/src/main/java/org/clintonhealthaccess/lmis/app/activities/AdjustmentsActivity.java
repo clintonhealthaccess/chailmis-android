@@ -141,6 +141,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
         String presetReason = intent.getStringExtra(ADJUSTMENT_REASON);
 
         final ArrayList<AdjustmentReason> adjustmentReasons = AdjustmentService.getAdjustmentReasons();
+
         ArrayAdapter<AdjustmentReason> adapter = new ArrayAdapter<AdjustmentReason>(AdjustmentsActivity.this, R.layout.simple_spinner_bold, adjustmentReasons);
         spinnerAdjustmentReason.setAdapter(adapter);
         System.out.println("Here ....");

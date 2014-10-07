@@ -45,7 +45,18 @@
         android:id="@+id/editTextQuantity"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageButtonCancel"
+        android:layout_toLeftOf="@+id/textViewAdjustment"
+        android:inputType="number"
+        android:layout_marginRight="20dp"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/editTextStockCounted"
+        android:layout_width="150dp"
+        android:visibility="gone"
+        android:hint="Amount Counted"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/textViewAdjustment"
         android:inputType="number"
         android:layout_marginRight="20dp"
         android:textSize="18sp" />
@@ -59,6 +70,37 @@
 
     </Spinner>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:text="Counted :"
+        android:layout_toLeftOf="@id/editTextQuantity"
+        android:id="@+id/textViewLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/textViewLabel"
+        android:paddingRight="10dp"
+        android:id="@+id/textViewCurrentStock" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/imageButtonCancel"
+        android:paddingRight="5dp"
+        android:id="@+id/textViewAdjustment" />
 
     <ImageButton
         android:id="@+id/imageButtonCancel"

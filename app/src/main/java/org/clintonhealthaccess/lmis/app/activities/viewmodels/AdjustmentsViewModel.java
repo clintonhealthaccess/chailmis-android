@@ -61,4 +61,6 @@ public class AdjustmentsViewModel extends BaseCommodityViewModel {
     public void setPositive(boolean positive) {
         this.positive = positive;
     }
+
+
 }

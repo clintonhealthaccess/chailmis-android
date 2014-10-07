@@ -52,6 +52,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+import static java.lang.Math.abs;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
 public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
@@ -69,18 +70,14 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(resource, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
+        TextView textViewLabel = (TextView) rowView.findViewById(R.id.textViewLabel);
+        TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
+        final EditText editTextStockCounted = (EditText) rowView.findViewById(R.id.editTextStockCounted);
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
         final AdjustmentsViewModel commodityViewModel = getItem(position);
-        setupAdjustmentType(spinnerAdjustmentType, commodityViewModel);
-        textViewCommodityName.setText(commodityViewModel.getName());
-        setupQuantity(editTextQuantity, commodityViewModel);
-        activateCancelButton(imageButtonCancel, commodityViewModel);
-        return rowView;
-    }
-
-    private void setupAdjustmentType(Spinner spinnerAdjustmentType, final AdjustmentsViewModel commodityViewModel) {
 
         final List<String> types = new ArrayList<>();
 
@@ -91,7 +88,22 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             if (commodityViewModel.getAdjustmentReason().allowsNegative()) {
                 types.add("-");
             }
-
+            if (commodityViewModel.getAdjustmentReason().isPhysicalCount()) {
+                textViewAdjustment.setVisibility(View.VISIBLE);
+                textViewLabel.setVisibility(View.VISIBLE);
+                textViewCurrentStock.setVisibility(View.VISIBLE);
+                editTextStockCounted.setVisibility(View.VISIBLE);
+                spinnerAdjustmentType.setVisibility(View.GONE);
+                editTextQuantity.setVisibility(View.GONE);
+                textViewCurrentStock.setText("Current Stock :" + commodityViewModel.getStockOnHand());
+            } else {
+                editTextQuantity.setVisibility(View.VISIBLE);
+                spinnerAdjustmentType.setVisibility(View.VISIBLE);
+                editTextStockCounted.setVisibility(View.GONE);
+                textViewAdjustment.setVisibility(View.GONE);
+                textViewLabel.setVisibility(View.GONE);
+                textViewCurrentStock.setVisibility(View.GONE);
+            }
             if (types.size() < 2) {
                 spinnerAdjustmentType.setEnabled(false);
             } else {
@@ -102,24 +114,25 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         spinnerAdjustmentType.setAdapter(adapter);
         spinnerAdjustmentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = types.get(position);
+            public void onItemSelected(AdapterView<?> parent1, View view, int position1, long id) {
+                String selected = types.get(position1);
                 commodityViewModel.setPositive(selected.equals("+"));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(AdapterView<?> parent1) {
 
             }
         });
-    }
-
-    private void setupQuantity(EditText editTextQuantity, BaseCommodityViewModel commodityViewModel) {
-        editTextQuantity.addTextChangedListener(new AdjustmentTextWatcher((AdjustmentsViewModel) commodityViewModel, editTextQuantity));
+        textViewCommodityName.setText(commodityViewModel.getName());
+        editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
+        editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment));
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity >= 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
+        activateCancelButton(imageButtonCancel, commodityViewModel);
+        return rowView;
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {
@@ -131,11 +144,13 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         });
     }
 
-    private static class AdjustmentTextWatcher implements TextWatcher {
+    private static class AdjustmentQuantityTextWatcher implements TextWatcher {
+        public static final int PLUS = 0;
+        public static final int MINUS = 1;
         private final AdjustmentsViewModel commodityViewModel;
         private final EditText editText;
 
-        public AdjustmentTextWatcher(AdjustmentsViewModel commodityViewModel, EditText editText) {
+        public AdjustmentQuantityTextWatcher(AdjustmentsViewModel commodityViewModel, EditText editText) {
             this.commodityViewModel = commodityViewModel;
             this.editText = editText;
         }
@@ -162,6 +177,41 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                     if (result < 0) {
                         editText.setError(String.format("Can't reduce stock by more than %d", stockOnHand));
                     }
+                }
+            }
+        }
+    }
+
+    private static class PhysicalCountTextWatcher implements TextWatcher {
+        private final AdjustmentsViewModel adjustmentsViewModel;
+        private final TextView textViewAdjustment;
+
+        public PhysicalCountTextWatcher(AdjustmentsViewModel adjustmentsViewModel, TextView textViewAdjustment) {
+            this.adjustmentsViewModel = adjustmentsViewModel;
+            this.textViewAdjustment = textViewAdjustment;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String value = editable.toString();
+            if (!value.isEmpty()) {
+                int quantity = getIntFromString(value);
+                if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
+                    int difference = quantity - adjustmentsViewModel.getStockOnHand();
+                    adjustmentsViewModel.setPositive(difference > 0);
+                    int adjustment = abs(difference);
+                    textViewAdjustment.setText(String.valueOf(adjustment));
+                    adjustmentsViewModel.setQuantityEntered(adjustment);
                 }
             }
         }

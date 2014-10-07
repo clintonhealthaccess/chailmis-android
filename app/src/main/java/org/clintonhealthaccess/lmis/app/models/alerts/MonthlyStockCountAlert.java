@@ -37,7 +37,7 @@ import android.util.Log;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
-import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,7 +75,7 @@ public class MonthlyStockCountAlert implements NotificationMessage {
             Intent intent = new Intent(context, AdjustmentsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Bundle data = new Bundle();
-            data.putString(AdjustmentsActivity.ADJUSTMENT_REASON, AdjustmentService.PHYSICAL_COUNT);
+            data.putString(AdjustmentsActivity.ADJUSTMENT_REASON, AdjustmentReason.PHYSICAL_COUNT_TEXT);
             intent.putExtras(data);
             context.startActivity(intent);
         }

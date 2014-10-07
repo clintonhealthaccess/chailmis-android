@@ -30,6 +30,13 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 public class AdjustmentReason {
+    public static final String PHYSICAL_COUNT_TEXT = "Physical Count";
+    public static final String RECEIVED_FROM_ANOTHER_FACILITY_TEXT = "Received from another facility";
+    public static final String SENT_TO_ANOTHER_FACILITY_TEXT = "Sent to another facility";
+    public static final String SELECT_REASON = "--Select reason--";
+    public static final AdjustmentReason PHYSICAL_COUNT = new AdjustmentReason(PHYSICAL_COUNT_TEXT, true, true);
+    public static final AdjustmentReason RECEIVED_FROM_ANOTHER_FACILITY = new AdjustmentReason(RECEIVED_FROM_ANOTHER_FACILITY_TEXT, true, false);
+    public static final AdjustmentReason SENT_TO_ANOTHER_FACILITY = new AdjustmentReason(SENT_TO_ANOTHER_FACILITY_TEXT, false, true);
     private String name;
     private boolean allowsPostive, allowsNegative;
 
@@ -75,5 +82,9 @@ public class AdjustmentReason {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    public boolean isPhysicalCount() {
+        return name.equalsIgnoreCase("Physical Count");
     }
 }

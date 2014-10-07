@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
   ~
@@ -142,5 +141,8 @@
     <string name="starting_month">Starting Month:</string>
     <string name="ending_month">Ending Month:</string>
     <string name="starting_year">Starting Year:</string>
+    <string name="physical_count">Physical Count</string>
+    <string name="received_from_another_facility">Received from another facility</string>
+    <string name="sent_to_another_facilility">Sent to another facility</string>
 
 </resources>
