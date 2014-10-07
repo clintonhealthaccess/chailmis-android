@@ -302,6 +302,19 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
         verify(mockSmsSyncService, times(1)).send(any(DataValueSet.class));
         assertThat(commoditySnapshotService.getSmsReadySnapshots().size(), is(0));
+        assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
+    }
+
+    @Test
+    public void shouldNotSendSmsIfSnapshotsAreAlreadySentBySms() throws Exception {
+        createTwoSnapshotsInSameDataSet();
+
+        assertThat(commoditySnapshotService.getSmsReadySnapshots().size(), is(2));
+
+        commoditySnapshotService.syncWithServerThroughSms(new User("user", "user"));
+        commoditySnapshotService.syncWithServerThroughSms(new User("user", "user"));
+
+        verify(mockSmsSyncService, times(1)).send(any(DataValueSet.class));
     }
 
     private List<CommoditySnapshot> createTwoSnapshotsInSameDataSet() {
