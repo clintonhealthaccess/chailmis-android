@@ -29,35 +29,51 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.support.v7.internal.view.menu.MenuBuilder;
+import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.ReportType;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
-import static junit.framework.Assert.assertTrue;
+import java.util.List;
+
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.setupActivity;
+import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class ReportsActivityTest {
 
 
     private UserService userService;
+    @Inject
+    private CommodityService commodityService;
+    @Inject
+    private CategoryService categoryService;
 
     private ReportsActivity getReportsActivity() {
         return setupActivity(ReportsActivity.class);
@@ -67,12 +83,14 @@ public class ReportsActivityTest {
     public void setUp() throws Exception {
         userService = mock(UserService.class);
         when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        when(userService.userRegistered()).thenReturn(true);
         setUpInjectionWithMockLmisServer(Robolectric.application, this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(userService);
             }
         });
+
 
     }
 
@@ -91,14 +109,55 @@ public class ReportsActivityTest {
 
     }
 
-    @Ignore("we didn't find a way to verify menu item visible yet.")
+
     @Test
-    public void testHelpIsAvailableAsAMenuItem() {
+    public void testShouldDisplayAllCategoriesAsButtons() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
         ReportsActivity reportsActivity = getReportsActivity();
-        MenuBuilder menu = new MenuBuilder(reportsActivity);
-        reportsActivity.onCreateOptionsMenu(menu);
-        //reportsActivity.menu1
-        assertTrue(menu.findItem(R.id.action_help).isVisible());
+
+        LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
+        int buttonAmount = categoryLayout.getChildCount();
+        assertThat(buttonAmount, is(7));
+
+        for (int i = 1; i < buttonAmount; i++) {
+            View childView = categoryLayout.getChildAt(i);
+            assertThat(childView, instanceOf(Button.class));
+        }
     }
 
+    @Test
+    public void testThatAnelgesisticsShouldShowTwoReportsWhenClicked() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        ReportsActivity reportsActivity = getReportsActivity();
+        LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
+        LinearLayout reportButtonsLayout = (LinearLayout) reportsActivity.findViewById(R.id.linearLayoutCategoryReports);
+        int buttonAmount = categoryLayout.getChildCount();
+        assertThat(buttonAmount, is(7));
+        Button button = (Button) categoryLayout.getChildAt(1);
+        ANDROID.assertThat(button).hasTextString("Anti Malarials");
+        button.performClick();
+        ANDROID.assertThat(reportButtonsLayout).hasChildCount(2);
+    }
+
+    @Test
+    public void shouldLoadReportAcitivityWhenReportButtonIsClicked() throws Exception {
+
+        commodityService.initialise(new User("test", "pass"));
+        List<Category> categories = categoryService.all();
+        ReportsActivity reportsActivity = getReportsActivity();
+        LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
+        LinearLayout reportButtonsLayout = (LinearLayout) reportsActivity.findViewById(R.id.linearLayoutCategoryReports);
+        int buttonAmount = categoryLayout.getChildCount();
+        assertThat(buttonAmount, is(7));
+        Button antiMalarialsButton = (Button) categoryLayout.getChildAt(1);
+        antiMalarialsButton.performClick();
+
+        Button reportButton = (Button) reportButtonsLayout.getChildAt(0);
+        reportButton.performClick();
+
+        ReportType facilityStockReport = ReportType.FacilityStockReport;
+        Intent intent = new Intent(reportsActivity, facilityStockReport.getReportActivity());
+        intent.putExtra(ReportsActivity.CATEGORY_BUNDLE_KEY, categories.get(0));
+        assertThat(shadowOf(reportsActivity).getNextStartedActivity(), equalTo(intent));
+    }
 }

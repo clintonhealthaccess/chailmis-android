@@ -29,12 +29,34 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.ReportType;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
+
+import java.util.List;
+
+import roboguice.inject.InjectView;
 
 public class ReportsActivity extends BaseActivity {
+
+    public static final String CATEGORY_BUNDLE_KEY = "Category";
+    @Inject
+    CategoryService categoryService;
+    @InjectView(R.id.layoutCategories)
+    private LinearLayout categoriesLayout;
+    @InjectView(R.id.linearLayoutCategoryReports)
+    private LinearLayout reportsButtonsLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +66,57 @@ public class ReportsActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_reports);
+        setupCategories();
+
+    }
+
+    private void setupCategories() {
+        Drawable commodityButtonBackground = createCommodityButtonBackground();
+        for (final Category category : categoryService.all()) {
+            final Button button = createCommoditySelectionButton(category, commodityButtonBackground);
+            categoriesLayout.addView(button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ReportType> reportTypeList = ReportType.getReportTypesForCategory(category.getName());
+                    reportsButtonsLayout.removeAllViews();
+                    for (final ReportType reportType : reportTypeList) {
+                        Button reportButton = new Button(getApplicationContext());
+                        reportButton.setText(reportType.getName());
+                        reportsButtonsLayout.addView(reportButton);
+                        reportButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(getApplicationContext(), reportType.getReportActivity());
+                                intent.putExtra(CATEGORY_BUNDLE_KEY, category);
+                                startActivity(intent);
+                            }
+                        });
+
+                    }
+                }
+            });
+        }
+    }
+
+    private Drawable createCommodityButtonBackground() {
+        Drawable commodityButtonBackground = getResources().getDrawable(R.drawable.arrow_black_right);
+        commodityButtonBackground.setBounds(0, 0, 20, 30);
+        return commodityButtonBackground;
+    }
+
+    private Button createCommoditySelectionButton(final Category category, Drawable background) {
+        Button button = new Button(this);
+        button.setBackgroundResource(R.drawable.category_button_on_overlay);
+        button.setCompoundDrawables(null, null, background, null);
+        button.setText(category.getName());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        return button;
     }
 
 }

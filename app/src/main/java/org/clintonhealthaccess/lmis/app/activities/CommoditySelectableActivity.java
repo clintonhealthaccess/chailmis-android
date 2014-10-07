@@ -192,6 +192,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         return commodityButtonBackground;
     }
 
+
     private Button createCommoditySelectionButton(final Category category, Drawable background) {
         Button button = new Button(this);
         button.setBackgroundResource(R.drawable.category_button_on_overlay);
