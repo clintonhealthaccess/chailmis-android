@@ -41,13 +41,13 @@ public class SmsSyncServiceTest {
 
     @Test
     public void shouldSendDataValueSetThroughSms() throws Exception {
-        DataValue dataValue1 = DataValue.builder().dataElement("element_1").value("11").build();
-        DataValue dataValue2 = DataValue.builder().dataElement("element_2").value("22").build();
+        DataValue dataValue1 = DataValue.builder().dataSet("set_1").dataElement("element_1").period("20141005").value("11").build();
+        DataValue dataValue2 = DataValue.builder().dataSet("set_1").dataElement("element_2").period("20141005").value("22").build();
         DataValueSet dataValueSet = new DataValueSet();
         dataValueSet.setDataValues(newArrayList(dataValue1, dataValue2));
 
         smsSyncService.send(dataValueSet);
 
-        verify(mockSmsManager).sendTextMessage("+256785000000", null, "set_1 element_1.11.element_2.22", null, null);
+        verify(mockSmsManager).sendTextMessage("+256785000000", null, "set_1 0510 element_1.11.element_2.22", null, null);
     }
 }
