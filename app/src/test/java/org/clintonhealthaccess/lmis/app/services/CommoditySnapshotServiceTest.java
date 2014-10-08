@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
@@ -253,11 +254,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         List<CommoditySnapshot> snapshots = newArrayList(snapshot1, snapshot2);
 
-        DataValueSet valueSet = commoditySnapshotService.getDataValueSetFromSnapshots(snapshots, "orgUnit");
+        DataValueSet valueSet = new DataValueSet(snapshots, "orgUnit");
 
         assertThat(valueSet, notNullValue());
-        assertThat(valueSet.getDataSet(), notNullValue());
         assertThat(valueSet.getDataValues().size(), is(2));
+        for (DataValue dataValue : valueSet.getDataValues()) {
+            assertThat(dataValue.getDataSet(), notNullValue());
+        }
+
         assertThat(valueSet.getDataValues().get(0).getValue(), is("3"));
         assertThat(valueSet.getDataValues().get(1).getValue(), is("8"));
         assertThat(valueSet.getDataValues().get(0).getDataElement(), is(commodityAction.getId()));

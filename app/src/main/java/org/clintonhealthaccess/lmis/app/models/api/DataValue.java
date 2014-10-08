@@ -31,13 +31,15 @@ package org.clintonhealthaccess.lmis.app.models.api;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Builder;
 
 @Getter
 @Setter
 @Builder
+@ToString
 public class DataValue {
-    private String value, period, orgUnit, dataElement, categoryOptionCombo, attributeOptionCombo, storedBy;
+    private String value, period, orgUnit, dataSet, dataElement, categoryOptionCombo, attributeOptionCombo, storedBy;
     private Boolean followUp;
 
     public int getPeriodInt() {

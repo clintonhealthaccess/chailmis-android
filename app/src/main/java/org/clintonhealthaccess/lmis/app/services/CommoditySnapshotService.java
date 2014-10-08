@@ -40,7 +40,6 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -48,7 +47,6 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.util.Log.e;
@@ -134,7 +132,7 @@ public class CommoditySnapshotService {
         List<CommoditySnapshot> snapshotsToSync = getUnSyncedSnapshots();
         if (!isEmpty(snapshotsToSync)) {
             i("==> Syncing...........", snapshotsToSync.size() + " snapshots");
-            DataValueSet valueSet = getDataValueSetFromSnapshots(snapshotsToSync, user.getFacilityCode());
+            DataValueSet valueSet = new DataValueSet(snapshotsToSync, user.getFacilityCode());
             try {
                 DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
                 if (response.isSuccess()) {
@@ -149,7 +147,7 @@ public class CommoditySnapshotService {
     public void syncWithServerThroughSms(User user) {
         List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
         if(!isEmpty(snapshots)) {
-            DataValueSet valueSet = getDataValueSetFromSnapshots(snapshots, user.getFacilityCode());
+            DataValueSet valueSet = new DataValueSet(snapshots, user.getFacilityCode());
             if(smsSyncService.send(valueSet)) {
                 markSnapShotsAsSmsSent(snapshots);
             }
@@ -170,18 +168,5 @@ public class CommoditySnapshotService {
             snapshot.setSynced(true);
             dailyCommoditySnapshotDao.update(snapshot);
         }
-    }
-
-    DataValueSet getDataValueSetFromSnapshots(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
-        DataValueSet dataValueSet = new DataValueSet();
-        dataValueSet.setDataSet(snapshotsToSync.get(0).getCommodityAction().getDataSet().getId());
-        dataValueSet.setDataValues(new ArrayList<DataValue>());
-        for (CommoditySnapshot snapshot : snapshotsToSync) {
-            DataValue dataValue = DataValue.builder().value(String.valueOf(snapshot.getValue())).
-                    dataElement(snapshot.getCommodityAction().getId()).
-                    period(snapshot.getPeriod()).orgUnit(orgUnit).attributeOptionCombo(snapshot.getAttributeOptionCombo()).build();
-            dataValueSet.getDataValues().add(dataValue);
-        }
-        return dataValueSet;
     }
 }

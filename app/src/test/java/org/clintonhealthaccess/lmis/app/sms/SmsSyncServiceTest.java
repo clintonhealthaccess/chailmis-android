@@ -44,7 +44,6 @@ public class SmsSyncServiceTest {
         DataValue dataValue1 = DataValue.builder().dataElement("element_1").value("11").build();
         DataValue dataValue2 = DataValue.builder().dataElement("element_2").value("22").build();
         DataValueSet dataValueSet = new DataValueSet();
-        dataValueSet.setDataSet("set_1");
         dataValueSet.setDataValues(newArrayList(dataValue1, dataValue2));
 
         smsSyncService.send(dataValueSet);

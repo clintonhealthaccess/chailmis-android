@@ -39,12 +39,18 @@ import android.util.Log;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
+import org.clintonhealthaccess.lmis.app.backgroundServices.SmsSyncIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.Calendar;
 
+import static android.app.AlarmManager.INTERVAL_DAY;
+import static android.app.AlarmManager.RTC_WAKEUP;
+import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static roboguice.RoboGuice.DEFAULT_STAGE;
 import static roboguice.RoboGuice.getInjector;
 import static roboguice.RoboGuice.newDefaultRoboModule;
@@ -71,17 +77,36 @@ public class LmisApplication extends Application {
         loadAllCommoditiesToCache();
         loadAllAllocationstoCache();
         setupAlertsService();
+        setupSmsSyncingService();
+    }
+
+    private void setupSmsSyncingService() {
+        setupSmsSyncingAt(1);
+        setupSmsSyncingAt(13);
+    }
+
+    private void setupSmsSyncingAt(int hourOfDay) {
+        Intent smsSyncingServiceIntent = new Intent(context, SmsSyncIntentService.class);
+        smsSyncingServiceIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, smsSyncingServiceIntent, FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(RTC_WAKEUP, calendar.getTimeInMillis(), INTERVAL_DAY, pendingIntent);
     }
 
     private void setupAlertsService() {
         Log.i("Alert", "Started");
         Intent syncDataServiceIntent = new Intent(context, AlertsGenerationIntentService.class);
-        syncDataServiceIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        syncDataServiceIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, syncDataServiceIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                FLAG_CANCEL_CURRENT);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, 10);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+        alarmManager.setRepeating(RTC_WAKEUP,
                 calendar.getTimeInMillis(), 2 * 60 * 1000, pendingIntent);
         Log.i("Alert", "Finished");
     }

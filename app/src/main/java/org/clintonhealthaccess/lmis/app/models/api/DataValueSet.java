@@ -29,16 +29,31 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
-import java.util.ArrayList;
+import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
+
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class DataValueSet {
-    private List<DataValue> dataValues = new ArrayList<>();
-    private String dataSet;
+    private List<DataValue> dataValues = newArrayList();
+
+    public DataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
+        for (CommoditySnapshot snapshot : snapshotsToSync) {
+            DataValue dataValue = DataValue.builder().value(String.valueOf(snapshot.getValue())).
+                    dataSet(snapshot.getCommodityAction().getDataSet().getId()).
+                    dataElement(snapshot.getCommodityAction().getId()).
+                    period(snapshot.getPeriod()).orgUnit(orgUnit).
+                    attributeOptionCombo(snapshot.getAttributeOptionCombo()).build();
+            this.getDataValues().add(dataValue);
+        }
+    }
 }
 
