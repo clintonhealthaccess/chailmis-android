@@ -31,21 +31,32 @@ package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.BaseActivity;
 import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
+import org.clintonhealthaccess.lmis.app.adapters.FacilityStockReportAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import roboguice.inject.InjectView;
 
@@ -70,21 +81,115 @@ public class FacilityStockReportActivity extends BaseActivity {
     @Inject
     UserService userService;
 
+    @Inject
+    ReportsService reportsService;
+
     private Category category;
+    private FacilityStockReportAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        setContentView(R.layout.activity_facility_stock_report);
-        category = (Category) getIntent().getSerializableExtra(ReportsActivity.CATEGORY_BUNDLE_KEY);
 
+        setContentView(R.layout.activity_facility_stock_report);
+
+        category = (Category) getIntent().getSerializableExtra(ReportsActivity.CATEGORY_BUNDLE_KEY);
+        adapter = new FacilityStockReportAdapter(getApplicationContext(), R.layout.facility_stock_report_item, new ArrayList<FacilityStockReportItem>());
         textViewReportName.setText(String.format("Facility Stock Report for %s", category.getName()));
 
-        ArrayList<String> years = getLastNYears(10);
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, years);
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(10));
+        ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths());
+        spinnerStartingMonth.setAdapter(startMonthAdapter);
+        spinnerStartingMonth.setSelection(0);
+
+        setupEndMonthSpinner();
+
         spinnerYear.setAdapter(yearsAdapter);
 
+        setupListeners();
+        setItems();
+
+        listViewReport.addHeaderView(getLayoutInflater().inflate(R.layout.facility_stock_report_header, null));
+        listViewReport.setAdapter(adapter);
+    }
+
+    private void setupEndMonthSpinner() {
+        int selectedIndex = spinnerStartingMonth.getSelectedItemPosition();
+        Log.e("Selected Item", String.valueOf(selectedIndex));
+        ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths(selectedIndex));
+        spinnerEndingMonth.setAdapter(endMonthAdapter);
+    }
+
+    private List<String> getMonths(int selectedIndex) {
+
+        List<String> months = getMonths();
+        if (selectedIndex >= 0) {
+            return months.subList(selectedIndex, 12);
+        }
+        return months;
+    }
+
+    private void setupListeners() {
+
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setItems();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        };
+
+        spinnerEndingMonth.setOnItemSelectedListener(listener);
+
+        spinnerYear.setOnItemSelectedListener(listener);
+
+        spinnerStartingMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setItems();
+                setupEndMonthSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void setItems() {
+        List<FacilityStockReportItem> facilityReportItemsForCategory = reportsService.getFacilityReportItemsForCategory(category, getYear(), getStartingMonth(), getEndingMonth());
+        adapter.clear();
+        adapter.addAll(facilityReportItemsForCategory);
+        adapter.notifyDataSetChanged();
+    }
+
+    private String getYear() {
+        return (String) spinnerYear.getSelectedItem();
+    }
+
+    private String getStartingMonth() {
+        return (String) spinnerStartingMonth.getSelectedItem();
+    }
+
+    private String getEndingMonth() {
+        return (String) spinnerEndingMonth.getSelectedItem();
+    }
+
+    public List<String> getMonths() {
+        ArrayList<String> strings = new ArrayList<>(Arrays.asList(new DateFormatSymbols().getMonths()));
+        return FluentIterable.from(strings).filter(new Predicate<String>() {
+            @Override
+            public boolean apply(String input) {
+                return !input.isEmpty();
+            }
+        }).toList();
     }
 
     private ArrayList<String> getLastNYears(int numberOfYears) {

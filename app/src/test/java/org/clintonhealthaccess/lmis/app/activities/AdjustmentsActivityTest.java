@@ -35,7 +35,6 @@ import com.google.inject.Inject;
 import junit.framework.TestCase;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
