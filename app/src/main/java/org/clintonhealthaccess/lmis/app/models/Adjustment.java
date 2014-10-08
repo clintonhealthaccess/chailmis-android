@@ -74,8 +74,7 @@ public class Adjustment implements Serializable, Snapshotable {
     public List<CommoditySnapshotValue> getActivitiesValues() {
         List<CommoditySnapshotValue> values = new ArrayList<>();
         values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENTS), quantity));
-        //FIXME clarify on how to submit adjustments data esp reason
-//        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENT_REASON), reason));
+        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENT_REASON), reason));
         return values;
     }
 

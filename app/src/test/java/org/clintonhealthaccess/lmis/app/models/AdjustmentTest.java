@@ -29,23 +29,70 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import junit.framework.TestCase;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(RobolectricGradleTestRunner.class)
-public class AdjustmentTest extends TestCase {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    //FIXME test that it calculates the correct stock on hand
-    //FIXME test that it gets the correct type
-    //FIXME test that it creates the correct commodityActionValues
-    //FIXME test that
+@RunWith(RobolectricGradleTestRunner.class)
+public class AdjustmentTest {
+
     @Test
-    public void fakeHolderTest (){
-        assertTrue(true);
+    public void shouldAddToStockOnHandIfPositive() {
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(10);
+        Adjustment adjustment = new Adjustment(commodity, 20, true, "Count");
+        assertThat(adjustment.getNewStockOnHand(), is(30));
+
     }
 
+    @Test
+    public void shouldSubtractFromStockOnHandIfNegative() {
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(20);
+        Adjustment adjustment = new Adjustment(commodity, 10, false, "Count");
+        assertThat(adjustment.getNewStockOnHand(), is(10));
+
+    }
+
+    @Test
+    public void shouldReturnPlusIfPositive() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(20);
+        Adjustment adjustment = new Adjustment(commodity, 10, true, "Count");
+        assertThat(adjustment.getType(), is("+"));
+
+    }
+
+    @Test
+    public void shouldReturnMinusIfNotPositive() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(20);
+        Adjustment adjustment = new Adjustment(commodity, 10, false, "Count");
+        assertThat(adjustment.getType(), is("-"));
+
+    }
+
+    @Test
+    public void shouldSelectCorrectCommodityActions() throws Exception {
+        Commodity commodity = mock(Commodity.class);
+        CommodityAction adjustmentReasonsAction = new CommodityAction(commodity, "12", "12", DataElementType.ADJUSTMENT_REASON.toString());
+        CommodityAction adjustmentAmountAction = new CommodityAction(commodity, "12", "12", DataElementType.ADJUSTMENTS.toString());
+        when(commodity.getCommodityAction(DataElementType.ADJUSTMENTS.toString())).thenReturn(adjustmentAmountAction);
+        when(commodity.getCommodityAction(DataElementType.ADJUSTMENT_REASON.toString())).thenReturn(adjustmentReasonsAction);
+        Adjustment adjustment = new Adjustment(commodity, 10, true, "Count");
+        assertThat(adjustment.getActivitiesValues().size(), is(2));
+        assertThat(adjustment.getActivitiesValues().get(0).getValue(), is("10"));
+        assertThat(adjustment.getActivitiesValues().get(1).getValue(), is("Count"));
+        assertThat(adjustment.getActivitiesValues().get(0).getCommodityAction(), is(notNullValue()));
+        assertThat(adjustment.getActivitiesValues().get(1).getCommodityAction(), is(notNullValue()));
+
+    }
 }
