@@ -52,6 +52,7 @@ import java.util.List;
 import static android.util.Log.e;
 import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
+import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
@@ -145,7 +146,9 @@ public class CommoditySnapshotService {
     }
 
     public void syncWithServerThroughSms(User user) {
+        i("SMS Sync", "Checking snapshots...");
         List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
+        i("SMS Sync", format("%d snapshots need to be synced through SMS", snapshots.size()));
         if(!isEmpty(snapshots)) {
             DataValueSet valueSet = new DataValueSet(snapshots, user.getFacilityCode());
             if(smsSyncService.send(valueSet)) {
