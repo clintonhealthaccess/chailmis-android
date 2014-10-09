@@ -42,6 +42,17 @@ public class SmsValueSetTest {
     }
 
     @Test
+    public void shouldAcceptMonthlyPeriod() throws Exception {
+        DataValueSet dataValueSet = new DataValueSet();
+        dataValueSet.setDataValues(newArrayList(buildDataValue("set_1", "element_1", "201410", "11")));
+
+        List<SmsValueSet> smsValueSets = SmsValueSet.build(dataValueSet);
+
+        assertThat(smsValueSets.size(), is(1));
+        assertThat(smsValueSets.get(0).toString(), is("set_1 0110 element_1.11"));
+    }
+
+    @Test
     public void shouldSplitDataValueSetIfThereAreTooManyDataValues() throws Exception {
         List<DataValue> dataValues = newArrayList();
         for(int i = 0; i < 50; i++) {

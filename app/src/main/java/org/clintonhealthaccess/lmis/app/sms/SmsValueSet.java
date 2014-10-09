@@ -5,11 +5,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.api.DataValue;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -20,11 +18,9 @@ import static com.google.common.collect.Collections2.transform;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.partition;
-import static java.lang.String.format;
 
 public class SmsValueSet {
-    public static final SimpleDateFormat PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
-    public static final SimpleDateFormat SMS_PERIOD_DATE_FORMAT = new SimpleDateFormat("ddMM");
+    private static final SimpleDateFormat SMS_PERIOD_DATE_FORMAT = new SimpleDateFormat("ddMM");
     private final List<SmsValue> values;
     private String prefix;
 
@@ -48,12 +44,8 @@ public class SmsValueSet {
         return Multimaps.index(dataValues, new Function<DataValue, String>() {
             @Override
             public String apply(DataValue input) {
-                try {
-                    Date period = PERIOD_DATE_FORMAT.parse(input.getPeriod());
-                    return input.getDataSet() + " " + SMS_PERIOD_DATE_FORMAT.format(period);
-                } catch (ParseException e) {
-                    throw new LmisException(format("Invalid period date from DataValue [%s]", input), e);
-                }
+                Date periodDate = input.periodAsDate();
+                return input.getDataSet() + " " + SMS_PERIOD_DATE_FORMAT.format(periodDate);
             }
         });
     }
