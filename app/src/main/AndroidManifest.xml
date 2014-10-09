@@ -148,6 +148,7 @@
                 android:resource="@xml/syncadapter" />
         </service>
         <service android:name=".backgroundServices.AlertsGenerationIntentService" />
+        <service android:name=".backgroundServices.SmsSyncIntentService" />
 
         <provider
             android:name=".sync.StubContentProvider"

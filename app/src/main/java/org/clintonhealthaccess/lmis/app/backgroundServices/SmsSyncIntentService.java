@@ -20,6 +20,10 @@ public class SmsSyncIntentService extends RoboIntentService {
         super(name);
     }
 
+    public SmsSyncIntentService() {
+        super("SmsSyncIntentService");
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         commoditySnapshotService.syncWithServerThroughSms(userService.getRegisteredUser());
