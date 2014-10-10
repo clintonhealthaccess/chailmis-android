@@ -42,7 +42,7 @@ public class SmsCommandConfigurationTest {
     @Test
     public void shouldCreateSmsCommandFromDataSet() throws Exception {
         List<SmsCommand> allSmsCommands = SmsCommand.all();
-        assertThat(allSmsCommands.size(), is(15));
+        assertThat(allSmsCommands.size(), is(16));
         assertThat(allSmsCommands.get(6).getName(), is("5521e503834"));
 
         SmsCommand smsCommand = allSmsCommands.get(0);
