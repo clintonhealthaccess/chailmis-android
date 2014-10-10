@@ -26,6 +26,8 @@ public class SmsSyncIntentService extends RoboIntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        commoditySnapshotService.syncWithServerThroughSms(userService.getRegisteredUser());
+        if (userService.userRegistered()) {
+            commoditySnapshotService.syncWithServerThroughSms(userService.getRegisteredUser());
+        }
     }
 }
