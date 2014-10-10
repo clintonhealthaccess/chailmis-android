@@ -70,7 +70,7 @@ public enum ReportType {
         Map<String, List<ReportType>> stringListHashMap = new HashMap<>();
         stringListHashMap.put(VACCINE, Arrays.asList(MonthlyHealthFacilityDevicesUtilizationReport, MonthlyHealthFacilityVaccinesUtilizationReport));
         stringListHashMap.put(MALARIA, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1));
-        stringListHashMap.put(FAMILY, Arrays.asList(ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
+        stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
 
         for (String key : stringListHashMap.keySet()) {
             if (selectTypes(name, key)) return stringListHashMap.get(key);

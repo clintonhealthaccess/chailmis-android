@@ -73,7 +73,7 @@
                     android:background="@color/dark_blue_header"
                     android:textColor="@color/white"
                     android:padding="10dp"
-                    android:text="@string/commodity_categories"
+                    android:text="Select a Category"
                     android:id="@+id/textViewCategories"
                     android:textSize="18sp"
                     android:textStyle="bold" />
