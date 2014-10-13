@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -186,14 +185,18 @@ public class FacilityStockReportActivity extends BaseActivity {
     }
 
     private void setItems() {
-        List<FacilityStockReportItem> facilityReportItemsForCategory = reportsService.getFacilityReportItemsForCategory(category, getYear(), getStartingMonth(), getEndingMonth());
+        List<FacilityStockReportItem> facilityReportItemsForCategory = reportsService.getFacilityReportItemsForCategory(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
         adapter.clear();
         adapter.addAll(facilityReportItemsForCategory);
         adapter.notifyDataSetChanged();
     }
 
-    private String getYear() {
+    private String getStartingYear() {
         return (String) spinnerStartingYear.getSelectedItem();
+    }
+
+    public String getEndingYear() {
+        return (String) spinnerEndingYear.getSelectedItem();
     }
 
     private String getStartingMonth() {
@@ -213,6 +216,7 @@ public class FacilityStockReportActivity extends BaseActivity {
             }
         }).toList();
     }
+
 
     private ArrayList<String> getLastNYears(int numberOfYears) {
         ArrayList<String> years = new ArrayList<>();

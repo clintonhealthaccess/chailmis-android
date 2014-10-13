@@ -26,6 +26,7 @@ import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
@@ -67,6 +68,7 @@ public class CreateInitTables implements Migration {
             createTableIfNotExists(connectionSource, AllocationAlert.class);
             createTableIfNotExists(connectionSource, Adjustment.class);
             createTableIfNotExists(connectionSource, MonthlyStockCountAlert.class);
+            createTableIfNotExists(connectionSource, StockItemSnapshot.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

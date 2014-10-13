@@ -46,6 +46,8 @@ public class StockService {
     @Inject
     private CategoryService categoryService;
 
+    @Inject
+    public StockItemSnapshotService stockItemSnapshotService;
 
     public int getStockLevelFor(Commodity commodity) {
         return commodity.getStockOnHand();
@@ -63,11 +65,14 @@ public class StockService {
         categoryService.clearCache();
     }
 
+
     private void saveStockLevel(final Commodity commodity) {
         dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
+
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
                 dao.update(commodity.getStockItem());
+                stockItemSnapshotService.createOrUpdate(commodity);
                 return null;
             }
         });

@@ -28,23 +28,44 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.services;
+package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-public class ReportsService {
+@DatabaseTable
+public class StockItemSnapshot {
 
-    public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear, String startingMonth, String endingYear, String EndingMonth) {
-        ArrayList<FacilityStockReportItem> facilityStockReportItems = new ArrayList<>();
-        for (Commodity commodity: category.getCommodities()) {
-            FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            facilityStockReportItems.add(item);
-        }
-        return facilityStockReportItems;
+    @DatabaseField(generatedId = true)
+    protected int id;
+
+    @DatabaseField(foreign = true, canBeNull = false)
+    private Commodity commodity;
+
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    private Date created;
+
+    @DatabaseField(canBeNull = false)
+    private int quantity;
+
+    public StockItemSnapshot() {
+        //OrlLite likes
+    }
+
+    public StockItemSnapshot(Commodity commodity, Date created, int quantity) {
+        this.commodity = commodity;
+        this.created = created;
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

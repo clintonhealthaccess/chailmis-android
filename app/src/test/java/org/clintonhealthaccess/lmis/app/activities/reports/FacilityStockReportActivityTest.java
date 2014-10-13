@@ -81,7 +81,7 @@ public class FacilityStockReportActivityTest {
         userService = mock(UserService.class);
         reportsService = mock(ReportsService.class);
         when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
-        when(reportsService.getFacilityReportItemsForCategory((Category) any(), anyString(), anyString(), anyString())).thenReturn(new ArrayList<FacilityStockReportItem>());
+        when(reportsService.getFacilityReportItemsForCategory((Category) any(), anyString(), anyString(), anyString(), anyString())).thenReturn(new ArrayList<FacilityStockReportItem>());
         setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
             @Override
             protected void configure() {
