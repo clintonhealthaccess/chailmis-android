@@ -66,19 +66,19 @@ public enum ReportType {
         return name;
     }
 
-    public static List<ReportType> getReportTypesForCategory(String name) {
+    public static List<ReportType> getReportTypesForCategory(String categoryName) {
         Map<String, List<ReportType>> stringListHashMap = new HashMap<>();
         stringListHashMap.put(VACCINE, Arrays.asList(MonthlyHealthFacilityDevicesUtilizationReport, MonthlyHealthFacilityVaccinesUtilizationReport));
         stringListHashMap.put(MALARIA, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1));
         stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
 
         for (String key : stringListHashMap.keySet()) {
-            if (selectTypes(name, key)) return stringListHashMap.get(key);
+            if (selectTypes(categoryName, key)) return stringListHashMap.get(key);
         }
         return stringListHashMap.get(MALARIA);
     }
 
-    private static boolean selectTypes(String name, String vaccine) {
-        return name.toLowerCase().contains(vaccine);
+    private static boolean selectTypes(String categoryName, String key) {
+        return categoryName.toLowerCase().contains(key);
     }
 }

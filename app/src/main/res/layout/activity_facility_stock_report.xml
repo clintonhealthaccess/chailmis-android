@@ -55,33 +55,44 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Year:" />
+            android:text="@string/starting_year" />
 
         <Spinner
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerYear"></Spinner>
+            android:id="@+id/spinnerStartingYear"></Spinner>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Starting Month:" />
+            android:text="@string/starting_month" />
 
         <Spinner
             android:layout_width="fill_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:id="@+id/spinnerStartingMonth">
-
         </Spinner>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ending Month:" />
+            android:text="@string/ending_year" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/spinnerEndingYear"></Spinner>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ending_month" />
 
         <Spinner
             android:layout_width="fill_parent"

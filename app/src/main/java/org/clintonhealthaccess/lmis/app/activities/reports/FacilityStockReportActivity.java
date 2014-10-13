@@ -63,14 +63,19 @@ import roboguice.inject.InjectView;
 public class FacilityStockReportActivity extends BaseActivity {
 
 
+    public static final int NUMBER_OF_YEARS = 10;
+
     @InjectView(R.id.spinnerStartingMonth)
     Spinner spinnerStartingMonth;
 
     @InjectView(R.id.spinnerEndingMonth)
     Spinner spinnerEndingMonth;
 
-    @InjectView(R.id.spinnerYear)
-    Spinner spinnerYear;
+    @InjectView(R.id.spinnerStartingYear)
+    Spinner spinnerStartingYear;
+
+    @InjectView(R.id.spinnerEndingYear)
+    Spinner spinnerEndingYear;
 
     @InjectView(R.id.textViewReportName)
     TextView textViewReportName;
@@ -105,7 +110,9 @@ public class FacilityStockReportActivity extends BaseActivity {
 
         setupEndMonthSpinner();
 
-        spinnerYear.setAdapter(yearsAdapter);
+        spinnerStartingYear.setAdapter(yearsAdapter);
+
+        setupEndYearSpinner();
 
         setupListeners();
         setItems();
@@ -114,9 +121,14 @@ public class FacilityStockReportActivity extends BaseActivity {
         listViewReport.setAdapter(adapter);
     }
 
+    private void setupEndYearSpinner() {
+        int selectedIndex = spinnerStartingYear.getSelectedItemPosition();
+        ArrayAdapter<String> endYearAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS).subList(0, selectedIndex+1));
+        spinnerEndingYear.setAdapter(endYearAdapter);
+    }
+
     private void setupEndMonthSpinner() {
         int selectedIndex = spinnerStartingMonth.getSelectedItemPosition();
-        Log.e("Selected Item", String.valueOf(selectedIndex));
         ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths(selectedIndex));
         spinnerEndingMonth.setAdapter(endMonthAdapter);
     }
@@ -136,7 +148,6 @@ public class FacilityStockReportActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setItems();
-
             }
 
             @Override
@@ -147,7 +158,18 @@ public class FacilityStockReportActivity extends BaseActivity {
 
         spinnerEndingMonth.setOnItemSelectedListener(listener);
 
-        spinnerYear.setOnItemSelectedListener(listener);
+        spinnerStartingYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setupEndYearSpinner();
+                setItems();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         spinnerStartingMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -171,7 +193,7 @@ public class FacilityStockReportActivity extends BaseActivity {
     }
 
     private String getYear() {
-        return (String) spinnerYear.getSelectedItem();
+        return (String) spinnerStartingYear.getSelectedItem();
     }
 
     private String getStartingMonth() {

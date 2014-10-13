@@ -95,7 +95,8 @@ public class LmisApplication extends Application {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        alarmManager.setRepeating(RTC_WAKEUP, calendar.getTimeInMillis(), INTERVAL_DAY, pendingIntent);
+        //alarmManager.setRepeating(RTC_WAKEUP, calendar.getTimeInMillis(), INTERVAL_DAY, pendingIntent);
+        alarmManager.setRepeating(RTC_WAKEUP, calendar.getTimeInMillis(), 1*60*1000, pendingIntent);
     }
 
     private void setupAlertsService() {

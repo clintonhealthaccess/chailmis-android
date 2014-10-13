@@ -48,6 +48,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -93,8 +94,8 @@ public class FacilityStockReportActivityTest {
     @Test
     public void shouldCreateTheYearSpinner() throws Exception {
         FacilityStockReportActivity activity = getActivity();
-        ANDROID.assertThat(activity.spinnerYear).isNotNull();
-        ANDROID.assertThat(activity.spinnerYear).isVisible();
+        ANDROID.assertThat(activity.spinnerStartingYear).isNotNull();
+        ANDROID.assertThat(activity.spinnerStartingYear).isVisible();
     }
 
     @Test
@@ -114,7 +115,7 @@ public class FacilityStockReportActivityTest {
     @Test
     public void shouldSet10YearsInTheYearSpinner() throws Exception {
         FacilityStockReportActivity activity = getActivity();
-        assertThat(activity.spinnerYear.getAdapter().getCount(), is(10));
+        assertThat(activity.spinnerStartingYear.getAdapter().getCount(), is(10));
     }
 
 
@@ -166,4 +167,17 @@ public class FacilityStockReportActivityTest {
         assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(12));
         assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(11));
     }
+
+    @Test
+    public void shouldRePopulateEndYearSpinnerWhenStartingYearSpinnerIsChanged() throws Exception {
+        FacilityStockReportActivity activity = getActivity();
+        activity.spinnerStartingYear.setSelection(3);
+        assertThat(activity.spinnerEndingYear.getAdapter().getCount(), is(4));
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        assertThat((String)activity.spinnerEndingYear.getAdapter().getItem(3), is(String.valueOf(year-3)));
+    }
+
 }
