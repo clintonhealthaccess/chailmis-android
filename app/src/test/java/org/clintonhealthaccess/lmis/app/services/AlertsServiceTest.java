@@ -40,6 +40,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.MonthlyStockCountAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -76,11 +77,12 @@ public class AlertsServiceTest {
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
-        commodityService.initialise(new User("test", "pass"));
+
     }
 
     @Test
     public void shouldCreateLowStockAlertsForItemsWithStockBelowTheThreshold() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<LowStockAlert> lowStockAlerts = alertsService.getLowStockAlerts();
         assertThat(lowStockAlerts.size(), is(2));
@@ -89,7 +91,8 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldCreateLowStockAlert() throws Exception {
-        Commodity commodity = commodityService.all().get(0);
+        setupCommodities();
+        Commodity commodity = getCommodity();
         LowStockAlert alert = new LowStockAlert(commodity);
         alertsService.createAlert(alert);
         Long count = dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, Long>() {
@@ -102,9 +105,14 @@ public class AlertsServiceTest {
 
     }
 
+    private Commodity getCommodity() {
+        return commodityService.all().get(0);
+    }
+
     @Test
     public void shouldUpdatesStockAlert() throws Exception {
-        Commodity commodity = commodityService.all().get(0);
+        setupCommodities();
+        Commodity commodity = getCommodity();
         LowStockAlert alert = new LowStockAlert(commodity);
         alertsService.createAlert(alert);
         alert.setDisabled(true);
@@ -120,14 +128,20 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldGetCommodityViewModelsForEachLowStockAlert() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderCommodityViewModelsForLowStockAlert();
         assertThat(commodityViewModels.size(), is(2));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(30));
     }
 
+    private void setupCommodities() {
+        commodityService.initialise(new User("test", "pass"));
+    }
+
     @Test
     public void shouldGetCommodityViewModelsForEachCommodityForRoutineOrderAlert() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderViewModelsForRoutineOrderAlert();
         int numberOfCommodities = 7;
@@ -137,6 +151,7 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldFilterLowStockAlertsForGivenCommodities() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
         assertThat(alerts.size(), is(2));
@@ -150,6 +165,7 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldDisableAlertsForCommodities() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
         Commodity commodity = alerts.get(0).getCommodity();
@@ -163,6 +179,7 @@ public class AlertsServiceTest {
 
     @Test
     public void shouldReturnEnabledAlerts() throws Exception {
+        setupCommodities();
         alertsService.updateLowStockAlerts();
         List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
         assertThat(alerts.size(), is(2));
@@ -177,7 +194,7 @@ public class AlertsServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 24);
 
-        setRoutineOrderDay(25);
+        setPreferenceIntegerValue(25, CommodityService.ROUTINE_ORDER_ALERT_DAY);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
         List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(0));
@@ -188,7 +205,7 @@ public class AlertsServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 25);
 
-        setRoutineOrderDay(25);
+        setPreferenceIntegerValue(25, CommodityService.ROUTINE_ORDER_ALERT_DAY);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
         List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(1));
@@ -199,7 +216,8 @@ public class AlertsServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 27);
 
-        setRoutineOrderDay(25);
+        setPreferenceIntegerValue(25, CommodityService.ROUTINE_ORDER_ALERT_DAY);
+
         alertsService.generateRoutineOrderAlert(calendar.getTime());
         List<RoutineOrderAlert> routineOrderAlerts = alertsService.getRoutineOrderAlertsInCurrentMonth(calendar.getTime());
         assertThat(routineOrderAlerts.size(), is(1));
@@ -210,7 +228,7 @@ public class AlertsServiceTest {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2025, Calendar.JULY, 25);
 
-        setRoutineOrderDay(25);
+        setPreferenceIntegerValue(25, CommodityService.ROUTINE_ORDER_ALERT_DAY);
         alertsService.generateRoutineOrderAlert(calendar.getTime());
 
         calendar.set(2025, Calendar.JULY, 27);
@@ -241,8 +259,15 @@ public class AlertsServiceTest {
     @Test
     public void shouldGetRoutineOrderAlertDayFromPreferences() throws Exception {
         Integer day = 12;
-        setRoutineOrderDay(day);
-        assertThat(alertsService.getRoutineOrderAlertDay(), is(12));
+        setPreferenceIntegerValue(day, CommodityService.ROUTINE_ORDER_ALERT_DAY);
+        assertThat(alertsService.getRoutineOrderAlertDay(), is(day));
+    }
+
+    @Test
+    public void shouldGetStockCountDayFromPreferences() throws Exception {
+        Integer day = 23;
+        setPreferenceIntegerValue(day, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+        assertThat(alertsService.getMonthlyStockCountDay(), is(day));
     }
 
     @Test
@@ -265,7 +290,6 @@ public class AlertsServiceTest {
         alertsService.generateAllocationAlerts();
         List<AllocationAlert> allocationAlerts = alertsService.getAllocationAlerts();
         assertThat(allocationAlerts.size(), is(1));
-
     }
 
     @Test
@@ -277,6 +301,101 @@ public class AlertsServiceTest {
         assertThat(alertsService.getAllocationAlerts().size(), is(1));
     }
 
+    @Test
+    public void shouldDeleteAllocationAlertGivenTheAllocation() throws Exception {
+        Allocation allocation = new Allocation("james", "then");
+        createAllocation(allocation);
+        createAllocationAlert(new AllocationAlert(allocation));
+        assertThat(alertsService.getAllocationAlerts().size(), is(1));
+        alertsService.deleteAllocationAlert(allocation);
+        assertThat(alertsService.getAllocationAlerts().size(), is(0));
+    }
+
+    @Test
+    public void shouldGenerateMonthlyStockCountAlertForMonthIfNotYetAvailable() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+
+        assertThat(alertsService.getMonthlyStockCountAlerts(calendar.getTime()).size(), is(1));
+
+        calendar.set(2025, Calendar.JUNE, 20);
+
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+
+        assertThat(alertsService.getMonthlyStockCountAlerts(calendar.getTime()).size(), is(0));
+    }
+
+    @Test
+    public void shouldNotRegenerateMonthlyStockAlertForIfAlreadyGenerated() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+
+        List<MonthlyStockCountAlert> monthlyStockCountAlerts = alertsService.getMonthlyStockCountAlerts(calendar.getTime());
+
+        assertThat(monthlyStockCountAlerts.size(), is(1));
+    }
+
+    @Test
+    public void shouldIncludeMonthlyStockCountAlertsInGetNotificationMessages() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+
+        assertThat(alertsService.getNotificationMessages().size(), is(1));
+
+
+    }
+
+    @Test
+    public void shouldIncludeMonthlyStockCountAlertsInNotificationCount() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+
+        int numberOfAlertsBefore = alertsService.numberOfAlerts();
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+        alertsService.disableAllRoutineOrderAlerts();
+        assertThat(alertsService.numberOfAlerts(), is(numberOfAlertsBefore + 1));
+
+    }
+
+    @Test
+    public void shouldDisableAllMonthlyStockCountAlerts() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2025, Calendar.JULY, 27);
+
+        setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
+
+        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+
+        assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(1));
+
+        alertsService.disableAllMonthlyStockCountAlerts();
+
+        assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(0));
+
+
+    }
+
     private void createRoutineOrderAlert(final RoutineOrderAlert data) {
         dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, Object>() {
             @Override
@@ -286,9 +405,9 @@ public class AlertsServiceTest {
         });
     }
 
-    private void setRoutineOrderDay(Integer day) {
+    private void setPreferenceIntegerValue(Integer value, String key) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(CommodityService.ROUTINE_ORDER_ALERT_DAY, day);
+        editor.putInt(key, value);
         editor.commit();
     }
 
@@ -299,17 +418,6 @@ public class AlertsServiceTest {
                 return dao.create(data);
             }
         });
-    }
-
-    @Test
-    public void shouldDeleteAllocationAlertGivenTheAllocation() throws Exception {
-        Allocation allocation = new Allocation("james", "then");
-        createAllocation(allocation);
-        createAllocationAlert(new AllocationAlert(allocation));
-        assertThat(alertsService.getAllocationAlerts().size(), is(1));
-
-        alertsService.deleteAllocationAlert(allocation);
-        assertThat(alertsService.getAllocationAlerts().size(), is(0));
     }
 
 

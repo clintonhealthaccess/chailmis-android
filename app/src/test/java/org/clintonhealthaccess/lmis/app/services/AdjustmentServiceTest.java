@@ -29,67 +29,121 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
-import android.content.Context;
-
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-
-import junit.framework.TestCase;
 
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.assertEquals;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.robolectric.Robolectric.application;
-import static org.robolectric.Robolectric.httpRequestWasMade;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class AdjustmentServiceTest {
 
     @Inject
     CommodityService commodityService;
+
     @Inject
     AdjustmentService adjustmentService;
-    @Inject
-    Context context;
+
+
+    AlertsService alertsService;
+
+    CommoditySnapshotService commoditySnapShotService;
+
+    StockService stockService;
 
 
     @Before
     public void setUp() throws Exception {
-        setUpInjectionWithMockLmisServer(application, this);
+        alertsService = mock(AlertsService.class);
+        commoditySnapShotService = mock(CommoditySnapshotService.class);
+        stockService = mock(StockService.class);
+        setUpInjectionWithMockLmisServer(Robolectric.application, this, new AbstractModule() {
+            @Override
+            public void configure() {
+                bind(AlertsService.class).toInstance(alertsService);
+                bind(CommoditySnapshotService.class).toInstance(commoditySnapShotService);
+                bind(StockService.class).toInstance(stockService);
+            }
+        });
         commodityService.initialise(new User("user", "pass"));
     }
 
-    //FIXME test that it can save adjustments
     @Test
     public void shouldSaveAdjustments() throws Exception {
-//        GenericDao<Adjustment> adjustmentGenericDao = new GenericDao<>(Adjustment.class, context);
-//
-//        final Commodity commodity = commodityService.all().get(0);
-//        int initialCount = adjustmentGenericDao.queryForAll().size();
-//
-//        List<Adjustment> adjustments = Arrays.asList(
-//            new Adjustment(commodity, 5, true, "Sent to another facility"nA)
-//        );
-//        adjustmentService.save(adjustments);
-//        int finalCount = adjustmentGenericDao.queryForAll().size();
-//        assertEquals(finalCount, initialCount+1);
+        GenericDao<Adjustment> adjustmentGenericDao = new GenericDao<>(Adjustment.class, Robolectric.application);
+
+        final Commodity commodity = commodityService.all().get(0);
+        int initialCount = adjustmentGenericDao.queryForAll().size();
+
+        List<Adjustment> adjustments = Arrays.asList(
+                new Adjustment(commodity, 5, true, "Sent to another facility")
+        );
+        adjustmentService.save(adjustments);
+        int finalCount = adjustmentGenericDao.queryForAll().size();
+        assertEquals(finalCount, initialCount + 1);
 
     }
 
 
-    //FIXME test that it creates snapshots
-    
+    @Test
+    public void shouldCreateSnapShotsForSavedAdjusments() throws Exception {
+        final Commodity commodity = commodityService.all().get(0);
+        Adjustment adjustment = new Adjustment(commodity, 5, true, "Sent to another facility");
+        List<Adjustment> adjustments = Arrays.asList(
+                adjustment
+        );
+        adjustmentService.save(adjustments);
+        verify(commoditySnapShotService, atLeastOnce()).add(adjustment);
+
+    }
+
+    @Test
+    public void shouldIncreaseStockLevelForPositiveAdjustment() throws Exception {
+        final Commodity commodity = commodityService.all().get(0);
+        Adjustment adjustment = new Adjustment(commodity, 5, true, "Sent to another facility");
+        List<Adjustment> adjustments = Arrays.asList(
+                adjustment
+        );
+        adjustmentService.save(adjustments);
+        verify(stockService, atLeastOnce()).increaseStockLevelFor(adjustment.getCommodity(), 5);
+
+    }
+
+    @Test
+    public void shouldReduceStockLevelForNegativeAdjustment() throws Exception {
+        final Commodity commodity = commodityService.all().get(0);
+        Adjustment adjustment = new Adjustment(commodity, 5, false, "Sent to another facility");
+        List<Adjustment> adjustments = Arrays.asList(
+                adjustment
+        );
+        adjustmentService.save(adjustments);
+        verify(stockService, atLeastOnce()).reduceStockLevelFor(adjustment.getCommodity(), 5);
+
+    }
+
+    @Test
+    public void shouldDisableAllMonthlyStockAlerts() throws Exception {
+
+        final Commodity commodity = commodityService.all().get(0);
+        List<Adjustment> adjustments = Arrays.asList(
+                new Adjustment(commodity, 5, true, "Sent to another facility")
+        );
+        adjustmentService.save(adjustments);
+        verify(alertsService).disableAllMonthlyStockCountAlerts();
+    }
 }

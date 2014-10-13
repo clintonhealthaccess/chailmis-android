@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -51,9 +52,9 @@ import org.clintonhealthaccess.lmis.app.fragments.ConfirmAdjustmentsFragment;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -62,6 +63,7 @@ import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
 
 public class AdjustmentsActivity extends CommoditySelectableActivity {
+    public static final String ADJUSTMENT_REASON = "adjustment_reason";
     protected final ViewValidator<Spinner> HAS_NO_TYPE = new ViewValidator<Spinner>(R.string.adjustment_type_validation_message, new Predicate<Spinner>() {
         @Override
         public boolean apply(Spinner view) {
@@ -135,13 +137,20 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     }
 
     private void setUpSpinnerAdjustmentReason() {
-        final List<AdjustmentReason> adjustmentReasons = Arrays.asList(
-                new AdjustmentReason("--Select reason--", false, false),
-                new AdjustmentReason("Physical Count", true, true),
-                new AdjustmentReason("Received from another facility", true, false),
-                new AdjustmentReason("Sent to another facility", false, true));
+        Intent intent = getIntent();
+        String presetReason = intent.getStringExtra(ADJUSTMENT_REASON);
+
+        final ArrayList<AdjustmentReason> adjustmentReasons = AdjustmentService.getAdjustmentReasons();
         ArrayAdapter<AdjustmentReason> adapter = new ArrayAdapter<AdjustmentReason>(AdjustmentsActivity.this, R.layout.simple_spinner_bold, adjustmentReasons);
         spinnerAdjustmentReason.setAdapter(adapter);
+        System.out.println("Here ....");
+        if (presetReason != null) {
+            System.out.println(presetReason);
+            int selectedIndex = adjustmentReasons.indexOf(new AdjustmentReason(presetReason, true, true));
+            System.out.println(selectedIndex);
+            spinnerAdjustmentReason.setSelection(selectedIndex);
+        }
+
         spinnerAdjustmentReason.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

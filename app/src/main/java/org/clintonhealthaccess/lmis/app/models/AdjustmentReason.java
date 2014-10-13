@@ -59,4 +59,21 @@ public class AdjustmentReason {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AdjustmentReason)) return false;
+
+        AdjustmentReason that = (AdjustmentReason) o;
+
+        if (!name.equals(that.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

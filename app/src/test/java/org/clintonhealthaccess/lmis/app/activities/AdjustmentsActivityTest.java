@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Intent;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
@@ -45,9 +47,9 @@ import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import java.util.List;
 
@@ -119,9 +121,11 @@ public class AdjustmentsActivityTest extends TestCase {
         assertThat(adjustmentsViewModel.getAdjustmentReason().getName(), is(reason));
     }
 
-    //FIXME test that the validation works
-
-
-    //FIXME test that the dialog shows when you submit
-
+    @Test
+    public void shouldSetAdjustmentReasonFromIntent() throws Exception {
+        Intent intent = new Intent();
+        intent.putExtra(AdjustmentsActivity.ADJUSTMENT_REASON, AdjustmentService.PHYSICAL_COUNT);
+        AdjustmentsActivity adjustmentsActivity = Robolectric.buildActivity(AdjustmentsActivity.class).withIntent(intent).create().start().resume().visible().get();
+        assertThat(adjustmentsActivity.spinnerAdjustmentReason.getSelectedItem().toString(), is(AdjustmentService.PHYSICAL_COUNT));
+    }
 }

@@ -1,189 +1,228 @@
 [
- { "commodityAction": {
-                         "activityType": "STOCK_ON_HAND",
-                         "dataSet": {
-                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                             "name": "lmis dataset",
-                             "periodType": "Daily"
-                         },
-                         "id": "id_stock_on_hand_comm_1",
-                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                     },
-   "value":"10",
-   "period":"201404",
-   "id":"0001"
- },
- { "commodityAction": {
-                         "activityType": "MINIMUM_THRESHOLD",
-                         "dataSet": {
-                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                             "name": "lmis dataset",
-                             "periodType": "Daily"
-                         },
-                         "id": "id_minimum_threshold_1",
-                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                     },
-   "value":"15",
-   "period":"201404",
-   "id":"0002"
- },
- { "commodityAction": {
-                          "activityType": "MAXIMUM_THRESHOLD",
+    {
+        "commodityAction": {
+            "activityType": "STOCK_ON_HAND",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_stock_on_hand_comm_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+        },
+        "id": "0001",
+        "period": "201404",
+        "value": "10"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MINIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_minimum_threshold_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0002",
+        "period": "201404",
+        "value": "15"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MAXIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_maximum_threshold_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0003",
+        "period": "201404",
+        "value": "40"
+    },
+    {
+        "commodityAction": {
+            "activityType": "STOCK_ON_HAND",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_stock_on_hand_comm_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+        },
+        "id": "0004",
+        "period": "201404",
+        "value": "20"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MINIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_minimum_threshold_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0005",
+        "period": "201404",
+        "value": "15"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MAXIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_maximum_threshold_2",
+            "name": "686ee023-384a-asdas-9d40-aa8b1f756e6"
+        },
+        "id": "0006",
+        "period": "201404",
+        "value": "40"
+    },
+    {
+        "commodityAction": {
+            "activityType": "STOCK_ON_HAND",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_stock_on_hand_comm_3",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+        },
+        "id": "0007",
+        "period": "201404",
+        "value": "20"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MINIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_minimum_threshold_3",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0008",
+        "period": "201404",
+        "value": "25"
+    },
+    {
+        "commodityAction": {
+            "activityType": "MAXIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_maximum_threshold_3",
+            "name": "686ee023-384a-asdas-9d40-aa8b1f756e6"
+        },
+        "id": "0009",
+        "period": "201404",
+        "value": "60"
+    },
+    {
+        "commodityAction": {
+            "activityType": "PROJECTED_ORDER_AMOUNT",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_PROJECTED_ORDER_AMOUNT_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0010",
+        "period": "201404",
+        "value": "25"
+    },
+    {
+        "commodityAction": {
+            "activityType": "PROJECTED_ORDER_AMOUNT",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_PROJECTED_ORDER_AMOUNT_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0011",
+        "period": "201404",
+        "value": "25"
+    },
+    {
+        "commodityAction": {
+            "activityType": "AMC",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_AMC_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0012",
+        "period": "201404",
+        "value": "103"
+    },
+    {
+        "commodityAction": {
+            "activityType": "AMC",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_AMC_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0013",
+        "period": "201404",
+        "value": "125"
+    },
+         {
+             "commodityAction": {
+                 "activityType": "ADJUSTMENTS",
+                 "dataSet": {
+                     "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                     "name": "lmis dataset",
+                     "periodType": "Daily"
+                 },
+                 "id": "id_ADJUSTMENTS_2",
+                 "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+             },
+             "id": "0014",
+             "period": "201404",
+             "value": "125"
+         }
+         ,
+                  {
+                      "commodityAction": {
+                          "activityType": "ADJUSTMENT_REASON",
                           "dataSet": {
                               "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
                               "name": "lmis dataset",
                               "periodType": "Daily"
                           },
-                          "id": "id_maximum_threshold_1",
+                          "id": "id_ADJUSTMENTS_REASONS_3",
                           "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                       },
-    "value":"40",
-    "period":"201404",
-    "id":"0003"
-  },
-  { "commodityAction": {
-                         "activityType": "STOCK_ON_HAND",
-                         "dataSet": {
-                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                             "name": "lmis dataset",
-                             "periodType": "Daily"
-                         },
-                         "id": "id_stock_on_hand_comm_2",
-                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                     },
-   "value":"20",
-   "period":"201404",
-   "id":"0004"
- },
- { "commodityAction": {
-                         "activityType": "MINIMUM_THRESHOLD",
-                         "dataSet": {
-                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                             "name": "lmis dataset",
-                             "periodType": "Daily"
-                         },
-                         "id": "id_minimum_threshold_2",
-                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                     },
-   "value":"15",
-   "period":"201404",
-   "id":"0005"
- },
- { "commodityAction": {
-                          "activityType": "MAXIMUM_THRESHOLD",
-                          "dataSet": {
-                              "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                              "name": "lmis dataset",
-                              "periodType": "Daily"
-                          },
-                          "id": "id_maximum_threshold_2",
-                          "name": "686ee023-384a-asdas-9d40-aa8b1f756e6"
-                      },
-    "value":"40",
-    "period":"201404",
-    "id":"0006"
-  }
-
-  ,
-    { "commodityAction": {
-                           "activityType": "STOCK_ON_HAND",
-                           "dataSet": {
-                               "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                               "name": "lmis dataset",
-                               "periodType": "Daily"
-                           },
-                           "id": "id_stock_on_hand_comm_3",
-                           "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                       },
-     "value":"20",
-     "period":"201404",
-     "id":"0007"
-   },
-   { "commodityAction": {
-                           "activityType": "MINIMUM_THRESHOLD",
-                           "dataSet": {
-                               "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                               "name": "lmis dataset",
-                               "periodType": "Daily"
-                           },
-                           "id": "id_minimum_threshold_3",
-                           "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                       },
-     "value":"25",
-     "period":"201404",
-     "id":"0008"
-   },
-   { "commodityAction": {
-                            "activityType": "MAXIMUM_THRESHOLD",
-                            "dataSet": {
-                                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                                "name": "lmis dataset",
-                                "periodType": "Daily"
-                            },
-                            "id": "id_maximum_threshold_3",
-                            "name": "686ee023-384a-asdas-9d40-aa8b1f756e6"
-                        },
-      "value":"60",
-      "period":"201404",
-      "id":"0009"
-    },
-
-     { "commodityAction": {
-                              "activityType": "PROJECTED_ORDER_AMOUNT",
-                              "dataSet": {
-                                  "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                                  "name": "lmis dataset",
-                                  "periodType": "Daily"
-                              },
-                              "id": "id_PROJECTED_ORDER_AMOUNT_1",
-                              "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                          },
-        "value":"25",
-        "period":"201404",
-        "id":"0010"
-      },
-
-
-       { "commodityAction": {
-                                "activityType": "PROJECTED_ORDER_AMOUNT",
-                                "dataSet": {
-                                    "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                                    "name": "lmis dataset",
-                                    "periodType": "Daily"
-                                },
-                                "id": "id_PROJECTED_ORDER_AMOUNT_2",
-                                "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                            },
-          "value":"25",
-          "period":"201404",
-          "id":"0011"
-        },
-        { "commodityAction": {
-                                 "activityType": "AMC",
-                                 "dataSet": {
-                                     "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                                     "name": "lmis dataset",
-                                     "periodType": "Daily"
-                                 },
-                                 "id": "id_AMC_1",
-                                 "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                             },
-           "value":"103",
-           "period":"201404",
-           "id":"0012"
-         },
-         { "commodityAction": {
-                                  "activityType": "AMC",
-                                  "dataSet": {
-                                      "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                                      "name": "lmis dataset",
-                                      "periodType": "Daily"
-                                  },
-                                  "id": "id_AMC_2",
-                                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                              },
-            "value":"125",
-            "period":"201404",
-            "id":"0013"
-          }
+                      "id": "0015",
+                      "period": "201404",
+                      "value": "125"
+                  }
 ]

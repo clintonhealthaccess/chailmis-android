@@ -27,37 +27,57 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.backgroundServices;
+package org.clintonhealthaccess.lmis.app.models.alerts;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 
-import com.google.inject.Inject;
+import com.j256.ormlite.field.DatabaseField;
 
-import org.clintonhealthaccess.lmis.app.services.AlertsService;
+import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
+import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import roboguice.service.RoboIntentService;
+public class MonthlyStockCountAlert implements NotificationMessage {
+    public static final String DATE_CREATED = "dateCreated";
+    @DatabaseField(uniqueIndex = true, generatedId = true)
+    private long id;
 
-import static android.util.Log.i;
+    @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
+    private Date dateCreated;
 
-public class AlertsGenerationIntentService extends RoboIntentService {
+    @DatabaseField(canBeNull = false)
+    private boolean disabled;
 
-    @Inject
-    AlertsService alertsService;
+    public MonthlyStockCountAlert() {
+        //ormLite likes
+    }
 
-    public AlertsGenerationIntentService() {
-        super("AlertsGenerationIntentService");
+    public MonthlyStockCountAlert(Date date) {
+        this.dateCreated = date;
+        this.disabled = false;
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        i("Alert", "Generating alerts");
-        alertsService.updateLowStockAlerts();
-        alertsService.generateRoutineOrderAlert(new Date());
-        alertsService.generateAllocationAlerts();
-        alertsService.generateMonthlyStockCountAlerts(new Date());
+    public String getMessage() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM");
+        return "Monthly Stock Count for " + simpleDateFormat.format(dateCreated);
     }
 
-
+    @Override
+    public void onClick(Context context) {
+        Log.i("Monthly Stock counter alert clicked", getMessage());
+        if (!disabled) {
+            Intent intent = new Intent(context, AdjustmentsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Bundle data = new Bundle();
+            data.putString(AdjustmentsActivity.ADJUSTMENT_REASON, AdjustmentService.PHYSICAL_COUNT);
+            intent.putExtras(data);
+            context.startActivity(intent);
+        }
+    }
 }

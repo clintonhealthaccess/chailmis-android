@@ -48,6 +48,7 @@ import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
+import org.clintonhealthaccess.lmis.app.models.alerts.MonthlyStockCountAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -109,7 +110,7 @@ public class AlertsService {
 
 
     public int numberOfAlerts() {
-        return getEnabledLowStockAlerts().size() + getNumberOfRoutineOrderAlerts() + getAllocationAlerts().size();
+        return getEnabledLowStockAlerts().size() + getNumberOfRoutineOrderAlerts() + getAllocationAlerts().size() + getEnabledMonthlyStockAlerts().size();
     }
 
     public int getNumberOfRoutineOrderAlerts() {
@@ -291,6 +292,7 @@ public class AlertsService {
             messages.add(latestRoutineOrderAlerts);
         }
         messages.addAll(getAllocationAlerts());
+        messages.addAll(getEnabledMonthlyStockAlerts());
         if (messages.size() > 5) {
             return messages.subList(0, 5);
         }
@@ -301,6 +303,7 @@ public class AlertsService {
         List<NotificationMessage> messages = new ArrayList<>();
         messages.addAll(getAllRoutineOrderAlerts());
         messages.addAll(getAllocationAlerts());
+        messages.addAll(getEnabledMonthlyStockAlerts());
         return newArrayList(messages);
     }
 
@@ -326,10 +329,29 @@ public class AlertsService {
         });
     }
 
+    private void createMonthlyStockCountAlert(final MonthlyStockCountAlert monthlyStockCountAlert) {
+        dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, Object>() {
+            @Override
+            public Object operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
+                dao.create(monthlyStockCountAlert);
+                return null;
+            }
+        });
+    }
+
     private List<RoutineOrderAlert> getAllRoutineOrderAlerts() {
         return dbUtil.withDao(RoutineOrderAlert.class, new DbUtil.Operation<RoutineOrderAlert, List<RoutineOrderAlert>>() {
             @Override
             public List<RoutineOrderAlert> operate(Dao<RoutineOrderAlert, String> dao) throws SQLException {
+                return dao.queryBuilder().where().eq(DISABLED, false).query();
+            }
+        });
+    }
+
+    public List<MonthlyStockCountAlert> getEnabledMonthlyStockAlerts() {
+        return dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, List<MonthlyStockCountAlert>>() {
+            @Override
+            public List<MonthlyStockCountAlert> operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
                 return dao.queryBuilder().where().eq(DISABLED, false).query();
             }
         });
@@ -405,6 +427,47 @@ public class AlertsService {
                 deleteBuilder.where().eq(AllocationAlert.ALLOCATION_ID_COLUMN, allocation.getId());
                 deleteBuilder.delete();
                 return null;
+            }
+        });
+    }
+
+    public void generateMonthlyStockCountAlerts(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        if (cal.get(Calendar.DAY_OF_MONTH) < getMonthlyStockCountDay()) {
+            return;
+        }
+
+        if (getMonthlyStockCountAlerts(date).size() == 0) {
+            MonthlyStockCountAlert monthlyStockCountAlert = new MonthlyStockCountAlert(date);
+            createMonthlyStockCountAlert(monthlyStockCountAlert);
+        }
+    }
+
+    public int getMonthlyStockCountDay() {
+        return sharedPreferences.getInt(CommodityService.MONTHLY_STOCK_COUNT_DAY, 24);
+    }
+
+    public List<MonthlyStockCountAlert> getMonthlyStockCountAlerts(final Date date) {
+        return dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, List<MonthlyStockCountAlert>>() {
+            @Override
+            public List<MonthlyStockCountAlert> operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
+                Date firstDay = Helpers.firstDayOfMonth(date);
+                Date lastDay = Helpers.lastDayOfMonth(date);
+                return dao.queryBuilder().where().between(MonthlyStockCountAlert.DATE_CREATED, firstDay, lastDay).query();
+            }
+        });
+    }
+
+    public void disableAllMonthlyStockCountAlerts() {
+        dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, Integer>() {
+            @Override
+            public Integer operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
+                UpdateBuilder<MonthlyStockCountAlert, String> updateBuilder = dao.updateBuilder();
+                updateBuilder.where().eq(DISABLED, false);
+                updateBuilder.updateColumnValue(DISABLED, true);
+                return updateBuilder.update();
             }
         });
     }

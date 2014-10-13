@@ -33,16 +33,37 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AdjustmentService {
+    public static final String PHYSICAL_COUNT = "Physical Count";
+    public static final String RECEIVED_FROM_ANOTHER_FACILITY = "Received from another facility";
+    public static final String SENT_TO_ANOTHER_FACILITY = "Sent to another facility";
+    public static final String SELECT_REASON = "--Select reason--";
     @Inject
     DbUtil dbutil;
     @Inject
     CommoditySnapshotService commoditySnapshotService;
+
+    @Inject
+    AlertsService alertsService;
+
+    @Inject
+    StockService stockService;
+
+    public static ArrayList<AdjustmentReason> getAdjustmentReasons() {
+        return new ArrayList<>(Arrays.asList(
+                new AdjustmentReason(SELECT_REASON, false, false),
+                new AdjustmentReason(PHYSICAL_COUNT, true, true),
+                new AdjustmentReason(RECEIVED_FROM_ANOTHER_FACILITY, true, false),
+                new AdjustmentReason(SENT_TO_ANOTHER_FACILITY, false, true)));
+    }
 
     public void save(final List<Adjustment> adjustments) {
         dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, String>() {
@@ -51,9 +72,15 @@ public class AdjustmentService {
                 for (Adjustment adjustment : adjustments) {
                     dao.create(adjustment);
                     commoditySnapshotService.add(adjustment);
+                    if (adjustment.isPositive()) {
+                        stockService.increaseStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity());
+                    } else {
+                        stockService.reduceStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity());
+                    }
                 }
                 return null;
             }
         });
+        alertsService.disableAllMonthlyStockCountAlerts();
     }
 }
