@@ -54,7 +54,6 @@
         android:id="@+id/editTextStockCounted"
         android:layout_width="150dp"
         android:visibility="gone"
-        android:hint="Amount Counted"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/textViewAdjustment"
         android:inputType="number"

@@ -119,7 +119,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentReason adjustmentReason = AdjustmentReason.PHYSICAL_COUNT;
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(adjustmentReason);
         EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
-        ANDROID.assertThat(editText).isGone();
+        ANDROID.assertThat(editText).isInvisible();
     }
 
     @Test

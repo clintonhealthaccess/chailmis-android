@@ -94,7 +94,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 textViewCurrentStock.setVisibility(View.VISIBLE);
                 editTextStockCounted.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.GONE);
-                editTextQuantity.setVisibility(View.GONE);
+                editTextQuantity.setVisibility(View.INVISIBLE);
                 textViewCurrentStock.setText("Current Stock :" + commodityViewModel.getStockOnHand());
             } else {
                 editTextQuantity.setVisibility(View.VISIBLE);
