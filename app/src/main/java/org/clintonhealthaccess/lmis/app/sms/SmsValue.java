@@ -1,6 +1,6 @@
 package org.clintonhealthaccess.lmis.app.sms;
 
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
+import com.thoughtworks.dhis.models.DataValue;
 
 public class SmsValue {
     private String dataElement;

@@ -29,15 +29,16 @@
 
 package org.clintonhealthaccess.lmis.app.remote.endpoints;
 
+import com.thoughtworks.dhis.models.DataElement;
+import com.thoughtworks.dhis.models.DataElementGroup;
+import com.thoughtworks.dhis.models.DataElementGroupSet;
+import com.thoughtworks.dhis.models.DataValueSet;
+
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.models.api.CategoryComboSearchResponse;
 import org.clintonhealthaccess.lmis.app.models.api.ConstantSearchResponse;
-import org.clintonhealthaccess.lmis.app.models.api.DataElement;
-import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
-import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;

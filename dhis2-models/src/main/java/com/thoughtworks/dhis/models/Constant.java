@@ -7,5 +7,5 @@ import lombok.experimental.Builder;
 @Builder
 public class Constant {
     private String id, name, displayName;
-    private double value;
+    private Double value;
 }

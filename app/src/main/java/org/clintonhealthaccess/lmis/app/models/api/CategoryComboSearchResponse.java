@@ -30,6 +30,8 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
+import com.thoughtworks.dhis.models.CategoryCombo;
+
 import java.util.List;
 
 import lombok.Getter;

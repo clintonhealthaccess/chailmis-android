@@ -31,6 +31,10 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
+
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,6 +71,14 @@ public class CommoditySnapshot {
     @DatabaseField(canBeNull = true)
     private String attributeOptionCombo;
 
+    public static DataValueSet toDataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
+        DataValueSet dataValueSet = new DataValueSet();
+        for (CommoditySnapshot snapshot : snapshotsToSync) {
+            dataValueSet.getDataValues().add(snapshot.toDataValue(orgUnit));
+        }
+        return dataValueSet;
+    }
+
     public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value) {
         this.commodity = commodity;
         this.commodityAction = commodityAction;
@@ -77,7 +89,7 @@ public class CommoditySnapshot {
 
     public CommoditySnapshot(CommoditySnapshotValue commoditySnapshotValue) {
         this(commoditySnapshotValue.getCommodityAction().getCommodity(), commoditySnapshotValue.getCommodityAction(), commoditySnapshotValue.getValue());
-        if(commoditySnapshotValue.getPeriod() != null) {
+        if (commoditySnapshotValue.getPeriod() != null) {
             this.period = commoditySnapshotValue.getPeriod();
         }
     }
@@ -96,5 +108,13 @@ public class CommoditySnapshot {
         } catch (NumberFormatException ex) {
             this.value = value;
         }
+    }
+
+    private DataValue toDataValue(String orgUnit) {
+        return DataValue.builder().value(String.valueOf(getValue())).
+                dataSet(getCommodityAction().getDataSet().getId()).
+                dataElement(getCommodityAction().getId()).
+                period(getPeriod()).orgUnit(orgUnit).
+                attributeOptionCombo(getAttributeOptionCombo()).build();
     }
 }

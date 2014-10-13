@@ -3,9 +3,9 @@ package org.clintonhealthaccess.lmis.app.sms;
 import android.telephony.SmsManager;
 
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 
 import java.util.List;
 

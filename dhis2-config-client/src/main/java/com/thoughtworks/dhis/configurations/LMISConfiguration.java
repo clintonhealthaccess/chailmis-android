@@ -143,7 +143,7 @@ public class LMISConfiguration implements IConfiguration {
     private void setupConstants() {
         String name = "Monthly Stock Count Day";
         String leadTimeName = "Delivery Lead Time";
-        Constant monthlyStockCount = Constant.builder().id(generateID(name)).name(name).displayName(name).value(24).build();
+        Constant monthlyStockCount = Constant.builder().id(generateID(name)).name(name).displayName(name).value(24d).build();
         Constant leadTime = Constant.builder().id(generateID(leadTimeName)).name(leadTimeName).displayName(leadTimeName).value(0.5).build();
         constants.add(monthlyStockCount);
         constants.add(leadTime);

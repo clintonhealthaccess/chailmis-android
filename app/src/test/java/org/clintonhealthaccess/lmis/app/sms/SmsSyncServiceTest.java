@@ -4,9 +4,9 @@ import android.telephony.SmsManager;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
 
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;

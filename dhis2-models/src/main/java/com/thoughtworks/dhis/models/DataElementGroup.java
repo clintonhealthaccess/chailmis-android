@@ -1,13 +1,11 @@
 package com.thoughtworks.dhis.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Builder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -33,6 +31,8 @@ public class DataElementGroup {
     private String displayName;
 
     private User user;
+
+    private DataElementGroupSet dataElementGroupSet;
 
     private List<AttributeValue> attributeValues = new ArrayList<AttributeValue>();
 

@@ -35,15 +35,14 @@ import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 

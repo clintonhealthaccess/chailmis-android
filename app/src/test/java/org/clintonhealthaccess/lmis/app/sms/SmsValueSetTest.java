@@ -1,7 +1,8 @@
 package org.clintonhealthaccess.lmis.app.sms;
 
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
+
 import org.junit.Test;
 
 import java.util.List;

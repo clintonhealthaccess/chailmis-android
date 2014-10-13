@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models.api;
 
+import com.thoughtworks.dhis.models.OptionSet;
+
 import java.util.List;
 
 import lombok.Getter;

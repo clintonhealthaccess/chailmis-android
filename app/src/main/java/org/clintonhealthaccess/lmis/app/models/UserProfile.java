@@ -29,7 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.models.api.OrganisationUnit;
+import com.thoughtworks.dhis.models.OrganisationUnit;
 
 import java.util.ArrayList;
 import java.util.List;

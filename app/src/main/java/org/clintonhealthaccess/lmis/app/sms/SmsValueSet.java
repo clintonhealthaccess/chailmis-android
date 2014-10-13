@@ -4,9 +4,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;

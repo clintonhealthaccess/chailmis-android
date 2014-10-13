@@ -71,17 +71,11 @@ public class App {
                     if (attributes.size() > 0) {
                         int n = randInt(1, 6);
 
-                        DataValue value = new DataValue();
-
-                        value.setDataElement(element.getId());
-
-                        value.setValue(String.valueOf(n));
-
-                        value.setPeriod(period);
+                        DataValue value = DataValue.builder()
+                                .dataElement(element.getId()).value(String.valueOf(n))
+                                .period(period).build();
 
                         valueSet.getDataValues().add(value);
-
-
                     }
                 }
 
@@ -189,13 +183,8 @@ public class App {
                         Random rand = new Random();
 
 
-                        DataValue value = new DataValue();
-
-                        value.setDataElement(element.getId());
-
-                        value.setValue(String.valueOf(n));
-
-                        value.setPeriod(period);
+                        DataValue value = DataValue.builder()
+                                .dataElement(element.getId()).value(String.valueOf(n)).period(period).build();
 
                         valueSet.getDataValues().add(value);
 
@@ -230,10 +219,8 @@ public class App {
 
                 Random rand = new Random();
                 int n = rand.nextInt(randomLimit) + 1;
-                DataValue value = new DataValue();
-                value.setDataElement(element.getId());
-                value.setValue(String.valueOf(n));
-                value.setPeriod(period1);
+                DataValue value = DataValue.builder()
+                        .dataElement(element.getId()).value(String.valueOf(n)).period(period1).build();
                 valueSet.getDataValues().add(value);
 
                 Object data = service.submitValueSet(valueSet);
@@ -258,10 +245,8 @@ public class App {
             for (DataElement element : set.getDataElements()) {
                 Random rand = new Random();
                 int n = rand.nextInt(randomLimit) + 1;
-                DataValue value = new DataValue();
-                value.setDataElement(element.getId());
-                value.setValue(String.valueOf(n));
-                value.setPeriod(period1);
+                DataValue value = DataValue.builder()
+                        .dataElement(element.getId()).value(String.valueOf(n)).period(period1).build();
                 valueSet.getDataValues().add(value);
             }
         }

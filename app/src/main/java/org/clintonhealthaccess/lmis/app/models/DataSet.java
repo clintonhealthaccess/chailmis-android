@@ -31,8 +31,7 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import org.clintonhealthaccess.lmis.app.models.api.DataElement;
+import com.thoughtworks.dhis.models.DataElement;
 
 import java.io.Serializable;
 import java.util.List;
@@ -63,4 +62,17 @@ public class DataSet implements Serializable {
         this.id = id;
     }
 
+    public DataSet(com.thoughtworks.dhis.models.DataSet rawDataSet) {
+        id = rawDataSet.getId();
+        name = rawDataSet.getName();
+        description = rawDataSet.getDisplayName();
+        periodType = rawDataSet.getPeriodType();
+        dataElements = rawDataSet.getDataElements();
+    }
+
+    public com.thoughtworks.dhis.models.DataSet toRawDataSet() {
+        return com.thoughtworks.dhis.models.DataSet.builder()
+                .id(id).name(name).displayName(description).periodType(periodType)
+                .dataElements(dataElements).build();
+    }
 }

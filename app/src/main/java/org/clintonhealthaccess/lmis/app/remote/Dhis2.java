@@ -35,6 +35,13 @@ import android.util.Log;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.AttributeValue;
+import com.thoughtworks.dhis.models.DataElement;
+import com.thoughtworks.dhis.models.DataElementGroup;
+import com.thoughtworks.dhis.models.DataElementGroupSet;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
+import com.thoughtworks.dhis.models.OptionSet;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
@@ -46,15 +53,8 @@ import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.AttributeValue;
 import org.clintonhealthaccess.lmis.app.models.api.ConstantSearchResponse;
-import org.clintonhealthaccess.lmis.app.models.api.DataElement;
-import org.clintonhealthaccess.lmis.app.models.api.DataElementGroup;
-import org.clintonhealthaccess.lmis.app.models.api.DataElementGroupSet;
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
-import org.clintonhealthaccess.lmis.app.models.api.OptionSet;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
@@ -113,7 +113,7 @@ public class Dhis2 implements LmisServer {
             e(SYNC, String.format("DataSet: %s", dataSet.getName()));
             if (dataSet.getDataElements() != null) {
                 for (DataElement elm : dataSet.getDataElements()) {
-                    elm.setDataSets(newArrayList(dataSet));
+                    elm.setDataSets(newArrayList(dataSet.toRawDataSet()));
                     elements.add(elm);
                 }
             }
@@ -160,7 +160,7 @@ public class Dhis2 implements LmisServer {
                 AttributeValue attributeValue = element.getAttributeValues().get(0);
                 CommodityAction commodityAction = new CommodityAction(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
                 if (element.getDataSets() != null && element.getDataSets().size() > 0) {
-                    commodityAction.setDataSet(element.getDataSets().get(0));
+                    commodityAction.setDataSet(new DataSet(element.getDataSets().get(0)));
                 }
                 actualCommodity.getCommodityActions().add(commodityAction);
             }

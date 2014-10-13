@@ -35,12 +35,12 @@ import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
@@ -54,6 +54,7 @@ import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
 import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
+import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.toDataValueSet;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
 public class CommoditySnapshotService {
@@ -133,7 +134,7 @@ public class CommoditySnapshotService {
         List<CommoditySnapshot> snapshotsToSync = getUnSyncedSnapshots();
         if (!isEmpty(snapshotsToSync)) {
             i("==> Syncing...........", snapshotsToSync.size() + " snapshots");
-            DataValueSet valueSet = new DataValueSet(snapshotsToSync, user.getFacilityCode());
+            DataValueSet valueSet = toDataValueSet(snapshotsToSync, user.getFacilityCode());
             try {
                 DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
                 if (response.isSuccess()) {
@@ -150,7 +151,7 @@ public class CommoditySnapshotService {
         List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
         i("SMS Sync", format("%d snapshots need to be synced through SMS", snapshots.size()));
         if(!isEmpty(snapshots)) {
-            DataValueSet valueSet = new DataValueSet(snapshots, user.getFacilityCode());
+            DataValueSet valueSet = toDataValueSet(snapshots, user.getFacilityCode());
             if(smsSyncService.send(valueSet)) {
                 markSnapShotsAsSmsSent(snapshots);
             }

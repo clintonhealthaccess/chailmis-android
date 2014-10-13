@@ -33,6 +33,8 @@ import android.content.Context;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataValue;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
@@ -47,8 +49,6 @@ import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.api.DataValue;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSet;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
@@ -67,6 +67,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.toDataValueSet;
 import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -254,7 +255,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         CommoditySnapshot snapshot2 = new CommoditySnapshot(fetchedCommodity2, commodityActivities1.get(0), "8");
         List<CommoditySnapshot> snapshots = newArrayList(snapshot1, snapshot2);
 
-        DataValueSet valueSet = new DataValueSet(snapshots, "orgUnit");
+        DataValueSet valueSet = toDataValueSet(snapshots, "orgUnit");
 
         assertThat(valueSet, notNullValue());
         assertThat(valueSet.getDataValues().size(), is(2));
