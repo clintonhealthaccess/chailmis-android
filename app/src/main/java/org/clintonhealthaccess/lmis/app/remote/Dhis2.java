@@ -63,7 +63,6 @@ import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +71,7 @@ import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
 import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
 import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
@@ -105,15 +105,15 @@ public class Dhis2 implements LmisServer {
     }
 
     private List<Category> getCategoriesFromDataSets(List<DataSet> dataSets) {
-        List<Category> categories = new ArrayList<>();
-        List<Commodity> commodities = new ArrayList<>();
-        List<DataElement> elements = new ArrayList<>();
+        List<Category> categories = newArrayList();
+        List<Commodity> commodities = newArrayList();
+        List<DataElement> elements = newArrayList();
 
         for (DataSet dataSet : dataSets) {
             e(SYNC, String.format("DataSet: %s", dataSet.getName()));
-            if (dataSet != null && dataSet.getDataElements() != null) {
+            if (dataSet.getDataElements() != null) {
                 for (DataElement elm : dataSet.getDataElements()) {
-                    elm.setDataSets(new ArrayList<DataSet>(Arrays.asList(dataSet)));
+                    elm.setDataSets(newArrayList(dataSet));
                     elements.add(elm);
                 }
             }
@@ -150,10 +150,9 @@ public class Dhis2 implements LmisServer {
                     int location = categories.indexOf(category);
                     categories.set(location, category);
                 } else {
-                    category.setCommodities(new ArrayList<Commodity>(Arrays.asList(commodity)));
+                    category.setCommodities(newArrayList(commodity));
                     categories.add(category);
                 }
-                commodity.setCommodityActions(new ArrayList<CommodityAction>());
                 commodities.add(commodity);
                 actualCommodity = commodity;
             }

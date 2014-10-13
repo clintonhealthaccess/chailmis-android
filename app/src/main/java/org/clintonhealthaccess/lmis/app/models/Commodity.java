@@ -47,6 +47,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static com.google.common.collect.ImmutableList.copyOf;
+import static com.google.common.collect.Lists.newArrayList;
 
 @Getter
 @Setter
@@ -70,7 +71,7 @@ public class Commodity implements Serializable {
     @ForeignCollectionField(eager = true, maxEagerLevel = 5)
     private Collection<CommodityAction> commodityActionsSaved;
 
-    private List<CommodityAction> commodityActions = new ArrayList<>();
+    private List<CommodityAction> commodityActions = newArrayList();
 
     public Commodity() {
         // ormlite wants it

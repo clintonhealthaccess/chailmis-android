@@ -50,6 +50,7 @@ public class DataValue {
     private static final SimpleDateFormat MONTHLY_PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyyMM");
     private static final SimpleDateFormat DAILY_PERIOD_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
+    // FIXME: categoryOptionCombo and attributeOptionCombo are not used - and they shouldn't be, right?
     private String value, period, orgUnit, dataSet, dataElement, categoryOptionCombo, attributeOptionCombo, storedBy;
     private Boolean followUp;
 
