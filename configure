@@ -1,8 +1,8 @@
 #!/bin/sh
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: ./configure [dev|staging|prod]"
+if [ "$#" -lt 1 ]; then
+    echo "Usage: ./configure [dev|staging|prod] task"
     exit -1
 fi
-gradle :dhis2-config-client:jar
-java -jar dhis2-config-client/build/libs/dhis2-config-client.jar $1
+gradle -q :dhis2-config-client:jar
+java -jar dhis2-config-client/build/libs/dhis2-config-client.jar $1 $2

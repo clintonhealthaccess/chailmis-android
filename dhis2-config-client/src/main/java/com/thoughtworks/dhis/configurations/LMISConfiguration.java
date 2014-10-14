@@ -174,7 +174,7 @@ public class LMISConfiguration implements IConfiguration {
 
         List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED, DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE));
         List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD, DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC,
-                DataElementType.TMC, DataElementType.BUFFER_STOCK, DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT));
+                DataElementType.TMC, DataElementType.BUFFER_STOCK, DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT, DataElementType.MAXIMUM_STOCK_LEVEL, DataElementType.MINIMUM_STOCK_LEVEL));
 
         DataSet main = createDataSet(LMIS_COMMODITIES_DEFAULT, DAILY);
         DataSet losses = createDataSet(LMIS_COMMODITIES_LOSSES, DAILY);
