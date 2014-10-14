@@ -144,11 +144,8 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
         ArrayAdapter<AdjustmentReason> adapter = new ArrayAdapter<AdjustmentReason>(AdjustmentsActivity.this, R.layout.simple_spinner_bold, adjustmentReasons);
         spinnerAdjustmentReason.setAdapter(adapter);
-        System.out.println("Here ....");
         if (presetReason != null) {
-            System.out.println(presetReason);
             int selectedIndex = adjustmentReasons.indexOf(new AdjustmentReason(presetReason, true, true));
-            System.out.println(selectedIndex);
             spinnerAdjustmentReason.setSelection(selectedIndex);
         }
 

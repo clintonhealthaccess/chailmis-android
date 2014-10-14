@@ -60,11 +60,11 @@ public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReport
         Map<Integer, String> integerStringMap = new HashMap<>();
         FacilityStockReportItem item = getItem(position);
         integerStringMap.put(R.id.textViewCommodityName, item.getCommodityName());
-        integerStringMap.put(R.id.textViewOpeningBalance, String.valueOf(item.getOpeningBalance()));
+        integerStringMap.put(R.id.textViewOpeningBalance, String.valueOf(item.getOpeningStock()));
         integerStringMap.put(R.id.textViewQuantityReceived, String.valueOf(item.getCommoditiesReceived()));
         integerStringMap.put(R.id.textViewAdjusments, String.valueOf(item.getCommoditiesAdjusted()));
         integerStringMap.put(R.id.textViewLosses, String.valueOf(item.getCommoditiesLost()));
-        integerStringMap.put(R.id.textViewCommoditySOH, String.valueOf(item.getStockOnHand()));
+        integerStringMap.put(R.id.textViewCommoditySOH, String.valueOf(item.getOpeningStock()));
         integerStringMap.put(R.id.textViewCommodityDaysOutOfStock, String.valueOf(item.getCommodityStockOutDays()));
         integerStringMap.put(R.id.textViewCommodityAMC, String.valueOf(item.getCommodityAMC()));
         integerStringMap.put(R.id.textViewConsumption, String.valueOf(item.getCommoditiesDispenced()));

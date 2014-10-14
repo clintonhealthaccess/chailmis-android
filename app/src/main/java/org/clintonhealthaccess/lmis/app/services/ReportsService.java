@@ -30,21 +30,74 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.util.Log;
+
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ReportsService {
 
-    public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear, String startingMonth, String endingYear, String EndingMonth) {
+    @Inject
+    private StockItemSnapshotService stockItemSnapshotService;
+
+    public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
+                                                                           String startingMonth, String endingYear, String endingMonth) {
         ArrayList<FacilityStockReportItem> facilityStockReportItems = new ArrayList<>();
-        for (Commodity commodity: category.getCommodities()) {
-            FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-            facilityStockReportItems.add(item);
+
+        try {
+            Date startingDate = convertToDate(startingYear, startingMonth, true);
+            Date endDate = convertToDate(endingYear, endingMonth, false);
+
+            for (Commodity commodity : category.getCommodities()) {
+                int openingStock = getOpeningStock(commodity, startingDate);
+                FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), openingStock, 0, 0, 0, 0, 0, 0, 0, 0);
+                facilityStockReportItems.add(item);
+            }
+        } catch (Exception e) {
+            Log.e("ReportsService", e.getMessage());
         }
+
         return facilityStockReportItems;
+    }
+
+    private int getOpeningStock(Commodity commodity, Date date) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfPreviousMonth = calendar.getTime();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
+
+        StockItemSnapshot stockItemSnapshot1 = stockItemSnapshotService.get(commodity, lastDayOfPreviousMonth);
+        StockItemSnapshot latestStockItemSnapshot = stockItemSnapshotService.getLatest(commodity, lastDayOfPreviousMonth);
+        if (latestStockItemSnapshot != null) {
+            return latestStockItemSnapshot.getQuantity();
+        }
+
+        return 0;
+    }
+
+    private Date convertToDate(String year, String month, boolean isStartingDate) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
+        Date firstDateOfMonth = dateFormat.parse(year + "-" + month + "-01");
+        if (isStartingDate) {
+            return firstDateOfMonth;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(firstDateOfMonth);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
     }
 }

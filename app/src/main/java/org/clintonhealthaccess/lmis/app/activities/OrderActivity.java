@@ -310,7 +310,6 @@ public class OrderActivity extends CommoditySelectableActivity {
         int numberOfItems = arrayAdapter.getCount();
         Order order = new Order();
         order.setOrderType(getOrderType());
-        System.out.println("Here order tpe is " + order.getOrderType().getName());
         order.setSrvNumber(nextSRVNumber);
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);

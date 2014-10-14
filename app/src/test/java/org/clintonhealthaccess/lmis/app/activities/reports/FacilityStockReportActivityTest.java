@@ -136,7 +136,6 @@ public class FacilityStockReportActivityTest {
     public void shouldReturn12Months() throws Exception {
         FacilityStockReportActivity activity = getActivity();
         List<String> months = activity.getMonths();
-        System.out.println(months);
         assertThat(months.size(), is(NUMBER_OF_MONTHS_IN_YEAR));
 
     }

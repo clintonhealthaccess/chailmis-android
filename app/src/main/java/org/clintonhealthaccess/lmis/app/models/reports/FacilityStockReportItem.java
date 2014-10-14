@@ -32,18 +32,19 @@ package org.clintonhealthaccess.lmis.app.models.reports;
 
 public class FacilityStockReportItem {
     private String commodityName;
-    private int stockOnHand, commoditiesReceived, commoditiesAdjusted,
-            commoditiesLost, openingBalance, commodityAMC, commodityStockOutDays,
+    private int openingStock, commoditiesReceived, commoditiesAdjusted,
+            commoditiesLost, commodityAMC, commodityStockOutDays,
             commodityMaxThreshold, commodityOrderQuantity, commoditiesDispenced;
 
-    public FacilityStockReportItem(String commodityName, int stockOnHand, int commoditiesReceived, int commoditiesAdjusted, int commoditiesLost, int openingBalance, int commodityAMC, int commodityStockOutDays,
+    public FacilityStockReportItem(String commodityName, int openingStock, int commoditiesReceived,
+                                   int commoditiesAdjusted, int commoditiesLost, int commodityAMC,
+                                   int commodityStockOutDays,
                                    int commodityMaxThreshold, int commodityOrderQuantity, int commoditiesDispenced) {
         this.commodityName = commodityName;
-        this.stockOnHand = stockOnHand;
+        this.openingStock = openingStock;
         this.commoditiesReceived = commoditiesReceived;
         this.commoditiesAdjusted = commoditiesAdjusted;
         this.commoditiesLost = commoditiesLost;
-        this.openingBalance = openingBalance;
         this.commodityAMC = commodityAMC;
         this.commodityStockOutDays = commodityStockOutDays;
         this.commodityMaxThreshold = commodityMaxThreshold;
@@ -59,12 +60,12 @@ public class FacilityStockReportItem {
         this.commodityName = commodityName;
     }
 
-    public int getStockOnHand() {
-        return stockOnHand;
+    public int getOpeningStock() {
+        return openingStock;
     }
 
-    public void setStockOnHand(int stockOnHand) {
-        this.stockOnHand = stockOnHand;
+    public void setOpeningStock(int openingStock) {
+        this.openingStock = openingStock;
     }
 
     public int getCommoditiesReceived() {
@@ -89,14 +90,6 @@ public class FacilityStockReportItem {
 
     public void setCommoditiesLost(int commoditiesLost) {
         this.commoditiesLost = commoditiesLost;
-    }
-
-    public int getOpeningBalance() {
-        return openingBalance;
-    }
-
-    public void setOpeningBalance(int openingBalance) {
-        this.openingBalance = openingBalance;
     }
 
     public int getCommodityAMC() {

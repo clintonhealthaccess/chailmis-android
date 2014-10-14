@@ -44,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.matchers.NotNull;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -142,5 +143,23 @@ public class StockItemSnapshotServiceTest {
         stockService.increaseStockLevelFor(commodity, increase);
 
         stockItemSnapshotService.get(commodity, new Date());
+    }
+
+    @Test
+    public void shouldReturnLatestAvailableStockItemSnapshot() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        Date snapshotDate = calendar.getTime();
+
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, snapshotDate, commodity.getStockOnHand() + 10);
+        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application).create(stockItemSnapshot);
+
+        Date currentDate = new Date();
+        StockItemSnapshot latestSnapshot = stockItemSnapshotService.getLatest(commodity, currentDate);
+
+        assertThat(latestSnapshot, is(notNullValue()));
+        assertThat(latestSnapshot, is(stockItemSnapshot));
     }
 }

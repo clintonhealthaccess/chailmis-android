@@ -34,7 +34,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
@@ -43,6 +45,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.sql.SQLOutput;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -91,7 +97,7 @@ public class ReportsServiceTest {
 
     @Test
     public void shouldReturnListOfFacilityStockReportItems() throws Exception {
-        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(categories.get(0), "", "", "", "");
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(categories.get(0), "2014", "July", "2014", "July");
         assertThat(facilityStockReportItems.size(), is(greaterThan(0)));
     }
 
@@ -99,14 +105,45 @@ public class ReportsServiceTest {
     public void shouldReturnCorrectNumberOfFacilityStockReportItems() throws Exception {
         Category category = categories.get(0);
         int numberOfCommodities = category.getCommodities().size();
-        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, "","", "", "");
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, "2014", "July", "2014", "July");
         assertThat(facilityStockReportItems.size(), is(numberOfCommodities));
 
         category = categories.get(1);
         numberOfCommodities = category.getCommodities().size();
-        facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, "","", "", "");
+        facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, "2014", "July", "2014", "July");
         assertThat(facilityStockReportItems.size(), is(numberOfCommodities));
     }
 
+    @Test
+    public void shouldReturnCorrectOpeningBalance() throws Exception {
 
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        int difference = 3;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date startDate = calendar.getTime();
+
+        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
+        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedQuantity = commodity.getStockOnHand() + difference;
+        int openingStock = facilityStockReportItems.get(0).getOpeningStock();
+        assertThat(openingStock, is(expectedQuantity));
+    }
+
+    private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, time, commodity.getStockOnHand() + difference);
+        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application).create(stockItemSnapshot);
+    }
 }

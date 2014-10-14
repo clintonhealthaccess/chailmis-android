@@ -34,9 +34,13 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import lombok.ToString;
+
 @DatabaseTable
+@ToString
 public class StockItemSnapshot {
 
     @DatabaseField(generatedId = true)
@@ -67,5 +71,28 @@ public class StockItemSnapshot {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StockItemSnapshot that = (StockItemSnapshot) o;
+
+        if (quantity != that.quantity) return false;
+        if (!commodity.equals(that.commodity)) return false;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (!dateFormat.format(created).equals(dateFormat.format(that.created))) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = commodity.hashCode();
+        result = 31 * result + created.hashCode();
+        result = 31 * result + quantity;
+        return result;
     }
 }

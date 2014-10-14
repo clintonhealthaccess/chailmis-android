@@ -104,4 +104,24 @@ public class StockItemSnapshotService {
         StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
         new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
     }
+
+    public StockItemSnapshot getLatest(final Commodity commodity, final Date currentDate) {
+        return dbUtil.withDao(StockItemSnapshot.class,
+                new DbUtil.Operation<StockItemSnapshot, StockItemSnapshot>() {
+                    @Override
+                    public StockItemSnapshot operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
+                        QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
+                        queryBuilder.where().eq("commodity_id", commodity.getId()).and()
+                                .lt("created", currentDate)
+                                .or()
+                                .eq("created", currentDate);
+                        queryBuilder.orderBy("created", false);
+                        PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
+
+                        return dao.queryForFirst(query);
+                    }
+                }
+        );
+
+    }
 }
