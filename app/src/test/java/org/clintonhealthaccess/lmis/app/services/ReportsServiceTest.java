@@ -36,6 +36,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
@@ -45,7 +47,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,6 +77,8 @@ public class ReportsServiceTest {
     @Inject
     private CommodityService commodityService;
     private List<Category> categories;
+    @Inject
+    ReceiveService receiveService;
 
     @Before
     public void setUp() throws Exception {
@@ -91,9 +94,15 @@ public class ReportsServiceTest {
             }
         });
 
-        commodityService.initialise(new User("test", "pass"));
-        categories = categoryService.all();
-    }
+
+
+            commodityService.initialise(new
+
+            User("test","pass")
+
+            );
+            categories=categoryService.all();
+        }
 
     @Test
     public void shouldReturnListOfFacilityStockReportItems() throws Exception {
@@ -140,6 +149,43 @@ public class ReportsServiceTest {
         int expectedQuantity = commodity.getStockOnHand() + difference;
         int openingStock = facilityStockReportItems.get(0).getOpeningStock();
         assertThat(openingStock, is(expectedQuantity));
+    }
+
+    @Test
+    public void shouldReturnCorrectQuantityOfCommoditiesReceived() throws Exception {
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
+        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
+
+        createReceive(commodity, endDate, 20);
+        createReceive(commodity, endDate, 30);
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        assertThat(facilityStockReportItems.get(0).getCommoditiesReceived(), is(50));
+    }
+
+
+    private void createReceive(Commodity commodity, Date date, int quantityReceived) {
+        Receive receive = new Receive();
+
+        ReceiveItem receiveItem = new ReceiveItem();
+        receiveItem.setCommodity(commodity);
+        receiveItem.setQuantityAllocated(quantityReceived);
+        receiveItem.setQuantityReceived(quantityReceived);
+
+        receive.addReceiveItem(receiveItem);
+
+        receiveService.saveReceive(receive);
     }
 
     private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {

@@ -42,6 +42,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -115,5 +119,58 @@ public class ReceiveServiceTest {
         assertThat(receiveDao.queryForAll().size(), is(1));
         assertThat(receiveDao.queryForAll().get(0).getReceiveItemsCollection().size(), is(1));
         assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
+    }
+
+    @Test
+    public void shouldReturnTotalQuantityReceived() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date receiveDate = calendar.getTime();
+
+        createReceive(commodity, receiveDate, 20);
+        createReceive(commodity, receiveDate, 30);
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
+        assertThat(totalReceived, is(50));
+
+    }
+
+    @Test
+    public void shouldReturnCorrectTotalQuantityReceived() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date receiveDate = calendar.getTime();
+
+        createReceive(commodity, receiveDate, 200);
+        createReceive(commodity, receiveDate, 30);
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
+        assertThat(totalReceived, is(230));
+
+    }
+
+    private void createReceive(Commodity commodity, Date date, int quantityReceived) {
+        Receive receive = new Receive();
+
+        ReceiveItem receiveItem = new ReceiveItem();
+        receiveItem.setCommodity(commodity);
+        receiveItem.setQuantityAllocated(quantityReceived);
+        receiveItem.setQuantityReceived(quantityReceived);
+
+        receive.addReceiveItem(receiveItem);
+
+        receiveService.saveReceive(receive);
     }
 }

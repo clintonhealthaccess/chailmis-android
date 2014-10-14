@@ -50,6 +50,8 @@ public class ReportsService {
 
     @Inject
     private StockItemSnapshotService stockItemSnapshotService;
+    @Inject
+    private ReceiveService receiveService;
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
                                                                            String startingMonth, String endingYear, String endingMonth) {
@@ -61,7 +63,8 @@ public class ReportsService {
 
             for (Commodity commodity : category.getCommodities()) {
                 int openingStock = getOpeningStock(commodity, startingDate);
-                FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), openingStock, 0, 0, 0, 0, 0, 0, 0, 0);
+                int quantityReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
+                FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), openingStock, quantityReceived, 0, 0, 0, 0, 0, 0, 0);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {
