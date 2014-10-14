@@ -43,6 +43,7 @@ import android.widget.ListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
@@ -214,7 +215,7 @@ public class HomeActivity extends BaseActivity {
 
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getMinimumThreshold(), commodity.getMaximuThreshold(), commodity.getStockOnHand(), colors.get(count)));
+            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString()), colors.get(count)));
             count++;
         }
         LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);

@@ -186,7 +186,7 @@ public class Commodity implements Serializable {
         return max - getStockOnHand();
     }
 
-    private int getLatestValueFromCommodityActionByName(String actionName) {
+    public int getLatestValueFromCommodityActionByName(String actionName) {
         CommodityAction commodityAction = getCommodityAction(actionName);
         int defaultValue = 0;
         if (commodityAction != null) {

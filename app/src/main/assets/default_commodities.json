@@ -117,6 +117,26 @@
                         },
                         "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
                         "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "166f3c3b-ed3f-439b-8baa-6677393aacb6",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "751bb111-9692-4621-95f0-17ccdaee6a56",
+                        "name": "7dda0d31-1ed4-4ff2-9a6c-b905b8a8568e"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "93e6b458-ed59-40f4-acc1-db46e77479ea",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "e9e08fd1-ffc7-48fd-a6cb-714908844b4f",
+                        "name": "5da5e75c-5393-4794-8fe1-13be14cdc254"
                     }
                 ],
                 "id": "1",
@@ -239,6 +259,26 @@
                         },
                         "id": "00480295-3e18-40b1-98e8-1b418f55db88",
                         "name": "46ef1367-a7a9-4b1d-bace-b41af7e1c683"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "b6f9cf9e-8fe3-44e1-83be-5601e509fcb0",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "496a882c-752c-4703-86f2-93ad3c1ee313",
+                        "name": "3f4bd3ca-7213-4e09-ac90-d2de9a5fed9a"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "9d4f6863-d7d7-4252-8857-58734e72cec4",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "6f6043c0-9f69-4dff-818f-4d979dd14f56",
+                        "name": "d8d7207c-a603-4745-a56a-7b9c9389a2d2"
                     }
                 ],
                 "id": "3",
@@ -341,6 +381,26 @@
                         },
                         "id": "b8b4642d-3e4d-4eae-a795-e657c83e5248",
                         "name": "0b6123b4-b0c6-46bb-9007-737a51a2a807"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "8c01e9c4-6a73-4597-bd37-f1c796ef4e47",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "998dfe33-4ed6-4f14-a617-99988e0f6ce7",
+                        "name": "01f693e5-f963-4363-a761-8fc7e7561672"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "e399c0a8-6342-4d07-93fd-4e5cfa25716a",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "38220714-bcbd-4cc5-a08d-28a45406dfc5",
+                        "name": "00d54c31-50e3-410c-8b59-941933f4e280"
                     }
                 ],
                 "id": "4",
@@ -413,6 +473,26 @@
                         },
                         "id": "54445829-ba40-4559-9844-54177fd49fe9",
                         "name": "1d6fbe30-a039-44a0-a0aa-c0b3b0e321ef"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "63db7957-f200-4990-9853-fd9a4bffc451",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "2631c50b-c329-4157-9e9c-79b98b8e00e9",
+                        "name": "433616a7-f462-420d-abae-4f11924ea4d8"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "a6c2b6d2-e17e-48f1-a4a5-e3d06319cd7f",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "cc234e11-3b3b-4e45-883c-4c15dfaa25be",
+                        "name": "74ccd892-9924-411e-acf1-24d74364176f"
                     }
                 ],
                 "id": "5",
@@ -485,6 +565,26 @@
                         },
                         "id": "d69c946c-8a2d-464a-9cf0-2fa6ce86aafb",
                         "name": "f7e67142-6da9-4942-8c41-bae47a168655"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "972af6f8-8828-431c-9052-f5448294e69f",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "da54cc89-cfc9-4f44-a192-0c7fa306f604",
+                        "name": "2e87af01-a5c7-4970-bb67-eb82bd37ede1"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "38f0c3e3-4155-48dd-9070-93a3f1daebd7",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "f4bca4d7-5890-40b9-a0ad-097e6895be49",
+                        "name": "1aaac86a-e813-4b91-9d40-8cfd842e3919"
                     }
                 ],
                 "id": "6",
@@ -557,6 +657,26 @@
                         },
                         "id": "29c2c2f6-1439-4471-8d99-260ff8c377c8",
                         "name": "2079a178-0a92-4899-b07e-a4a6890e1959"
+                    },
+                    {
+                        "activityType": "MINIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "bad1bb52-bd8d-49b4-b3ce-fbc20640855a",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "ddc64927-fc0e-431a-9986-5fbe97bffd07",
+                        "name": "c264c710-3042-48ee-a785-2a080f0577b0"
+                    },
+                    {
+                        "activityType": "MAXIMUM_STOCK_LEVEL",
+                        "dataSet": {
+                            "id": "5e5606b9-6596-47e7-a81f-dc3e8d3651f1",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "102ad4c5-e08a-4ad8-9141-7f4637ed5c44",
+                        "name": "37df4cad-b422-4f0a-a599-18bf5bbd177f"
                     }
                 ],
                 "id": "7",

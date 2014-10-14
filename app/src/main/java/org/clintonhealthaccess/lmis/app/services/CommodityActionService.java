@@ -34,10 +34,15 @@ import android.content.Context;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class CommodityActionService {
 
@@ -47,16 +52,39 @@ public class CommodityActionService {
     @Inject
     DbUtil dbUtil;
 
+    @Inject
+    private LmisServer lmisServer;
 
     public CommodityActionService() {
     }
 
-    public CommodityAction getById(final String id) {
-        return dbUtil.withDao(CommodityAction.class, new DbUtil.Operation<CommodityAction, CommodityAction>() {
+    public List<CommodityAction> getAllById(final List<String> ids) {
+        return dbUtil.withDao(CommodityAction.class, new DbUtil.Operation<CommodityAction, List<CommodityAction>>() {
             @Override
-            public CommodityAction operate(Dao<CommodityAction, String> dao) throws SQLException {
-                return dao.queryForId(id);
+            public List<CommodityAction> operate(Dao<CommodityAction, String> dao) throws SQLException {
+                return dao.queryBuilder().where().in("id", ids).query();
             }
         });
+    }
+
+    protected void saveActionValues(final List<CommodityActionValue> commodityActionValues) {
+        if (commodityActionValues != null) {
+            dbUtil.withDaoAsBatch(CommodityActionValue.class, new DbUtil.Operation<CommodityActionValue, Void>() {
+                        @Override
+                        public Void operate(Dao<CommodityActionValue, String> dao) throws SQLException {
+                            for (CommodityActionValue actionValue : commodityActionValues) {
+                                dao.createOrUpdate(actionValue);
+                            }
+                            return null;
+                        }
+                    }
+
+            );
+        }
+    }
+
+    public void syncCommodityActionValues(User user, List<Commodity> commodities) {
+        List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
+        saveActionValues(commodityActionValues);
     }
 }

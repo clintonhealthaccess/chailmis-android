@@ -42,6 +42,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
+import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
@@ -58,6 +60,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     CommoditySnapshotService commoditySnapshotService;
     @Inject
     AllocationService allocationService;
+    @Inject
+    CommodityActionService commodityActionService;
+    @Inject
+    CommodityService commodityService;
 
     @Inject
     UserService userService;
@@ -72,12 +78,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         User user = userService.getRegisteredUser();
-
-        i("==> Syncing...........", account.name);
+        i("==> Syncing...........SNAPSHOTS", account.name);
         commoditySnapshotService.syncWithServer(user);
 
-        i("<== Syncing............", account.name);
+        i("<== Syncing............ALLOCATIONS", account.name);
         allocationService.syncAllocations(user);
+
+        i("<== Syncing............ACTIONVALUES", account.name);
+        commodityActionService.syncCommodityActionValues(user, commodityService.all());
 
     }
 }

@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.TimingLogger;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
@@ -41,12 +42,10 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
-import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
-import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
@@ -57,7 +56,6 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 
-import static android.util.Log.e;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
@@ -71,6 +69,9 @@ public class CommodityService {
 
     @Inject
     private AllocationService allocationService;
+
+    @Inject
+    CommodityActionService commodityActionService;
 
     @Inject
     private DbUtil dbUtil;
@@ -88,19 +89,29 @@ public class CommodityService {
     private String routineOrderAlertDay;
 
     public void initialise(User user) {
+        TimingLogger timingLogger = new TimingLogger("TIMER", "initialise");
         List<Category> allCommodities = lmisServer.fetchCommodities(user);
+        timingLogger.addSplit("fetch all cats");
         saveToDatabase(allCommodities);
+        timingLogger.addSplit("save all Cats");
         categoryService.clearCache();
         syncConstants(user);
+        timingLogger.addSplit("sync constants");
 
         List<Commodity> commodities = all();
-        List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
-        saveActionValues(commodityActionValues);
+        timingLogger.addSplit("all");
 
+        commodityActionService.syncCommodityActionValues(user, commodities);
+
+        timingLogger.addSplit("actionValues");
         categoryService.clearCache();
         updateStockValues(all());
+        timingLogger.addSplit("updateStockValues");
         allocationService.syncAllocations(user);
+        timingLogger.addSplit("sync allocations");
         categoryService.clearCache();
+        timingLogger.addSplit("clearCache");
+        timingLogger.dumpToLog();
     }
 
     private void syncConstants(User user) {
@@ -143,23 +154,6 @@ public class CommodityService {
         });
     }
 
-    private void createActionValue(final CommodityActionValue actionValue) {
-        dbUtil.withDao(CommodityActionValue.class, new Operation<CommodityActionValue, Void>() {
-            @Override
-            public Void operate(Dao<CommodityActionValue, String> dao) throws SQLException {
-                dao.createOrUpdate(actionValue);
-                return null;
-            }
-        });
-    }
-
-    protected void saveActionValues(List<CommodityActionValue> commodityActionValues) {
-        if (commodityActionValues != null) {
-            for (CommodityActionValue actionValue : commodityActionValues) {
-                createActionValue(actionValue);
-            }
-        }
-    }
 
     public List<Commodity> all() {
         List<Category> categories = categoryService.all();
@@ -171,7 +165,7 @@ public class CommodityService {
     }
 
     public void saveToDatabase(final List<Category> allCommodities) {
-        dbUtil.withDao(Category.class, new Operation<Category, Void>() {
+        dbUtil.withDaoAsBatch(Category.class, new Operation<Category, Void>() {
             @Override
             public Void operate(Dao<Category, String> dao) throws SQLException {
                 for (Category category : allCommodities) {
@@ -184,7 +178,7 @@ public class CommodityService {
     }
 
     private void saveAllCommodities(final Category category) {
-        dbUtil.withDao(Commodity.class, new Operation<Commodity, Void>() {
+        dbUtil.withDaoAsBatch(Commodity.class, new Operation<Commodity, Void>() {
             @Override
             public Void operate(Dao<Commodity, String> dao) throws SQLException {
                 for (Commodity commodity : category.getNotSavedCommodities()) {
@@ -200,17 +194,37 @@ public class CommodityService {
     private void createCommodityAction(Commodity commodity) {
         GenericDao<CommodityAction> commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
         GenericDao<DataSet> dataSetGenericDao = new GenericDao<>(DataSet.class, context);
-
+        final List<DataSet> dataSets = new ArrayList<>();
+        final List<CommodityAction> actions = new ArrayList<>();
         for (CommodityAction commodityAction : commodity.getCommodityActions()) {
             if (commodityAction.getDataSet() != null) {
-                dataSetGenericDao.createOrUpdate(commodityAction.getDataSet());
+                dataSets.add(commodityAction.getDataSet());
             }
             if (commodityAction.getCommodity() == null) {
                 commodityAction.setCommodity(commodity);
             }
-            e(Dhis2.SYNC, String.format("Saving activity %s %s", commodityAction.getName(), commodityAction.getId()));
-            commodityActivityGenericDao.createOrUpdate(commodityAction);
+            actions.add(commodityAction);
         }
+
+        dataSetGenericDao.bulkOperation(new Operation<DataSet, Object>() {
+            @Override
+            public Object operate(Dao<DataSet, String> dao) throws SQLException {
+                for (DataSet dataSet : dataSets) {
+                    dao.createOrUpdate(dataSet);
+                }
+                return null;
+            }
+        });
+
+        commodityActivityGenericDao.bulkOperation(new Operation<CommodityAction, Object>() {
+            @Override
+            public Object operate(Dao<CommodityAction, String> dao) throws SQLException {
+                for (CommodityAction action : actions) {
+                    dao.createOrUpdate(action);
+                }
+                return null;
+            }
+        });
 
     }
 

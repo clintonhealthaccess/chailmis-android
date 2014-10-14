@@ -34,13 +34,17 @@ import android.content.Intent;
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -55,17 +59,22 @@ import static org.robolectric.Robolectric.shadowOf;
 @RunWith(RobolectricGradleTestRunner.class)
 public class HomeActivityTest {
     private UserService mockUserService;
+    private CategoryService categoryService;
 
     @Before
     public void setUp() {
         mockUserService = mock(UserService.class);
+        categoryService = mock(CategoryService.class);
         final SyncManager mockSyncManager = mock(SyncManager.class);
         when(mockUserService.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        when(categoryService.all()).thenReturn(new ArrayList<Category>());
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
                 bind(UserService.class).toInstance(mockUserService);
                 bind(SyncManager.class).toInstance(mockSyncManager);
+                bind(CategoryService.class).toInstance(categoryService);
+
             }
         });
     }

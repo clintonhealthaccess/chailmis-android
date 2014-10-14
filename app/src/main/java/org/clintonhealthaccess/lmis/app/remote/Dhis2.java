@@ -31,9 +31,11 @@ package org.clintonhealthaccess.lmis.app.remote;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.TimingLogger;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.thoughtworks.dhis.models.AttributeValue;
 import com.thoughtworks.dhis.models.DataElement;
@@ -65,7 +67,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import roboguice.inject.InjectResource;
 
@@ -99,8 +103,11 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<Category> fetchCommodities(User user) {
+        TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name]");
+        timingLogger.addSplit("fetch data");
+        timingLogger.dumpToLog();
         return getCategoriesFromDataSets(response.getDataSets());
     }
 
@@ -272,10 +279,23 @@ public class Dhis2 implements LmisServer {
     }
 
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
-        return from(values).transform(new Function<DataValue, CommodityActionValue>() {
+        List<String> ids = from(values).transform(new Function<DataValue, String>() {
+            @Override
+            public String apply(DataValue input) {
+                return input.getDataElement();
+            }
+        }).toList();
+        List<CommodityAction> actions = commodityActionService.getAllById(ids);
+        final Map<String, CommodityAction> actionMap = new HashMap<>();
+        for (CommodityAction action : actions) {
+            actionMap.put(action.getId(), action);
+        }
+        ImmutableList<CommodityActionValue> commodityActionValues = from(values).transform(new Function<DataValue, CommodityActionValue>() {
             @Override
             public CommodityActionValue apply(DataValue input) {
-                CommodityAction commodityAction = commodityActionService.getById(input.getDataElement());
+
+                CommodityAction commodityAction = actionMap.get(input.getDataElement());
+
                 if (commodityAction == null) {
                     System.out.println("Data element: " + input.getDataElement());
                     System.out.println("Data value: " + input.getValue());
@@ -284,6 +304,9 @@ public class Dhis2 implements LmisServer {
                 return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
             }
         }).toList();
+
+        return commodityActionValues;
+
     }
 
 }

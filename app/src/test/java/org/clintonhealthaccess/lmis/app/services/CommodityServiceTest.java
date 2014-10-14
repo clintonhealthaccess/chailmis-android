@@ -47,7 +47,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -60,6 +59,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -79,6 +79,7 @@ public class CommodityServiceTest {
     @Inject
     private CommodityService commodityService;
     private CommodityService spyedCommodityService;
+    private CommodityActionService commodityActionService;
     @Inject
     private DbUtil dbUtil;
 
@@ -91,6 +92,7 @@ public class CommodityServiceTest {
     @Before
     public void setUp() throws Exception {
         mockLmisServer = mock(LmisServer.class);
+        commodityActionService = mock(CommodityActionService.class);
         mockStockLevels = testActionValues(application);
         when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
@@ -151,9 +153,16 @@ public class CommodityServiceTest {
 
     @Test
     public void shouldSaveStockLevelsOnInitialise() throws Exception {
+        setUpInjection(this, new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(LmisServer.class).toInstance(mockLmisServer);
+                bind(CommodityActionService.class).toInstance(commodityActionService);
+            }
+        });
         spyedCommodityService = spy(commodityService);
         spyedCommodityService.initialise(new User("user", "user"));
-        verify(spyedCommodityService).saveActionValues(mockStockLevels);
+        verify(commodityActionService).syncCommodityActionValues((User) any(), anyList());
     }
 
     @Test

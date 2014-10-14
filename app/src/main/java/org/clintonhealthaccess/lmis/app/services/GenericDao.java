@@ -107,4 +107,8 @@ public class GenericDao<Model> {
             }
         });
     }
+
+    public void bulkOperation(DbUtil.Operation<Model, Object> operation){
+        dbUtil.withDaoAsBatch(type, operation);
+    }
 }
