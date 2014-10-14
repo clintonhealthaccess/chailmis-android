@@ -35,6 +35,8 @@ import com.j256.ormlite.dao.Dao;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -44,6 +46,7 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -117,5 +120,50 @@ public class DispensingServiceTest {
             dispensingService.addDispensing(dispensing);
         }
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0021-%s", currentMonth)));
+    }
+
+    @Test
+    public void shouldReturnTotalQuantityDispensed() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+
+        dispense(commodity, 2);
+        dispense(commodity, 3);
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalReceived = dispensingService.getTotalDispensed(commodity, startingDate, endDate);
+        assertThat(totalReceived, is(5));
+
+    }
+
+    @Test
+    public void shouldReturnCorrectTotalQuantityDispensed() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        dispense(commodity, 1);
+        dispense(commodity, 1);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalReceived = dispensingService.getTotalDispensed(commodity, startingDate, endDate);
+        assertThat(totalReceived, is(2));
+
+    }
+
+    private void dispense(Commodity commodity, int quantity) {
+        Dispensing dispensing = new Dispensing();
+        DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
+        dispensing.addItem(dispensingItem);
+        dispensingService.addDispensing(dispensing);
     }
 }

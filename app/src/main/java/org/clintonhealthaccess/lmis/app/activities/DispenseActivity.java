@@ -196,7 +196,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
             public void operate(View view, BaseCommodityViewModel commodityViewModel) {
                 EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
                 int quantity = getIntFromString(editTextQuantity.getText().toString());
-                dispensing.getDispensingItems().add(new DispensingItem(commodityViewModel.getCommodity(), quantity));
+                dispensing.addItem(new DispensingItem(commodityViewModel.getCommodity(), quantity));
             }
         });
         return dispensing;

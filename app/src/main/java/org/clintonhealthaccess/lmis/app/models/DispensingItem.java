@@ -49,13 +49,14 @@ public class DispensingItem implements Serializable, Snapshotable {
     public static final String DISPENSE = "dispense";
     public static final String ADJUSTMENTS = "adjustments";
 
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     Commodity commodity;
 
     @DatabaseField(canBeNull = false)
     private int quantity;
 
-    @DatabaseField(canBeNull = false)
-    private String commodityId;
+//    @DatabaseField(canBeNull = false)
+//    private String commodityId;
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
@@ -68,7 +69,7 @@ public class DispensingItem implements Serializable, Snapshotable {
 
     public DispensingItem(Commodity commodity, int quantity) {
         this.commodity = commodity;
-        this.commodityId = commodity.getId();
+        //this.commodityId = commodity.getId();
         this.quantity = quantity;
         created = new Date();
     }

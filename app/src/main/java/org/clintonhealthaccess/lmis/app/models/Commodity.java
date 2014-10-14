@@ -45,12 +45,14 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 
 @Getter
 @Setter
+@ToString
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
     @DatabaseField(id = true, uniqueIndex = true)

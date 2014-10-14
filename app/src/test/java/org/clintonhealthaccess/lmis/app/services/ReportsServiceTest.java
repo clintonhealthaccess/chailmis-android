@@ -36,6 +36,8 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -79,6 +81,8 @@ public class ReportsServiceTest {
     private List<Category> categories;
     @Inject
     ReceiveService receiveService;
+    @Inject
+    private DispensingService dispensingService;
 
     @Before
     public void setUp() throws Exception {
@@ -95,14 +99,12 @@ public class ReportsServiceTest {
         });
 
 
+        commodityService.initialise(new
 
-            commodityService.initialise(new
-
-            User("test","pass")
-
-            );
-            categories=categoryService.all();
-        }
+                        User("test", "pass")
+        );
+        categories = categoryService.all();
+    }
 
     @Test
     public void shouldReturnListOfFacilityStockReportItems() throws Exception {
@@ -174,6 +176,38 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommoditiesReceived(), is(50));
     }
 
+    @Test
+    public void shouldReturnCorrectQuantityDispensed() throws Exception {
+        Category category = categoryService.all().get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        dispense(commodity, 2);
+        dispense(commodity, 1);
+
+        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
+        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
+                dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
+                dateFormatMonth.format(endDate));
+
+        assertThat(facilityStockReportItems.get(0).getCommoditiesDispenced(), is(3));
+
+    }
+
+    private void dispense(Commodity commodity, int quantity) {
+        Dispensing dispensing = new Dispensing();
+        DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
+        dispensing.addItem(dispensingItem);
+        dispensingService.addDispensing(dispensing);
+    }
 
     private void createReceive(Commodity commodity, Date date, int quantityReceived) {
         Receive receive = new Receive();

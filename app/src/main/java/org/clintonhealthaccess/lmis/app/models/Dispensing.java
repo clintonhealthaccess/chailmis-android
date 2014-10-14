@@ -40,6 +40,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "dispensings")
 public class Dispensing implements Serializable {
+
     private List<DispensingItem> dispensingItems = new ArrayList<>();
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
@@ -51,11 +52,17 @@ public class Dispensing implements Serializable {
     @DatabaseField
     private String prescriptionId;
 
-    @DatabaseField(dataType = DataType.DATE_LONG)
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date created;
 
     public Dispensing(boolean willDispenseToFacility) {
         dispenseToFacility = willDispenseToFacility;
+        created = new Date();
+    }
+
+    public Dispensing() {
+        dispenseToFacility = false;
+        created = new Date();
     }
 
     public void addItem(DispensingItem dispensingItem) {
@@ -64,11 +71,6 @@ public class Dispensing implements Serializable {
 
     public List<DispensingItem> getDispensingItems() {
         return dispensingItems;
-    }
-
-    public Dispensing() {
-        dispenseToFacility = false;
-        created = new Date();
     }
 
     public void setDispenseToFacility(boolean dispenseToFacility) {
