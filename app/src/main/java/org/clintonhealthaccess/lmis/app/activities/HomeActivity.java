@@ -215,7 +215,7 @@ public class HomeActivity extends BaseActivity {
 
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString()), colors.get(count)));
+            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString()), colors.get(count), commodity.getStockOnHand()));
             count++;
         }
         LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
@@ -238,7 +238,7 @@ public class HomeActivity extends BaseActivity {
         for (StockOnHandGraphBar bar : bars) {
             biggestValue = checkValue(biggestValue, bar.getMaximumThreshold());
             biggestValue = checkValue(biggestValue, bar.getMinimumThreshold());
-            biggestValue = checkValue(biggestValue, bar.getStockOnHand());
+            biggestValue = checkValue(biggestValue, bar.getMonthsOfStockOnHand());
         }
         return biggestValue;
     }

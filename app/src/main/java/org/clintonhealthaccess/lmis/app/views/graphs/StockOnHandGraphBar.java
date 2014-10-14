@@ -46,19 +46,21 @@ import static java.lang.Math.abs;
 
 @Getter
 public class StockOnHandGraphBar {
+    private int actualStockOnHand;
     private String commodityName;
-    private int maximumThreshold, minimumThreshold, stockOnHand, color;
+    private int maximumThreshold, minimumThreshold, monthsOfStockOnHand, color;
     private int heightOfColorHolder;
     private int heightForMinThreshold;
     private int heightForMaxThreshold;
     private int sohHeight;
 
-    public StockOnHandGraphBar(String commodityName, int min, int max, int soh, int color) {
+    public StockOnHandGraphBar(String commodityName, int min, int max, int monthsOfStockOnHand, int color, int actualStockOnHand) {
         this.commodityName = commodityName;
         this.minimumThreshold = min;
         this.maximumThreshold = max;
-        this.stockOnHand = soh;
+        this.monthsOfStockOnHand = monthsOfStockOnHand;
         this.color = color;
+        this.actualStockOnHand = actualStockOnHand;
     }
 
     public StockOnHandGraphBar() {
@@ -178,7 +180,7 @@ public class StockOnHandGraphBar {
     }
 
     private String getSOH() {
-        return "SOH  " + stockOnHand;
+        return "SOH  " + actualStockOnHand;
     }
 
     private int getHeightForMinThreshold(int barHeight, int biggestValue) {
@@ -190,7 +192,7 @@ public class StockOnHandGraphBar {
     }
 
     private int getHeightForHolder(int barHeight, int biggestValue) {
-        return getRelativeHeight(stockOnHand, biggestValue, barHeight);
+        return getRelativeHeight(monthsOfStockOnHand, biggestValue, barHeight);
     }
 
     protected int getRelativeHeight(int givenValue, int maxValue, int maxHeight) {
@@ -201,7 +203,7 @@ public class StockOnHandGraphBar {
     @Override
     public String toString() {
         return "StockOnHandGraphBar{" +
-                "stockOnHand=" + stockOnHand +
+                "monthsOfStockOnHand=" + monthsOfStockOnHand +
                 ", minimumThreshold=" + minimumThreshold +
                 ", maximumThreshold=" + maximumThreshold +
                 ", commodityName='" + commodityName + '\'' +
