@@ -131,8 +131,15 @@ public class HomeActivity extends BaseActivity {
         Crashlytics.start(this);
         setupButtonEvents();
         setupGraph();
-        setupAlerts();
+
         setupAutoSync();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupAlerts();
+
     }
 
     private void setupAutoSync() {
