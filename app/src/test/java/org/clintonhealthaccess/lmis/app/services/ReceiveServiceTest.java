@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.clintonhealthaccess.lmis.app.services.GenericService.getTotal;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -136,7 +137,8 @@ public class ReceiveServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         Date endDate = calendar.getTime();
 
-        int totalReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
+        int totalReceived = getTotal(commodity, startingDate, endDate,
+                Receive.class, ReceiveItem.class, application);
         assertThat(totalReceived, is(50));
 
     }
@@ -156,7 +158,8 @@ public class ReceiveServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         Date endDate = calendar.getTime();
 
-        int totalReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
+        int totalReceived = getTotal(commodity, startingDate, endDate,
+                Receive.class, ReceiveItem.class, application);
         assertThat(totalReceived, is(230));
 
     }

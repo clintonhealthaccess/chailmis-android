@@ -89,7 +89,7 @@ public class DbUtil {
         }
     }
 
-    private <T> Dao<T, String> initialiseDao(SQLiteOpenHelper openHelper, Class<T> domainClass) throws SQLException {
+    public static <T> Dao<T, String> initialiseDao(SQLiteOpenHelper openHelper, Class<T> domainClass) throws SQLException {
         ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
         return createDao(connectionSource, domainClass);
     }

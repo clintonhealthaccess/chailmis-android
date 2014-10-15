@@ -37,17 +37,11 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
-import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.BaseItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
-import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -55,51 +49,39 @@ import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
-public class ReceiveService {
+public class GenericService {
 
-    @Inject
-    Context context;
 
-    @Inject
-    StockService stockService;
-    @Inject
-    AllocationService allocationService;
-    @Inject
-    AlertsService alertsService;
+    public static <ActionClass, ItemClass extends BaseItem> int getTotal(Commodity commodity, Date startDate,
+                                                                  Date endDate, Class<ActionClass> actionClass,
+                                                                  Class<ItemClass> itemClass, Context context) {
+        int totalQuantity = 0;
 
-    @Inject
-    CommoditySnapshotService commoditySnapshotService;
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        try {
+            Dao<ActionClass, String> actionDao = initialiseDao(openHelper, actionClass);
+            Dao<ItemClass, String> itemDao = initialiseDao(openHelper, itemClass);
 
-    @Inject
-    DbUtil dbUtil;
+            QueryBuilder<ActionClass, String> actionQueryBuilder = actionDao.queryBuilder();
+            actionQueryBuilder.where().between("created", startDate, endDate);
 
-    public List<String> getReadyAllocationIds() {
-        return new ArrayList<>(Arrays.asList("UG-2004", "UG-2005"));
-    }
+            QueryBuilder<ItemClass, String> itemQueryBuilder = itemDao.queryBuilder();
+            itemQueryBuilder.where().eq("commodity_id", commodity.getId());
+            itemQueryBuilder.join(actionQueryBuilder);
 
-    public List<String> getCompletedIds() {
-        return new ArrayList<>();
-    }
+            List<ItemClass> items = itemQueryBuilder.query();
 
-    public void saveReceive(Receive receive) {
-        GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
-        receiveDao.create(receive);
-        if (receive.getAllocation() != null) {
-            Allocation allocation = receive.getAllocation();
-            allocation.setReceived(true);
-            allocationService.update(allocation);
-
-            alertsService.deleteAllocationAlert(allocation);
+            for (ItemClass item : items) {
+                totalQuantity += item.getQuantity();
+            }
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } finally {
+            releaseHelper();
+            return totalQuantity;
         }
-        saveReceiveItems(receive.getReceiveItems());
-    }
 
-    private void saveReceiveItems(List<ReceiveItem> receiveItems) {
-        GenericDao<ReceiveItem> receiveItemDao = new GenericDao<>(ReceiveItem.class, context);
-        for (ReceiveItem receiveItem : receiveItems) {
-            receiveItemDao.create(receiveItem);
-            stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived());
-            commoditySnapshotService.add(receiveItem);
-        }
+
     }
 }
+

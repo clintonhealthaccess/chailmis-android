@@ -45,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 
 @DatabaseTable(tableName = "dispensingItems")
-public class DispensingItem implements Serializable, Snapshotable {
+public class DispensingItem extends BaseItem implements Serializable, Snapshotable {
     public static final String DISPENSE = "dispense";
     public static final String ADJUSTMENTS = "adjustments";
 
@@ -107,7 +107,7 @@ public class DispensingItem implements Serializable, Snapshotable {
 
 
 
-
+    @Override
     public Integer getQuantity() {
         return quantity;
     }

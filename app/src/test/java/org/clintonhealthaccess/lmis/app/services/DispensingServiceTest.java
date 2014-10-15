@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.app.Application;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
@@ -136,7 +138,8 @@ public class DispensingServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         Date endDate = calendar.getTime();
 
-        int totalReceived = dispensingService.getTotalDispensed(commodity, startingDate, endDate);
+        int totalReceived = GenericService.getTotal(commodity, startingDate, endDate,
+                Dispensing.class, DispensingItem.class, application);
         assertThat(totalReceived, is(5));
 
     }
@@ -155,7 +158,8 @@ public class DispensingServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         Date endDate = calendar.getTime();
 
-        int totalReceived = dispensingService.getTotalDispensed(commodity, startingDate, endDate);
+        int totalReceived = GenericService.getTotal(commodity, startingDate, endDate,
+                Dispensing.class, DispensingItem.class, application);
         assertThat(totalReceived, is(2));
 
     }

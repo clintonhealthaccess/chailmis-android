@@ -30,12 +30,17 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 
@@ -55,6 +60,9 @@ public class ReportsService {
     @Inject
     private DispensingService dispensingService;
 
+    @Inject
+    Context context;
+
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
                                                                            String startingMonth, String endingYear, String endingMonth) {
         ArrayList<FacilityStockReportItem> facilityStockReportItems = new ArrayList<>();
@@ -65,8 +73,11 @@ public class ReportsService {
 
             for (Commodity commodity : category.getCommodities()) {
                 int openingStock = getOpeningStock(commodity, startingDate);
-                int quantityReceived = receiveService.getTotalReceived(commodity, startingDate, endDate);
-                int quantityDispensed = dispensingService.getTotalDispensed(commodity, startingDate, endDate);
+                int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
+                        Receive.class, ReceiveItem.class, context);
+                int quantityDispensed = GenericService.getTotal(commodity, startingDate, endDate,
+                        Dispensing.class, DispensingItem.class, context);
+
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), openingStock, quantityReceived, 0, 0, 0, 0, 0, 0, quantityDispensed);
                 facilityStockReportItems.add(item);
             }

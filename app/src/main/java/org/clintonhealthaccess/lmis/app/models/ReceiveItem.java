@@ -55,7 +55,7 @@ import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVE_DA
 @Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "receive_items")
-public class ReceiveItem implements Snapshotable {
+public class ReceiveItem extends BaseItem implements Snapshotable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -135,4 +135,8 @@ public class ReceiveItem implements Snapshotable {
         return input.getActivityType().contains(type);
     }
 
+    @Override
+    public Integer getQuantity() {
+        return quantityReceived;
+    }
 }

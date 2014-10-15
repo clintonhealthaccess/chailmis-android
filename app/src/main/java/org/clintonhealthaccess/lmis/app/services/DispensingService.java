@@ -55,6 +55,7 @@ import java.util.List;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
+import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
 public class DispensingService {
 
@@ -132,47 +133,6 @@ public class DispensingService {
 
 
         });
-    }
-
-    public int getTotalDispensed(Commodity commodity, Date startingDate, Date endDate) {
-        int totalDispensed = 0;
-
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
-        try {
-            Dao<Dispensing, String> dispensingDao = initialiseDao(openHelper, Dispensing.class);
-            Dao<DispensingItem, String> dispensingItemDao = initialiseDao(openHelper, DispensingItem.class);
-
-            QueryBuilder<Dispensing, String> dispensingQueryBuilder = dispensingDao.queryBuilder();
-            dispensingQueryBuilder.where().between("created", startingDate, endDate);
-
-            QueryBuilder<DispensingItem, String> dispensingItemQueryBuilder = dispensingItemDao.queryBuilder();
-            System.out.println("We reached here " + commodity);
-            dispensingItemQueryBuilder.where().eq("commodity_id", commodity.getId());
-
-            dispensingItemQueryBuilder.join(dispensingQueryBuilder);
-
-            List<DispensingItem> dispensingItems = dispensingItemQueryBuilder.query();
-
-            System.out.println("Found " + dispensingItems.size());
-
-            for (DispensingItem dispensingItem : dispensingItems) {
-                totalDispensed += dispensingItem.getQuantity();
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Exception " + e.getMessage());
-            throw new LmisException(e);
-        } finally {
-
-            System.out.println("Finally " + totalDispensed);
-            releaseHelper();
-            return totalDispensed;
-        }
-    }
-
-    private <T> Dao<T, String> initialiseDao(SQLiteOpenHelper openHelper, Class<T> domainClass) throws SQLException {
-        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
-        return createDao(connectionSource, domainClass);
     }
 
 }
