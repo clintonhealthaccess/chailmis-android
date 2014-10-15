@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.adapters;
 
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.utils.ListTestUtils;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
@@ -75,7 +77,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
         Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.spinnerAdjustmentType);
         ANDROID.assertThat(spinner).isEnabled();
-        ANDROID.assertThat(spinner).isGone();
+        ANDROID.assertThat(spinner).isInvisible();
     }
 
     @Test
@@ -155,6 +157,43 @@ public class AdjustmentsAdapterTest {
         editText.setText("50");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
+    }
+
+    @Test
+    public void shouldSetAdjustmentTypeToPositiveForPhysicalStockCountIfCounterIsGreaterThanSOH() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(100);
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        commodities.add(adjustmentsViewModel);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
+        editText.setText("200");
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
+        assertThat(adjustmentsViewModel.isPositive(), is(true));
+        assertThat(spinnerType.getSelectedItem().toString(), is("+"));
+    }
+
+    @Test
+    public void shouldSetAdjustmentTypeToNegativeForPhysicalStockCountIfCountedIsLessGrThanSOH() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(100);
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        commodities.add(adjustmentsViewModel);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities);
+
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
+        editText.setText("50");
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
+        assertThat(adjustmentsViewModel.isPositive(), is(false));
+        assertThat(spinnerType.getSelectedItem().toString(), is("-"));
     }
 
     private AdjustmentsAdapter getAdjustmentsAdapter(AdjustmentReason adjustmentReason) {

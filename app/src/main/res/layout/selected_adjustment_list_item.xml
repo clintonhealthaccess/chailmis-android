@@ -65,6 +65,7 @@
             android:id="@+id/editTextQuantity"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textViewAdjustment"
             android:layout_alignParentRight="true"
             android:inputType="number"
@@ -76,8 +77,8 @@
             android:layout_width="150dp"
             android:visibility="gone"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textViewAdjustment"
-            android:layout_alignParentRight="true"
             android:inputType="number"
             android:layout_marginRight="20dp"
             android:textSize="18sp" />
@@ -98,7 +99,7 @@
             android:layout_centerVertical="true"
             android:layout_height="wrap_content"
             android:text="Counted :"
-            android:layout_toLeftOf="@id/editTextQuantity"
+            android:layout_toLeftOf="@id/editTextStockCounted"
             android:id="@+id/textViewLabel" />
 
         <TextView

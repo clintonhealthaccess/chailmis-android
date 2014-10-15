@@ -133,7 +133,7 @@
     <string name="order_failed">Order Failed</string>
     <string name="outstanding_routine_order_alerts_message">Outstanding previous orders will be combined with this order</string>
     <string name="stock_on_hand">Stock On Hand</string>
-    <string name="adjustment_type_validation_message">Make sure an adjustment reason is selected</string>
+    <string name="adjustment_type_validation_message">Make sure an adjustment type is selected</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_facility_stock_report">FacilityStockReportActivity</string>
     <string name="action_settings">Settings</string>

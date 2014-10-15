@@ -93,7 +93,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 textViewLabel.setVisibility(View.VISIBLE);
                 textViewCurrentStock.setVisibility(View.VISIBLE);
                 editTextStockCounted.setVisibility(View.VISIBLE);
-                spinnerAdjustmentType.setVisibility(View.GONE);
+                spinnerAdjustmentType.setVisibility(View.INVISIBLE);
                 editTextQuantity.setVisibility(View.INVISIBLE);
                 textViewCurrentStock.setText("Current Stock :" + commodityViewModel.getStockOnHand());
             } else {
@@ -126,7 +126,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         });
         textViewCommodityName.setText(commodityViewModel.getName());
         editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
-        editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment));
+        editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment, spinnerAdjustmentType, types));
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity >= 0) {
             editTextQuantity.setText(Integer.toString(quantity));
@@ -185,10 +185,14 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
     private static class PhysicalCountTextWatcher implements TextWatcher {
         private final AdjustmentsViewModel adjustmentsViewModel;
         private final TextView textViewAdjustment;
+        private final Spinner spinnerAdjustmentType;
+        private final List<String> types;
 
-        public PhysicalCountTextWatcher(AdjustmentsViewModel adjustmentsViewModel, TextView textViewAdjustment) {
+        public PhysicalCountTextWatcher(AdjustmentsViewModel adjustmentsViewModel, TextView textViewAdjustment, Spinner spinnerAdjustmentType, List<String> types) {
             this.adjustmentsViewModel = adjustmentsViewModel;
             this.textViewAdjustment = textViewAdjustment;
+            this.spinnerAdjustmentType = spinnerAdjustmentType;
+            this.types = types;
         }
 
         @Override
@@ -208,7 +212,15 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 int quantity = getIntFromString(value);
                 if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
                     int difference = quantity - adjustmentsViewModel.getStockOnHand();
-                    adjustmentsViewModel.setPositive(difference > 0);
+                    boolean isPositive = difference > 0;
+                    adjustmentsViewModel.setPositive(isPositive);
+                    int selectedPostion = 0;
+                    if (isPositive) {
+                        selectedPostion = types.indexOf("+");
+                    } else {
+                        selectedPostion = types.indexOf("-");
+                    }
+                    spinnerAdjustmentType.setSelection(selectedPostion);
                     int adjustment = abs(difference);
                     textViewAdjustment.setText(String.valueOf(adjustment));
                     adjustmentsViewModel.setQuantityEntered(adjustment);
