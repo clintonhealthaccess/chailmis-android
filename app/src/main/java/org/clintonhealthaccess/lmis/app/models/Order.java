@@ -29,11 +29,13 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 
 import org.clintonhealthaccess.lmis.app.services.OrderItemSaver;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -51,12 +53,17 @@ public class Order implements Serializable {
     @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
     private OrderType orderType;
 
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    private Date created;
+
     public Order() {
         //Orm lite likes
+        created = new Date();
     }
 
     public Order(String srvNumber) {
         this.srvNumber = srvNumber;
+        created = new Date();
     }
 
     public void addItem(OrderItem orderItem) {

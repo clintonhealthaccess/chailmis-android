@@ -19,6 +19,36 @@
                         "name": "Coartem_DISPENSING"
                     },
                     {
+                        "activityType": "ORDERED_AMOUNT",
+                        "commodity": {
+                            "id": "1",
+                            "name": "Coartem",
+                            "orderDuration": 30
+                        },
+                        "dataSet": {
+                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "1234589",
+                        "name": "Coartem_ORDERED_AMOUNT"
+                    },
+                    {
+                        "activityType": "REASON_FOR_ORDER",
+                        "commodity": {
+                            "id": "1",
+                            "name": "Coartem",
+                            "orderDuration": 30
+                        },
+                        "dataSet": {
+                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "123458",
+                        "name": "Coartem_REASON_FOR_ORDER"
+                    },
+                    {
                         "activityType": "EXPIRED",
                         "dataSet": {
                             "id": "14c64f70-40a3-472e-9709-753648d9d374",

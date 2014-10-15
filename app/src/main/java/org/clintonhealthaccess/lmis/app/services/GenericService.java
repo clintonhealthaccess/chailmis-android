@@ -51,10 +51,9 @@ import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
 public class GenericService {
 
-
     public static <ActionClass, ItemClass extends BaseItem> int getTotal(Commodity commodity, Date startDate,
-                                                                  Date endDate, Class<ActionClass> actionClass,
-                                                                  Class<ItemClass> itemClass, Context context) {
+                                                                         Date endDate, Class<ActionClass> actionClass,
+                                                                         Class<ItemClass> itemClass, Context context) {
         int totalQuantity = 0;
 
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);

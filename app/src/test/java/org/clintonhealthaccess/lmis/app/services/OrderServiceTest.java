@@ -100,8 +100,8 @@ public class OrderServiceTest extends LMISTestCase {
     private Dao<Category, ?> categoryDao;
     private Dao<DataSet, ?> dataSetDao;
     private GenericDao<CommoditySnapshot> snapshotGenericDao;
-    private OrderType Routine = new OrderType("ROUTINE");
-    private OrderType Emergency = new OrderType("EMERGENCY");
+    private OrderType Routine = new OrderType(OrderType.ROUTINE);
+    private OrderType Emergency = new OrderType(OrderType.EMERGENCY);
 
     @Before
     public void setUp() throws SQLException {

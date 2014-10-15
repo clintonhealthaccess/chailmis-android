@@ -38,6 +38,8 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -83,6 +85,10 @@ public class ReportsServiceTest {
     ReceiveService receiveService;
     @Inject
     private DispensingService dispensingService;
+    @Inject
+    private LossService lossService;
+    private SimpleDateFormat dateFormatYear;
+    private SimpleDateFormat dateFormatMonth;
 
     @Before
     public void setUp() throws Exception {
@@ -98,12 +104,11 @@ public class ReportsServiceTest {
             }
         });
 
-
-        commodityService.initialise(new
-
-                        User("test", "pass")
-        );
+        commodityService.initialise(new User("test", "pass"));
         categories = categoryService.all();
+
+        dateFormatYear = new SimpleDateFormat("YYYY");
+        dateFormatMonth = new SimpleDateFormat("MMMM");
     }
 
     @Test
@@ -143,8 +148,6 @@ public class ReportsServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date startDate = calendar.getTime();
 
-        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
-        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
                 dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
@@ -164,9 +167,6 @@ public class ReportsServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
-        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
-
         createReceive(commodity, endDate, 20);
         createReceive(commodity, endDate, 30);
 
@@ -181,7 +181,6 @@ public class ReportsServiceTest {
         Category category = categoryService.all().get(0);
         Commodity commodity = category.getCommodities().get(0);
 
-
         Calendar calendar = Calendar.getInstance();
         Date endDate = calendar.getTime();
 
@@ -191,15 +190,39 @@ public class ReportsServiceTest {
         dispense(commodity, 2);
         dispense(commodity, 1);
 
-        SimpleDateFormat dateFormatYear = new SimpleDateFormat("YYYY");
-        SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM");
-
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
                 dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
                 dateFormatMonth.format(endDate));
 
         assertThat(facilityStockReportItems.get(0).getCommoditiesDispenced(), is(3));
+    }
 
+    @Test
+    public void shouldReturnValidQuantityLost() throws Exception {
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        createLoss(commodity, 2);
+        createLoss(commodity, 2);
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
+                dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
+                dateFormatMonth.format(endDate));
+
+        assertThat(facilityStockReportItems.get(0).getCommoditiesLost(), is(4));
+    }
+
+    private void createLoss(Commodity commodity, int quantityLost) {
+        Loss loss = new Loss();
+        LossItem lossItem = new LossItem(commodity, quantityLost);
+        loss.addLossItem(lossItem);
+        lossService.saveLoss(loss);
     }
 
     private void dispense(Commodity commodity, int quantity) {

@@ -30,12 +30,14 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -44,7 +46,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @DatabaseTable(tableName = "losses")
 public class Loss implements Serializable {
 
@@ -54,7 +55,14 @@ public class Loss implements Serializable {
     @ForeignCollectionField(eager = true, maxEagerLevel = 3)
     private ForeignCollection<LossItem> lossItemsCollection;
 
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    private Date created;
+
     private List<LossItem> lossItems = new ArrayList<>();
+
+    public Loss(){
+        this.created = new Date();
+    }
 
     public void addLossItem(LossItem lossItem) {
         lossItem.setLoss(this);

@@ -39,6 +39,10 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.clintonhealthaccess.lmis.app.models.Order;
+import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -77,8 +81,14 @@ public class ReportsService {
                         Receive.class, ReceiveItem.class, context);
                 int quantityDispensed = GenericService.getTotal(commodity, startingDate, endDate,
                         Dispensing.class, DispensingItem.class, context);
+                int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
+                        Loss.class, LossItem.class, context);
 
-                FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(), openingStock, quantityReceived, 0, 0, 0, 0, 0, 0, quantityDispensed);
+                int quantityOrdered = GenericService.getTotal(commodity, startingDate, endDate,
+                        Order.class, OrderItem.class, context);
+
+                FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
+                        openingStock, quantityReceived, 0, quantityLost, 0, 0, 0, quantityOrdered, quantityDispensed);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {

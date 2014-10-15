@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class OrderItem implements Snapshotable {
+public class OrderItem extends BaseItem implements Snapshotable {
 
     public static final String ORDERED_AMOUNT = "ordered_amount";
     public static final String ORDER_REASON = "reason_for_order";
@@ -75,7 +75,6 @@ public class OrderItem implements Snapshotable {
         this.reasonForUnexpectedQuantity = commodityViewModel.getReasonForUnexpectedOrderQuantity();
     }
 
-
     public Order getOrder() {
         return order;
     }
@@ -92,7 +91,8 @@ public class OrderItem implements Snapshotable {
         return order.getSrvNumber();
     }
 
-    public int getQuantity() {
+    @Override
+    public Integer getQuantity() {
         return quantity;
     }
 

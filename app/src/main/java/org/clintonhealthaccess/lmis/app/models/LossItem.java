@@ -31,7 +31,9 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -41,15 +43,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.ToString;
+
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.lang.String.format;
 import static org.clintonhealthaccess.lmis.app.models.LossReason.getLossCommodityActions;
 
+@ToString
 @DatabaseTable(tableName = "loss_items")
-public class LossItem implements Serializable, Snapshotable {
-
-    private List<LossItemDetail> lossItemDetails;
+public class LossItem extends BaseItem implements Serializable, Snapshotable {
 
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
@@ -59,6 +62,11 @@ public class LossItem implements Serializable, Snapshotable {
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Loss loss;
+
+    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    private ForeignCollection<LossItemDetail> lossItemDetailCollection;
+
+    private List<LossItemDetail> lossItemDetails;
 
     @Deprecated
     public LossItem() {
@@ -141,6 +149,13 @@ public class LossItem implements Serializable, Snapshotable {
     }
 
     public List<LossItemDetail> getLossItemDetails() {
+        if (lossItemDetailCollection != null)
+            lossItemDetails = copyOf(lossItemDetailCollection);
         return lossItemDetails;
+    }
+
+    @Override
+    public Integer getQuantity() {
+        return getTotalLosses();
     }
 }
