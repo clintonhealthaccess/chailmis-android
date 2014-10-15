@@ -75,38 +75,40 @@ public class CommoditySnapshotService {
 
     public void add(final Snapshotable snapshotable) {
         GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
-        for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
-            List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
-            if (commoditySnapshots.isEmpty()) {
-                createNewSnapshot(value, snapshotGenericDao);
-            } else {
-                updateSnapshot(value, snapshotGenericDao, commoditySnapshots);
+        snapshotGenericDao.bulkOperation(new DbUtil.Operation<CommoditySnapshot, Object>() {
+            @Override
+            public Object operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
+                for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
+                    List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value, dao);
+                    if (commoditySnapshots.isEmpty()) {
+                        createNewSnapshot(value, dao);
+                    } else {
+                        updateSnapshot(value, dao, commoditySnapshots);
+                    }
+                }
+                return null;
             }
-        }
+        });
+
 
     }
 
-    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao, List<CommoditySnapshot> commoditySnapshots) {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dailyCommoditySnapshotDao, List<CommoditySnapshot> commoditySnapshots) throws SQLException {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
         commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
         commoditySnapshot.setSynced(false);
         dailyCommoditySnapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> dailyCommoditySnapshotDao) {
+    private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dailyCommoditySnapshotDao) throws SQLException {
         CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue);
         dailyCommoditySnapshotDao.create(commoditySnapshot);
     }
 
-    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommoditySnapshotValue commoditySnapshotValue) {
-        return dbUtil.withDao(CommoditySnapshot.class, new DbUtil.Operation<CommoditySnapshot, List<CommoditySnapshot>>() {
-            @Override
-            public List<CommoditySnapshot> operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
-                QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getCommodityAction().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getCommodityAction()).and().eq(PERIOD, commoditySnapshotValue.getCommodityAction().getPeriod());
-                return dao.query(queryBuilder.prepare());
-            }
-        });
+    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dao) throws SQLException {
+        QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
+        queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getCommodityAction().getCommodity()).and().eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getCommodityAction()).and().eq(PERIOD, commoditySnapshotValue.getCommodityAction().getPeriod());
+        return dao.query(queryBuilder.prepare());
     }
 
     public List<CommoditySnapshot> getUnSyncedSnapshots() {
@@ -150,9 +152,9 @@ public class CommoditySnapshotService {
         i("SMS Sync", "Checking snapshots...");
         List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
         i("SMS Sync", format("%d snapshots need to be synced through SMS", snapshots.size()));
-        if(!isEmpty(snapshots)) {
+        if (!isEmpty(snapshots)) {
             DataValueSet valueSet = toDataValueSet(snapshots, user.getFacilityCode());
-            if(smsSyncService.send(valueSet)) {
+            if (smsSyncService.send(valueSet)) {
                 markSnapShotsAsSmsSent(snapshots);
             }
         }

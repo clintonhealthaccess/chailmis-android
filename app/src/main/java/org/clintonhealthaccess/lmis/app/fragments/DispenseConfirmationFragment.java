@@ -30,6 +30,8 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -114,19 +116,8 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         buttonDispenseConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispensingService.addDispensing(dispensing);
-
-                if (dispensing.isDispenseToFacility()) {
-                    showToastMessage(getString(R.string.dispense_to_facility_successful));
-                } else {
-                    showToastMessage(getString(R.string.dispense_to_successful));
-                }
-                dismiss();
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.finish();
-                    startActivity(activity.getIntent());
-                }
+                SaveDispensing task = new SaveDispensing(DispenseConfirmationFragment.this);
+                task.execute();
             }
         });
 
@@ -140,6 +131,56 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
 
     private void showToastMessage(String message) {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private class SaveDispensing extends AsyncTask<Void, Void, Boolean> {
+        private ProgressDialog dialog;
+        private DispenseConfirmationFragment fragment;
+
+        public SaveDispensing(DispenseConfirmationFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new ProgressDialog(getActivity());
+            this.dialog.setMessage(getString(R.string.saving));
+            this.dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                dispensingService.addDispensing(dispensing);
+            } catch (Exception ex) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if (success) {
+                if (dispensing.isDispenseToFacility()) {
+                    showToastMessage(getString(R.string.dispense_to_facility_successful));
+                } else {
+                    showToastMessage(getString(R.string.dispense_to_successful));
+                }
+                fragment.dismiss();
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                    startActivity(activity.getIntent());
+                }
+            } else {
+                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.failed_to_save), Toast.LENGTH_LONG).show();
+            }
+
+            this.dialog.dismiss();
+
+        }
     }
 
 }

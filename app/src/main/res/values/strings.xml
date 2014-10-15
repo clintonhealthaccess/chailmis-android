@@ -144,5 +144,7 @@
     <string name="physical_count">Physical Count</string>
     <string name="received_from_another_facility">Received from another facility</string>
     <string name="sent_to_another_facilility">Sent to another facility</string>
+    <string name="saving">Saving</string>
+    <string name="failed_to_save">Failed to Save</string>
 
 </resources>

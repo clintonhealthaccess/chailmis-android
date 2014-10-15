@@ -43,8 +43,6 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
@@ -70,7 +68,7 @@ public class DispensingService {
     private DbUtil dbUtil;
 
     public void addDispensing(final Dispensing dispensing) {
-        dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, DispensingItem>() {
+        dbUtil.withDaoAsBatch(DispensingItem.class, new DbUtil.Operation<DispensingItem, DispensingItem>() {
             @Override
             public DispensingItem operate(Dao<DispensingItem, String> dao) throws SQLException {
                 saveDispensing(dispensing);
