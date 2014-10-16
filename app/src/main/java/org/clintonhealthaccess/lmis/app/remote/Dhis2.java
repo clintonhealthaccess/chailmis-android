@@ -277,6 +277,17 @@ public class Dhis2 implements LmisServer {
         }
     }
 
+    @Override
+    public String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        ConstantSearchResponse response = service.searchConstants(constantKey, "id,name,value");
+        if (!response.getConstants().isEmpty()) {
+            return "+" + String.valueOf(response.getConstants().get(0).getValue().longValue());
+        } else {
+            return defaultValue;
+        }
+    }
+
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
         List<String> ids = from(values).transform(new Function<DataValue, String>() {
             @Override

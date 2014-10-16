@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectResource;
@@ -70,6 +71,9 @@ public class RegisterActivity extends RoboActionBarActivity {
 
     @Inject
     private OrderService orderService;
+
+    @Inject
+    private SmsSyncService smsSyncService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -146,7 +150,7 @@ public class RegisterActivity extends RoboActionBarActivity {
                 commodityService.initialise(user);
                 orderService.syncOrderReasons();
                 orderService.syncOrderTypes();
-
+                smsSyncService.syncGatewayNumber();
             } catch (Exception e) {
                 this.failureCause = e;
                 Log.e("Registration Error", e.getLocalizedMessage());

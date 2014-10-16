@@ -57,4 +57,6 @@ public interface LmisServer {
     Integer fetchIntegerConstant(User user, String monthlyStockCountSearchKey1);
 
     List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user);
+
+    String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue);
 }
