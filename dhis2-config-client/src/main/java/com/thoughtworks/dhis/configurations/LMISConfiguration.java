@@ -76,6 +76,7 @@ public class LMISConfiguration implements IConfiguration {
     private static final String LMIS_COMMODITIES_DEFAULT = LMIS_KEY_WORD + "Commodities Default";
     private static final String LMIS_COMMODITIES_ALLOCATED = LMIS_KEY_WORD + "Commodities Allocated";
     private static final String LMIS_ACTIVITY = LMIS_KEY_WORD + "Activity";
+    private static final String LMIS_NON_LGA = "Non LGA";
     public static final String OPTION_SETS = "optionSets";
     public static final String INDICATOR_TYPES = "indicatorTypes";
     public static final String INDICATORS = "indicators";
@@ -85,6 +86,7 @@ public class LMISConfiguration implements IConfiguration {
     private static final String LMIS_COMMODITIES_CALCULATED = LMIS_KEY_WORD + "Commodities Calculated";
     public static final String ATTRIBUTES = "attributes";
     public static final String CONSTANTS = "constants";
+    private final Attribute lgaAttribute;
 
 
     private CategoryCombo defaultCategoryCombo;
@@ -98,11 +100,12 @@ public class LMISConfiguration implements IConfiguration {
     private List<String> shortNames;
     private OptionSet orderReasonOptionSet;
     private IndicatorType indicatorType;
-    private Attribute attribute;
+    private Attribute actionAttribute;
 
     public LMISConfiguration(CategoryCombo defaultCategoryCombo) {
         this.defaultCategoryCombo = defaultCategoryCombo;
-        attribute = createAttribute();
+        actionAttribute = createAttribute("string", LMISConfiguration.LMIS_ACTIVITY, true, false);
+        lgaAttribute = createAttribute("string", LMISConfiguration.LMIS_NON_LGA, false, true);
         dataElementGroups = new ArrayList<DataElementGroup>();
         dataElementGroupSets = new ArrayList<DataElementGroupSet>();
         dataElements = new ArrayList<DataElement>();
@@ -160,7 +163,7 @@ public class LMISConfiguration implements IConfiguration {
         data.put(DATA_ELEMENTS, dataElements);
         data.put(DATA_ELEMENT_GROUPS, dataElementGroups);
         data.put(DATA_ELEMENT_GROUP_SETS, dataElementGroupSets);
-        data.put(ATTRIBUTES, Arrays.asList(attribute));
+        data.put(ATTRIBUTES, Arrays.asList(actionAttribute,lgaAttribute));
 
         return data;
     }
@@ -200,8 +203,8 @@ public class LMISConfiguration implements IConfiguration {
                     List<DataElement> elementsInIndicator = new ArrayList<DataElement>();
                     for (DataElementType type : dataElementTypes) {
                         String element_name = commodity.getName() + " " + type.getActivity();
-                        DataElement dataElement = createDataElement(attribute, element_name, type);
-                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups);
+                        DataElement dataElement = createDataElement(actionAttribute, element_name, type);
+                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
                         group.getDataElements().add(dataElement);
                         dataSet.getDataElements().add(dataElement);
                         dataElements.add(dataElement);
@@ -234,7 +237,7 @@ public class LMISConfiguration implements IConfiguration {
                 }
             }
             if (dataSet == allocated) {
-                createSpecialDataElements(attribute, dataElements, dataSet, DataElementType.ALLOCATION_ID, "", "ALLOCATION_ID");
+                createSpecialDataElements(actionAttribute, dataElements, dataSet, DataElementType.ALLOCATION_ID, "", "ALLOCATION_ID");
             }
 
             dataSets.add(dataSet);
@@ -248,11 +251,11 @@ public class LMISConfiguration implements IConfiguration {
                 List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EMERGENCY_ORDERED_AMOUNT, DataElementType.EMERGENCY_REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
-                    DataElement dataElement = createDataElement(attribute, element_name, type);
+                    DataElement dataElement = createDataElement(actionAttribute, element_name, type);
                     if (type.getActivity().equals(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())) {
                         dataElement.setOptionSet(orderReasonOptionSet);
                     }
-                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups);
+                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
                     group.getDataElements().add(dataElement);
                     dataSetEmergencyOrder.getDataElements().add(dataElement);
                     dataElements.add(dataElement);
@@ -261,7 +264,7 @@ public class LMISConfiguration implements IConfiguration {
 
             }
         }
-        createSpecialDataElements(attribute, dataElements, dataSetEmergencyOrder, DataElementType.ORDER_ID, "Emergency", "ORDER_ID");
+        createSpecialDataElements(actionAttribute, dataElements, dataSetEmergencyOrder, DataElementType.ORDER_ID, "Emergency", "ORDER_ID");
         dataSets.add(dataSetEmergencyOrder);
     }
 
@@ -280,18 +283,18 @@ public class LMISConfiguration implements IConfiguration {
 
             @Override
             public void afterEachCategory(ExcelCategory category) {
-                createSpecialDataElements(attribute, dataElements, dataSet, DataElementType.ORDER_ID, category.getName(), "ORDER_ID");
+                createSpecialDataElements(actionAttribute, dataElements, dataSet, DataElementType.ORDER_ID, category.getName(), "ORDER_ID");
                 dataElementGroupSets.add(groupSet);
                 dataSets.add(dataSet);
             }
 
             @Override
             public void onEachCommodity(ExcelCommodity commodity) {
-                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups);
+                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
                 List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.ORDERED_AMOUNT, DataElementType.REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
-                    DataElement dataElement = createDataElement(attribute, element_name, type);
+                    DataElement dataElement = createDataElement(actionAttribute, element_name, type);
                     if (type.getActivity().equals(DataElementType.REASON_FOR_ORDER.getActivity())) {
                         dataElement.setOptionSet(orderReasonOptionSet);
                     }
@@ -319,12 +322,15 @@ public class LMISConfiguration implements IConfiguration {
             String[] parts = line.split(",");
             String categoryName = parts[0];
             String commodityName = parts[1];
+            String isNonLGAText = parts[2];
+            boolean isNonLGA = isNonLGAText.equalsIgnoreCase("1");
+
 
             ExcelCategory category = new ExcelCategory(categoryName);
             if (!categories.contains(category)) {
                 categories.add(category);
             }
-            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName));
+            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA));
         }
 
         return categories;
@@ -336,11 +342,17 @@ public class LMISConfiguration implements IConfiguration {
         return dataElementGroupSet;
     }
 
-    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups) {
+    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups, boolean nonLGA) {
+        String value = "0";
+        if (nonLGA) {
+            value = "1";
+        }
+        AttributeValue attributeValue = AttributeValue.builder().attribute(lgaAttribute).value(value).build();
         DataElementGroup build = DataElementGroup.builder().
                 name(groupName)
                 .id(generateID(groupName))
                 .shortName(getShortName(groupName))
+                .attributeValues(Arrays.asList(attributeValue))
                 .dataElements(new ArrayList<DataElement>()).
                         build();
         if (groups.contains(build)) {
@@ -369,8 +381,8 @@ public class LMISConfiguration implements IConfiguration {
         return dataSet;
     }
 
-    private Attribute createAttribute() {
-        return Attribute.builder().id(generateID(LMISConfiguration.LMIS_ACTIVITY)).name(LMISConfiguration.LMIS_ACTIVITY).code(LMISConfiguration.LMIS_ACTIVITY).dataElementAttribute(true).valueType("string").build();
+    private Attribute createAttribute(String type, String name, boolean dataElementAttribute, boolean dataElementGroupAttribute) {
+        return Attribute.builder().id(generateID(name)).name(name).code(name).dataElementAttribute(dataElementAttribute).dataElementGroupAttribute(dataElementGroupAttribute).valueType(type).build();
     }
 
     private DataElement createDataElement(Attribute attribute, String dataElementName, DataElementType dataElementType) {
