@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
   ~
@@ -39,27 +38,39 @@
     android:textAlignment="center"
     android:background="@drawable/card">
 
+
+    <LinearLayout
+        android:id="@+id/layoutCheckbox"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewCommodityOutOfStock"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/not_in_stock"
+            android:textColor="@color/blue"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/checkboxCommoditySelected"
+            android:layout_width="wrap_content"
+            android:clickable="false"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textViewCommodityName"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_centerVertical="true"
+        android:ellipsize="marquee"
+        android:layout_toLeftOf="@id/layoutCheckbox"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/textViewCommodityOutOfStock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/not_in_stock"
-        android:textColor="@color/blue"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:visibility="gone" />
-
-    <CheckBox
-        android:id="@+id/checkboxCommoditySelected"
-        android:layout_width="wrap_content"
-        android:clickable="false"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" />
 
 </RelativeLayout>
