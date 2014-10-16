@@ -33,6 +33,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -42,10 +43,15 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.adjust;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -146,4 +152,42 @@ public class AdjustmentServiceTest {
         adjustmentService.save(adjustments);
         verify(alertsService).disableAllMonthlyStockCountAlerts();
     }
+
+    @Test
+    public void shouldReturnTotalQuantityAdjusted() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        adjust(commodity, 2, true, AdjustmentReason.PHYSICAL_COUNT, adjustmentService);
+        adjust(commodity, 5, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalAdjustments = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
+        assertThat(totalAdjustments, is(-3));
+    }
+
+    @Test
+    public void shouldReturnCorrectTotalQuantityAdjusted() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        adjust(commodity, 40, true, AdjustmentReason.PHYSICAL_COUNT, adjustmentService);
+        adjust(commodity, 5, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int totalAdjustments = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
+        assertThat(totalAdjustments, is(35));
+    }
+
+
 }

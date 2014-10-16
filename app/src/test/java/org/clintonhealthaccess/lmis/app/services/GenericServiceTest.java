@@ -86,13 +86,10 @@ public class GenericServiceTest {
     @Test
     public void shouldReturnTotalQuantityReceived() throws Exception {
         Commodity commodity = commodityService.all().get(0);
+        createReceive(commodity, 20);
+        createReceive(commodity, 30);
 
         Calendar calendar = Calendar.getInstance();
-        Date receiveDate = calendar.getTime();
-
-        createReceive(commodity, receiveDate, 20);
-        createReceive(commodity, receiveDate, 30);
-
         calendar.add(Calendar.DAY_OF_MONTH, -5);
         Date startingDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_MONTH, 10);
@@ -107,13 +104,10 @@ public class GenericServiceTest {
     @Test
     public void shouldReturnCorrectTotalQuantityReceived() throws Exception {
         Commodity commodity = commodityService.all().get(0);
+        createReceive(commodity, 200);
+        createReceive(commodity, 30);
 
         Calendar calendar = Calendar.getInstance();
-        Date receiveDate = calendar.getTime();
-
-        createReceive(commodity, receiveDate, 200);
-        createReceive(commodity, receiveDate, 30);
-
         calendar.add(Calendar.DAY_OF_MONTH, -5);
         Date startingDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_MONTH, 10);
@@ -129,11 +123,10 @@ public class GenericServiceTest {
     public void shouldReturnTotalQuantityDispensed() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
-        Calendar calendar = Calendar.getInstance();
-
         dispense(commodity, 2);
         dispense(commodity, 3);
 
+        Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
         Date startingDate = calendar.getTime();
         calendar.add(Calendar.DAY_OF_MONTH, 10);
@@ -216,8 +209,6 @@ public class GenericServiceTest {
         OrderItem orderItem = new OrderItem(orderCommodityViewModel);
         order.addItem(orderItem);
 
-        //CommoditySnapshotService commoditySnapshotService = mock(CommoditySnapshotService.class);
-
         orderService.saveOrder(order);
     }
 
@@ -235,8 +226,9 @@ public class GenericServiceTest {
         dispensingService.addDispensing(dispensing);
     }
 
-    private void createReceive(Commodity commodity, Date date, int quantityReceived) {
+    private void createReceive(Commodity commodity, int quantityReceived) {
         Receive receive = new Receive("LGA");
+
         ReceiveItem receiveItem = new ReceiveItem();
         receiveItem.setCommodity(commodity);
         receiveItem.setQuantityAllocated(quantityReceived);

@@ -33,6 +33,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -57,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.adjust;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
@@ -88,6 +90,9 @@ public class ReportsServiceTest {
     private DispensingService dispensingService;
     @Inject
     private LossService lossService;
+    @Inject
+    private AdjustmentService adjustmentService;
+
     private SimpleDateFormat dateFormatYear;
     private SimpleDateFormat dateFormatMonth;
 
@@ -217,6 +222,28 @@ public class ReportsServiceTest {
                 dateFormatMonth.format(endDate));
 
         assertThat(facilityStockReportItems.get(0).getCommoditiesLost(), is(4));
+    }
+
+    @Test
+    public void shouldReturnTotalQuantityAdjusted() throws Exception {
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        adjust(commodity, 6, true, AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY, adjustmentService);
+        adjust(commodity, 13, false, AdjustmentReason.PHYSICAL_COUNT, adjustmentService);
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
+                dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
+                dateFormatMonth.format(endDate));
+
+        assertThat(facilityStockReportItems.get(0).getCommoditiesAdjusted(), is(-7));
+
     }
 
     private void createLoss(Commodity commodity, int quantityLost) {

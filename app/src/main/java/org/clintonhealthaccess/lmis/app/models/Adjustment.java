@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.dhis.models.DataElementType;
@@ -37,13 +38,11 @@ import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @DatabaseTable
 public class Adjustment implements Serializable, Snapshotable {
-    public Adjustment() {
-        //orm likes
-    }
 
     @DatabaseField(foreign = true, canBeNull = false)
     Commodity commodity;
@@ -60,11 +59,20 @@ public class Adjustment implements Serializable, Snapshotable {
     @DatabaseField(canBeNull = false)
     private String reason;
 
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
+    private Date created;
+
+    public Adjustment() {
+        // ormLite likes
+        setDate();
+    }
+
     public Adjustment(Commodity commodity, int quantityEntered, boolean positive, String reason) {
         this.commodity = commodity;
         this.quantity = quantityEntered;
         this.positive = positive;
         this.reason = reason;
+        setDate();
     }
 
     public Commodity getCommodity() {
@@ -108,5 +116,9 @@ public class Adjustment implements Serializable, Snapshotable {
             return stock + quantity;
         }
         return stock - quantity;
+    }
+
+    private void setDate() {
+        this.created = new Date();
     }
 }

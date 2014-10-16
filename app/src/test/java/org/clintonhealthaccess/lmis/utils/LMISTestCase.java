@@ -30,14 +30,21 @@
 
 package org.clintonhealthaccess.lmis.utils;
 
+import com.google.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 import org.robolectric.Robolectric;
 import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 
 import roboguice.inject.InjectResource;
 
@@ -71,5 +78,10 @@ public class LMISTestCase {
         String content = IOUtils.toString(src);
         src.close();
         return content;
+    }
+
+    public static void adjust(Commodity commodity, int quantity, boolean positive, AdjustmentReason reason, AdjustmentService adjustmentService) {
+        Adjustment adjustment = new Adjustment(commodity, quantity, positive, reason.getName());
+        adjustmentService.save(Arrays.asList(adjustment));
     }
 }

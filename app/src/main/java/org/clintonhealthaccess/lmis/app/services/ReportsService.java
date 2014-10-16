@@ -63,7 +63,8 @@ public class ReportsService {
     private ReceiveService receiveService;
     @Inject
     private DispensingService dispensingService;
-
+    @Inject
+    private AdjustmentService adjustmentService;
     @Inject
     Context context;
 
@@ -87,8 +88,10 @@ public class ReportsService {
                 int quantityOrdered = GenericService.getTotal(commodity, startingDate, endDate,
                         Order.class, OrderItem.class, context);
 
+                int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
+
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
-                        openingStock, quantityReceived, 0, quantityLost, 0, 0, 0, quantityOrdered, quantityDispensed);
+                        openingStock, quantityReceived, quantityAdjusted, quantityLost, 0, 0, 0, quantityOrdered, quantityDispensed);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {
