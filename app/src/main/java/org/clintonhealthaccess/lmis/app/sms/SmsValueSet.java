@@ -7,10 +7,13 @@ import com.google.common.collect.Multimaps;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import lombok.Getter;
 
 import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.Collections2.transform;
@@ -18,7 +21,8 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.partition;
 
-public class SmsValueSet {
+@Getter
+public class SmsValueSet implements Serializable {
     private static final SimpleDateFormat SMS_PERIOD_DATE_FORMAT = new SimpleDateFormat("ddMM");
     private final List<SmsValue> values;
     private String prefix;

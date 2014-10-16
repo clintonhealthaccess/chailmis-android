@@ -159,7 +159,7 @@ public class CommoditySnapshotService {
 
     public void syncWithServerThroughSms(User user) {
         i("SMS Sync", "Checking snapshots...");
-        List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
+        final List<CommoditySnapshot> snapshots = getSmsReadySnapshots();
         i("SMS Sync", format("%d snapshots need to be synced through SMS", snapshots.size()));
         if (!isEmpty(snapshots)) {
             DataValueSet valueSet = toDataValueSet(snapshots, user.getFacilityCode());

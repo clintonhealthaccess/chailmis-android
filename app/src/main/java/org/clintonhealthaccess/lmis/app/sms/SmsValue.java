@@ -2,7 +2,9 @@ package org.clintonhealthaccess.lmis.app.sms;
 
 import com.thoughtworks.dhis.models.DataValue;
 
-public class SmsValue {
+import java.io.Serializable;
+
+public class SmsValue implements Serializable {
     private String dataElement;
     private String value;
 

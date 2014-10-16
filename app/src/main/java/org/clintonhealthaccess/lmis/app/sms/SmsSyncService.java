@@ -28,7 +28,7 @@ public class SmsSyncService {
         i("SMS Sync", format("Start syncing through SMS, %d messages in total", smsValueSets.size()));
         for (SmsValueSet smsValueSet : smsValueSets) {
             try {
-                i("SMS Sync", format("Sending ==> %s", smsValueSet));
+                i("SMS Sync", format("Sending to [%s] ==> %s", dhis2SmsNumber, smsValueSet));
                 smsManager.sendTextMessage(dhis2SmsNumber, null, smsValueSet.toString(), null, null);
             } catch(Exception e) {
                 e("SMS Sync", format("Failed to send smsValueSet: %s", smsValueSet), e);
