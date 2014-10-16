@@ -166,7 +166,6 @@ public class GenericServiceTest {
 
     }
 
-    @Ignore
     @Test
      public void shouldReturnValidQuantityLost() throws Exception {
         Commodity commodity = commodityService.all().get(0);

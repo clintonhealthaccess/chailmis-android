@@ -198,7 +198,6 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommoditiesDispenced(), is(3));
     }
 
-    @Ignore
     @Test
     public void shouldReturnValidQuantityLost() throws Exception {
         Category category = categories.get(0);

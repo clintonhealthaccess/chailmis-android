@@ -94,6 +94,9 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
 
     public int getTotalLosses() {
         int result = 0;
+        if(lossItemDetails == null){
+            lossItemDetails = copyOf(lossItemDetailCollection);
+        }
         for (LossItemDetail lossItemDetail : lossItemDetails) {
             result += lossItemDetail.getValue();
         }
