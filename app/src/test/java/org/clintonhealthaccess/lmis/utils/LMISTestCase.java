@@ -30,14 +30,26 @@
 
 package org.clintonhealthaccess.lmis.utils;
 
-import com.google.inject.Inject;
-
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
+import org.clintonhealthaccess.lmis.app.models.Order;
+import org.clintonhealthaccess.lmis.app.models.OrderItem;
+import org.clintonhealthaccess.lmis.app.models.OrderType;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
+import org.clintonhealthaccess.lmis.app.services.DispensingService;
+import org.clintonhealthaccess.lmis.app.services.LossService;
+import org.clintonhealthaccess.lmis.app.services.OrderService;
+import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 import org.robolectric.Robolectric;
 import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
@@ -45,6 +57,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Date;
 
 import roboguice.inject.InjectResource;
 
@@ -83,5 +96,49 @@ public class LMISTestCase {
     public static void adjust(Commodity commodity, int quantity, boolean positive, AdjustmentReason reason, AdjustmentService adjustmentService) {
         Adjustment adjustment = new Adjustment(commodity, quantity, positive, reason.getName());
         adjustmentService.save(Arrays.asList(adjustment));
+    }
+
+    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService) {
+        Receive receive = new Receive("LGA");
+
+        ReceiveItem receiveItem = new ReceiveItem();
+        receiveItem.setCommodity(commodity);
+        receiveItem.setQuantityAllocated(quantityReceived);
+        receiveItem.setQuantityReceived(quantityReceived);
+
+        receive.addReceiveItem(receiveItem);
+
+        receiveService.saveReceive(receive);
+    }
+
+    public static void dispense(Commodity commodity, int quantity, DispensingService dispensingService) {
+        Dispensing dispensing = new Dispensing();
+        DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
+        dispensing.addItem(dispensingItem);
+        dispensingService.addDispensing(dispensing);
+    }
+
+
+    public static void lose(Commodity commodity, int quantityLost, LossService lossService) {
+        Loss loss = new Loss();
+        LossItem lossItem = new LossItem(commodity, quantityLost);
+        loss.addLossItem(lossItem);
+        lossService.saveLoss(loss);
+    }
+
+
+    public static void order(Commodity commodity, int quantity, OrderService orderService) {
+        Order order = new Order();
+        order.setSrvNumber("TEST");
+        order.setOrderType(new OrderType(OrderType.ROUTINE));
+
+        OrderCommodityViewModel orderCommodityViewModel = new OrderCommodityViewModel(commodity, quantity);
+        orderCommodityViewModel.setOrderPeriodStartDate(new Date());
+        orderCommodityViewModel.setOrderPeriodEndDate(new Date());
+
+        OrderItem orderItem = new OrderItem(orderCommodityViewModel);
+        order.addItem(orderItem);
+
+        orderService.saveOrder(order);
     }
 }

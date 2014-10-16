@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
@@ -39,28 +38,25 @@ import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.Order;
 import org.clintonhealthaccess.lmis.app.models.OrderItem;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import static org.clintonhealthaccess.lmis.app.services.GenericService.getTotal;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.lose;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.order;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -86,8 +82,8 @@ public class GenericServiceTest {
     @Test
     public void shouldReturnTotalQuantityReceived() throws Exception {
         Commodity commodity = commodityService.all().get(0);
-        createReceive(commodity, 20);
-        createReceive(commodity, 30);
+        receive(commodity, 20, receiveService);
+        receive(commodity, 30, receiveService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -104,8 +100,8 @@ public class GenericServiceTest {
     @Test
     public void shouldReturnCorrectTotalQuantityReceived() throws Exception {
         Commodity commodity = commodityService.all().get(0);
-        createReceive(commodity, 200);
-        createReceive(commodity, 30);
+        receive(commodity, 200, receiveService);
+        receive(commodity, 30, receiveService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -123,8 +119,8 @@ public class GenericServiceTest {
     public void shouldReturnTotalQuantityDispensed() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
-        dispense(commodity, 2);
-        dispense(commodity, 3);
+        dispense(commodity, 2, dispensingService);
+        dispense(commodity, 3, dispensingService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -138,13 +134,13 @@ public class GenericServiceTest {
 
     }
 
-    
+
     @Test
     public void shouldReturnCorrectTotalQuantityDispensed() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
-        dispense(commodity, 1);
-        dispense(commodity, 1);
+        dispense(commodity, 1, dispensingService);
+        dispense(commodity, 1, dispensingService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -160,11 +156,11 @@ public class GenericServiceTest {
     }
 
     @Test
-     public void shouldReturnValidQuantityLost() throws Exception {
+    public void shouldReturnValidQuantityLost() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
-        createLoss(commodity, 3);
-        createLoss(commodity, 2);
+        lose(commodity, 3, lossService);
+        lose(commodity, 2, lossService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -182,8 +178,8 @@ public class GenericServiceTest {
     public void shouldReturnValidQuantityOrdered() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
-        createOrder(commodity, 1);
-        createOrder(commodity, 1);
+        order(commodity, 1, orderService);
+        order(commodity, 1, orderService);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, -5);
@@ -196,50 +192,4 @@ public class GenericServiceTest {
                 Order.class, OrderItem.class, application);
         assertThat(totalOrdered, is(2));
     }
-
-    private void createOrder(Commodity commodity, int quantity) {
-        Order order = new Order();
-        order.setSrvNumber("TEST");
-        order.setOrderType(new OrderType(OrderType.ROUTINE));
-
-        OrderCommodityViewModel orderCommodityViewModel = new OrderCommodityViewModel(commodity, quantity);
-        orderCommodityViewModel.setOrderPeriodStartDate(new Date());
-        orderCommodityViewModel.setOrderPeriodEndDate(new Date());
-
-        OrderItem orderItem = new OrderItem(orderCommodityViewModel);
-        order.addItem(orderItem);
-
-        orderService.saveOrder(order);
-    }
-
-    private void createLoss(Commodity commodity, int quantityLost) {
-        Loss loss = new Loss();
-        LossItem lossItem = new LossItem(commodity, quantityLost);
-        loss.addLossItem(lossItem);
-        lossService.saveLoss(loss);
-    }
-
-    private void dispense(Commodity commodity, int quantity) {
-        Dispensing dispensing = new Dispensing();
-        DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
-        dispensing.addItem(dispensingItem);
-        dispensingService.addDispensing(dispensing);
-    }
-
-    private void createReceive(Commodity commodity, int quantityReceived) {
-        Receive receive = new Receive("LGA");
-
-        ReceiveItem receiveItem = new ReceiveItem();
-        receiveItem.setCommodity(commodity);
-        receiveItem.setQuantityAllocated(quantityReceived);
-        receiveItem.setQuantityReceived(quantityReceived);
-
-        receive.addReceiveItem(receiveItem);
-
-        receiveService.saveReceive(receive);
-    }
-
-
-
-
 }

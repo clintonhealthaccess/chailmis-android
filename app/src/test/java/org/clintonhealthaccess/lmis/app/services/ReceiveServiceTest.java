@@ -121,8 +121,4 @@ public class ReceiveServiceTest {
         assertThat(receiveDao.queryForAll().get(0).getReceiveItemsCollection().size(), is(1));
         assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
     }
-
-
-
-
 }

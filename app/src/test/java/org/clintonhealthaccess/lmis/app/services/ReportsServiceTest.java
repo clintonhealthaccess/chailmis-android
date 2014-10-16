@@ -59,6 +59,9 @@ import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.adjust;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.lose;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
@@ -173,8 +176,8 @@ public class ReportsServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        createReceive(commodity, endDate, 20);
-        createReceive(commodity, endDate, 30);
+        receive(commodity, 20, receiveService);
+        receive(commodity, 30, receiveService);
 
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
                 dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
@@ -193,8 +196,8 @@ public class ReportsServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        dispense(commodity, 2);
-        dispense(commodity, 1);
+        dispense(commodity, 2, dispensingService);
+        dispense(commodity, 1, dispensingService);
 
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
                 dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
@@ -214,8 +217,8 @@ public class ReportsServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        createLoss(commodity, 2);
-        createLoss(commodity, 2);
+        lose(commodity, 2, lossService);
+        lose(commodity, 2, lossService);
 
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
                 dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
@@ -244,33 +247,6 @@ public class ReportsServiceTest {
 
         assertThat(facilityStockReportItems.get(0).getCommoditiesAdjusted(), is(-7));
 
-    }
-
-    private void createLoss(Commodity commodity, int quantityLost) {
-        Loss loss = new Loss();
-        LossItem lossItem = new LossItem(commodity, quantityLost);
-        loss.addLossItem(lossItem);
-        lossService.saveLoss(loss);
-    }
-
-    private void dispense(Commodity commodity, int quantity) {
-        Dispensing dispensing = new Dispensing();
-        DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
-        dispensing.addItem(dispensingItem);
-        dispensingService.addDispensing(dispensing);
-    }
-
-    private void createReceive(Commodity commodity, Date date, int quantityReceived) {
-        Receive receive = new Receive("LGA");
-
-        ReceiveItem receiveItem = new ReceiveItem();
-        receiveItem.setCommodity(commodity);
-        receiveItem.setQuantityAllocated(quantityReceived);
-        receiveItem.setQuantityReceived(quantityReceived);
-
-        receive.addReceiveItem(receiveItem);
-
-        receiveService.saveReceive(receive);
     }
 
     private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {
