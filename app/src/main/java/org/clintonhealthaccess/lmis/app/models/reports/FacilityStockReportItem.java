@@ -34,12 +34,12 @@ public class FacilityStockReportItem {
     private String commodityName;
     private int openingStock, commoditiesReceived, commoditiesAdjusted,
             commoditiesLost, commodityAMC, commodityStockOutDays,
-            commodityMaxThreshold, commodityOrderQuantity, commoditiesDispenced;
+            commodityMaxThreshold, commodityOrderQuantity, commoditiesDispensed, stockOnHand;
 
     public FacilityStockReportItem(String commodityName, int openingStock, int commoditiesReceived,
                                    int commoditiesAdjusted, int commoditiesLost, int commodityAMC,
                                    int commodityStockOutDays,
-                                   int commodityMaxThreshold, int commodityOrderQuantity, int commoditiesDispenced) {
+                                   int commodityMaxThreshold, int commodityOrderQuantity, int commoditiesDispensed, int stockOnHand) {
         this.commodityName = commodityName;
         this.openingStock = openingStock;
         this.commoditiesReceived = commoditiesReceived;
@@ -49,86 +49,51 @@ public class FacilityStockReportItem {
         this.commodityStockOutDays = commodityStockOutDays;
         this.commodityMaxThreshold = commodityMaxThreshold;
         this.commodityOrderQuantity = commodityOrderQuantity;
-        this.commoditiesDispenced = commoditiesDispenced;
+        this.commoditiesDispensed = commoditiesDispensed;
+        this.stockOnHand = stockOnHand;
     }
 
     public String getCommodityName() {
         return commodityName;
     }
 
-    public void setCommodityName(String commodityName) {
-        this.commodityName = commodityName;
-    }
-
     public int getOpeningStock() {
         return openingStock;
-    }
-
-    public void setOpeningStock(int openingStock) {
-        this.openingStock = openingStock;
     }
 
     public int getCommoditiesReceived() {
         return commoditiesReceived;
     }
 
-    public void setCommoditiesReceived(int commoditiesReceived) {
-        this.commoditiesReceived = commoditiesReceived;
-    }
-
     public int getCommoditiesAdjusted() {
         return commoditiesAdjusted;
-    }
-
-    public void setCommoditiesAdjusted(int commoditiesAdjusted) {
-        this.commoditiesAdjusted = commoditiesAdjusted;
     }
 
     public int getCommoditiesLost() {
         return commoditiesLost;
     }
 
-    public void setCommoditiesLost(int commoditiesLost) {
-        this.commoditiesLost = commoditiesLost;
-    }
-
     public int getCommodityAMC() {
         return commodityAMC;
-    }
-
-    public void setCommodityAMC(int commodityAMC) {
-        this.commodityAMC = commodityAMC;
     }
 
     public int getCommodityStockOutDays() {
         return commodityStockOutDays;
     }
 
-    public void setCommodityStockOutDays(int commodityStockOutDays) {
-        this.commodityStockOutDays = commodityStockOutDays;
-    }
-
     public int getCommodityMaxThreshold() {
         return commodityMaxThreshold;
-    }
-
-    public void setCommodityMaxThreshold(int commodityMaxThreshold) {
-        this.commodityMaxThreshold = commodityMaxThreshold;
     }
 
     public int getCommodityOrderQuantity() {
         return commodityOrderQuantity;
     }
 
-    public void setCommodityOrderQuantity(int commodityOrderQuantity) {
-        this.commodityOrderQuantity = commodityOrderQuantity;
+    public int getCommoditiesDispensed() {
+        return commoditiesDispensed;
     }
 
-    public int getCommoditiesDispenced() {
-        return commoditiesDispenced;
-    }
-
-    public void setCommoditiesDispenced(int commoditiesDispenced) {
-        this.commoditiesDispenced = commoditiesDispenced;
+    public int getStockOnHand() {
+        return stockOnHand;
     }
 }

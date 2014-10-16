@@ -37,19 +37,12 @@ import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
-import org.clintonhealthaccess.lmis.app.models.Dispensing;
-import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.Loss;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -203,7 +196,7 @@ public class ReportsServiceTest {
                 dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate),
                 dateFormatMonth.format(endDate));
 
-        assertThat(facilityStockReportItems.get(0).getCommoditiesDispenced(), is(3));
+        assertThat(facilityStockReportItems.get(0).getCommoditiesDispensed(), is(3));
     }
 
     @Test
@@ -247,6 +240,31 @@ public class ReportsServiceTest {
 
         assertThat(facilityStockReportItems.get(0).getCommoditiesAdjusted(), is(-7));
 
+    }
+
+    @Test
+    public void shouldReturnCorrectStockOnHand() throws Exception {
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date currentDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        calendar.add(Calendar.DAY_OF_MONTH, -2);
+        int difference = 3;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(currentDate), dateFormatMonth.format(currentDate));
+
+        int expectedQuantity = commodity.getStockOnHand() + difference;
+        int stockOnHand = facilityStockReportItems.get(0).getStockOnHand();
+        assertThat(stockOnHand, is(expectedQuantity));
     }
 
     private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {

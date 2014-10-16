@@ -77,7 +77,9 @@ public class ReportsService {
             Date endDate = convertToDate(endingYear, endingMonth, false);
 
             for (Commodity commodity : category.getCommodities()) {
-                int openingStock = getOpeningStock(commodity, startingDate);
+
+                int openingStock = getLatestStock(commodity, startingDate, true);
+
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
                 int quantityDispensed = GenericService.getTotal(commodity, startingDate, endDate,
@@ -90,8 +92,11 @@ public class ReportsService {
 
                 int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
 
+                int stockOnHand = getLatestStock(commodity, endDate, false);
+
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
-                        openingStock, quantityReceived, quantityAdjusted, quantityLost, 0, 0, 0, quantityOrdered, quantityDispensed);
+                        openingStock, quantityReceived, quantityAdjusted, quantityLost,
+                        0, 0, 0, quantityOrdered, quantityDispensed, stockOnHand);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {
@@ -101,16 +106,16 @@ public class ReportsService {
         return facilityStockReportItems;
     }
 
-    private int getOpeningStock(Commodity commodity, Date date) throws Exception {
+    private int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        Date lastDayOfPreviousMonth = calendar.getTime();
+        if (isOpeningStock) {
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        Date requiredDate = calendar.getTime();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
-
-        StockItemSnapshot stockItemSnapshot1 = stockItemSnapshotService.get(commodity, lastDayOfPreviousMonth);
-        StockItemSnapshot latestStockItemSnapshot = stockItemSnapshotService.getLatest(commodity, lastDayOfPreviousMonth);
+        StockItemSnapshot latestStockItemSnapshot = stockItemSnapshotService.getLatest(commodity,
+                requiredDate);
         if (latestStockItemSnapshot != null) {
             return latestStockItemSnapshot.getQuantity();
         }
