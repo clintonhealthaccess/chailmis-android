@@ -152,8 +152,6 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
     }
 
     public List<LossItemDetail> getLossItemDetails() {
-        if (lossItemDetailCollection != null)
-            lossItemDetails = copyOf(lossItemDetailCollection);
         return lossItemDetails;
     }
 
