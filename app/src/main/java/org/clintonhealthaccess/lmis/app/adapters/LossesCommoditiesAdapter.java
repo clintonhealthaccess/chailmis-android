@@ -50,6 +50,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityVie
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesViewModelCommand;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.LossReason;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
         RelativeLayout relativeLayoutContainer = (RelativeLayout) rowView.findViewById(R.id.relativeLayoutContainer);
         LinearLayout linearLayout = addLinearLayout(relativeLayoutContainer, 1, textViewCommodityName.getId(), R.id.imageButtonCancel);
         for (LossReason lossReason : viewModel.getLossReasons()) {
-            EditText editText = createLossAmountEditText(linearLayout, lossReason);
+            NumberTextView editText = createLossAmountEditText(linearLayout, lossReason);
             setUpLosses(textViewCommodityName, viewModel, editText, lossReason);
             i++;
             if (i % 3 == 0) {
@@ -119,12 +120,12 @@ public class LossesCommoditiesAdapter extends ArrayAdapter<LossesCommodityViewMo
             view.setId(R.id.dynamicLinearLayout3);
     }
 
-    private EditText createLossAmountEditText(LinearLayout lossAmountsLayout, LossReason lossReason) {
+    private NumberTextView createLossAmountEditText(LinearLayout lossAmountsLayout, LossReason lossReason) {
         TextView label = new TextView(getContext());
         label.setText(lossReason.getLabel());
         label.setTextSize(COMPLEX_UNIT_SP, 16);
 
-        EditText editText = new EditText(getContext());
+        NumberTextView editText = new NumberTextView(getContext());
         TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT, 1);
         editText.setLayoutParams(layoutParams);
         editText.setTextSize(COMPLEX_UNIT_SP, 16);

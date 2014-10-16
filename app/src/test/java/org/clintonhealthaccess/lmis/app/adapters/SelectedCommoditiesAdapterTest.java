@@ -27,82 +27,76 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.watchers;
+package org.clintonhealthaccess.lmis.app.adapters;
 
-import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.DispenseActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.StockService;
-import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
+import org.robolectric.Robolectric;
 
-import static android.text.Editable.Factory;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.robolectric.Robolectric.application;
+import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class QuantityTextWatcherTest {
-
-    StockService mockStockService;
-    private TextWatcher watcher;
-    private NumberTextView editText;
+public class SelectedCommoditiesAdapterTest {
+    private DispenseActivity dispenseActivity;
+    private SelectedCommoditiesAdapter adapter;
+    private StockService stockServiceMock;
 
     @Before
     public void setUp() throws Exception {
-        mockStockService = mock(StockService.class);
+        stockServiceMock = mock(StockService.class);
+        when(stockServiceMock.getStockLevelFor((Commodity) anyObject())).thenReturn(10);
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
-                bind(StockService.class).toInstance(mockStockService);
+                bind(StockService.class).toInstance(stockServiceMock);
             }
         });
-        editText = spy(new NumberTextView(application));
-        watcher = new QuantityTextWatcher(editText, new BaseCommodityViewModel(new Commodity("")));
+        dispenseActivity = setupActivity(DispenseActivity.class);
+        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_commodity_list_item, new ArrayList<BaseCommodityViewModel>());
     }
 
     @Test
-    public void shouldShowErrorIfQuantityIsGreaterThanStockAvailable() throws Exception {
-        when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(2);
-        watcher.afterTextChanged(new Factory().newEditable("12"));
-        verify(editText).setError(anyString());
-
+    public void shouldShowKeyboardWhenTextIsEnteredIntoQuantityField() throws Exception {
+        Commodity commodity = new Commodity("food");
+        BaseCommodityViewModel viewModel = new BaseCommodityViewModel(commodity);
+        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_commodity_list_item, Arrays.asList(viewModel));
+        View rowView = getRowView();
+        ANDROID.assertThat(dispenseActivity.keyBoardView).isNotShown();
+        EditText editText = (EditText) rowView.findViewById(R.id.editTextQuantity);
+        editText.performClick();
+        ANDROID.assertThat(dispenseActivity.keyBoardView).isShown();
     }
 
-    @Test
-    public void shouldShowErrorWithRemainingStockIfQuantityIsGreaterThanStockAvailable() throws Exception {
-        when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(2);
-        watcher.afterTextChanged(new Factory().newEditable("12"));
-        assertThat(editText.getError().toString(), containsString("(2)"));
-
+    private View getRowView() {
+        ViewGroup genericLayout = getLinearLayout();
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_commodity_list_item, null);
+        return adapter.getView(0, convertView, genericLayout);
     }
 
-    @Test
-    public void shouldNotShowErrorIfQuantityIsLessThanStockAvailable() throws Exception {
-        when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(77);
-        watcher.afterTextChanged(new Factory().newEditable("4"));
-        verify(editText).setError(null);
+    private LinearLayout getLinearLayout() {
+        return new LinearLayout(dispenseActivity);
     }
-
-    @Test
-    public void shouldNotShowErrorIfQuantityIsEqualToStockAvailable() throws Exception {
-        when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(4);
-        watcher.afterTextChanged(new Factory().newEditable("4"));
-        verify(editText).setError(null);
-    }
-
-
 }

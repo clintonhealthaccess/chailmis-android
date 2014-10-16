@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,13 +78,10 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         TextView textViewLabel = (TextView) rowView.findViewById(R.id.textViewLabel);
         TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
-        final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
-        final EditText editTextStockCounted = (EditText) rowView.findViewById(R.id.editTextStockCounted);
+        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
+        final NumberTextView editTextStockCounted = (NumberTextView) rowView.findViewById(R.id.editTextStockCounted);
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
         final AdjustmentsViewModel commodityViewModel = getItem(position);
-
-        activity.setupEditTextForNumberInput(editTextQuantity);
-        activity.setupEditTextForNumberInput(editTextStockCounted);
 
         final List<String> types = new ArrayList<>();
 
@@ -182,6 +180,8 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                     int result = stockOnHand - quantity;
                     if (result < 0) {
                         editText.setError(String.format("Can't reduce stock by more than %d", stockOnHand));
+                    } else {
+                        editText.setError(null);
                     }
                 }
             }

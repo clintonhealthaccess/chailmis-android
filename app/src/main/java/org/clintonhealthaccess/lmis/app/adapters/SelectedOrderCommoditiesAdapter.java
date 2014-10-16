@@ -53,6 +53,7 @@ import org.clintonhealthaccess.lmis.app.events.OrderTypeChanged;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.utils.ViewHelpers;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.text.ParseException;
@@ -95,12 +96,11 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         View rowView = getRowView(parent);
         final OrderCommodityViewModel orderCommodityViewModel = getCommodityViewModel(position);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        final EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
+        final NumberTextView editTextOrderQuantity = (NumberTextView) rowView.findViewById(R.id.editTextOrderQuantity);
         final Spinner spinnerUnexpectedReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
-        orderActivity.setupEditTextForNumberInput(editTextOrderQuantity);
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         textViewCommodityName.setText(orderCommodityViewModel.getName());
@@ -354,6 +354,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
             setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
             if (quantityInt <= 0) {
                 editTextOrderQuantity.setError(adapter.getContext().getString(R.string.orderQuantityMustBeGreaterThanZero));
+            } else {
+                editTextOrderQuantity.setError(null);
             }
         }
 

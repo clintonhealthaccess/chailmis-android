@@ -69,6 +69,7 @@ public class QuantityTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable editable) {
         String value = editable.toString();
+        Log.e("KEYBOARD", value);
         if (!value.isEmpty()) {
             int quantity = getIntFromString(value);
             Log.i("Entered", String.format("%d", quantity));
@@ -77,6 +78,8 @@ public class QuantityTextWatcher implements TextWatcher {
             commodityViewModel.setQuantityEntered(quantity);
             if (quantity > stock_level) {
                 editTextQuantity.setError(String.format("The quantity entered is greater than Stock available (%d)", stock_level));
+            } else {
+                editTextQuantity.setError(null);
             }
         }
     }

@@ -69,7 +69,7 @@
             android:text="@string/allocated"
             android:textSize="16sp" />
 
-        <EditText
+        <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextAllocatedQuantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
             android:text="@string/received"
             android:textSize="16sp" />
 
-        <EditText
+        <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextReceivedQuantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

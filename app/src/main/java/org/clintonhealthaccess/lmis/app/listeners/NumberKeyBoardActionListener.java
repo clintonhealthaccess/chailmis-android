@@ -35,6 +35,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import org.clintonhealthaccess.lmis.app.activities.CommoditySelectableActivity;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 
 public class NumberKeyBoardActionListener implements KeyboardView.OnKeyboardActionListener {
     private CommoditySelectableActivity commoditySelectableActivity;
@@ -56,9 +57,8 @@ public class NumberKeyBoardActionListener implements KeyboardView.OnKeyboardActi
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
 
-
         View focusCurrent = commoditySelectableActivity.getWindow().getCurrentFocus();
-        if (focusCurrent == null || focusCurrent.getClass() != EditText.class) return;
+        if (focusCurrent == null || focusCurrent.getClass() != NumberTextView.class) return;
         EditText edittext = (EditText) focusCurrent;
         Editable editable = edittext.getText();
         int start = edittext.getSelectionStart();

@@ -61,7 +61,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextQuantity"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             android:layout_marginRight="20dp"
             android:textSize="18sp" />
 
-        <EditText
+        <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextStockCounted"
             android:layout_width="150dp"
             android:visibility="gone"

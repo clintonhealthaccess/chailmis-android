@@ -42,6 +42,7 @@ import android.widget.TextView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.util.List;
@@ -67,8 +68,8 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
 
         holder.textViewCommodityName = (TextView) convertView.findViewById(R.id.textViewCommodityName);
         holder.imageButtonCancel = (ImageButton) convertView.findViewById(R.id.imageButtonCancel);
-        holder.editTextAllocatedQuantity = (EditText) convertView.findViewById(R.id.editTextAllocatedQuantity);
-        holder.editTextReceivedQuantity = (EditText) convertView.findViewById(R.id.editTextReceivedQuantity);
+        holder.editTextAllocatedQuantity = (NumberTextView) convertView.findViewById(R.id.editTextAllocatedQuantity);
+        holder.editTextReceivedQuantity = (NumberTextView) convertView.findViewById(R.id.editTextReceivedQuantity);
         holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
 
 

@@ -42,6 +42,7 @@ import android.widget.TextView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.QuantityTextWatcher;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewMo
         View rowView = inflater.inflate(resource, parent, false);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
-        final EditText editTextQuantity = (EditText) rowView.findViewById(R.id.editTextQuantity);
+        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
         final BaseCommodityViewModel commodityViewModel = getItem(position);
         textViewCommodityName.setText(commodityViewModel.getName());
         setupQuantity(editTextQuantity, commodityViewModel);

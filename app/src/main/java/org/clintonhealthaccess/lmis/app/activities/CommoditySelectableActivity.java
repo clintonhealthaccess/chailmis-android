@@ -55,6 +55,9 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
+import org.clintonhealthaccess.lmis.app.events.NumberTextViewFocusChanged;
+import org.clintonhealthaccess.lmis.app.events.NumberTextViewOnClick;
+import org.clintonhealthaccess.lmis.app.events.NumberTextViewOnTouch;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.listeners.NumberKeyBoardActionListener;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -310,6 +313,22 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         public String toastMessage() {
             return getString(toastMessageStringId);
         }
+    }
+
+    public void onEvent(NumberTextViewFocusChanged event) {
+        if (event.hasFocus) showCustomKeyboard(event.view);
+        else hideCustomKeyboard();
+    }
+
+    public void onEvent(NumberTextViewOnClick event) {
+        showCustomKeyboard(event.view);
+    }
+
+    public void onEvent(NumberTextViewOnTouch event) {
+        int inType = event.view.getInputType();
+        event.view.setInputType(InputType.TYPE_NULL);
+        event.view.onTouchEvent(event.motionEvent);
+        event.view.setInputType(inType);
     }
 
 }
