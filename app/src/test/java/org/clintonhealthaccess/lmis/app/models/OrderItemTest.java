@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.thoughtworks.dhis.models.DataElementType;
+
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.junit.Test;
 
@@ -45,12 +47,12 @@ public class OrderItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction amountActivity = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
         CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
-        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_REASON_FOR_ORDER);
-        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_ORDERED_AMOUNT);
-        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT)).thenReturn(emergencyOrder);
-        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER)).thenReturn(emergencyReason);
-        when(commodity.getCommodityAction(CommodityAction.ORDERED_AMOUNT)).thenReturn(amountActivity);
-        when(commodity.getCommodityAction(CommodityAction.REASON_FOR_ORDER)).thenReturn(reasonActivity);
+        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity());
+        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", DataElementType.EMERGENCY_ORDERED_AMOUNT.getActivity());
+        when(commodity.getCommodityAction(DataElementType.EMERGENCY_ORDERED_AMOUNT.getActivity())).thenReturn(emergencyOrder);
+        when(commodity.getCommodityAction(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())).thenReturn(emergencyReason);
+        when(commodity.getCommodityAction(DataElementType.ORDERED_AMOUNT.getActivity())).thenReturn(amountActivity);
+        when(commodity.getCommodityAction(DataElementType.REASON_FOR_ORDER.getActivity())).thenReturn(reasonActivity);
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         String testReason = "reason";
         commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));
@@ -70,12 +72,12 @@ public class OrderItemTest {
         Commodity commodity = mock(Commodity.class);
         CommodityAction commodityActionRoutineAmountOrdered = new CommodityAction(commodity, "12", "12", OrderItem.ORDERED_AMOUNT);
         CommodityAction reasonActivity = new CommodityAction(commodity, "12", "demand", OrderItem.ORDER_REASON);
-        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_REASON_FOR_ORDER);
-        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", CommodityAction.EMERGENCY_ORDERED_AMOUNT);
-        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT)).thenReturn(emergencyOrder);
-        when(commodity.getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER)).thenReturn(emergencyReason);
-        when(commodity.getCommodityAction(CommodityAction.ORDERED_AMOUNT)).thenReturn(commodityActionRoutineAmountOrdered);
-        when(commodity.getCommodityAction(CommodityAction.REASON_FOR_ORDER)).thenReturn(reasonActivity);
+        CommodityAction emergencyOrder = new CommodityAction(commodity, "12", "demand", DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity());
+        CommodityAction emergencyReason = new CommodityAction(commodity, "12", "demand", DataElementType.EMERGENCY_ORDERED_AMOUNT.getActivity());
+        when(commodity.getCommodityAction(DataElementType.EMERGENCY_ORDERED_AMOUNT.getActivity())).thenReturn(emergencyOrder);
+        when(commodity.getCommodityAction(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())).thenReturn(emergencyReason);
+        when(commodity.getCommodityAction(DataElementType.ORDERED_AMOUNT.getActivity())).thenReturn(commodityActionRoutineAmountOrdered);
+        when(commodity.getCommodityAction(DataElementType.REASON_FOR_ORDER.getActivity())).thenReturn(reasonActivity);
         OrderCommodityViewModel commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         String testReason = "reason";
         commodityViewModel.setReasonForUnexpectedOrderQuantity(new OrderReason(testReason));

@@ -33,6 +33,7 @@ import android.content.Context;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
 
@@ -161,13 +162,16 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     public void shouldCreateCommoditySnapshotForReceiving() throws Exception {
         Commodity commodity = commodityDao.queryForAll().get(0);
         ReceiveItem receiveItem = new ReceiveItem(commodity, 10, 10);
-        receiveItem.setReceive(new Receive(true, null));
+        receiveItem.setReceive(new Receive("Facility", null));
 
         commoditySnapshotService.add(receiveItem);
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
-        assertThat(commoditySnapshots.size(), is(2));
-
+        assertThat(commoditySnapshots.size(), is(3));
+        for(CommoditySnapshot snapshot : commoditySnapshots){
+            System.out.println(snapshot.getValue());
+            System.out.println(snapshot.getPeriod());
+        }
         CommoditySnapshot receivedValueSnapshot = commoditySnapshots.get(0);
         assertThat(receivedValueSnapshot.getValue(), is("10"));
         assertThat(receivedValueSnapshot.getPeriod(), is(PERIOD_DATE_FORMAT.format(new Date())));
@@ -188,12 +192,12 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         allocationItem.setQuantity(10);
 
         ReceiveItem receiveItem = new ReceiveItem(commodity, 10, 10);
-        receiveItem.setReceive(new Receive(false, allocation));
+        receiveItem.setReceive(new Receive("LGA", allocation));
 
         commoditySnapshotService.add(receiveItem);
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
-        assertThat(commoditySnapshots.size(), is(2));
+        assertThat(commoditySnapshots.size(), is(3));
 
         CommoditySnapshot receivedValueSnapshot = commoditySnapshots.get(0);
         assertThat(receivedValueSnapshot.getValue(), is("10"));
@@ -412,8 +416,9 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
         generateCommodityAction(dataSet, commodity, "DISPENSING", DispensingItem.DISPENSE);
         generateCommodityAction(dataSet, commodity, "ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
-        generateCommodityAction(dataSet, commodity, "RECEIVED", CommodityAction.RECEIVED);
-        generateCommodityAction(dataSet, commodity, "RECEIVE_DATE", CommodityAction.RECEIVE_DATE);
+        generateCommodityAction(dataSet, commodity, "RECEIVED", DataElementType.RECEIVED.getActivity());
+        generateCommodityAction(dataSet, commodity, "RECEIVE_DATE", DataElementType.RECEIVE_DATE.getActivity());
+        generateCommodityAction(dataSet, commodity, "RECEIVE_SOURCE", DataElementType.RECEIVE_SOURCE.getActivity());
     }
 
     private void generateCommodityAction(DataSet dataSet, Commodity commodity, String nameTag, String type) {

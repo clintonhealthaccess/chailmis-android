@@ -71,7 +71,7 @@ public class ReceiveConfirmFragmentTest {
             }
         });
 
-        ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(new Receive());
+        ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(new Receive("LGA"));
         startFragment(receiveConfirmFragment);
     }
 

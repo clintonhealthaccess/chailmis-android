@@ -34,6 +34,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
@@ -48,8 +49,6 @@ import lombok.Setter;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVED;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVE_DATE;
 
 @Getter
 @Setter
@@ -86,10 +85,10 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
         Function<CommodityAction, CommoditySnapshotValue> forReceivedAction = new Function<CommodityAction, CommoditySnapshotValue>() {
             @Override
             public CommoditySnapshotValue apply(CommodityAction input) {
-                if (receive.isReceiveFromFacility()) {
-                    return new CommoditySnapshotValue(input, quantityReceived);
-                } else {
+                if (receive.isRecievingFromLGA()) {
                     return new CommoditySnapshotValue(input, quantityReceived, getAllocationPeriod());
+                } else {
+                    return new CommoditySnapshotValue(input, quantityReceived);
                 }
             }
         };
@@ -97,18 +96,29 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
             @Override
             public CommoditySnapshotValue apply(CommodityAction input) {
                 String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-                if (receive.isReceiveFromFacility()) {
-                    return new CommoditySnapshotValue(input, today);
-                } else {
+
+                if (receive.isRecievingFromLGA()) {
                     return new CommoditySnapshotValue(input, today, getAllocationPeriod());
+                } else {
+                    return new CommoditySnapshotValue(input, today);
                 }
             }
         };
 
-        List<CommoditySnapshotValue> receivedValues = filterCommodityActions(RECEIVED).transform(forReceivedAction).toList();
-        List<CommoditySnapshotValue> receiveDateValues = filterCommodityActions(RECEIVE_DATE).transform(forReceiveDateAction).toList();
+        Function<CommodityAction, CommoditySnapshotValue> forReceivedSource = new Function<CommodityAction, CommoditySnapshotValue>() {
+            @Override
+            public CommoditySnapshotValue apply(CommodityAction input) {
+                String source = receive.getSource();
+                return new CommoditySnapshotValue(input, source);
+            }
+        };
+
+        List<CommoditySnapshotValue> receivedValues = filterCommodityActions(DataElementType.RECEIVED.getActivity()).transform(forReceivedAction).toList();
+        List<CommoditySnapshotValue> receiveDateValues = filterCommodityActions(DataElementType.RECEIVE_DATE.getActivity()).transform(forReceiveDateAction).toList();
+        List<CommoditySnapshotValue> receiveSourceValues = filterCommodityActions(DataElementType.RECEIVE_SOURCE.getActivity()).transform(forReceivedSource).toList();
         List<CommoditySnapshotValue> result = newArrayList(receivedValues);
         result.addAll(receiveDateValues);
+        result.addAll(receiveSourceValues);
         return result;
     }
 

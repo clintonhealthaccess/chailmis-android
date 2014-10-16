@@ -41,6 +41,7 @@ import com.thoughtworks.dhis.models.AttributeValue;
 import com.thoughtworks.dhis.models.DataElement;
 import com.thoughtworks.dhis.models.DataElementGroup;
 import com.thoughtworks.dhis.models.DataElementGroupSet;
+import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
 import com.thoughtworks.dhis.models.OptionSet;
@@ -76,8 +77,6 @@ import roboguice.inject.InjectResource;
 import static android.util.Log.e;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATED;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.ALLOCATION_ID;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
 public class Dhis2 implements LmisServer {
@@ -202,8 +201,8 @@ public class Dhis2 implements LmisServer {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
-            String dataSet2 = getDataSetId(commodities, CommodityAction.AMC);
-            String dataSetId = getDataSetId(commodities, CommodityAction.STOCK_ON_HAND);
+            String dataSet2 = getDataSetId(commodities, DataElementType.AMC.getActivity());
+            String dataSetId = getDataSetId(commodities, DataElementType.STOCK_ON_HAND.getActivity());
             valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today(), dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
@@ -216,7 +215,7 @@ public class Dhis2 implements LmisServer {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
-            String dataSetId = getDataSetId(commodities, ALLOCATED);
+            String dataSetId = getDataSetId(commodities, DataElementType.ALLOCATED.getActivity());
             valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today());
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
@@ -226,7 +225,7 @@ public class Dhis2 implements LmisServer {
         return from(commodityActionValues).filter(new Predicate<CommodityActionValue>() {
             @Override
             public boolean apply(CommodityActionValue input) {
-                return input.getCommodityAction().getActivityType().equals(ALLOCATED);
+                return input.getCommodityAction().getActivityType().equals(DataElementType.ALLOCATED.getActivity());
             }
         }).toList();
     }
@@ -299,7 +298,7 @@ public class Dhis2 implements LmisServer {
                 if (commodityAction == null) {
                     System.out.println("Data element: " + input.getDataElement());
                     System.out.println("Data value: " + input.getValue());
-                    commodityAction = new CommodityAction(null, input.getDataElement(), ALLOCATION_ID, ALLOCATED);
+                    commodityAction = new CommodityAction(null, input.getDataElement(), DataElementType.ALLOCATION_ID.getActivity(), DataElementType.ALLOCATED.getActivity());
                 }
                 return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
             }

@@ -37,8 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -51,7 +50,6 @@ import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
-import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -62,6 +60,7 @@ import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -77,8 +76,9 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     @InjectView(R.id.textViewAllocationId)
     AutoCompleteTextView textViewAllocationId;
 
-    @InjectView(R.id.checkBoxReceiveFromFacility)
-    public CheckBox checkBoxReceiveFromFacility;
+
+    @InjectView(R.id.spinnerSource)
+    public Spinner spinnerSource;
 
     @Inject
     AllocationService allocationService;
@@ -119,24 +119,38 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         completedAllocationIds = allocationService.getReceivedAllocationIds();
         setupAllocationIdTextView();
         setupReceiveButton();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getReceiveSources());
+        spinnerSource.setAdapter(adapter);
+        spinnerSource.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                        String selected = getReceiveSources().get(position);
+                        if (selected.contains(getString(R.string.lga))) {
+                            setAllocation(textViewAllocationId.getText().toString());
+                            textViewAllocationId.setEnabled(true);
+                        } else {
+                            allocation = null;
+                            textViewAllocationId.setError(null);
+                            textViewAllocationId.setEnabled(false);
+                        }
+                    }
 
-        checkBoxReceiveFromFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                textViewAllocationId.setEnabled(!isChecked);
-                if (isChecked) {
-                    allocation = null;
-                    textViewAllocationId.setError(null);
-                } else {
-                    setAllocation(textViewAllocationId.getText().toString());
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
                 }
-            }
-        });
+        );
 
-        if(presetAllocationId != null){
+        if (presetAllocationId != null) {
             textViewAllocationId.setText(presetAllocationId);
         }
 
+    }
+
+    public List<String> getReceiveSources() {
+        return Arrays.asList(getString(R.string.lga), getString(R.string.facility), getString(R.string.zonal_store), getString(R.string.others));
     }
 
     @Override
@@ -164,7 +178,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     public Receive generateReceive() {
-        Receive receive = new Receive(checkBoxReceiveFromFacility.isChecked(), allocation);
+        Receive receive = new Receive(spinnerSource.getSelectedItem().toString(), allocation);
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
             ReceiveItem receiveItem = viewModel.getReceiveItem();
@@ -172,6 +186,8 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         }
         return receive;
     }
+
+
 
     @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {

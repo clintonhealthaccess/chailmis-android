@@ -172,7 +172,7 @@ public class LMISConfiguration implements IConfiguration {
                 DataElementType.EXPIRED, DataElementType.VVM_CHANGE, DataElementType.BREAKAGE, DataElementType.FROZEN,
                 DataElementType.LABEL_REMOVED, DataElementType.OTHERS));
 
-        List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED, DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE));
+        List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED, DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
         List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD, DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC,
                 DataElementType.TMC, DataElementType.BUFFER_STOCK, DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT, DataElementType.MAXIMUM_STOCK_LEVEL, DataElementType.MINIMUM_STOCK_LEVEL));
 

@@ -41,7 +41,6 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -56,21 +55,26 @@ public class Receive implements Serializable {
 
     private List<ReceiveItem> receiveItems = new ArrayList<>();
 
-    @DatabaseField(canBeNull = false)
-    private boolean receiveFromFacility = false;
 
     @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date created;
 
     private Allocation allocation;
+    @DatabaseField(canBeNull = false)
+    private String source;
 
-    public Receive(){
+    public Receive() {
+        setDateCreated();
+    }
+
+    public Receive(String source) {
+        this.setSource(source);
         setDateCreated();
     }
 
 
-    public Receive(boolean receiveFromFacility, Allocation allocation){
-        this.receiveFromFacility = receiveFromFacility;
+    public Receive(String source, Allocation allocation) {
+        this.source = source;
         this.allocation = allocation;
         setDateCreated();
     }
@@ -82,5 +86,9 @@ public class Receive implements Serializable {
 
     private void setDateCreated() {
         this.created = new Date();
+    }
+
+    public boolean isRecievingFromLGA() {
+        return source.contains("LGA");
     }
 }

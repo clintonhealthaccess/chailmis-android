@@ -29,14 +29,14 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.thoughtworks.dhis.models.DataElementType;
+
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVED;
-import static org.clintonhealthaccess.lmis.app.models.CommodityAction.RECEIVE_DATE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -46,10 +46,10 @@ public class ReceiveItemTest {
     @Test
     public void shouldSelectCorrectActivity() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityAction activity = new CommodityAction(commodity, "12", "12", RECEIVED);
+        CommodityAction activity = new CommodityAction(commodity, "12", "12", DataElementType.RECEIVED.getActivity());
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(activity));
 
-        Receive receive = new Receive(true, null);
+        Receive receive = new Receive("LGA", null);
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         item.setReceive(receive);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
@@ -59,11 +59,11 @@ public class ReceiveItemTest {
     @Test
     public void shouldConvertFieldsToCommoditySnapshotValues() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityAction receivedActivity = new CommodityAction(commodity, "1", "0.05ml Syringe x 1 RECEIVED", RECEIVED);
-        CommodityAction receiveDateActivity = new CommodityAction(commodity, "2", "0.05ml Syringe x 1 RECEIVE_DATE", RECEIVE_DATE);
+        CommodityAction receivedActivity = new CommodityAction(commodity, "1", "0.05ml Syringe x 1 RECEIVED", DataElementType.RECEIVED.getActivity());
+        CommodityAction receiveDateActivity = new CommodityAction(commodity, "2", "0.05ml Syringe x 1 RECEIVE_DATE", DataElementType.RECEIVE_DATE.getActivity());
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(receivedActivity, receiveDateActivity));
 
-        Receive receive = new Receive(true, null);
+        Receive receive = new Receive("LGA", null);
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         item.setReceive(receive);
 

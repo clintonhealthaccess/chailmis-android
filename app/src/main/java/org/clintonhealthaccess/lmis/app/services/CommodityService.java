@@ -37,6 +37,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -123,7 +124,7 @@ public class CommodityService {
         List<StockItem> stockItems = FluentIterable.from(commodities).transform(new Function<Commodity, StockItem>() {
             @Override
             public StockItem apply(Commodity input) {
-                CommodityAction commodityAction = input.getCommodityAction(CommodityAction.STOCK_ON_HAND);
+                CommodityAction commodityAction = input.getCommodityAction(DataElementType.STOCK_ON_HAND.getActivity());
                 if (commodityAction != null && commodityAction.getActionLatestValue() != null) {
                     return new StockItem(input, Integer.parseInt(commodityAction.getActionLatestValue().getValue()));
                 } else {

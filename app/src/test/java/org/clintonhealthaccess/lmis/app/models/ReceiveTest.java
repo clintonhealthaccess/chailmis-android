@@ -41,7 +41,7 @@ public class ReceiveTest {
 
     @Test
     public void shouldAddRecieveItemToRecieve() throws Exception {
-        Receive receive = new Receive();
+        Receive receive = new Receive("LGA");
 
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL));
         viewModel.setQuantityAllocated(7);

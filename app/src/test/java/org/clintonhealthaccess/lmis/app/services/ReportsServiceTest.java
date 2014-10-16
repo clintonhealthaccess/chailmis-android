@@ -234,7 +234,7 @@ public class ReportsServiceTest {
     }
 
     private void createReceive(Commodity commodity, Date date, int quantityReceived) {
-        Receive receive = new Receive();
+        Receive receive = new Receive("LGA");
 
         ReceiveItem receiveItem = new ReceiveItem();
         receiveItem.setCommodity(commodity);

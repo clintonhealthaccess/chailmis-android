@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
@@ -105,11 +106,11 @@ public class OrderItem extends BaseItem implements Snapshotable {
     public List<CommoditySnapshotValue> getActivitiesValues() {
         List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>();
         if (order.getOrderType().isRoutine()) {
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.ORDERED_AMOUNT), getQuantity()));
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.REASON_FOR_ORDER), getReasonOrEmptyString()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(DataElementType.ORDERED_AMOUNT.getActivity()), getQuantity()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(DataElementType.REASON_FOR_ORDER.getActivity()), getReasonOrEmptyString()));
         } else if (order.getOrderType().isEmergency()) {
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_ORDERED_AMOUNT), getQuantity()));
-            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(CommodityAction.EMERGENCY_REASON_FOR_ORDER), getReasonOrEmptyString()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(DataElementType.EMERGENCY_ORDERED_AMOUNT.getActivity()), getQuantity()));
+            commoditySnapshotValues.add(new CommoditySnapshotValue(getCommodity().getCommodityAction(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity()), getReasonOrEmptyString()));
         }
         return commoditySnapshotValues;
     }

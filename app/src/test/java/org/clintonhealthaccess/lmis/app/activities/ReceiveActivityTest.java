@@ -30,14 +30,12 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
-import android.widget.ImageButton;
 
 import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
@@ -49,7 +47,6 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -62,14 +59,13 @@ import java.util.Arrays;
 
 import de.greenrobot.event.EventBus;
 
-import static junit.framework.Assert.assertFalse;
-import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -113,26 +109,6 @@ public class ReceiveActivityTest {
 
 
     @Test
-    public void testCheckBoxReceiveFromFacilityExists() throws Exception {
-        ReceiveActivity receiveActivity = getReceiveActivity();
-        assertThat(receiveActivity.checkBoxReceiveFromFacility, not(nullValue()));
-    }
-
-    @Ignore("Work in progress ...[Job]")
-    @Test
-    public void shouldRemoveSelectedCommodityFromListWhenCancelButtonIsClicked() {
-        CommodityToggledEventDetails eventDetails = fireCommodityToggledEvent(getReceiveActivity());
-        ReceiveCommoditiesAdapter adapter = (ReceiveCommoditiesAdapter) eventDetails.activity.arrayAdapter;
-
-        ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.receive_commodity_list_item, R.id.imageButtonCancel);
-        cancelButton.performClick();
-
-        assertFalse(eventDetails.activity.selectedCommodities.contains(eventDetails.commodityViewModel()));
-        assertThat(eventDetails.activity.gridViewSelectedCommodities.getAdapter().getCount(), is(0));
-    }
-
-
-    @Test
     public void shouldShowAllocationIdAutoCompleteTextView() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         assertThat(receiveActivity.textViewAllocationId, not(nullValue()));
@@ -154,6 +130,7 @@ public class ReceiveActivityTest {
         String item2 = "UG-0002";
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
         ReceiveActivity receiveActivity = getReceiveActivity();
+        setSource(receiveActivity, application.getString(R.string.facility));
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
         receiveActivity.textViewAllocationId.setText(item1);
         assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_received)));
@@ -231,59 +208,59 @@ public class ReceiveActivityTest {
 
         assertThat(receive.getReceiveItems().size(), is(1));
         assertThat(receive.getReceiveItems().get(0).getCommodity().getName(), is(PANADOL));
-        assertThat(receive.isReceiveFromFacility(), is(false));
+        assertThat(receive.getSource(), is("LGA"));
     }
 
     @Test
-    public void shouldGenerateReceiveFromFacility() throws Exception {
+    public void shouldGenerateReceiveWithSource() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL), 3, 6);
         EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
+        String applicationString = application.getString(R.string.facility);
+        setSource(receiveActivity, applicationString);
         Receive receive = receiveActivity.generateReceive();
-
-        assertThat(receive.isReceiveFromFacility(), is(true));
+        assertThat(receive.getSource(), is(applicationString));
     }
 
     @Test
-    public void shouldDisableAllocationIfReceiveFromFacilityChecked() throws Exception {
+    public void shouldDisableAllocationIfReceivingFromFacility() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        setSource(receiveActivity, application.getString(R.string.facility));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
 
     @Test
-    public void shouldRemoveErrorOnAllocationIdIfReceiveFromFacilityChecked() throws Exception {
+    public void shouldRemoveErrorOnAllocationIdIfReceiveFromFacility() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setError("Pre-set error message");
-
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        setSource(receiveActivity, application.getString(R.string.facility));
 
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
 
     @Test
-    public void shouldEnableAllocationIfReceiveFromFacilityIsNotChecked() throws Exception {
+    public void shouldEnableAllocationIfReceivingFromLGA() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText("INVALIDALLOCATIONID");
-
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        setSource(receiveActivity, application.getString(R.string.facility));
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
-
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(false);
-
+        setSource(receiveActivity, application.getString(R.string.lga));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
-
         CharSequence error = receiveActivity.textViewAllocationId.getError();
         assertThat(error, notNullValue());
         assertThat(error.toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
     }
 
+    private void setSource(ReceiveActivity receiveActivity, String string) {
+        int position2 = receiveActivity.getReceiveSources().indexOf(string);
+        receiveActivity.spinnerSource.setSelection(position2);
+    }
+
     @Test
     public void shouldNotRequireAllocationIdWhenReceivingFromFacility() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        setSource(receiveActivity, application.getString(R.string.facility));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         setupValidCommodity(receiveActivity);
         receiveActivity.getSubmitButton().performClick();
@@ -292,7 +269,7 @@ public class ReceiveActivityTest {
     }
 
     @Test
-    public void shouldClearAllocationWhenReceivingFromFacility() throws Exception {
+    public void shouldClearAllocationWhenNotReceivingFromLGA() throws Exception {
         String item1 = VALID_ALLOCATION_ID;
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1)));
         Allocation allocation = mock(Allocation.class);
@@ -311,8 +288,7 @@ public class ReceiveActivityTest {
 
         assertThat(receiveActivity.allocation, is(notNullValue()));
         assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
-
-        receiveActivity.checkBoxReceiveFromFacility.setChecked(true);
+        receiveActivity.spinnerSource.setSelection(1);
         assertThat(receiveActivity.allocation, is(nullValue()));
     }
 
@@ -378,6 +354,18 @@ public class ReceiveActivityTest {
         ReceiveActivity receiveActivity = Robolectric.buildActivity(ReceiveActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(receiveActivity.allocation, is(notNullValue()));
         assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
+    }
+
+    @Test
+    public void shouldHaveASpinnerForSourceOfCommodities() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.spinnerSource, not(nullValue()));
+    }
+
+    @Test
+    public void shouldHaveOptionsInSourceSpinner() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertThat(receiveActivity.spinnerSource.getAdapter().getCount(), is(greaterThan(1)));
     }
 
     private void performSubmitWithValidFields() {

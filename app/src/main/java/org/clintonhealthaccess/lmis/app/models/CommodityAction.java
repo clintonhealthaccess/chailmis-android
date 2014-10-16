@@ -33,6 +33,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
@@ -65,22 +66,6 @@ public class CommodityAction implements Serializable {
     private ForeignCollection<CommodityActionValue> commodityActionValueCollection;
 
     private List<CommodityActionValue> commodityActionValues = new ArrayList<>();
-
-    public static final String STOCK_ON_HAND = "STOCK_ON_HAND";
-    public static final String MINIMUN_THRESHOLD = "MINIMUM_THRESHOLD";
-    public static final String MAXIMUM_THRESHOLD = "MAXIMUM_THRESHOLD";
-    public static final String AMC = "AMC";
-    public static final String ALLOCATION_ID = "ALLOCATION_ID";
-    public static final String ALLOCATED = "ALLOCATED";
-    public static final String RECEIVED = "RECEIVED";
-    public static final String RECEIVE_DATE = "RECEIVE_DATE";
-    public static final String PROJECTED_ORDER_AMOUNT = "PROJECTED_ORDER_AMOUNT";
-    public static final String EMERGENCY_ORDERED_AMOUNT = "EMERGENCY_ORDERED_AMOUNT";
-    public static final String EMERGENCY_REASON_FOR_ORDER = "EMERGENCY_REASON_FOR_ORDER";
-    public static final String ORDERED_AMOUNT = "ORDERED_AMOUNT";
-    public static final String REASON_FOR_ORDER = "REASON_FOR_ORDER";
-    public static final String ADJUSTMENTS = "ADJUSTMENTS";
-    public static final String ADJUSTMENT_REASON = "ADJUSTMENT_REASON";
 
     public CommodityAction() {
         //Orm Lite likes

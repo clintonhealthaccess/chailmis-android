@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
@@ -73,8 +74,8 @@ public class Adjustment implements Serializable, Snapshotable {
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
         List<CommoditySnapshotValue> values = new ArrayList<>();
-        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENTS), quantity));
-        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(CommodityAction.ADJUSTMENT_REASON), reason));
+        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(DataElementType.ADJUSTMENTS.getActivity()), quantity));
+        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(DataElementType.ADJUSTMENT_REASON.getActivity()), reason));
         return values;
     }
 

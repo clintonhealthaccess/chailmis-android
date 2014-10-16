@@ -83,16 +83,22 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/allocationSource"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/receive_background"
-                android:textColor="@color/white"
-                android:text="@string/allocation_source"
+
+            <Spinner
                 android:layout_alignParentRight="true"
                 android:padding="10dp"
-                android:textSize="18sp" />
+                android:id="@+id/spinnerSource"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></Spinner>
+
+            <TextView
+                android:layout_toLeftOf="@+id/spinnerSource"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:text="Source"
+                android:textSize="18sp"
+                android:layout_height="wrap_content" />
 
         </RelativeLayout>
 
@@ -112,11 +118,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textViewAllocationId" />
 
-            <CheckBox
-                android:id="@+id/checkBoxReceiveFromFacility"
-                android:layout_width="wrap_content"
-                android:text="@string/receive_from_facility"
-                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
         <RelativeLayout
