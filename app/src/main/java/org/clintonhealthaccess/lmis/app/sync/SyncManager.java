@@ -33,10 +33,13 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.os.Bundle;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
+
+import java.util.List;
 
 import roboguice.inject.InjectResource;
 
@@ -47,6 +50,8 @@ import static android.content.ContentResolver.addPeriodicSync;
 import static android.content.ContentResolver.setIsSyncable;
 import static android.content.ContentResolver.setSyncAutomatically;
 import static android.util.Log.i;
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.valueOf;
 
 public class SyncManager {
@@ -63,10 +68,18 @@ public class SyncManager {
     private Integer syncInterval;
 
     public void kickOff() {
-        Account[] accounts = accountManager.getAccounts();
-        i("###### amount of accounts : ", valueOf(accounts.length));
-        if (accounts.length > 0) {
-            kickOffFor(accounts[0]);
+        List<Account> accounts = newArrayList(accountManager.getAccounts());
+        i("###### amount of accounts : ", valueOf(accounts.size()));
+
+        List<Account> lmisAccounts = from(accounts).filter(new Predicate<Account>() {
+            @Override
+            public boolean apply(Account input) {
+                return syncAccountType.equals(input.type);
+            }
+        }).toList();
+
+        if (lmisAccounts.size() > 0) {
+            kickOffFor(lmisAccounts.get(0));
         }
     }
 
