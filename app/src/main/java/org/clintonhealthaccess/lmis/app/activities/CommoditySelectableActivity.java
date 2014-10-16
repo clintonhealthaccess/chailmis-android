@@ -29,11 +29,17 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.text.InputType;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,6 +56,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
+import org.clintonhealthaccess.lmis.app.listeners.NumberKeyBoardActionListener;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
@@ -65,6 +72,8 @@ import static com.google.common.collect.Lists.newArrayList;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
 
+    public final static int CodeDelete = -5;
+    public final static int CodeCancel = -3;
     protected final ViewValidator<EditText> INVALID_AMOUNT = new ViewValidator<EditText>(R.string.dispense_submit_validation_message_zero, new Predicate<EditText>() {
         @Override
         public boolean apply(EditText editTextQuantity) {
@@ -92,8 +101,12 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     GridView gridViewSelectedCommodities;
     ArrayAdapter arrayAdapter;
     ArrayList<BaseCommodityViewModel> selectedCommodities = newArrayList();
+    Keyboard keyBoard;
     @Inject
     private CategoryService categoryService;
+
+    @InjectView(R.id.keyBoardView)
+    public KeyboardView keyBoardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +117,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(getLayoutId());
         setupCategories();
+        setupKeyBoard();
         beforeArrayAdapterCreate(savedInstanceState);
         arrayAdapter = getArrayAdapter();
         gridViewSelectedCommodities.setAdapter(arrayAdapter);
@@ -171,9 +185,59 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected ArrayAdapter getArrayAdapter();
 
+    protected void setupKeyBoard() {
+        keyBoard = new Keyboard(CommoditySelectableActivity.this, R.xml.keyboard);
+        keyBoardView.setKeyboard(keyBoard);
+        keyBoardView.setPreviewEnabled(false);
+        keyBoardView.setOnKeyboardActionListener(new NumberKeyBoardActionListener(this));
+    }
+
     abstract protected void afterCreate(Bundle savedInstanceState);
 
     abstract protected void beforeArrayAdapterCreate(Bundle savedInstanceState);
+
+    public void hideCustomKeyboard() {
+        keyBoardView.setVisibility(View.GONE);
+        keyBoardView.setEnabled(false);
+    }
+
+    public void showCustomKeyboard(View v) {
+        keyBoardView.setVisibility(View.VISIBLE);
+        keyBoardView.setEnabled(true);
+        if (v != null)
+            ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
+    }
+
+    public boolean isCustomKeyboardVisible() {
+        return keyBoardView.getVisibility() == View.VISIBLE;
+    }
+
+    public void setupEditTextForNumberInput(View edittext) {
+        edittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) showCustomKeyboard(v);
+                else hideCustomKeyboard();
+            }
+        });
+        edittext.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomKeyboard(v);
+            }
+        });
+        edittext.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                EditText edittext = (EditText) v;
+                int inType = edittext.getInputType();
+                edittext.setInputType(InputType.TYPE_NULL);
+                edittext.onTouchEvent(event);
+                edittext.setInputType(inType);
+                return true;
+            }
+        });
+    }
 
     abstract protected CommoditiesToViewModelsConverter getViewModelConverter();
 
@@ -247,4 +311,5 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             return getString(toastMessageStringId);
         }
     }
+
 }

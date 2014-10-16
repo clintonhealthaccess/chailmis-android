@@ -77,10 +77,10 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     private OrderType orderType;
 
 
-    public SelectedOrderCommoditiesAdapter(Context context, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons, OrderType type, OrderActivity orderActivity) {
-        super(context, resource, commodities);
+    public SelectedOrderCommoditiesAdapter(OrderActivity orderActivity, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons, OrderType type) {
+        super(orderActivity.getApplicationContext(), resource, commodities);
         unexpectedOrderReasons.addAll(reasons);
-        unexpectedOrderReasons.add(0, new OrderReason(context.getString(R.string.select_reason)));
+        unexpectedOrderReasons.add(0, new OrderReason(orderActivity.getString(R.string.select_reason)));
         this.orderType = type;
         this.orderActivity = orderActivity;
         EventBus.getDefault().register(this);

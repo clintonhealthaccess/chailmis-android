@@ -96,6 +96,11 @@ public class LossesActivityTest {
 
 
     @Test
+    public void shouldHaveAKeyBoardView() throws Exception {
+        assertThat(lossesActivity.keyBoardView, not(nullValue()));
+    }
+
+    @Test
     public void shouldOpenConfirmDialogIfLossesAreValid() throws Exception {
         Commodity mockCommodity = buildMockCommodity();
         when(mockCommodity.getStockOnHand()).thenReturn(10);

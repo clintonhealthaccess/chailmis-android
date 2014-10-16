@@ -35,6 +35,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -44,7 +45,6 @@ import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
 
@@ -54,14 +54,19 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class AdjustmentsAdapterTest {
 
 
+    private AdjustmentsActivity activity;
+
     @Before
     public void setUp() {
         setUpInjection(this);
+
+        activity = setupActivity(AdjustmentsActivity.class);
     }
 
     @Test
@@ -139,7 +144,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
         editText.setText("200");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
         assertThat(adjustmentsViewModel.isPositive(), is(true));
@@ -153,7 +158,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
         editText.setText("50");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
@@ -167,7 +172,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
@@ -185,7 +190,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
 
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
@@ -194,6 +199,38 @@ public class AdjustmentsAdapterTest {
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
         assertThat(spinnerType.getSelectedItem().toString(), is("-"));
+    }
+
+    @Test
+    public void shouldShowKeyboardWhenTextIsEnteredIntoQuantityField() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(100);
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        commodities.add(adjustmentsViewModel);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        ANDROID.assertThat(activity.keyBoardView).isNotShown();
+        EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
+        editText.performClick();
+        ANDROID.assertThat(activity.keyBoardView).isShown();
+    }
+
+    @Test
+    public void shouldShowKeyboardWhenTextIsEnteredIntoStockCountedField() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(100);
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        commodities.add(adjustmentsViewModel);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        ANDROID.assertThat(activity.keyBoardView).isNotShown();
+        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        editText.performClick();
+        ANDROID.assertThat(activity.keyBoardView).isShown();
     }
 
     private AdjustmentsAdapter getAdjustmentsAdapter(AdjustmentReason adjustmentReason) {
@@ -211,6 +248,6 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, quantityEntered, positive);
         adjustmentsViewModel.setAdjustmentReason(adjustmentReason);
         commodities.add(adjustmentsViewModel);
-        return new AdjustmentsAdapter(Robolectric.application, R.layout.selected_adjustment_list_item, commodities);
+        return new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
     }
 }

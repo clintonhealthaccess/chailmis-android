@@ -43,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -57,9 +58,11 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 
 public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
     private final int resource;
+    private final AdjustmentsActivity activity;
 
-    public AdjustmentsAdapter(Context context, int resource, List<AdjustmentsViewModel> objects) {
-        super(context, resource, objects);
+    public AdjustmentsAdapter(AdjustmentsActivity activity, int resource, List<AdjustmentsViewModel> objects) {
+        super(activity, resource, objects);
+        this.activity = activity;
         this.resource = resource;
     }
 
@@ -78,6 +81,9 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         final EditText editTextStockCounted = (EditText) rowView.findViewById(R.id.editTextStockCounted);
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
         final AdjustmentsViewModel commodityViewModel = getItem(position);
+
+        activity.setupEditTextForNumberInput(editTextQuantity);
+        activity.setupEditTextForNumberInput(editTextStockCounted);
 
         final List<String> types = new ArrayList<>();
 

@@ -126,6 +126,13 @@ public class DispenseActivityTest {
     }
 
     @Test
+    public void shouldHaveAKeyBoardView() throws Exception {
+        DispenseActivity activity = getDispenseActivity();
+        assertThat(activity, not(nullValue()));
+        assertThat(activity.keyBoardView, not(nullValue()));
+    }
+
+    @Test
     public void testShouldDisplayAllCategoriesAsButtons() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
 

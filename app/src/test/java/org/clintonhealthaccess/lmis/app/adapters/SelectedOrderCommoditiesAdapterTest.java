@@ -130,7 +130,6 @@ public class SelectedOrderCommoditiesAdapterTest {
         orderActivity = getOrderActivity();
 
 
-
         commodities = new ArrayList<>();
         commodityViewModel = new OrderCommodityViewModel(commodity, 10);
         commodityViewModel.setOrderReasonPosition(0);
@@ -138,7 +137,7 @@ public class SelectedOrderCommoditiesAdapterTest {
         orderReasons.add(losses);
         orderReasons.add(highDemand);
         orderReasons.add(adjustments);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
     }
 
     private OrderActivity getOrderActivity() {
@@ -303,7 +302,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldShowSpinnerForUnExpectedOrderReasonsIfOrderTypeIsNotRoutine() throws Exception {
         commodityViewModel.setExpectedOrderQuantity(10);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, emergency, orderActivity);
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, emergency);
         View rowView = getRowView();
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isVisible();
@@ -312,7 +311,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldHideSpinnerForUnExpectedOrderReasonsIfOrderTypeIsRoutine() throws Exception {
         commodityViewModel.setExpectedOrderQuantity(10);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         ANDROID.assertThat(spinnerUnexpectedOrderReasons).isNotVisible();
@@ -320,7 +319,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldDefaultToBlankForUnExpectedReasons() throws Exception {
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
 
 
@@ -335,7 +334,7 @@ public class SelectedOrderCommoditiesAdapterTest {
         commodities = new ArrayList<>();
         commodityViewModel.setOrderPeriodStartDate(currentDate);
         commodities.add(commodityViewModel);
-        adapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, list_item_layout, commodities, orderReasons, routine, orderActivity);
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
 
         TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
@@ -347,6 +346,17 @@ public class SelectedOrderCommoditiesAdapterTest {
         assertThat(textViewEndDate.getText().toString(), is(endDateString));
 
     }
+
+    @Test
+    public void shouldShowKeyboardWhenTextIsEnteredIntoQuantityField() throws Exception {
+        adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
+        View rowView = getRowView();
+        ANDROID.assertThat(orderActivity.keyBoardView).isNotShown();
+        EditText editText = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
+        editText.performClick();
+        ANDROID.assertThat(orderActivity.keyBoardView).isShown();
+    }
+
 
     private View getRowView() {
         ViewGroup genericLayout = getLinearLayout();

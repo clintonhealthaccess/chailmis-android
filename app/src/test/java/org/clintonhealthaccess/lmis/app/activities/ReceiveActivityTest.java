@@ -46,6 +46,7 @@ import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,6 +108,12 @@ public class ReceiveActivityTest {
         assertThat(receiveActivity, not(nullValue()));
     }
 
+
+    @Test
+    public void shouldHaveAKeyBoardView() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        MatcherAssert.assertThat(receiveActivity.keyBoardView, not(nullValue()));
+    }
 
     @Test
     public void shouldShowAllocationIdAutoCompleteTextView() throws Exception {

@@ -52,6 +52,7 @@ import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,7 +150,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1, commodityViewModel2);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(orderActivity, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
 
         OrderItem orderItem2 = new OrderItem(commodityViewModel1);
         OrderItem orderItem1 = new OrderItem(commodityViewModel2);
@@ -233,7 +234,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(orderActivity, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
@@ -249,7 +250,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(orderActivity, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
@@ -265,7 +266,7 @@ public class OrderActivityTest {
         List<OrderReason> orderReasons = Arrays.asList();
         List<OrderCommodityViewModel> commodityViewModels = Arrays.asList(commodityViewModel1);
         OrderType type = new OrderType(OrderType.ROUTINE);
-        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(Robolectric.application, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type, orderActivity);
+        orderActivity.arrayAdapter = new SelectedOrderCommoditiesAdapter(orderActivity, R.layout.selected_order_commodity_list_item, commodityViewModels, orderReasons, type);
 
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getItems().size(), is(1));
@@ -310,5 +311,24 @@ public class OrderActivityTest {
         orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         ShadowHandler.idleMainLooper();
         assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
+    }
+
+    @Test
+    public void shouldHaveAKeyBoardView() throws Exception {
+        orderActivity = getOrderActivity();
+        assertThat(orderActivity.keyBoardView, not(nullValue()));
+    }
+
+    @Test
+    public void shouldHaveAKeyBoard() throws Exception {
+        orderActivity = getOrderActivity();
+        assertThat(orderActivity.keyBoard, not(nullValue()));
+    }
+
+    @Test
+    public void shouldHave12KeysOnTheKeyboard() throws Exception {
+        orderActivity = getOrderActivity();
+        assertThat(orderActivity.keyBoard.getKeys().size(), is(12));
+        ANDROID.assertThat(orderActivity.keyBoardView).isNotShown();
     }
 }

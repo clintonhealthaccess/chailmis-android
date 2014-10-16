@@ -98,7 +98,11 @@ public class AdjustmentsActivityTest extends TestCase {
         AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
         assertThat(adjustmentsActivity, not(nullValue()));
     }
-
+    @Test
+    public void shouldHaveAKeyBoardView() throws Exception {
+        AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
+        assertThat(adjustmentsActivity.keyBoardView, not(nullValue()));
+    }
     @Test
     public void shouldSetupAdjustmentReasons() throws Exception {
         AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
