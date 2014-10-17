@@ -42,10 +42,15 @@ abstract public class CommodityDisplayStrategy implements Serializable {
         if (!allowClick(commodityViewModel)) {
             checkboxCommoditySelected.setVisibility(View.INVISIBLE);
             alternativeText.setVisibility(View.VISIBLE);
+            alternativeText.setText(getMessage());
         }
     }
 
     abstract public boolean allowClick(BaseCommodityViewModel commodityViewModel);
+
+    public String getMessage() {
+        return "Not In Stock";
+    }
 
     public static final CommodityDisplayStrategy DISALLOW_CLICK_WHEN_OUT_OF_STOCK = new CommodityDisplayStrategy() {
         @Override
@@ -58,6 +63,18 @@ abstract public class CommodityDisplayStrategy implements Serializable {
         @Override
         public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
             return true;
+        }
+    };
+
+    public static final CommodityDisplayStrategy ALLOW_ONLY_LGA_COMMODITIES = new CommodityDisplayStrategy() {
+        @Override
+        public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
+            return !commodityViewModel.getCommodity().isNonLGA();
+        }
+
+        @Override
+        public String getMessage() {
+            return "Can't Be Ordered Here";
         }
     };
 }

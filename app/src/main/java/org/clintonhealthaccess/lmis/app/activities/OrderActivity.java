@@ -32,14 +32,11 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +68,6 @@ import de.greenrobot.event.EventBus;
 import roboguice.inject.InjectView;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
 
 public class OrderActivity extends CommoditySelectableActivity {
 
@@ -126,12 +122,11 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
-        return ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+        return CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES;
     }
 
     @Override
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-
 
 
         Intent intent = getIntent();
