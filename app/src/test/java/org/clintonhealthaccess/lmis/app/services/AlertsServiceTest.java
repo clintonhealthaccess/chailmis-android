@@ -144,7 +144,7 @@ public class AlertsServiceTest {
         setupCommodities();
         alertsService.updateLowStockAlerts();
         List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderViewModelsForRoutineOrderAlert();
-        int numberOfCommodities = 7;
+        int numberOfCommodities = 5;
         assertThat(commodityViewModels.size(), is(numberOfCommodities));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
     }
@@ -394,6 +394,16 @@ public class AlertsServiceTest {
         assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(0));
 
 
+    }
+
+    @Test
+    public void shouldPrepopulateOnlyLGACommodities() throws Exception {
+        setupCommodities();
+        alertsService.updateLowStockAlerts();
+        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderViewModelsForRoutineOrderAlert();
+        int numberOfCommodities = 5;
+        assertThat(commodityViewModels.size(), is(numberOfCommodities));
+        assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
     }
 
     private void createRoutineOrderAlert(final RoutineOrderAlert data) {

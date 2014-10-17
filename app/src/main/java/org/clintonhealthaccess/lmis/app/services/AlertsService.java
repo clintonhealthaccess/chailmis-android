@@ -250,7 +250,12 @@ public class AlertsService {
     }
 
     public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
-        return FluentIterable.from(getEnabledLowStockAlerts()).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
+        return FluentIterable.from(getEnabledLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+            @Override
+            public boolean apply(LowStockAlert input) {
+                return !input.getCommodity().isNonLGA();
+            }
+        }).transform(new Function<LowStockAlert, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(LowStockAlert lowStockAlert) {
                 int quantity = lowStockAlert.getCommodity().calculateEmergencyPrepopulatedQuantity();
@@ -369,7 +374,12 @@ public class AlertsService {
     }
 
     public List<OrderCommodityViewModel> getOrderViewModelsForRoutineOrderAlert() {
-        return FluentIterable.from(commodityService.all()).transform(new Function<Commodity, OrderCommodityViewModel>() {
+        return FluentIterable.from(commodityService.all()).filter(new Predicate<Commodity>() {
+            @Override
+            public boolean apply(Commodity input) {
+                return !input.isNonLGA();
+            }
+        }).transform(new Function<Commodity, OrderCommodityViewModel>() {
             @Override
             public OrderCommodityViewModel apply(Commodity commodity) {
                 int quantity = commodity.calculateRoutinePrePopulatedQuantity();
