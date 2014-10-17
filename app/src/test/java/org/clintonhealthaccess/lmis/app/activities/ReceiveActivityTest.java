@@ -140,7 +140,7 @@ public class ReceiveActivityTest {
         String item2 = "UG-0002";
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
         ReceiveActivity receiveActivity = getReceiveActivity();
-        setSource(receiveActivity, application.getString(R.string.facility));
+        setSource(receiveActivity, application.getString(R.string.zonal_store));
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
         receiveActivity.textViewAllocationId.setText(item1);
         assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_received)));
@@ -218,7 +218,7 @@ public class ReceiveActivityTest {
 
         assertThat(receive.getReceiveItems().size(), is(1));
         assertThat(receive.getReceiveItems().get(0).getCommodity().getName(), is(PANADOL));
-        assertThat(receive.getSource(), is("LGA"));
+        assertThat(receive.getSource(), is(application.getString(R.string.lga)));
     }
 
     @Test
@@ -226,25 +226,25 @@ public class ReceiveActivityTest {
         ReceiveActivity receiveActivity = getReceiveActivity();
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL), 3, 6);
         EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
-        String applicationString = application.getString(R.string.facility);
+        String applicationString = application.getString(R.string.zonal_store);
         setSource(receiveActivity, applicationString);
         Receive receive = receiveActivity.generateReceive();
         assertThat(receive.getSource(), is(applicationString));
     }
 
     @Test
-    public void shouldDisableAllocationIfReceivingFromFacility() throws Exception {
+    public void shouldDisableAllocationIfNotRecievingFromLGA() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
-        setSource(receiveActivity, application.getString(R.string.facility));
+        setSource(receiveActivity, application.getString(R.string.zonal_store));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
 
     @Test
-    public void shouldRemoveErrorOnAllocationIdIfReceiveFromFacility() throws Exception {
+    public void shouldRemoveErrorOnAllocationIdIfNotRecievingFromLGA() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setError("Pre-set error message");
-        setSource(receiveActivity, application.getString(R.string.facility));
+        setSource(receiveActivity, application.getString(R.string.zonal_store));
 
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
@@ -253,7 +253,7 @@ public class ReceiveActivityTest {
     public void shouldEnableAllocationIfReceivingFromLGA() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText("INVALIDALLOCATIONID");
-        setSource(receiveActivity, application.getString(R.string.facility));
+        setSource(receiveActivity, application.getString(R.string.zonal_store));
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
         setSource(receiveActivity, application.getString(R.string.lga));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
@@ -268,9 +268,9 @@ public class ReceiveActivityTest {
     }
 
     @Test
-    public void shouldNotRequireAllocationIdWhenReceivingFromFacility() throws Exception {
+    public void shouldNotRequireAllocationIdWhenNotRecievingFromLGA() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
-        setSource(receiveActivity, application.getString(R.string.facility));
+        setSource(receiveActivity, application.getString(R.string.zonal_store));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         setupValidCommodity(receiveActivity);
         receiveActivity.getSubmitButton().performClick();
@@ -424,10 +424,10 @@ public class ReceiveActivityTest {
         addCommodity(false, PANADOL);
         addCommodity(false, "sugar");
         addCommodity(true, "sugar12");
-        assertThat(receiveActivity.selectedCommodities.size(),is(3));
-        receiveActivity.spinnerSource.setSelection(2);
+        assertThat(receiveActivity.selectedCommodities.size(), is(3));
+        receiveActivity.spinnerSource.setSelection(1);
         assertThat(receiveActivity.spinnerSource.getSelectedItem().toString(), is(application.getString(R.string.zonal_store)));
-        assertThat(receiveActivity.selectedCommodities.size(),is(1));
+        assertThat(receiveActivity.selectedCommodities.size(), is(1));
     }
 
     @Test
@@ -436,10 +436,10 @@ public class ReceiveActivityTest {
         addCommodity(false, PANADOL);
         addCommodity(false, "sugar");
         addCommodity(true, "sugar12");
-        assertThat(receiveActivity.selectedCommodities.size(),is(3));
+        assertThat(receiveActivity.selectedCommodities.size(), is(3));
         receiveActivity.spinnerSource.setSelection(0);
         assertThat(receiveActivity.spinnerSource.getSelectedItem().toString(), is(application.getString(R.string.lga)));
-        assertThat(receiveActivity.selectedCommodities.size(),is(2));
+        assertThat(receiveActivity.selectedCommodities.size(), is(2));
 
     }
 

@@ -141,7 +141,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     public List<String> getReceiveSources() {
-        return Arrays.asList(getString(R.string.lga), getString(R.string.facility), getString(R.string.zonal_store), getString(R.string.others));
+        return Arrays.asList(getString(R.string.lga), getString(R.string.zonal_store), getString(R.string.others));
     }
 
     @Override
