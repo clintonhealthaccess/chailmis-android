@@ -44,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -105,6 +106,23 @@ public class StockItemSnapshotService {
         new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
     }
 
+    public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (isOpeningStock) {
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        Date requiredDate = calendar.getTime();
+
+        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity,
+                requiredDate);
+        if (latestStockItemSnapshot != null) {
+            return latestStockItemSnapshot.getQuantity();
+        }
+
+        return 0;
+    }
+
     public StockItemSnapshot getLatest(final Commodity commodity, final Date currentDate) {
         return dbUtil.withDao(StockItemSnapshot.class,
                 new DbUtil.Operation<StockItemSnapshot, StockItemSnapshot>() {
@@ -124,4 +142,35 @@ public class StockItemSnapshotService {
         );
 
     }
+
+    public int getStockOutDays(Commodity commodity, Date startingDate, Date endDate) throws Exception {
+        int openingSock = getLatestStock(commodity, startingDate, true);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+
+        int numOfStockOutDays = openingSock == 0 ? 1 : 0;
+        boolean previousDayWasStockOutDay = openingSock == 0 ? true : false;
+
+        calendar.setTime(startingDate);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd");
+
+        while (calendar.getTime().before(endDate)) {
+
+            StockItemSnapshot stockItemSnapshot = get(commodity, calendar.getTime());
+
+            if ((stockItemSnapshot == null && previousDayWasStockOutDay) ||
+                    (stockItemSnapshot != null && stockItemSnapshot.getQuantity() == 0)) {
+                numOfStockOutDays++;
+                previousDayWasStockOutDay = true;
+            } else {
+                previousDayWasStockOutDay = false;
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return numOfStockOutDays;
+    }
+
 }

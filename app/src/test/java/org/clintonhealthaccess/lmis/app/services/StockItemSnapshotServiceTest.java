@@ -40,6 +40,7 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.matchers.NotNull;
@@ -48,6 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.createStockItemSnapshot;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
@@ -153,13 +155,67 @@ public class StockItemSnapshotServiceTest {
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         Date snapshotDate = calendar.getTime();
 
-        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, snapshotDate, commodity.getStockOnHand() + 10);
-        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application).create(stockItemSnapshot);
+        StockItemSnapshot stockItemSnapshot = createStockItemSnapshot(commodity, snapshotDate, 10);
 
         Date currentDate = new Date();
         StockItemSnapshot latestSnapshot = stockItemSnapshotService.getLatest(commodity, currentDate);
 
         assertThat(latestSnapshot, is(notNullValue()));
         assertThat(latestSnapshot, is(stockItemSnapshot));
+    }
+
+    @Test
+    public void shouldReturnCorrectStockOutDays() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -7);
+        Date startDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        int difference = -5;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 3);
+        difference = -10;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        int expectedNumOfStockOutDays = 4;
+
+        int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, endDate);
+
+        assertThat(numOfStockOutDays, is(expectedNumOfStockOutDays));
+    }
+
+    @Test
+    public void shouldReturnStockOutDays() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date startDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        int difference = -5;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        int stockOutDay = 8;
+        calendar.add(Calendar.DAY_OF_MONTH, stockOutDay);
+        difference = -10;
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+
+        int expectedNumOfStockOutDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - (stockOutDay + 1);
+
+        int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, endDate);
+
+        assertThat(numOfStockOutDays, is(expectedNumOfStockOutDays));
     }
 }

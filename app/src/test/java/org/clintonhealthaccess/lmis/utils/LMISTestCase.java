@@ -45,8 +45,10 @@ import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
+import org.clintonhealthaccess.lmis.app.services.GenericDao;
 import org.clintonhealthaccess.lmis.app.services.LossService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;
@@ -60,6 +62,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 import roboguice.inject.InjectResource;
+
+import static org.robolectric.Robolectric.application;
 
 public class LMISTestCase {
     @InjectResource(R.string.dhis2_base_url)
@@ -140,5 +144,15 @@ public class LMISTestCase {
         order.addItem(orderItem);
 
         orderService.saveOrder(order);
+    }
+
+    public static StockItemSnapshot createStockItemSnapshot(Commodity commodity, Date time, int difference) {
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity,
+                time, commodity.getStockOnHand() + difference);
+
+        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application)
+                .create(stockItemSnapshot);
+
+        return stockItemSnapshot;
     }
 }

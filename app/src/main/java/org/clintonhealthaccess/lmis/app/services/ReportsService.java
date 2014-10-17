@@ -59,17 +59,13 @@ import java.util.List;
 public class ReportsService {
 
     @Inject
-    private StockItemSnapshotService stockItemSnapshotService;
+    StockItemSnapshotService stockItemSnapshotService;
     @Inject
-    private ReceiveService receiveService;
-    @Inject
-    private DispensingService dispensingService;
-    @Inject
-    private AdjustmentService adjustmentService;
+    AdjustmentService adjustmentService;
     @Inject
     Context context;
     @Inject
-    private CommodityActionService commodityActionService;
+    CommodityActionService commodityActionService;
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
                                                                            String startingMonth, String endingYear, String endingMonth) {
@@ -81,7 +77,7 @@ public class ReportsService {
 
             for (Commodity commodity : category.getCommodities()) {
 
-                int openingStock = getLatestStock(commodity, startingDate, true);
+                int openingStock = stockItemSnapshotService.getLatestStock(commodity, startingDate, true);
 
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
@@ -95,15 +91,18 @@ public class ReportsService {
 
                 int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
 
-                int stockOnHand = getLatestStock(commodity, endDate, false);
+                int stockOnHand = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
 
                 int amc = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.AMC);
 
                 int maxThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
 
+                int stockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startingDate, endDate);
+
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
                         openingStock, quantityReceived, quantityAdjusted, quantityLost,
-                        amc, 0, maxThreshold, quantityOrdered, quantityDispensed, stockOnHand);
+                        amc, stockOutDays, maxThreshold, quantityOrdered, quantityDispensed, stockOnHand);
+
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {
@@ -113,22 +112,6 @@ public class ReportsService {
         return facilityStockReportItems;
     }
 
-    private int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        if (isOpeningStock) {
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-        }
-        Date requiredDate = calendar.getTime();
-
-        StockItemSnapshot latestStockItemSnapshot = stockItemSnapshotService.getLatest(commodity,
-                requiredDate);
-        if (latestStockItemSnapshot != null) {
-            return latestStockItemSnapshot.getQuantity();
-        }
-
-        return 0;
-    }
 
     private Date convertToDate(String year, String month, boolean isStartingDate) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
