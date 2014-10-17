@@ -34,6 +34,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -96,12 +97,13 @@ public class ReportsService {
 
                 int stockOnHand = getLatestStock(commodity, endDate, false);
 
-                int amc = commodityActionService.getAMC(commodity, startingDate, endDate);
+                int amc = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.AMC);
 
+                int maxThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
 
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
                         openingStock, quantityReceived, quantityAdjusted, quantityLost,
-                        amc, 0, 0, quantityOrdered, quantityDispensed, stockOnHand);
+                        amc, 0, maxThreshold, quantityOrdered, quantityDispensed, stockOnHand);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {

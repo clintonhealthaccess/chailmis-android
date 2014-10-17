@@ -299,9 +299,64 @@ public class ReportsServiceTest {
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
                 dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
-        int expectedAMC = 119;
-        assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedAMC));
+        int expectedMaxThreshold = 119;
+        assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedMaxThreshold));
     }
+
+    @Test
+    public void shouldReturnMaximumThreshold() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.APRIL, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedMaxThreshold = 40;
+        assertThat(facilityStockReportItems.get(0).getCommodityMaxThreshold(), is(expectedMaxThreshold));
+    }
+
+    @Test
+    public void shouldReturnCorrectMaximumThreshold() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.MAY, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedMaxThreshold = 60;
+        assertThat(facilityStockReportItems.get(0).getCommodityMaxThreshold(), is(expectedMaxThreshold));
+    }
+
+    @Test
+    public void shouldReturnCorrectMaxThresholdFor2Months() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedMaxThreshold = 50;
+        assertThat(facilityStockReportItems.get(0).getCommodityMaxThreshold(), is(expectedMaxThreshold));
+    }
+
 
     private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {
         StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, time, commodity.getStockOnHand() + difference);

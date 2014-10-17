@@ -102,9 +102,9 @@ public class CommodityActionService {
         saveActionValues(commodityActionValues);
     }
 
-    public int getAMC(Commodity commodity, Date startingDate, Date endDate) {
+    public int getMonthlyValue(Commodity commodity, Date startingDate, Date endDate, DataElementType dataElementType) {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
-        int amc = 0;
+        int commodityActionValueQuantity = 0;
         try {
             Dao<CommodityActionValue, String> commodityActionValueDao = DbUtil.initialiseDao(openHelper, CommodityActionValue.class);
             Dao<CommodityAction, String> commodityActionDao = DbUtil.initialiseDao(openHelper, CommodityAction.class);
@@ -115,22 +115,21 @@ public class CommodityActionService {
             commodityActionValueQueryBuilder.where().in("period", periods);
 
             QueryBuilder<CommodityAction, String> commodityActionQueryBuilder = commodityActionDao.queryBuilder();
-            commodityActionQueryBuilder.where().eq("commodity_id", commodity.getId()).and().eq("activityType", DataElementType.AMC);
+            commodityActionQueryBuilder.where().eq("commodity_id", commodity.getId()).and().eq("activityType", dataElementType);
 
             commodityActionValueQueryBuilder.join(commodityActionQueryBuilder);
 
             List<CommodityActionValue> commodityActionValues = commodityActionValueQueryBuilder.query();
-            amc = average(commodityActionValues, periods.size());
+            commodityActionValueQuantity = average(commodityActionValues, periods.size());
 
 
         } catch (SQLException e) {
             throw new LmisException(e);
         } finally {
             releaseHelper();
-            return amc;
+            return commodityActionValueQuantity;
         }
     }
-
 
     private List<String> monthlyPeriods(Date startDate, Date endDate) {
         Calendar calendar = Calendar.getInstance();

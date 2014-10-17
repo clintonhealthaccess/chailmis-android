@@ -46,6 +46,21 @@
     },
     {
         "commodityAction": {
+            "activityType": "MAXIMUM_THRESHOLD",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_maximum_threshold_2014May_Coatem",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0003_2014may_coartem",
+        "period": "201405",
+        "value": "60"
+    },
+    {
+        "commodityAction": {
             "activityType": "STOCK_ON_HAND",
             "dataSet": {
                 "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
@@ -87,7 +102,7 @@
         },
         "id": "0006",
         "period": "201404",
-        "value": "40"
+        "value": "47"
     },
     {
         "commodityAction": {

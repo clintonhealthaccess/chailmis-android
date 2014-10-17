@@ -32,18 +32,18 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataElementType;
 
-import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -98,7 +98,7 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getAMC(commodity, startDate, endDate);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.AMC);
         assertThat(amc, is(103));
     }
 
@@ -113,13 +113,13 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getAMC(commodity, startDate, endDate);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.AMC);
         assertThat(amc, is(125));
 
     }
 
     @Test
-     public void shouldReturnCorrectAMCForTwoPeriods() throws Exception {
+    public void shouldReturnCorrectAMCForTwoPeriods() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 
         Calendar calendar = Calendar.getInstance();
@@ -129,7 +129,7 @@ public class CommodityActionServiceTest {
         calendar.set(2014, Calendar.MAY, 07);
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getAMC(commodity, startDate, endDate);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.AMC);
         assertThat(amc, is(119));
 
     }
@@ -145,8 +145,71 @@ public class CommodityActionServiceTest {
         calendar.set(2014, Calendar.JUNE, 07);
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getAMC(commodity, startDate, endDate);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.AMC);
         assertThat(amc, is(79));
+    }
+
+
+    @Test
+    public void shouldReturnMaximumThresholdForAGivenPeriod() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+
+        int maxThreshold = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        assertThat(maxThreshold, is(40));
+    }
+
+    @Test
+    public void shouldReturnCorrectMaximumThresholdForGivenPeriod() throws Exception {
+        Commodity commodity = commodityService.all().get(1);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        assertThat(amc, is(47));
 
     }
+
+    @Test
+    public void shouldReturnCorrectMaximumThresholdForTwoPeriods() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+        Date endDate = calendar.getTime();
+
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        assertThat(amc, is(50));
+
+    }
+
+    @Test
+    public void shouldReturnCorrectMaximumThresholdForThreePeriods() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.JUNE, 07);
+        Date endDate = calendar.getTime();
+
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        assertThat(amc, is(33));
+    }
+
 }
