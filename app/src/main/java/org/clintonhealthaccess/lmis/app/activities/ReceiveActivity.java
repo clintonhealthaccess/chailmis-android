@@ -106,7 +106,21 @@ public class ReceiveActivity extends CommoditySelectableActivity {
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
-        return CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+        return new CommodityDisplayStrategy() {
+            @Override
+            public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
+                if (spinnerSource.getSelectedItem().equals(getString(R.string.zonal_store))) {
+                    return commodityViewModel.getCommodity().isNonLGA();
+                } else {
+                    return !commodityViewModel.getCommodity().isNonLGA();
+                }
+            }
+
+            @Override
+            public String getMessage() {
+                return "Can't Be Received from " + spinnerSource.getSelectedItem().toString();
+            }
+        };
     }
 
     @Override
@@ -119,29 +133,6 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         completedAllocationIds = allocationService.getReceivedAllocationIds();
         setupAllocationIdTextView();
         setupReceiveButton();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getReceiveSources());
-        spinnerSource.setAdapter(adapter);
-        spinnerSource.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                        String selected = getReceiveSources().get(position);
-                        if (selected.contains(getString(R.string.lga))) {
-                            setAllocation(textViewAllocationId.getText().toString());
-                            textViewAllocationId.setEnabled(true);
-                        } else {
-                            allocation = null;
-                            textViewAllocationId.setError(null);
-                            textViewAllocationId.setEnabled(false);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                }
-        );
 
         if (presetAllocationId != null) {
             textViewAllocationId.setText(presetAllocationId);
@@ -157,6 +148,51 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         presetAllocationId = intent.getStringExtra(ALLOCATION_ID);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getReceiveSources());
+        spinnerSource.setAdapter(adapter);
+        spinnerSource.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                        String selected = getReceiveSources().get(position);
+                        if (selected.contains(getString(R.string.lga))) {
+                            setAllocation(textViewAllocationId.getText().toString());
+                            textViewAllocationId.setEnabled(true);
+                        } else {
+                            allocation = null;
+                            textViewAllocationId.setError(null);
+                            textViewAllocationId.setEnabled(false);
+                        }
+                        List<CommodityToggledEvent> events = new ArrayList<CommodityToggledEvent>();
+                        if (selected.contains(getString(R.string.zonal_store))) {
+                            for (BaseCommodityViewModel model : selectedCommodities) {
+                                if (!model.getCommodity().isNonLGA()) {
+                                    events.add(new CommodityToggledEvent(model));
+                                }
+                            }
+                        } else {
+                            for (BaseCommodityViewModel model : selectedCommodities) {
+                                if (model.getCommodity().isNonLGA()) {
+                                    events.add(new CommodityToggledEvent(model));
+                                }
+                            }
+                        }
+
+                        for (CommodityToggledEvent event : events) {
+                            onEvent(event);
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                }
+        );
+
     }
 
     private void setupReceiveButton() {
@@ -186,7 +222,6 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         }
         return receive;
     }
-
 
 
     @Override

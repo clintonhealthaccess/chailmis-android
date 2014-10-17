@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.widget.Spinner;
 
 import com.google.inject.AbstractModule;
 
@@ -60,6 +61,8 @@ import java.util.Arrays;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -346,7 +349,6 @@ public class ReceiveActivityTest {
     public void shouldPrepopulateWithSetAllocationIdIfAvailable() throws Exception {
         String item1 = VALID_ALLOCATION_ID;
         Allocation allocation = mock(Allocation.class);
-
         AllocationItem item = new AllocationItem();
         item.setCommodity(new Commodity("food"));
         item.setQuantity(10);
@@ -373,6 +375,81 @@ public class ReceiveActivityTest {
     public void shouldHaveOptionsInSourceSpinner() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         assertThat(receiveActivity.spinnerSource.getAdapter().getCount(), is(greaterThan(1)));
+    }
+
+    @Test
+    public void shouldNotAllowYouToSelectLGACommoditiesWhenZonalStoreIsSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.zonal_store));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.isNonLGA()).thenReturn(false);
+        assertFalse(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+    }
+
+    @Test
+    public void shouldAllowYouToSelectNonLGACommoditiesWhenZonalStoreIsSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.zonal_store));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.isNonLGA()).thenReturn(true);
+        assertTrue(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+    }
+
+    @Test
+    public void shouldAllowYouToSelectLGACommoditiesWhenLGAIsSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.lga));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.isNonLGA()).thenReturn(false);
+        assertTrue(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+    }
+
+    @Test
+    public void shouldNotAllowYouToSelectNonLGACommoditiesWhenLGAIsSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.lga));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.isNonLGA()).thenReturn(true);
+        assertFalse(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+
+    }
+
+    @Test
+    public void shouldClearAllLGACommoditiesWhenZonalSourceIsSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        addCommodity(false, PANADOL);
+        addCommodity(false, "sugar");
+        addCommodity(true, "sugar12");
+        assertThat(receiveActivity.selectedCommodities.size(),is(3));
+        receiveActivity.spinnerSource.setSelection(2);
+        assertThat(receiveActivity.spinnerSource.getSelectedItem().toString(), is(application.getString(R.string.zonal_store)));
+        assertThat(receiveActivity.selectedCommodities.size(),is(1));
+    }
+
+    @Test
+    public void shouldClearAllNonLGACommoditiesWhenZonalSourceIsNotSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        addCommodity(false, PANADOL);
+        addCommodity(false, "sugar");
+        addCommodity(true, "sugar12");
+        assertThat(receiveActivity.selectedCommodities.size(),is(3));
+        receiveActivity.spinnerSource.setSelection(0);
+        assertThat(receiveActivity.spinnerSource.getSelectedItem().toString(), is(application.getString(R.string.lga)));
+        assertThat(receiveActivity.selectedCommodities.size(),is(2));
+
+    }
+
+    private void addCommodity(boolean nonLGA, String name) {
+        Commodity commodity = new Commodity(name);
+        commodity.setNonLGA(nonLGA);
+        ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(commodity);
+        viewModel.setQuantityReceived(2);
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(viewModel);
+        EventBus.getDefault().post(commodityToggledEvent);
     }
 
     private void performSubmitWithValidFields() {

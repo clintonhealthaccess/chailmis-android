@@ -119,9 +119,9 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(getLayoutId());
-        setupCategories();
         setupKeyBoard();
         beforeArrayAdapterCreate(savedInstanceState);
+        setupCategories();
         arrayAdapter = getArrayAdapter();
         gridViewSelectedCommodities.setAdapter(arrayAdapter);
 
