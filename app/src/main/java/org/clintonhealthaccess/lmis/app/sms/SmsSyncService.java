@@ -20,7 +20,7 @@ import static android.util.Log.i;
 import static java.lang.String.format;
 
 public class SmsSyncService {
-    private static final String SMS_GATEWAY_NUMBER = "SMS_GATEWAY_NUMBER";
+    static final String SMS_GATEWAY_NUMBER = "SMS_GATEWAY_NUMBER";
 
     @InjectResource(R.string.dhis2_sms_number)
     private String defaultDhis2SmsNumber;

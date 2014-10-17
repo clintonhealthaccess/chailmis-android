@@ -42,6 +42,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +74,7 @@ public class RegisterActivityTest {
     private CommodityService mockCommodityService;
     private OrderService mockOrderService;
     private StockService mockStockService;
+    private SmsSyncService mockSmsSyncService;
 
     @Before
     public void setUp() throws Exception {
@@ -80,6 +82,7 @@ public class RegisterActivityTest {
         mockCommodityService = mock(CommodityService.class);
         mockStockService = mock(StockService.class);
         mockOrderService = mock(OrderService.class);
+        mockSmsSyncService = mock(SmsSyncService.class);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -88,6 +91,7 @@ public class RegisterActivityTest {
                 bind(CommodityService.class).toInstance(mockCommodityService);
                 bind(StockService.class).toInstance(mockStockService);
                 bind(OrderService.class).toInstance(mockOrderService);
+                bind(SmsSyncService.class).toInstance(mockSmsSyncService);
             }
         });
 
