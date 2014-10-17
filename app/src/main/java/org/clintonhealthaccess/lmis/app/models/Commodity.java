@@ -67,6 +67,9 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
+    @DatabaseField(canBeNull = false)
+    private boolean nonLGA = false;
+
     @ForeignCollectionField(eager = true, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
 

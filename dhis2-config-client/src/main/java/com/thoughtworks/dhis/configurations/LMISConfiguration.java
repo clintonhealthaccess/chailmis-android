@@ -76,7 +76,6 @@ public class LMISConfiguration implements IConfiguration {
     private static final String LMIS_COMMODITIES_DEFAULT = LMIS_KEY_WORD + "Commodities Default";
     private static final String LMIS_COMMODITIES_ALLOCATED = LMIS_KEY_WORD + "Commodities Allocated";
     private static final String LMIS_ACTIVITY = LMIS_KEY_WORD + "Activity";
-    private static final String LMIS_NON_LGA = "Non LGA";
     public static final String OPTION_SETS = "optionSets";
     public static final String INDICATOR_TYPES = "indicatorTypes";
     public static final String INDICATORS = "indicators";
@@ -105,7 +104,7 @@ public class LMISConfiguration implements IConfiguration {
     public LMISConfiguration(CategoryCombo defaultCategoryCombo) {
         this.defaultCategoryCombo = defaultCategoryCombo;
         actionAttribute = createAttribute("string", LMISConfiguration.LMIS_ACTIVITY, true, false);
-        lgaAttribute = createAttribute("string", LMISConfiguration.LMIS_NON_LGA, false, true);
+        lgaAttribute = createAttribute("string", Attribute.LMIS_NON_LGA, false, true);
         dataElementGroups = new ArrayList<DataElementGroup>();
         dataElementGroupSets = new ArrayList<DataElementGroupSet>();
         dataElements = new ArrayList<DataElement>();

@@ -119,6 +119,16 @@ public class Dhis2Test extends LMISTestCase {
     }
 
     @Test
+    public void shouldFetchNonLGAInformation() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        List<Category> categories = dhis2.fetchCommodities(new User());
+        assertThat(categories.size(), is(10));
+        Category category = categories.get(0);
+        assertThat(category.getNotSavedCommodities().get(0).isNonLGA(), is(false));
+        assertThat(category.getNotSavedCommodities().get(1).isNonLGA(), is(true));
+    }
+
+    @Test
     public void shouldCreateCommodityActionValueForEachDataValue() throws Exception {
         String orgUnit = "orgnunit";
         User user = new User();

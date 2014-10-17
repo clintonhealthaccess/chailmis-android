@@ -6,6 +6,7 @@ import lombok.experimental.Builder;
 @Data
 @Builder
 public class Attribute {
+    public static final String LMIS_NON_LGA = "Non LGA";
     private String id;
     private String created;
     private String name;

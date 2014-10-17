@@ -37,6 +37,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.Attribute;
 import com.thoughtworks.dhis.models.AttributeValue;
 import com.thoughtworks.dhis.models.DataElement;
 import com.thoughtworks.dhis.models.DataElementGroup;
@@ -104,7 +105,7 @@ public class Dhis2 implements LmisServer {
     public List<Category> fetchCommodities(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name]");
+        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
         timingLogger.addSplit("fetch data");
         timingLogger.dumpToLog();
         return getCategoriesFromDataSets(response.getDataSets());
@@ -140,6 +141,17 @@ public class Dhis2 implements LmisServer {
         if (element.getDataElementGroups().size() > 0) {
             DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
             DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
+            if (dataElementGroup.getAttributeValues() != null) {
+                if (dataElementGroup.getAttributeValues().size() > 0) {
+                    for (AttributeValue value : dataElementGroup.getAttributeValues()) {
+                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_NON_LGA)) {
+                            commodity.setNonLGA(value.getValue().equalsIgnoreCase("1"));
+                        }
+                    }
+                } else {
+                    commodity.setNonLGA(false);
+                }
+            }
             commodity.setId(dataElementGroup.getId());
 
             if (commodities.contains(commodity)) {
@@ -147,17 +159,19 @@ public class Dhis2 implements LmisServer {
             } else {
                 commodity.setName(dataElementGroup.getName());
                 Category category = new Category();
-                category.setName(dataElementGroupSet.getName());
-                category.setLmisId(dataElementGroupSet.getId());
-                if (categories.contains(category)) {
-                    List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
-                    updatedCommodities.add(commodity);
-                    category.setCommodities(updatedCommodities);
-                    int location = categories.indexOf(category);
-                    categories.set(location, category);
-                } else {
-                    category.setCommodities(newArrayList(commodity));
-                    categories.add(category);
+                if (dataElementGroupSet != null) {
+                    category.setName(dataElementGroupSet.getName());
+                    category.setLmisId(dataElementGroupSet.getId());
+                    if (categories.contains(category)) {
+                        List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
+                        updatedCommodities.add(commodity);
+                        category.setCommodities(updatedCommodities);
+                        int location = categories.indexOf(category);
+                        categories.set(location, category);
+                    } else {
+                        category.setCommodities(newArrayList(commodity));
+                        categories.add(category);
+                    }
                 }
                 commodities.add(commodity);
                 actualCommodity = commodity;
