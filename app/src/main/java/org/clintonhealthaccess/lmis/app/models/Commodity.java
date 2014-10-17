@@ -74,7 +74,7 @@ public class Commodity implements Serializable {
     private ForeignCollection<StockItem> stockItems;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 5)
-    private Collection<CommodityAction> commodityActionsSaved;
+     private Collection<CommodityAction> commodityActionsSaved;
 
     private List<CommodityAction> commodityActions = newArrayList();
 

@@ -170,7 +170,7 @@
             "dataSet": {
                 "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
                 "name": "lmis dataset",
-                "periodType": "Daily"
+                "periodType": "Monthly"
             },
             "id": "id_AMC_1",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
@@ -178,6 +178,21 @@
         "id": "0012",
         "period": "201404",
         "value": "103"
+    },
+    {
+        "commodityAction": {
+            "activityType": "AMC",
+            "dataSet": {
+                "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                "name": "lmis dataset",
+                "periodType": "Daily"
+            },
+            "id": "id_AMC_2_201405",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+        },
+        "id": "0013_201405",
+        "period": "201405",
+        "value": "135"
     },
     {
         "commodityAction": {

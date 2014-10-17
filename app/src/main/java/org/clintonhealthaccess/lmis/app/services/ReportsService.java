@@ -67,6 +67,8 @@ public class ReportsService {
     private AdjustmentService adjustmentService;
     @Inject
     Context context;
+    @Inject
+    private CommodityActionService commodityActionService;
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
                                                                            String startingMonth, String endingYear, String endingMonth) {
@@ -94,9 +96,12 @@ public class ReportsService {
 
                 int stockOnHand = getLatestStock(commodity, endDate, false);
 
+                int amc = commodityActionService.getAMC(commodity, startingDate, endDate);
+
+
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
                         openingStock, quantityReceived, quantityAdjusted, quantityLost,
-                        0, 0, 0, quantityOrdered, quantityDispensed, stockOnHand);
+                        amc, 0, 0, quantityOrdered, quantityDispensed, stockOnHand);
                 facilityStockReportItems.add(item);
             }
         } catch (Exception e) {

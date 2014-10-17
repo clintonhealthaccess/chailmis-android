@@ -172,8 +172,8 @@ public class ReportsServiceTest {
         receive(commodity, 20, receiveService);
         receive(commodity, 30, receiveService);
 
-        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
-                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category,
+                dateFormatYear.format(startDate), dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
         assertThat(facilityStockReportItems.get(0).getCommoditiesReceived(), is(50));
     }
@@ -265,6 +265,42 @@ public class ReportsServiceTest {
         int expectedQuantity = commodity.getStockOnHand() + difference;
         int stockOnHand = facilityStockReportItems.get(0).getStockOnHand();
         assertThat(stockOnHand, is(expectedQuantity));
+    }
+
+    @Test
+    public void shouldReturnCorrectAMC() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.APRIL, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedAMC = 103;
+        assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedAMC));
+    }
+
+    @Test
+    public void shouldReturnCorrectAMCFor2Months() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedAMC = 119;
+        assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedAMC));
     }
 
     private void createStockItemSnapshot(Commodity commodity, Date time, int difference) {

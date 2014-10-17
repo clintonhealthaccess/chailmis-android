@@ -30,19 +30,34 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
+import java.sql.SQLOutput;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.xml.transform.Source;
+
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 
 public class CommodityActionService {
 
@@ -78,7 +93,6 @@ public class CommodityActionService {
                             return null;
                         }
                     }
-
             );
         }
     }
@@ -86,5 +100,62 @@ public class CommodityActionService {
     public void syncCommodityActionValues(User user, List<Commodity> commodities) {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
         saveActionValues(commodityActionValues);
+    }
+
+    public int getAMC(Commodity commodity, Date startingDate, Date endDate) {
+        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        int amc = 0;
+        try {
+            Dao<CommodityActionValue, String> commodityActionValueDao = DbUtil.initialiseDao(openHelper, CommodityActionValue.class);
+            Dao<CommodityAction, String> commodityActionDao = DbUtil.initialiseDao(openHelper, CommodityAction.class);
+
+            QueryBuilder<CommodityActionValue, String> commodityActionValueQueryBuilder = commodityActionValueDao.queryBuilder();
+            List<String> periods = monthlyPeriods(startingDate, endDate);
+
+            commodityActionValueQueryBuilder.where().in("period", periods);
+
+            QueryBuilder<CommodityAction, String> commodityActionQueryBuilder = commodityActionDao.queryBuilder();
+            commodityActionQueryBuilder.where().eq("commodity_id", commodity.getId()).and().eq("activityType", DataElementType.AMC);
+
+            commodityActionValueQueryBuilder.join(commodityActionQueryBuilder);
+
+            List<CommodityActionValue> commodityActionValues = commodityActionValueQueryBuilder.query();
+            amc = average(commodityActionValues, periods.size());
+
+
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } finally {
+            releaseHelper();
+            return amc;
+        }
+    }
+
+
+    private List<String> monthlyPeriods(Date startDate, Date endDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        endDate = calendar.getTime();
+
+        List<String> periods = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+
+        calendar.setTime(startDate);
+
+        while (calendar.getTime().before(endDate)) {
+            periods.add(dateFormat.format(calendar.getTime()));
+            calendar.add(Calendar.MONTH, 1);
+        }
+
+        return periods;
+    }
+
+    private int average(List<CommodityActionValue> commodityActionValues, int maxNumberOfValues) {
+        int value = 0;
+        for (CommodityActionValue commodityActionValue : commodityActionValues) {
+            value += Integer.parseInt(commodityActionValue.getValue());
+        }
+        return value / maxNumberOfValues;
     }
 }
