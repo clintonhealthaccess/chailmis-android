@@ -144,13 +144,14 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     private void setupConstants() {
-        String name = "Monthly Stock Count Day";
-        String leadTimeName = "Delivery Lead Time";
-        Constant monthlyStockCount = Constant.builder().id(generateID(name)).name(name).displayName(name).value(24d).build();
-        Constant leadTime = Constant.builder().id(generateID(leadTimeName)).name(leadTimeName).displayName(leadTimeName).value(0.5).build();
-        constants.add(monthlyStockCount);
-        constants.add(leadTime);
+        setupConstant("Monthly Stock Count Day", 24d);
+        setupConstant("Delivery Lead Time", 0.5);
+        setupConstant("SMS_GATEWAY_NUMBER", 256785111222d);
+    }
 
+    private void setupConstant(String name, double value) {
+        Constant constant = Constant.builder().id(generateID(name)).name(name).displayName(name).value(value).build();
+        constants.add(constant);
     }
 
     private HashMap<String, Object> buildMetaData() {
