@@ -63,7 +63,6 @@ public class StockItemSnapshotService {
                         QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
                         queryBuilder.where().eq("commodity_id", commodity.getId()).and().eq("created", date);
                         PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
-                        List<StockItemSnapshot> stockItemSnapshots = dao.query(query);
 
                         return dao.query(query);
                     }
@@ -154,8 +153,6 @@ public class StockItemSnapshotService {
         boolean previousDayWasStockOutDay = openingSock == 0 ? true : false;
 
         calendar.setTime(startingDate);
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMM-dd");
 
         while (calendar.getTime().before(endDate)) {
 

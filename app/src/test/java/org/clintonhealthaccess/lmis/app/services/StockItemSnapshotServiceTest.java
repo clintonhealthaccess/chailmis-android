@@ -178,9 +178,7 @@ public class StockItemSnapshotServiceTest {
         int difference = -5;
         createStockItemSnapshot(commodity, calendar.getTime(), difference);
 
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-        calendar.add(Calendar.DAY_OF_MONTH, 3);
+        calendar.add(Calendar.DAY_OF_MONTH, 4);
         difference = -10;
         createStockItemSnapshot(commodity, calendar.getTime(), difference);
 
