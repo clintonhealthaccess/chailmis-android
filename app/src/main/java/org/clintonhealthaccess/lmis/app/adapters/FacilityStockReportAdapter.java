@@ -69,7 +69,7 @@ public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReport
         integerStringMap.put(R.id.textViewCommodityAMC, String.valueOf(item.getCommodityAMC()));
         integerStringMap.put(R.id.textViewConsumption, String.valueOf(item.getCommoditiesDispensed()));
         integerStringMap.put(R.id.textViewMaxQuantity, String.valueOf(item.getCommodityMaxThreshold()));
-        integerStringMap.put(R.id.textViewOrderQuantity, String.valueOf(item.getCommodityOrderQuantity()));
+        integerStringMap.put(R.id.textViewOrderQuantity, String.valueOf(item.getCommodityMinimumThreshold()));
 
         for (Integer key : integerStringMap.keySet()) {
             TextView textView = (TextView) view.findViewById(key);

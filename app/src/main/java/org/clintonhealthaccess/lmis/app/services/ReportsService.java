@@ -86,8 +86,7 @@ public class ReportsService {
                 int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
                         Loss.class, LossItem.class, context);
 
-                int quantityOrdered = GenericService.getTotal(commodity, startingDate, endDate,
-                        Order.class, OrderItem.class, context);
+                int minThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MINIMUM_THRESHOLD);
 
                 int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
 
@@ -101,7 +100,7 @@ public class ReportsService {
 
                 FacilityStockReportItem item = new FacilityStockReportItem(commodity.getName(),
                         openingStock, quantityReceived, quantityAdjusted, quantityLost,
-                        amc, stockOutDays, maxThreshold, quantityOrdered, quantityDispensed, stockOnHand);
+                        amc, stockOutDays, maxThreshold, minThreshold, quantityDispensed, stockOnHand);
 
                 facilityStockReportItems.add(item);
             }

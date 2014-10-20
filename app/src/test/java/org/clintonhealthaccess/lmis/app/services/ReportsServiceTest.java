@@ -115,13 +115,13 @@ public class ReportsServiceTest {
         dateFormatMonth = new SimpleDateFormat("MMMM");
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnListOfFacilityStockReportItems() throws Exception {
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(categories.get(0), "2014", "July", "2014", "July");
         assertThat(facilityStockReportItems.size(), is(greaterThan(0)));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectNumberOfFacilityStockReportItems() throws Exception {
         Category category = categories.get(0);
         int numberOfCommodities = category.getCommodities().size();
@@ -134,7 +134,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.size(), is(numberOfCommodities));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectOpeningBalance() throws Exception {
 
         Category category = categories.get(0);
@@ -160,7 +160,7 @@ public class ReportsServiceTest {
         assertThat(openingStock, is(expectedQuantity));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectQuantityOfCommoditiesReceived() throws Exception {
         Category category = categories.get(0);
         Commodity commodity = category.getCommodities().get(0);
@@ -180,7 +180,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommoditiesReceived(), is(50));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectQuantityDispensed() throws Exception {
         Category category = categoryService.all().get(0);
         Commodity commodity = category.getCommodities().get(0);
@@ -201,7 +201,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommoditiesDispensed(), is(3));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnValidQuantityLost() throws Exception {
         Category category = categories.get(0);
         Commodity commodity = category.getCommodities().get(0);
@@ -222,7 +222,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommoditiesLost(), is(4));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnTotalQuantityAdjusted() throws Exception {
         Category category = categories.get(0);
         Commodity commodity = category.getCommodities().get(0);
@@ -244,7 +244,7 @@ public class ReportsServiceTest {
 
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectStockOnHand() throws Exception {
         Category category = categories.get(0);
         Commodity commodity = category.getCommodities().get(0);
@@ -269,7 +269,7 @@ public class ReportsServiceTest {
         assertThat(stockOnHand, is(expectedQuantity));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectAMC() throws Exception {
         Category category = categories.get(0);
 
@@ -287,7 +287,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedAMC));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectAMCFor2Months() throws Exception {
         Category category = categories.get(0);
 
@@ -305,7 +305,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityAMC(), is(expectedMaxThreshold));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnMaximumThreshold() throws Exception {
         Category category = categories.get(0);
 
@@ -323,7 +323,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityMaxThreshold(), is(expectedMaxThreshold));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectMaximumThreshold() throws Exception {
         Category category = categories.get(0);
 
@@ -341,7 +341,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityMaxThreshold(), is(expectedMaxThreshold));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldReturnCorrectMaxThresholdFor2Months() throws Exception {
         Category category = categories.get(0);
 
@@ -388,6 +388,42 @@ public class ReportsServiceTest {
                         dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
         assertThat(facilityStockReportItems.get(0).getCommodityStockOutDays(), is(numOfStockOutDays));
+    }
+
+
+    public void shouldReturnMinimumThreshold() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.APRIL, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedMinThreshold = 15;
+        assertThat(facilityStockReportItems.get(0).getCommodityMinimumThreshold(), is(expectedMinThreshold));
+    }
+
+    @Test
+    public void shouldReturnCorrectMinimumThresholdFor2Months() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+        Date endDate = calendar.getTime();
+
+        List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        int expectedMinThreshold = 17;
+        assertThat(facilityStockReportItems.get(0).getCommodityMinimumThreshold(), is(expectedMinThreshold));
     }
 
 

@@ -34,12 +34,12 @@ public class FacilityStockReportItem {
     private String commodityName;
     private int openingStock, commoditiesReceived, commoditiesAdjusted,
             commoditiesLost, commodityAMC, commodityStockOutDays,
-            commodityMaxThreshold, commodityOrderQuantity, commoditiesDispensed, stockOnHand;
+            commodityMaxThreshold, commodityMinimumThreshold, commoditiesDispensed, stockOnHand;
 
     public FacilityStockReportItem(String commodityName, int openingStock, int commoditiesReceived,
                                    int commoditiesAdjusted, int commoditiesLost, int commodityAMC,
                                    int commodityStockOutDays,
-                                   int commodityMaxThreshold, int commodityOrderQuantity, int commoditiesDispensed, int stockOnHand) {
+                                   int commodityMaxThreshold, int commodityMinimumThreshold, int commoditiesDispensed, int stockOnHand) {
         this.commodityName = commodityName;
         this.openingStock = openingStock;
         this.commoditiesReceived = commoditiesReceived;
@@ -48,7 +48,7 @@ public class FacilityStockReportItem {
         this.commodityAMC = commodityAMC;
         this.commodityStockOutDays = commodityStockOutDays;
         this.commodityMaxThreshold = commodityMaxThreshold;
-        this.commodityOrderQuantity = commodityOrderQuantity;
+        this.commodityMinimumThreshold = commodityMinimumThreshold;
         this.commoditiesDispensed = commoditiesDispensed;
         this.stockOnHand = stockOnHand;
     }
@@ -85,8 +85,8 @@ public class FacilityStockReportItem {
         return commodityMaxThreshold;
     }
 
-    public int getCommodityOrderQuantity() {
-        return commodityOrderQuantity;
+    public int getCommodityMinimumThreshold() {
+        return commodityMinimumThreshold;
     }
 
     public int getCommoditiesDispensed() {

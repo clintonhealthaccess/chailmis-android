@@ -99,6 +99,16 @@
                         "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                     },
                     {
+                        "activityType": "MINIMUM_THRESHOLD",
+                        "dataSet": {
+                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
+                        "id": "id_minimum_threshold_2014_05",
+                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                    },
+                    {
                         "activityType": "MAXIMUM_THRESHOLD",
                         "dataSet": {
                             "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
