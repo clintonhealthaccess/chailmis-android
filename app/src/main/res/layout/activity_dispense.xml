@@ -135,9 +135,10 @@
 
             <GridView
                 android:id="@+id/gridViewSelectedCommodities"
+                android:layout_alignParentTop="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/buttonSubmitDispense"
+                android:layout_above="@id/buttonSubmitDispense"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:numColumns="1"
