@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH1Activity;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,5 +76,10 @@ public class ReportTypeTest {
         List<ReportType> reportTypesForCategory = ReportType.getReportTypesForCategory("Antibiotics");
         assertThat(reportTypesForCategory.size(), is(2));
         assertThat(reportTypesForCategory, containsInAnyOrder(ReportType.FacilityStockReport, ReportType.FacilityConsumptionReportRH1));
+    }
+
+    @Test
+    public void shouldGotToFacilityConsumptionReportRH1ActivityForRH1report() throws Exception {
+        assertThat(ReportType.FacilityConsumptionReportRH1.getReportActivity().getName(), is(FacilityConsumptionReportRH1Activity.class.getName()));
     }
 }

@@ -29,43 +29,33 @@
 
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
+import android.widget.ArrayAdapter;
+
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityStockReportAdapter;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<FacilityStockReportAdapter> {
-
-
+public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity {
     @Override
     String getReportName() {
-        return String.format("Facility Stock Report for %s", category.getName());
+        return "Family Planning Commodity Facility Consumption Report";
     }
 
     @Override
     int getHeaderLayout() {
-        return R.layout.facility_stock_report_header;
+        return R.layout.facility_consumption_report_rh1_header;
     }
 
     @Override
-    FacilityStockReportAdapter getAdapter() {
-        return new FacilityStockReportAdapter(getApplicationContext(), R.layout.facility_stock_report_item, new ArrayList<FacilityStockReportItem>());
+    ArrayAdapter getAdapter() {
+        return null;
     }
 
     @Override
     int getLayoutId() {
-        return R.layout.activity_facility_stock_report;
+        return R.layout.activity_facility_consumption_report_rh1;
     }
 
     @Override
     void setItems() {
-        List<FacilityStockReportItem> facilityReportItemsForCategory = reportsService.getFacilityReportItemsForCategory(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(facilityReportItemsForCategory);
-        adapter.notifyDataSetChanged();
+
     }
-
-
 }

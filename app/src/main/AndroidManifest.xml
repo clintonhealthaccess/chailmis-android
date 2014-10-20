@@ -168,6 +168,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ReportsActivity" />
         </activity>
+        <activity
+            android:name=".activities.reports.FacilityConsumptionReportRH1Activity"
+            android:label="@string/title_activity_rh1"
+            android:parentActivityName=".activities.ReportsActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ReportsActivity" />
+        </activity>
     </application>
 
 </manifest>
