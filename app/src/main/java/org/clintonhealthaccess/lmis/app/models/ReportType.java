@@ -33,6 +33,7 @@ import org.clintonhealthaccess.lmis.app.activities.HomeActivity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH1Activity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH2Activity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityStockReportActivity;
+import org.clintonhealthaccess.lmis.app.activities.reports.MonthlyVaccineUtilizationReportActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public enum ReportType {
     FacilityRequsitionIssueReportForm("Facility Requsition, Issue and Report Form", FacilityStockReportActivity.class),
     FacilityConsumptionReportRH1("Family Planning Commodity Facility Consumption Report RH1", FacilityConsumptionReportRH1Activity.class),
     FacilityConsumptionReportRH2("Reproductory Health Commodity Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class),
-    MonthlyHealthFacilityVaccinesUtilizationReport("MONTHLY HEALTH FACILITY VACCINES UTILIZATION REPORT", HomeActivity.class),
+    MonthlyHealthFacilityVaccinesUtilizationReport("MONTHLY HEALTH FACILITY VACCINES UTILIZATION REPORT", MonthlyVaccineUtilizationReportActivity.class),
     MonthlyHealthFacilityDevicesUtilizationReport("MONTHLY HEALTH FACILITY DEVICES/ OTHER MATERIALS UTILIZATION REPORT", HomeActivity.class);
     public static final String VACCINE = "vaccine";
     public static final String MALARIA = "malaria";

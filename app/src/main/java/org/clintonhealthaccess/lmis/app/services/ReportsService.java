@@ -52,7 +52,6 @@ import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -256,4 +255,6 @@ public class ReportsService {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         return calendar.getTime();
     }
+
+
 }

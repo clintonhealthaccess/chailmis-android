@@ -160,5 +160,8 @@
     <string name="total_quantity_dispensed">Total Quantity Dispensed</string>
     <string name="quantity_lost">Quantity Lost</string>
     <string name="closing_balance">Closing Balance</string>
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="commodities">Commodities</string>
 
 </resources>
