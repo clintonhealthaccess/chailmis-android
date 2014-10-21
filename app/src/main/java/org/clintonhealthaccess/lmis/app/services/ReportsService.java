@@ -41,6 +41,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -51,6 +52,8 @@ import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.joda.time.DateTime;
@@ -205,6 +208,41 @@ public class ReportsService {
         });
     }
 
+
+    public List<FacilityConsumptionReportRH2Item> getFacilityConsumptionReportRH2Items(Category category, String startingYear, String startingMonth, String endingYear, String endingMonth) {
+        ArrayList<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items = new ArrayList<>();
+
+        try {
+            Date startingDate = convertToDate(startingYear, startingMonth, true);
+            Date endDate = convertToDate(endingYear, endingMonth, false);
+
+            for (Commodity commodity : category.getCommodities()) {
+
+                int openingStock = stockItemSnapshotService.getLatestStock(commodity, startingDate, true);
+
+                int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
+                        Receive.class, ReceiveItem.class, context);
+                int quantityDispensedToClients = GenericService.getTotal(commodity, startingDate, endDate,
+                        Dispensing.class, DispensingItem.class, context);
+                int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
+                        Loss.class, LossItem.class, context);
+
+                int commoditiesDispensedToFacilities = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+
+                int closingStock = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
+
+                FacilityConsumptionReportRH2Item item = new FacilityConsumptionReportRH2Item(commodity.getName(),
+                        openingStock, quantityReceived, quantityDispensedToClients,
+                        commoditiesDispensedToFacilities, quantityLost, closingStock);
+
+                facilityConsumptionReportRH2Items.add(item);
+            }
+        } catch (Exception e) {
+            Log.e("ReportsService", e.getMessage());
+        }
+
+        return facilityConsumptionReportRH2Items;
+    }
 
     private Date convertToDate(String year, String month, boolean isStartingDate) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");

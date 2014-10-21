@@ -150,5 +150,14 @@
     <string name="lga">LGA / State CMS</string>
     <string name="zonal_store">Zonal Cold Chain Store</string>
     <string name="others">Others</string>
+    <string name="rh2_report_header">Family Planning Commodity Facility Consumption Report 2</string>
+    <string name="rh1_report_header">Family Planning Commodity Facility Consumption Report</string>
+    <string name="quantity_received">Quantity Received</string>
+    <string name="opening_balance">Opening Balance</string>
+    <string name="quantity_dispensed_to_clients">Quantity Dispensed to Clients</string>
+    <string name="quantity_dispensed_to_facility">Quantity Dispensed to Facility</string>
+    <string name="total_quantity_dispensed">Total Quantity Dispensed</string>
+    <string name="quantity_lost">Quantity Lost</string>
+    <string name="closing_balance">Closing Balance</string>
 
 </resources>

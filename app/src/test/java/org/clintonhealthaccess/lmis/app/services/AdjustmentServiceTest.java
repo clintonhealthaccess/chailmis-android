@@ -189,5 +189,25 @@ public class AdjustmentServiceTest {
         assertThat(totalAdjustments, is(35));
     }
 
+    @Test
+    public void shouldReturnQuantityAdjustedGivenReason() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
 
+        adjust(commodity, 40, true, AdjustmentReason.PHYSICAL_COUNT, adjustmentService);
+        adjust(commodity, 5, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int physicalAdjustments = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.PHYSICAL_COUNT);
+        assertThat(physicalAdjustments, is(40));
+
+        int sentToFacility = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+        assertThat(sentToFacility, is(5));
+
+    }
 }

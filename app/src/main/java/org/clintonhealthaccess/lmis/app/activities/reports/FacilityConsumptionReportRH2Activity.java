@@ -29,39 +29,48 @@
 
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
+import android.content.Context;
+import android.widget.ArrayAdapter;
+
+import com.google.inject.Inject;
+
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.adapters.reports.FacilityConsumptionReportRH2Adapter;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
+public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseActivity{
+    @Inject
+    Context context;
+
     @Override
     String getReportName() {
-        return getString(R.string.rh1_report_header);
+        return getString(R.string.rh2_report_header);
     }
 
     @Override
     int getHeaderLayout() {
-        return R.layout.facility_consumption_report_rh1_header;
+        return R.layout.facility_consumption_report_rh2_header;
     }
 
     @Override
-    FacilityCommoditityConsumptionReportRH1Adapter getAdapter() {
-        return new FacilityCommoditityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
+    ArrayAdapter getAdapter() {
+        return new FacilityConsumptionReportRH2Adapter(context, R.layout.facility_consumption_report_rh2_item, new ArrayList<FacilityConsumptionReportRH2Item>());
     }
 
     @Override
     int getLayoutId() {
-        return R.layout.activity_facility_consumption_report_rh1;
+        return R.layout.activity_facility_stock_report;
     }
 
     @Override
     void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
+        List<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items = reportsService.getFacilityConsumptionReportRH2Items(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
         adapter.clear();
-        adapter.addAll(itemsForCategory);
+        adapter.addAll(facilityConsumptionReportRH2Items);
         adapter.notifyDataSetChanged();
     }
 }

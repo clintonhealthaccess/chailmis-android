@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import org.clintonhealthaccess.lmis.app.activities.HomeActivity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH1Activity;
+import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH2Activity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityStockReportActivity;
 
 import java.util.Arrays;
@@ -41,9 +42,9 @@ import java.util.Map;
 public enum ReportType {
 
     FacilityStockReport("Facility Stock Report", FacilityStockReportActivity.class),
-    FacilityRequsitionIssueReportForm("Facility Requsition, Issue and Report Form", HomeActivity.class),
+    FacilityRequsitionIssueReportForm("Facility Requsition, Issue and Report Form", FacilityStockReportActivity.class),
     FacilityConsumptionReportRH1("Family Planning Commodity Facility Consumption Report", FacilityConsumptionReportRH1Activity.class),
-    FacilityConsumptionReportRH2("Reproductory Health Commodity Facility Consumption Report", HomeActivity.class),
+    FacilityConsumptionReportRH2("Reproductory Health Commodity Facility Consumption Report", FacilityConsumptionReportRH2Activity.class),
     MonthlyHealthFacilityVaccinesUtilizationReport("MONTHLY HEALTH FACILITY VACCINES UTILIZATION REPORT", HomeActivity.class),
     MonthlyHealthFacilityDevicesUtilizationReport("MONTHLY HEALTH FACILITY DEVICES/ OTHER MATERIALS UTILIZATION REPORT", HomeActivity.class);
     public static final String VACCINE = "vaccine";

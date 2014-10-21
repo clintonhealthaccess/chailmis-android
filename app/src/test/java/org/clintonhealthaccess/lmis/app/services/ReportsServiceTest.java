@@ -43,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
@@ -62,6 +63,7 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.adjust;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.createStockItemSnapshot;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.createStockItemSnapshotValue;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.lose;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
@@ -446,6 +448,47 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityMinimumThreshold(), is(expectedMinThreshold));
     }
 
+    @Test
+    public void shouldReturnCorrectFacilityConsumptionRH2Items() throws Exception {
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date endDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        int openingStock = 3;
+        createStockItemSnapshotValue(commodity, calendar.getTime(), openingStock);
+
+        receive(commodity, 20, receiveService);
+        receive(commodity, 30, receiveService);
+
+        dispense(commodity, 2, dispensingService);
+        dispense(commodity, 3, dispensingService);
+
+        lose(commodity, 9, lossService);
+        lose(commodity, 3, lossService);
+
+        adjust(commodity, 3, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+        adjust(commodity, 5, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date startDate = calendar.getTime();
+
+        List<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items = reportsService.getFacilityConsumptionReportRH2Items(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+
+        assertThat(facilityConsumptionReportRH2Items.get(0).getOpeningStock(), is(openingStock));
+        assertThat(facilityConsumptionReportRH2Items.get(0).getCommoditiesReceived(), is(50));
+        assertThat(facilityConsumptionReportRH2Items.get(0).getCommoditiesDispensedToClients(), is(5));
+
+        assertThat(facilityConsumptionReportRH2Items.get(0).getCommoditiesDispensedToFacilities(), is(8));
+        assertThat(facilityConsumptionReportRH2Items.get(0).totalDispensed(), is(13));
+
+        assertThat(facilityConsumptionReportRH2Items.get(0).getCommoditiesLost(), is(12));
+        assertThat(facilityConsumptionReportRH2Items.get(0).getClosingStock(), is(35));
+    }
 
     @Test
     public void shouldReturnValuesForEachCommodityInTheCategoryForgetFacilityCommodityConsumptionReportRH1() throws Exception {

@@ -155,4 +155,13 @@ public class LMISTestCase {
 
         return stockItemSnapshot;
     }
+
+    public static StockItemSnapshot createStockItemSnapshotValue(Commodity commodity, Date time, int quantity) {
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, time, quantity);
+
+        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application)
+                .create(stockItemSnapshot);
+
+        return stockItemSnapshot;
+    }
 }
