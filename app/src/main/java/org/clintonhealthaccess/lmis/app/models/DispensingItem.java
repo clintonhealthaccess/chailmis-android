@@ -115,4 +115,12 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
     public void setDispensing(Dispensing dispensing) {
         this.dispensing = dispensing;
     }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 }

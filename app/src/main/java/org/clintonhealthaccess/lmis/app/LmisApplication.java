@@ -38,6 +38,8 @@ import android.util.Log;
 
 import com.google.inject.Inject;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
 import org.clintonhealthaccess.lmis.app.backgroundServices.SmsSyncIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
@@ -73,6 +75,7 @@ public class LmisApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setBaseApplicationInjector(this, DEFAULT_STAGE, newDefaultRoboModule(this), new GuiceConfigurationModule());
+        JodaTimeAndroid.init(this);
         getInjector(this).injectMembersWithoutViews(this);
         loadAllCommoditiesToCache();
         loadAllAllocationstoCache();

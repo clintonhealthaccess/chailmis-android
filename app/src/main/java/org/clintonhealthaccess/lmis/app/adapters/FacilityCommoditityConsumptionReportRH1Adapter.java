@@ -27,41 +27,48 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities.reports;
+package org.clintonhealthaccess.lmis.app.adapters;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
+import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
-    @Override
-    String getReportName() {
-        return "Family Planning Commodity Facility Consumption Report";
+public class FacilityCommoditityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
+    private final int resource;
+
+    public FacilityCommoditityConsumptionReportRH1Adapter(Context context, int resource, List<FacilityCommodityConsumptionRH1ReportItem> objects) {
+        super(context, resource, objects);
+        this.resource = resource;
     }
 
-    @Override
-    int getHeaderLayout() {
-        return R.layout.facility_consumption_report_rh1_header;
-    }
 
     @Override
-    FacilityCommoditityConsumptionReportRH1Adapter getAdapter() {
-        return new FacilityCommoditityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) getContext()
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout view = (LinearLayout) inflater.inflate(resource, parent, false);
+        TextView textViewCommodityName = (TextView) view.findViewById(R.id.textViewCommodityName);
+        FacilityCommodityConsumptionRH1ReportItem item = getItem(position);
+        textViewCommodityName.setText(item.getCommodity().getName());
+        for (ConsumptionValue value : item.getValues()) {
+            TextView textView = new TextView(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
+            textView.setLayoutParams(params);
+            textView.setText(String.valueOf(value.getConsumption()));
+            textView.setPadding(10, 10, 10, 10);
+            view.addView(textView);
+        }
 
-    @Override
-    int getLayoutId() {
-        return R.layout.activity_facility_consumption_report_rh1;
-    }
-
-    @Override
-    void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(itemsForCategory);
-        adapter.notifyDataSetChanged();
+        return view;
     }
 }

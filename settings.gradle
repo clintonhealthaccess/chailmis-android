@@ -1,1 +1,2 @@
 include ':app', ':dhis2-models', ':dhis2-config-client'
+//startParameter.offline = true

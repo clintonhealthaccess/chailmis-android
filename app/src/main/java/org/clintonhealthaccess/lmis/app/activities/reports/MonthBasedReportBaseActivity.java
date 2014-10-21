@@ -100,8 +100,12 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         setupEndYearSpinner();
         setupListeners();
         setItems();
-        listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
+        setupListViewHeader();
         listViewReport.setAdapter(adapter);
+    }
+
+    private void setupListViewHeader() {
+        listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
     }
 
     abstract String getReportName();

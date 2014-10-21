@@ -27,41 +27,34 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities.reports;
+package org.clintonhealthaccess.lmis.app.models.reports;
 
-import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
-    @Override
-    String getReportName() {
-        return "Family Planning Commodity Facility Consumption Report";
+public class FacilityCommodityConsumptionRH1ReportItem {
+    private ArrayList<ConsumptionValue> values;
+
+    private Commodity commodity;
+
+    public FacilityCommodityConsumptionRH1ReportItem(Commodity commodity) {
+        this.commodity = commodity;
     }
 
-    @Override
-    int getHeaderLayout() {
-        return R.layout.facility_consumption_report_rh1_header;
+    public void setValues(ArrayList<ConsumptionValue> values) {
+        this.values = values;
     }
 
-    @Override
-    FacilityCommoditityConsumptionReportRH1Adapter getAdapter() {
-        return new FacilityCommoditityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
+    public Commodity getCommodity() {
+        return commodity;
     }
 
-    @Override
-    int getLayoutId() {
-        return R.layout.activity_facility_consumption_report_rh1;
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
     }
 
-    @Override
-    void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(itemsForCategory);
-        adapter.notifyDataSetChanged();
+    public ArrayList<ConsumptionValue> getValues() {
+        return values;
     }
 }

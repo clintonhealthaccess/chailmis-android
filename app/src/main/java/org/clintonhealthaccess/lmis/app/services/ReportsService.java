@@ -33,7 +33,12 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.common.base.Function;
+import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -42,18 +47,23 @@ import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
-import org.clintonhealthaccess.lmis.app.models.Order;
-import org.clintonhealthaccess.lmis.app.models.OrderItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
+import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.joda.time.DateTime;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class ReportsService {
@@ -66,6 +76,9 @@ public class ReportsService {
     Context context;
     @Inject
     CommodityActionService commodityActionService;
+    @Inject
+    DbUtil dbUtil;
+
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
                                                                            String startingMonth, String endingYear, String endingMonth) {
@@ -109,6 +122,87 @@ public class ReportsService {
         }
 
         return facilityStockReportItems;
+    }
+
+    public List<FacilityCommodityConsumptionRH1ReportItem> getFacilityCommodityConsumptionReportRH1(Category category, String startingYear,
+                                                                                                    String startingMonth, String endingYear, String endingMonth) {
+
+        ArrayList<FacilityCommodityConsumptionRH1ReportItem> items = new ArrayList<>();
+        try {
+            Date startingDate = convertToDate(startingYear, startingMonth, true);
+            Date endDate = convertToDate(endingYear, endingMonth, false);
+
+            for (Commodity commodity : category.getCommodities()) {
+                FacilityCommodityConsumptionRH1ReportItem reportItem = new FacilityCommodityConsumptionRH1ReportItem(commodity);
+                reportItem.setValues(getConsumptionValuesForCommodityBetweenDates(commodity, startingDate, endDate));
+                items.add(reportItem);
+            }
+        } catch (ParseException e) {
+            Log.e("ReportsService", e.getMessage());
+        }
+
+
+        return items;
+    }
+
+    protected ArrayList<ConsumptionValue> getConsumptionValuesForCommodityBetweenDates(final Commodity commodity, final Date startingDate, final Date endDate) {
+        ArrayList<ConsumptionValue> consumptionValues = new ArrayList<>();
+        List<DispensingItem> dispensingItems = getDispensingItems(commodity, startingDate, endDate);
+        ListMultimap<Date, DispensingItem> listMultimap = groupDispensingItems(dispensingItems);
+        HashMap<Date, Integer> values = mapDispensingItemsToDates(listMultimap, new DateTime(startingDate).withTimeAtStartOfDay(), new DateTime(endDate).withTimeAtStartOfDay());
+        for (Date date : values.keySet()) {
+            ConsumptionValue consumptionValue = new ConsumptionValue(date,values.get(date));
+            consumptionValues.add(consumptionValue);
+        }
+        sortConsumptionValues(consumptionValues);
+        return consumptionValues;
+    }
+
+    private void sortConsumptionValues(ArrayList<ConsumptionValue> consumptionValues) {
+        Collections.sort(consumptionValues, new Comparator<ConsumptionValue>() {
+            @Override
+            public int compare(ConsumptionValue lhs, ConsumptionValue rhs) {
+                return lhs.getDate().compareTo(rhs.getDate());
+            }
+        });
+    }
+
+    private HashMap<Date, Integer> mapDispensingItemsToDates(ListMultimap<Date, DispensingItem> listMultimap, DateTime start, DateTime stop) {
+        DateTime inter = start;
+        HashMap<Date, Integer> values = new HashMap<>();
+        while (inter.compareTo(stop) < 0) {
+            Integer consumption = 0;
+            if (values.containsKey(inter)) {
+                consumption = values.get(inter);
+            }
+            for (DispensingItem item : listMultimap.get(inter.toDate())) {
+                consumption += item.getQuantity();
+            }
+            values.put(inter.toDate(), consumption);
+            inter = inter.plusDays(1);
+        }
+        return values;
+    }
+
+    private ListMultimap<Date, DispensingItem> groupDispensingItems(List<DispensingItem> dispensingItems) {
+        return Multimaps.index(dispensingItems, new Function<DispensingItem, Date>() {
+            @Override
+            public Date apply(DispensingItem input) {
+                return new DateTime(input.getCreated()).withTimeAtStartOfDay().toDate();
+            }
+        });
+    }
+
+    private List<DispensingItem> getDispensingItems(final Commodity commodity, final Date startingDate, final Date endDate) {
+        return dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, List<DispensingItem>>() {
+            @Override
+            public List<DispensingItem> operate(Dao<DispensingItem, String> dao) throws SQLException {
+                QueryBuilder<DispensingItem, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().between("created", startingDate, endDate).
+                        and().eq("commodity_id", commodity.getId());
+                return queryBuilder.query();
+            }
+        });
     }
 
 

@@ -32,22 +32,30 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -74,24 +82,36 @@ public class ReportsServiceTest {
 
     @Inject
     CategoryService categoryService;
+
     @Inject
     private ReportsService reportsService;
 
     private List<CommodityActionValue> mockStockLevels;
+
     private LmisServer mockLmisServer;
+
     @Inject
     private CommodityService commodityService;
+
     private List<Category> categories;
+
     @Inject
     ReceiveService receiveService;
+
     @Inject
     private DispensingService dispensingService;
+
     @Inject
     private LossService lossService;
+
     @Inject
     private AdjustmentService adjustmentService;
 
+    @Inject
+    private DbUtil dbUtil;
+
     private SimpleDateFormat dateFormatYear;
+
     private SimpleDateFormat dateFormatMonth;
 
     @Before
@@ -427,4 +447,75 @@ public class ReportsServiceTest {
     }
 
 
+    @Test
+    public void shouldReturnValuesForEachCommodityInTheCategoryForgetFacilityCommodityConsumptionReportRH1() throws Exception {
+
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.MAY, 07);
+
+        Date endDate = calendar.getTime();
+        List<FacilityCommodityConsumptionRH1ReportItem> facilityStockReportItems = reportsService.getFacilityCommodityConsumptionReportRH1(category, dateFormatYear.format(startDate),
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
+        assertThat(facilityStockReportItems.size(), is(6));
+    }
+
+
+    @Test
+    public void shouldCalculateConsumptionWithAllDispensingItemsInDateRange() throws Exception {
+
+        Category category = categories.get(0);
+        Commodity commodity = category.getCommodities().get(0);
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(2014, Calendar.APRIL, 02);
+        createDispensingItemWithDate(commodity, calendar.getTime(), 10);
+
+        calendar.set(2014, Calendar.APRIL, 03);
+        createDispensingItemWithDate(commodity, calendar.getTime(), 10);
+
+        calendar.set(2014, Calendar.APRIL, 04);
+        createDispensingItemWithDate(commodity, calendar.getTime(), 10);
+        createDispensingItemWithDate(commodity, calendar.getTime(), 20);
+
+        calendar.set(2014, Calendar.APRIL, 06);
+        Date endDate = calendar.getTime();
+
+        System.out.println("512   ");
+
+        ArrayList<ConsumptionValue> values = reportsService.getConsumptionValuesForCommodityBetweenDates(commodity, startDate, endDate);
+        assertThat(values.size(), is(daysBetween(startDate, endDate)));
+        assertThat(values.get(0).getConsumption(), is(0));
+        assertThat(values.get(1).getConsumption(), is(10));
+        assertThat(values.get(2).getConsumption(), is(10));
+        assertThat(values.get(3).getConsumption(), is(30));
+        assertThat(values.get(4).getConsumption(), is(0));
+
+    }
+
+    private DispensingItem createDispensingItemWithDate(Commodity commodity, Date firstDate, int quantity) {
+        Dispensing dispensing = new Dispensing();
+        final DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
+        dispensingItem.setCreated(firstDate);
+        dispensingItem.setDispensing(dispensing);
+        dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, Object>() {
+            @Override
+            public Object operate(Dao<DispensingItem, String> dao) throws SQLException {
+                return dao.create(dispensingItem);
+            }
+        });
+        return dispensingItem;
+    }
+
+    public int daysBetween(Date d1, Date d2) {
+        return Days.daysBetween(new DateTime(d1), new DateTime(d2)).getDays();
+    }
 }

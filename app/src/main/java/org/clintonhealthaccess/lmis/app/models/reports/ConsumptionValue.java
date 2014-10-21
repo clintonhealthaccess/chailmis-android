@@ -27,41 +27,42 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.activities.reports;
+package org.clintonhealthaccess.lmis.app.models.reports;
 
-import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import java.util.Date;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ConsumptionValue {
+    private Date date;
+    private int consumption;
 
-public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
-    @Override
-    String getReportName() {
-        return "Family Planning Commodity Facility Consumption Report";
+    public ConsumptionValue(Date date, int consumption) {
+        this.date = date;
+        this.consumption = consumption;
+
+    }
+
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getConsumption() {
+        return consumption;
+    }
+
+    public void setConsumption(int consumption) {
+        this.consumption = consumption;
     }
 
     @Override
-    int getHeaderLayout() {
-        return R.layout.facility_consumption_report_rh1_header;
-    }
-
-    @Override
-    FacilityCommoditityConsumptionReportRH1Adapter getAdapter() {
-        return new FacilityCommoditityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
-    }
-
-    @Override
-    int getLayoutId() {
-        return R.layout.activity_facility_consumption_report_rh1;
-    }
-
-    @Override
-    void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(itemsForCategory);
-        adapter.notifyDataSetChanged();
+    public String toString() {
+        return "ConsumptionValue{" +
+                "date=" + date +
+                ", consumption=" + consumption +
+                '}';
     }
 }
