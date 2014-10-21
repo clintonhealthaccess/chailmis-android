@@ -137,6 +137,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_facility_stock_report">FacilityStockReportActivity</string>
     <string name="title_activity_rh1">FacilityConsumptionReportRH1Activity</string>
+    <string name="title_activity_rh2">FacilityConsumptionReportRH2Activity</string>
     <string name="action_settings">Settings</string>
     <string name="ending_year">Ending Year:</string>
     <string name="starting_month">Starting Month:</string>
