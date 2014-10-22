@@ -46,7 +46,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.OrderActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.events.OrderTypeChanged;
@@ -73,17 +72,15 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
     public static final String ROUTINE = "Routine";
     public static final int MIN_ORDER_PERIOD = 7;
-    private OrderActivity orderActivity;
     private List<OrderReason> unexpectedOrderReasons = new ArrayList<>();
     private OrderType orderType;
 
 
-    public SelectedOrderCommoditiesAdapter(OrderActivity orderActivity, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons, OrderType type) {
-        super(orderActivity.getApplicationContext(), resource, commodities);
+    public SelectedOrderCommoditiesAdapter(Context context, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons, OrderType type) {
+        super(context, resource, commodities);
         unexpectedOrderReasons.addAll(reasons);
-        unexpectedOrderReasons.add(0, new OrderReason(orderActivity.getString(R.string.select_reason)));
+        unexpectedOrderReasons.add(0, new OrderReason(getContext().getString(R.string.select_reason)));
         this.orderType = type;
-        this.orderActivity = orderActivity;
         EventBus.getDefault().register(this);
     }
 

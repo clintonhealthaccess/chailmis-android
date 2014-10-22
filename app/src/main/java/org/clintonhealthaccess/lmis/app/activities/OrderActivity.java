@@ -113,7 +113,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     @Override
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedOrderCommoditiesAdapter(
-                this, getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType());
+                getBaseContext(), getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType());
     }
 
     private OrderType getOrderType() {
