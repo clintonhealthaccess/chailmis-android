@@ -76,6 +76,7 @@
             android:background="@color/dark_blue_header"
             android:layout_height="wrap_content">
 
+
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -97,12 +98,39 @@
             android:paddingTop="10dp">
 
 
-            <LinearLayout
+            <ListView
                 android:layout_weight="1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/linearLayoutCategoryReports"
-                android:orientation="vertical"></LinearLayout>
+                android:id="@+id/listViewCategoryReports"
+                android:divider="@null"
+                android:orientation="vertical"></ListView>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutEmpty"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="20dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/textViewEmpty"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="@string/choose_category" />
+
+                <ImageView
+                    android:id="@+id/imageviewArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="100dp"
+                    android:src="@drawable/ic_1414000428_left_128"
+                    android:layout_toLeftOf="@id/textViewEmpty"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
     </LinearLayout>

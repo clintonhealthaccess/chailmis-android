@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -130,13 +131,13 @@ public class ReportsActivityTest {
         commodityService.initialise(new User("test", "pass"));
         ReportsActivity reportsActivity = getReportsActivity();
         LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
-        LinearLayout reportButtonsLayout = (LinearLayout) reportsActivity.findViewById(R.id.linearLayoutCategoryReports);
+        ListView reportButtonsLayout = (ListView) reportsActivity.findViewById(R.id.listViewCategoryReports);
         int buttonAmount = categoryLayout.getChildCount();
         assertThat(buttonAmount, is(7));
         Button button = (Button) categoryLayout.getChildAt(1);
         ANDROID.assertThat(button).hasTextString("Anti Malarials");
         button.performClick();
-        ANDROID.assertThat(reportButtonsLayout).hasChildCount(2);
+        assertThat(reportButtonsLayout.getAdapter().getCount(), is(2));
     }
 
     @Test
@@ -146,13 +147,13 @@ public class ReportsActivityTest {
         List<Category> categories = categoryService.all();
         ReportsActivity reportsActivity = getReportsActivity();
         LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
-        LinearLayout reportButtonsLayout = (LinearLayout) reportsActivity.findViewById(R.id.linearLayoutCategoryReports);
-        int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(7));
+        ListView reportButtonsLayout = (ListView) reportsActivity.findViewById(R.id.listViewCategoryReports);
         Button antiMalarialsButton = (Button) categoryLayout.getChildAt(1);
         antiMalarialsButton.performClick();
+        int buttonAmount = reportButtonsLayout.getAdapter().getCount();
+        assertThat(buttonAmount, is(2));
 
-        Button reportButton = (Button) reportButtonsLayout.getChildAt(0);
+        Button reportButton = (Button) reportButtonsLayout.getAdapter().getView(0, null, null);
         reportButton.performClick();
 
         ReportType facilityStockReport = ReportType.FacilityStockReport;
