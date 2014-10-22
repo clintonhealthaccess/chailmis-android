@@ -121,7 +121,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:background="@color/chart6"
-            android:layout_height="370dp"/>
+            android:layout_height="370dp" />
 
 
     </LinearLayout>
@@ -134,37 +134,52 @@
         android:orientation="vertical"
         android:layout_marginLeft="10dp">
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:text="@string/alerts"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="#fff"
-            android:textSize="22sp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center" />
-
-        <ListView
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listViewAlerts">
+            android:layout_weight="1">
 
-        </ListView>
+            <TextView
+                android:layout_width="fill_parent"
+                android:text="@string/alerts"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center" />
 
-        <TextView
+            <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listViewAlerts">
+
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:text="@string/Notifications"
-            android:gravity="center"
-            android:textColor="#fff"
-            android:textSize="22sp"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
-            android:textAlignment="center" />
+            android:layout_weight="1">
 
-        <ListView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listViewNotifications"></ListView>
+            <TextView
+                android:layout_width="fill_parent"
+                android:text="@string/Notifications"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:textAlignment="center" />
+
+            <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/listViewNotifications"></ListView>
+        </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>
