@@ -151,9 +151,9 @@ public class ReportsService {
         ArrayList<ConsumptionValue> consumptionValues = new ArrayList<>();
         List<DispensingItem> dispensingItems = getDispensingItems(commodity, startingDate, endDate);
         ListMultimap<Date, DispensingItem> listMultimap = groupDispensingItems(dispensingItems);
-        HashMap<Date, Integer> values = mapDispensingItemsToDates(listMultimap, new DateTime(startingDate).withTimeAtStartOfDay(), new DateTime(endDate).withTimeAtStartOfDay());
+        HashMap<Date, Integer> values = mapDispensingItemsToDates(listMultimap, startingDate, endDate);
         for (Date date : values.keySet()) {
-            ConsumptionValue consumptionValue = new ConsumptionValue(date,values.get(date));
+            ConsumptionValue consumptionValue = new ConsumptionValue(date, values.get(date));
             consumptionValues.add(consumptionValue);
         }
         sortConsumptionValues(consumptionValues);
@@ -169,21 +169,33 @@ public class ReportsService {
         });
     }
 
-    private HashMap<Date, Integer> mapDispensingItemsToDates(ListMultimap<Date, DispensingItem> listMultimap, DateTime start, DateTime stop) {
-        DateTime inter = start;
+    private HashMap<Date, Integer> mapDispensingItemsToDates(ListMultimap<Date, DispensingItem> listMultimap, Date start, Date stop) {
+        List<DateTime> days = getDays(start, stop);
         HashMap<Date, Integer> values = new HashMap<>();
-        while (inter.compareTo(stop) < 0) {
+        for (DateTime time : days) {
             Integer consumption = 0;
-            if (values.containsKey(inter)) {
-                consumption = values.get(inter);
+            if (values.containsKey(time)) {
+                consumption = values.get(time);
             }
-            for (DispensingItem item : listMultimap.get(inter.toDate())) {
+            for (DispensingItem item : listMultimap.get(time.toDate())) {
                 consumption += item.getQuantity();
             }
-            values.put(inter.toDate(), consumption);
-            inter = inter.plusDays(1);
+            values.put(time.toDate(), consumption);
+
         }
         return values;
+    }
+
+    public List<DateTime> getDays(Date start, Date stop) {
+        DateTime actualStart = new DateTime(start).withTimeAtStartOfDay();
+        DateTime actualEnd = new DateTime(stop).withTimeAtStartOfDay();
+        DateTime inter = actualStart;
+        List<DateTime> days = new ArrayList<>();
+        while (inter.compareTo(actualEnd) < 0) {
+            days.add(inter);
+            inter = inter.plusDays(1);
+        }
+        return days;
     }
 
     private ListMultimap<Date, DispensingItem> groupDispensingItems(List<DispensingItem> dispensingItems) {
@@ -243,7 +255,7 @@ public class ReportsService {
         return facilityConsumptionReportRH2Items;
     }
 
-    private Date convertToDate(String year, String month, boolean isStartingDate) throws ParseException {
+    public Date convertToDate(String year, String month, boolean isStartingDate) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MMMM-dd");
         Date firstDateOfMonth = dateFormat.parse(year + "-" + month + "-01");
         if (isStartingDate) {

@@ -36,5 +36,6 @@
     <dimen name="confirm_items_padding">10dp</dimen>
     <dimen name="bar_width">70dp</dimen>
     <dimen name="report_row_width">150dp</dimen>
+    <dimen name="report_commodity_name_width" >150dp</dimen>
 
 </resources>

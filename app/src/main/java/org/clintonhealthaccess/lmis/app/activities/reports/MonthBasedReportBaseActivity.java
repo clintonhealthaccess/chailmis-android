@@ -104,7 +104,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         listViewReport.setAdapter(adapter);
     }
 
-    private void setupListViewHeader() {
+    void setupListViewHeader() {
         listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
     }
 

@@ -29,14 +29,24 @@
 
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
+import android.graphics.Typeface;
+import android.util.Log;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.joda.time.DateTime;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
+    private static final String TAG = "REPORTS";
+
     @Override
     String getReportName() {
         return getString(R.string.rh1_report_header);
@@ -63,5 +73,34 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
         adapter.clear();
         adapter.addAll(itemsForCategory);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    void setupListViewHeader() {
+        LinearLayout linearLayout = buildHeaderView();
+        listViewReport.addHeaderView(linearLayout);
+    }
+
+    LinearLayout buildHeaderView() {
+        LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(getHeaderLayout(), null);
+        try {
+            Date startingDate = reportsService.convertToDate(getStartingYear(), getStartingMonth(), true);
+            Date endDate = reportsService.convertToDate(getEndingYear(), getEndingMonth(), false);
+
+            List<DateTime> days = reportsService.getDays(startingDate, endDate);
+            LinearLayout layoutRows = (LinearLayout) linearLayout.findViewById(R.id.layoutDates);
+            for (DateTime day : days) {
+                TextView textView = new TextView(getApplicationContext());
+                textView.setText(String.valueOf(day.getDayOfMonth()));
+                textView.setTextColor(getResources().getColor(R.color.black));
+                textView.setTypeface(null, Typeface.BOLD);
+                textView.setLayoutParams(FacilityCommoditityConsumptionReportRH1Adapter.PARAMS);
+                layoutRows.addView(textView);
+            }
+        } catch (ParseException e) {
+            Log.e(TAG, "Error parsing dates:" + e.getLocalizedMessage());
+
+        }
+        return linearLayout;
     }
 }

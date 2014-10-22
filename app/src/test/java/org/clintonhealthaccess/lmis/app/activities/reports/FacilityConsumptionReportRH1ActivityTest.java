@@ -30,9 +30,12 @@
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.content.Intent;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -42,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -49,6 +53,7 @@ import org.robolectric.Robolectric;
 import java.util.ArrayList;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -125,4 +130,32 @@ public class FacilityConsumptionReportRH1ActivityTest {
         assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
     }
 
+    @Test
+    public void shouldHaveTwoRowsInHeaderOfListView() throws Exception {
+        FacilityConsumptionReportRH1Activity activity = getActivity();
+        assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));
+        LinearLayout linearLayout = activity.buildHeaderView();
+        ANDROID.assertThat(linearLayout).hasChildCount(2);
+    }
+
+    @Test
+    public void shouldHaveTextCommodityNameInFirstRowOfListViewHeader() throws Exception {
+        FacilityConsumptionReportRH1Activity activity = getActivity();
+        assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));
+        LinearLayout linearLayout = activity.buildHeaderView();
+        LinearLayout firstRow = (LinearLayout) linearLayout.getChildAt(0);
+        TextView textViewCommodityName = (TextView) firstRow.getChildAt(0);
+        ANDROID.assertThat(textViewCommodityName).hasText("Commodity");
+    }
+
+    @Ignore
+    @Test
+    public void shouldHaveManyTextViewsInSecondRowOfListViewHeader() throws Exception {
+        FacilityConsumptionReportRH1Activity activity = getActivity();
+        assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));
+        LinearLayout linearLayout = activity.buildHeaderView();
+        assertThat(linearLayout.getChildCount(), is(greaterThan(1)));
+        LinearLayout secondRow = (LinearLayout) linearLayout.findViewById(R.id.layoutDates);
+        assertThat(secondRow.getChildCount(), is(greaterThan(5)));
+    }
 }

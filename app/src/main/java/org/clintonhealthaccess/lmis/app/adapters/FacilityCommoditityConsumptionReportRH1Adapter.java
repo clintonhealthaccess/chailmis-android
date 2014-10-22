@@ -44,7 +44,14 @@ import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumpt
 import java.util.List;
 
 public class FacilityCommoditityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
+    public static final int COLUMN_WIDTH = 30;
     private final int resource;
+    public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
+
+    private static LinearLayout.LayoutParams getLayoutParams() {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(COLUMN_WIDTH, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        return params;
+    }
 
     public FacilityCommoditityConsumptionReportRH1Adapter(Context context, int resource, List<FacilityCommodityConsumptionRH1ReportItem> objects) {
         super(context, resource, objects);
@@ -56,19 +63,18 @@ public class FacilityCommoditityConsumptionReportRH1Adapter extends ArrayAdapter
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout view = (LinearLayout) inflater.inflate(resource, parent, false);
-        TextView textViewCommodityName = (TextView) view.findViewById(R.id.textViewCommodityName);
+        LinearLayout linearLayout = (LinearLayout) inflater.inflate(resource, parent, false);
+        TextView textViewCommodityName = (TextView) linearLayout.findViewById(R.id.textViewCommodityName);
         FacilityCommodityConsumptionRH1ReportItem item = getItem(position);
         textViewCommodityName.setText(item.getCommodity().getName());
         for (ConsumptionValue value : item.getValues()) {
             TextView textView = new TextView(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(150, ViewGroup.LayoutParams.WRAP_CONTENT);
-            textView.setLayoutParams(params);
+            textView.setLayoutParams(PARAMS);
+            textView.setTextColor(getContext().getResources().getColor(R.color.black));
             textView.setText(String.valueOf(value.getConsumption()));
-            textView.setPadding(10, 10, 10, 10);
-            view.addView(textView);
+            linearLayout.addView(textView);
         }
 
-        return view;
+        return linearLayout;
     }
 }
