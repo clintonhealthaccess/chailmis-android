@@ -48,9 +48,12 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.BaseActivity;
 import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
+import org.clintonhealthaccess.lmis.app.adapters.reports.MonthlyVaccineUtilizationReportAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.ReportType;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 
 import java.text.DateFormatSymbols;
@@ -75,12 +78,16 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     @InjectView(R.id.textViewReportName)
     public TextView textViewReportName;
 
-    @InjectView(R.id.listViewReport)
-    private ListView listViewReport;
+    @InjectView(R.id.listViewUtilizationReportItemValues)
+    ListView listViewUtilizationReportItemValues;
+
+    @InjectView(R.id.listViewUtilizationReportItemNames)
+    ListView listViewUtilizationReportItemNames;
 
     private Category category;
 
-    private ArrayAdapter adapter;
+    private MonthlyVaccineUtilizationReportAdapter valuesAdapter;
+    private MonthlyVaccineUtilizationReportAdapter namesAdapter;
 
     public static final int NUMBER_OF_YEARS = 10;
 
@@ -105,16 +112,17 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         spinnerYear.setAdapter(yearsAdapter);
 
         setupListeners();
-        adapter = new ArrayAdapter(context, R.layout.notification_message_item, new ArrayList());
-//        setItems();
-        setupListViewHeader();
-        listViewReport.setAdapter(adapter);
+        valuesAdapter = new MonthlyVaccineUtilizationReportAdapter(context, R.layout.monthly_vaccine_utilization_report_item, new ArrayList<UtilizationItem>(), false);
+        namesAdapter = new MonthlyVaccineUtilizationReportAdapter(context, R.layout.monthly_vaccine_utilization_report_item, new ArrayList<UtilizationItem>(), true);
+        setItems();
+        listViewUtilizationReportItemValues.setAdapter(valuesAdapter);
+        listViewUtilizationReportItemNames.setAdapter(namesAdapter);
     }
 
     private void setupCommodities(Category category) {
         Drawable commodityButtonBackground = createCommodityButtonBackground();
         LinearLayout commoditiesLayout = (LinearLayout) findViewById(R.id.layoutCommodities);
-        for (final Commodity commodity: category.getCommodities()) {
+        for (final Commodity commodity : category.getCommodities()) {
             Button button = createCommoditySelectionButton(commodity, commodityButtonBackground);
             commoditiesLayout.addView(button);
         }
@@ -135,23 +143,18 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                setItems();
             }
         });
         return button;
     }
 
-
-    private void setupListViewHeader() {
-        listViewReport.addHeaderView(getLayoutInflater().inflate(R.layout.monthly_vaccine_utilization_report_header, null));
-    }
-
-     private void  setupListeners() {
+    private void setupListeners() {
 
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //setItems();
+                setItems();
             }
 
             @Override
@@ -184,12 +187,48 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         return years;
     }
 
-//    void setItems() {
-//        //List<VaccineUtilizationReportItem> vaccineUtilizationItems = reportsService.getVaccineUtilizationItems(category, getYear(), getMonth());
-//        adapter.clear();
-//        adapter.addAll(new ArrayList<>());
-//        adapter.notifyDataSetChanged();
-//    }
+    void setItems() {
+        List<UtilizationValue> headerValues = new ArrayList<>();
+        for(int i = 1; i<=31; i++){
+            headerValues.add(new UtilizationValue(i, i));
+        }
+        UtilizationItem header = new UtilizationItem("Day of Month", headerValues);
+
+        List<UtilizationValue> openingBalanceValues = new ArrayList<>();
+        for(int i = 1; i<=31; i++){
+            openingBalanceValues.add(new UtilizationValue(i, 0));
+        }
+
+        List<UtilizationValue> receivedValues = new ArrayList<>();
+        for(int i = 1; i<=31; i++){
+            receivedValues.add(new UtilizationValue(i, 23));
+        }
+
+        List<UtilizationValue> doseValues = new ArrayList<>();
+        for(int i = 1; i<=31; i++){
+            doseValues.add(new UtilizationValue(i, 90));
+        }
+
+        List<UtilizationValue> endingValues = new ArrayList<>();
+        for(int i = 1; i<=31; i++){
+            endingValues.add(new UtilizationValue(i, 8));
+        }
+
+        UtilizationItem ui = new UtilizationItem("Opening Balance", openingBalanceValues);
+        UtilizationItem ui2 = new UtilizationItem("Received", receivedValues);
+        UtilizationItem ui3 = new UtilizationItem("Doses Opened", doseValues);
+        UtilizationItem ui4 = new UtilizationItem("Ending Balance", endingValues);
+//        List<UtilizationItem> utilizationItems = reportsService.getUtilizationItems(category, getYear(), getMonth());
+
+        valuesAdapter.clear();
+        valuesAdapter.addAll(Arrays.asList(header, ui, ui2, ui3, ui4));
+        valuesAdapter.notifyDataSetChanged();
+
+
+        namesAdapter.clear();
+        namesAdapter.addAll(Arrays.asList(header, ui, ui2, ui3, ui4));
+        namesAdapter.notifyDataSetChanged();
+    }
 
     protected String getYear() {
         return (String) spinnerYear.getSelectedItem();

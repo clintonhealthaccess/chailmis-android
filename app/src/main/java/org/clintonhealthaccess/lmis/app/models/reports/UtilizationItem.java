@@ -31,8 +31,16 @@ package org.clintonhealthaccess.lmis.app.models.reports;
 
 import java.util.List;
 
+import lombok.Getter;
+
+@Getter
 public class UtilizationItem {
 
     String name;
     List<UtilizationValue> utilizationValues;
+
+    public UtilizationItem(String name, List<UtilizationValue> utilizationValues) {
+        this.name = name;
+        this.utilizationValues = utilizationValues;
+    }
 }

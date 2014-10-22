@@ -29,7 +29,14 @@
 
 package org.clintonhealthaccess.lmis.app.models.reports;
 
+import lombok.Getter;
+
+@Getter
 public class UtilizationValue {
     int day;
     int value;
+    public UtilizationValue(int day, int value){
+        this.day = day;
+        this.value = value;
+    }
 }
