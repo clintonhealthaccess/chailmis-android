@@ -159,9 +159,12 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                         if (selected.contains(getString(R.string.lga))) {
                             setAllocation(textViewAllocationId.getText().toString());
                             textViewAllocationId.setEnabled(true);
+                            textViewAllocationId.setVisibility(View.VISIBLE);
+
                         } else {
                             allocation = null;
                             textViewAllocationId.setError(null);
+                            textViewAllocationId.setVisibility(View.INVISIBLE);
                             textViewAllocationId.setEnabled(false);
                         }
                         List<CommodityToggledEvent> events = new ArrayList<CommodityToggledEvent>();
