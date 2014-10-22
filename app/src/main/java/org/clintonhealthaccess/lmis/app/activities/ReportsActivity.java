@@ -67,6 +67,7 @@ public class ReportsActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_reports);
         setupCategories();
+        
 
     }
 
