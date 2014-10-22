@@ -76,6 +76,7 @@
         </Spinner>
 
         <TextView
+            android:id="@+id/textViewEndingYear"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -88,6 +89,7 @@
             android:id="@+id/spinnerEndingYear"></Spinner>
 
         <TextView
+            android:id="@+id/textViewEndingMonth"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

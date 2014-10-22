@@ -45,7 +45,6 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -100,7 +99,7 @@ public class FacilityConsumptionReportRH1ActivityTest {
     public void shouldCreateTheEndMonthSpinner() throws Exception {
         FacilityConsumptionReportRH1Activity activity = getActivity();
         ANDROID.assertThat(activity.spinnerEndingMonth).isNotNull();
-        ANDROID.assertThat(activity.spinnerEndingMonth).isVisible();
+        ANDROID.assertThat(activity.spinnerEndingMonth).isInvisible();
     }
 
     @Test
@@ -148,7 +147,6 @@ public class FacilityConsumptionReportRH1ActivityTest {
         ANDROID.assertThat(textViewCommodityName).hasText("Commodity");
     }
 
-    @Ignore
     @Test
     public void shouldHaveManyTextViewsInSecondRowOfListViewHeader() throws Exception {
         FacilityConsumptionReportRH1Activity activity = getActivity();
@@ -156,6 +154,16 @@ public class FacilityConsumptionReportRH1ActivityTest {
         LinearLayout linearLayout = activity.buildHeaderView();
         assertThat(linearLayout.getChildCount(), is(greaterThan(1)));
         LinearLayout secondRow = (LinearLayout) linearLayout.findViewById(R.id.layoutDates);
-        assertThat(secondRow.getChildCount(), is(greaterThan(5)));
+        assertThat(secondRow.getChildCount(), is(greaterThan(0)));
+    }
+
+    @Test
+    public void shouldOnlyShowStartMonthAndStartYear() throws Exception {
+
+        FacilityConsumptionReportRH1Activity activity = getActivity();
+        ANDROID.assertThat(activity.spinnerStartingYear).isVisible();
+        ANDROID.assertThat(activity.spinnerEndingYear).isInvisible();
+        ANDROID.assertThat(activity.spinnerStartingMonth).isVisible();
+        ANDROID.assertThat(activity.spinnerEndingMonth).isInvisible();
     }
 }

@@ -42,6 +42,7 @@
             android:layout_width="@dimen/report_commodity_name_width"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:text="Commodity" />
 
@@ -50,6 +51,7 @@
             android:layout_height="wrap_content"
             android:gravity="center|center_horizontal"
             android:padding="10dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:text="Quantity Dispensed" />
     </LinearLayout>

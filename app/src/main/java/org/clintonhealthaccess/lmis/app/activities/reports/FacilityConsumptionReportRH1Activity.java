@@ -35,7 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.adapters.FacilityCommoditityConsumptionReportRH1Adapter;
+import org.clintonhealthaccess.lmis.app.adapters.FacilityCommodityConsumptionReportRH1Adapter;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.joda.time.DateTime;
 
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommoditityConsumptionReportRH1Adapter> {
+public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommodityConsumptionReportRH1Adapter> {
     private static final String TAG = "REPORTS";
 
     @Override
@@ -58,8 +58,8 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     }
 
     @Override
-    FacilityCommoditityConsumptionReportRH1Adapter getAdapter() {
-        return new FacilityCommoditityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
+    FacilityCommodityConsumptionReportRH1Adapter getAdapter() {
+        return new FacilityCommodityConsumptionReportRH1Adapter(getApplicationContext(), R.layout.facility_commodity_consumption_report_rh1_item, new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
     }
 
     @Override
@@ -69,7 +69,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
     @Override
     void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
+        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getStartingYear(), getStartingMonth());
         adapter.clear();
         adapter.addAll(itemsForCategory);
         adapter.notifyDataSetChanged();
@@ -85,7 +85,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(getHeaderLayout(), null);
         try {
             Date startingDate = reportsService.convertToDate(getStartingYear(), getStartingMonth(), true);
-            Date endDate = reportsService.convertToDate(getEndingYear(), getEndingMonth(), false);
+            Date endDate = reportsService.convertToDate(getStartingYear(), getStartingMonth(), false);
 
             List<DateTime> days = reportsService.getDays(startingDate, endDate);
             LinearLayout layoutRows = (LinearLayout) linearLayout.findViewById(R.id.layoutDates);
@@ -94,7 +94,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
                 textView.setText(String.valueOf(day.getDayOfMonth()));
                 textView.setTextColor(getResources().getColor(R.color.black));
                 textView.setTypeface(null, Typeface.BOLD);
-                textView.setLayoutParams(FacilityCommoditityConsumptionReportRH1Adapter.PARAMS);
+                textView.setLayoutParams(FacilityCommodityConsumptionReportRH1Adapter.PARAMS);
                 layoutRows.addView(textView);
             }
         } catch (ParseException e) {
@@ -102,5 +102,10 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
         }
         return linearLayout;
+    }
+
+    @Override
+    SpinnerVisibilityStrategy getStrategy() {
+        return SpinnerVisibilityStrategy.startVisible;
     }
 }

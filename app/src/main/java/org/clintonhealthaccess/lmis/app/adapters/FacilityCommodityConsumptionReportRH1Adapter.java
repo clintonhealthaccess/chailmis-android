@@ -43,7 +43,7 @@ import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumpt
 
 import java.util.List;
 
-public class FacilityCommoditityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
+public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
     public static final int COLUMN_WIDTH = 30;
     private final int resource;
     public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
@@ -53,7 +53,7 @@ public class FacilityCommoditityConsumptionReportRH1Adapter extends ArrayAdapter
         return params;
     }
 
-    public FacilityCommoditityConsumptionReportRH1Adapter(Context context, int resource, List<FacilityCommodityConsumptionRH1ReportItem> objects) {
+    public FacilityCommodityConsumptionReportRH1Adapter(Context context, int resource, List<FacilityCommodityConsumptionRH1ReportItem> objects) {
         super(context, resource, objects);
         this.resource = resource;
     }

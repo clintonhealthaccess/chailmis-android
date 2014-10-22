@@ -73,6 +73,13 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
     @InjectView(R.id.listViewReport)
     ListView listViewReport;
+
+    @InjectView(R.id.textViewEndingYear)
+    TextView textViewEndingYear;
+
+    @InjectView(R.id.textViewEndingMonth)
+    TextView textViewEndingMonth;
+
     @Inject
     UserService userService;
 
@@ -91,6 +98,13 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         category = (Category) getIntent().getSerializableExtra(ReportsActivity.CATEGORY_BUNDLE_KEY);
         adapter = getAdapter();
         textViewReportName.setText(getReportName());
+        setupSpinners();
+        setItems();
+        setupListViewHeader();
+        listViewReport.setAdapter(adapter);
+    }
+
+    private void setupSpinners() {
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
         ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths());
         spinnerStartingMonth.setAdapter(startMonthAdapter);
@@ -99,10 +113,13 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         spinnerStartingYear.setAdapter(yearsAdapter);
         setupEndYearSpinner();
         setupListeners();
-        setItems();
-        setupListViewHeader();
-        listViewReport.setAdapter(adapter);
+        getStrategy().applyVisibilityStrategy(spinnerStartingMonth, spinnerEndingMonth, spinnerStartingYear, spinnerEndingYear,textViewEndingMonth,textViewEndingYear);
     }
+
+    SpinnerVisibilityStrategy getStrategy() {
+        return SpinnerVisibilityStrategy.allVisible;
+    }
+
 
     void setupListViewHeader() {
         listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
