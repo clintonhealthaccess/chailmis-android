@@ -41,6 +41,7 @@ import android.widget.Spinner;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
@@ -48,11 +49,13 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.AdjustmentsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ConfirmAdjustmentsFragment;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +78,9 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.buttonSubmitAdjustments)
     Button buttonSubmitAdjustments;
+
+    @Inject
+    CommodityService commodityService;
 
     @Override
     protected Button getSubmitButton() {
@@ -147,6 +153,11 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
         if (presetReason != null) {
             int selectedIndex = adjustmentReasons.indexOf(new AdjustmentReason(presetReason, true, true));
             spinnerAdjustmentReason.setSelection(selectedIndex);
+            for (Commodity commodity : commodityService.all()) {
+                AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, commodity.getStockOnHand());
+                adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+                onEvent(new CommodityToggledEvent(adjustmentsViewModel));
+            }
         }
 
         spinnerAdjustmentReason.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

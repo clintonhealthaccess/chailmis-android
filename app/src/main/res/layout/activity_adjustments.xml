@@ -103,18 +103,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_height="wrap_content"></Spinner>
-
-            <GridView
-                android:id="@+id/gridViewSelectedCommodities"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/spinnerAdjustmentReason"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:numColumns="1"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="7dp" />
-
             <Button
                 android:id="@+id/buttonSubmitAdjustments"
                 android:layout_width="wrap_content"
@@ -124,6 +112,19 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/submit"
                 android:visibility="invisible" />
+            <GridView
+                android:id="@+id/gridViewSelectedCommodities"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spinnerAdjustmentReason"
+                android:layout_above="@id/buttonSubmitAdjustments"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:numColumns="1"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="7dp" />
+
+
 
         </RelativeLayout>
     </LinearLayout>

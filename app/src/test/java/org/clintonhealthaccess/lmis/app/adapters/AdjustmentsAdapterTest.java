@@ -233,6 +233,25 @@ public class AdjustmentsAdapterTest {
         ANDROID.assertThat(activity.keyBoardView).isShown();
     }
 
+    @Test
+    public void shouldSetTheCountedTextViewIfTheCountedIsSetInTheViewModel() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getStockOnHand()).thenReturn(100);
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        int stockCounted = 300;
+        adjustmentsViewModel.setStockCounted(stockCounted);
+        commodities.add(adjustmentsViewModel);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+
+        ANDROID.assertThat(editText).containsText("300");
+
+    }
+
     private AdjustmentsAdapter getAdjustmentsAdapter(AdjustmentReason adjustmentReason) {
         return getAdjustmentsAdapterForQuantity(adjustmentReason, 12);
     }

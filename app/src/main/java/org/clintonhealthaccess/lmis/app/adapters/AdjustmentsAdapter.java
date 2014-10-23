@@ -135,7 +135,12 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         if (quantity >= 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
+        int counted = commodityViewModel.getStockCounted();
+        if (counted >= 0) {
+            editTextStockCounted.setText(Integer.toString(counted));
+        }
         activateCancelButton(imageButtonCancel, commodityViewModel);
+
         return rowView;
     }
 
