@@ -34,7 +34,6 @@ import android.util.Log;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
@@ -43,6 +42,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.alerts.AllocationAlert;
@@ -62,6 +62,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.activities.OrderActivity.setupOrderCommodityViewModel;
 
@@ -74,6 +75,7 @@ public class AlertsService {
     CommodityService commodityService;
     @Inject
     AllocationService allocationService;
+
     @Inject
     DbUtil dbUtil;
     @Inject
@@ -99,7 +101,7 @@ public class AlertsService {
     }
 
     public List<LowStockAlert> getEnabledLowStockAlerts() {
-        return FluentIterable.from(getLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+        return from(getLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
             @Override
             public boolean apply(LowStockAlert input) {
                 return !input.isDisabled();
@@ -176,7 +178,7 @@ public class AlertsService {
     }
 
     private ImmutableList<Commodity> getCommoditiesInLowStockAlerts() {
-        return FluentIterable.from(queryAllLowStockAlerts()).transform(new Function<LowStockAlert, Commodity>() {
+        return from(queryAllLowStockAlerts()).transform(new Function<LowStockAlert, Commodity>() {
             @Override
             public Commodity apply(LowStockAlert input) {
                 return input.getCommodity();
@@ -185,8 +187,8 @@ public class AlertsService {
     }
 
     public ImmutableList<LowStockAlert> getLowStockAlertsForCommodities(final List<Commodity> commodities) {
-        return FluentIterable
-                .from(queryAllLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+        return
+                from(queryAllLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
                     @Override
                     public boolean apply(LowStockAlert input) {
                         return commodities.contains(input.getCommodity());
@@ -249,7 +251,7 @@ public class AlertsService {
     }
 
     public List<OrderCommodityViewModel> getOrderCommodityViewModelsForLowStockAlert() {
-        return FluentIterable.from(getEnabledLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
+        return from(getEnabledLowStockAlerts()).filter(new Predicate<LowStockAlert>() {
             @Override
             public boolean apply(LowStockAlert input) {
                 return !input.getCommodity().isNonLGA();
@@ -373,7 +375,7 @@ public class AlertsService {
     }
 
     public List<OrderCommodityViewModel> getOrderViewModelsForRoutineOrderAlert() {
-        return FluentIterable.from(commodityService.all()).filter(new Predicate<Commodity>() {
+        return from(commodityService.all()).filter(new Predicate<Commodity>() {
             @Override
             public boolean apply(Commodity input) {
                 return !input.isNonLGA();
@@ -411,7 +413,7 @@ public class AlertsService {
     }
 
     private List<Allocation> getAllocationsFromAlerts(List<AllocationAlert> allocationAlerts) {
-        return FluentIterable.from(allocationAlerts).transform(new Function<AllocationAlert, Allocation>() {
+        return from(allocationAlerts).transform(new Function<AllocationAlert, Allocation>() {
             @Override
             public Allocation apply(AllocationAlert input) {
                 return input.getAllocation();
@@ -469,15 +471,47 @@ public class AlertsService {
         });
     }
 
+
     public void disableAllMonthlyStockCountAlerts() {
-        dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, Integer>() {
-            @Override
-            public Integer operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
-                UpdateBuilder<MonthlyStockCountAlert, String> updateBuilder = dao.updateBuilder();
-                updateBuilder.where().eq(DISABLED, false);
-                updateBuilder.updateColumnValue(DISABLED, true);
-                return updateBuilder.update();
+        for (final MonthlyStockCountAlert alert : getEnabledMonthlyStockAlerts()) {
+            if (adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(alert.getDateCreated())) {
+                dbUtil.withDao(MonthlyStockCountAlert.class, new DbUtil.Operation<MonthlyStockCountAlert, Integer>() {
+                    @Override
+                    public Integer operate(Dao<MonthlyStockCountAlert, String> dao) throws SQLException {
+                        alert.setDisabled(true);
+                        return dao.update(alert);
+                    }
+                });
             }
+        }
+
+    }
+
+    boolean adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(final Date date) {
+        final Date low = Helpers.firstDayOfMonth(date);
+        final Date high = Helpers.lastDayOfMonth(date);
+        final List<Commodity> commoditiesFromAdjusments = from(getAdjustmentsBetweenDates(low, high)).transform(new Function<Adjustment, Commodity>() {
+            @Override
+            public Commodity apply(Adjustment input) {
+                return input.getCommodity();
+            }
+        }).toList();
+        List<Commodity> commoditiesWithoutAdjusments = from(commodityService.all()).filter(new Predicate<Commodity>() {
+            @Override
+            public boolean apply(Commodity input) {
+                return !commoditiesFromAdjusments.contains(input);
+            }
+        }).toList();
+        return commoditiesWithoutAdjusments.size() == 0;
+    }
+
+    private List<Adjustment> getAdjustmentsBetweenDates(final Date low, final Date high) {
+        return dbUtil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
+            @Override
+            public List<Adjustment> operate(Dao<Adjustment, String> dao) throws SQLException {
+                return dao.queryBuilder().where().between("created", low, high).query();
+            }
+
         });
     }
 }

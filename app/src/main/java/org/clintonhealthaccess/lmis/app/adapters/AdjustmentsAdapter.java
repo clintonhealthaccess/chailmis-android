@@ -221,6 +221,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             String value = editable.toString();
             if (!value.isEmpty()) {
                 int quantity = getIntFromString(value);
+                adjustmentsViewModel.setStockCounted(quantity);
                 if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
                     int difference = quantity - adjustmentsViewModel.getStockOnHand();
                     boolean isPositive = difference > 0;

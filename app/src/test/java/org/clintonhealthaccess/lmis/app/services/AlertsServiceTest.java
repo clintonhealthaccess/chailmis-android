@@ -35,6 +35,8 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -49,6 +51,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,6 +66,9 @@ import static org.robolectric.Robolectric.application;
 public class AlertsServiceTest {
     @Inject
     AlertsService alertsService;
+
+    @Inject
+    AdjustmentService adjusmentService;
 
     @Inject
     private CommodityService commodityService;
@@ -385,15 +391,15 @@ public class AlertsServiceTest {
 
         setPreferenceIntegerValue(25, CommodityService.MONTHLY_STOCK_COUNT_DAY);
 
-        alertsService.generateMonthlyStockCountAlerts(calendar.getTime());
+        Date date = calendar.getTime();
+        alertsService.generateMonthlyStockCountAlerts(date);
 
-        assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(1));
-
+        List<MonthlyStockCountAlert> enabledMonthlyStockAlerts = alertsService.getEnabledMonthlyStockAlerts();
+        assertThat(enabledMonthlyStockAlerts.size(), is(1));
+        createAdjusmentsForEachCommodity(date);
+        assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(date), is(true));
         alertsService.disableAllMonthlyStockCountAlerts();
-
         assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(0));
-
-
     }
 
     @Test
@@ -404,6 +410,54 @@ public class AlertsServiceTest {
         int numberOfCommodities = 5;
         assertThat(commodityViewModels.size(), is(numberOfCommodities));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
+    }
+
+
+    @Test
+    public void shouldCheckIfAdjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert() throws Exception {
+        setupCommodities();
+        Adjustment adjustment = new Adjustment(commodityService.all().get(0), 10, true, AdjustmentReason.PHYSICAL_COUNT.getName());
+
+        saveAdjusment(adjustment);
+
+        assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(new Date()), is(false));
+        createAdjusmentsForEachCommodity(new Date());
+        assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(new Date()), is(true));
+
+
+    }
+
+    private void createAdjusmentsForEachCommodity(Date date) {
+        final List<Adjustment> adjustments = new ArrayList<>();
+        for (Commodity commodity : commodityService.all()) {
+            final Adjustment adjustment_new = new Adjustment(commodity, 10, true, AdjustmentReason.PHYSICAL_COUNT.getName());
+            adjustment_new.setCreated(date);
+            adjustments.add(adjustment_new);
+        }
+
+        createAdjusments(adjustments);
+    }
+
+    private void createAdjusments(final List<Adjustment> adjustments) {
+        dbUtil.withDaoAsBatch(Adjustment.class, new DbUtil.Operation<Adjustment, Object>() {
+            @Override
+            public Object operate(Dao<Adjustment, String> dao) throws SQLException {
+                for (Adjustment adj : adjustments) {
+                    dao.create(adj);
+                }
+                return null;
+            }
+        });
+    }
+
+    private void saveAdjusment(final Adjustment adjustment) {
+        dbUtil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, Object>() {
+            @Override
+            public Object operate(Dao<Adjustment, String> dao) throws SQLException {
+                dao.create(adjustment);
+                return null;
+            }
+        });
     }
 
     private void createRoutineOrderAlert(final RoutineOrderAlert data) {

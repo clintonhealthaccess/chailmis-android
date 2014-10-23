@@ -121,4 +121,12 @@ public class Adjustment implements Serializable, Snapshotable {
     private void setDate() {
         this.created = new Date();
     }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 }

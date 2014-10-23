@@ -30,28 +30,21 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
-import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
-import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
 public class AdjustmentService {
     @Inject
@@ -64,6 +57,10 @@ public class AdjustmentService {
 
     @Inject
     StockService stockService;
+
+
+    @Inject
+    CategoryService categoryService;
 
     @Inject
     Context context;
@@ -92,6 +89,7 @@ public class AdjustmentService {
                 return null;
             }
         });
+        categoryService.clearCache();
         alertsService.disableAllMonthlyStockCountAlerts();
     }
 

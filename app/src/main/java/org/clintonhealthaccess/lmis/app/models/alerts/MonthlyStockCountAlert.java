@@ -80,4 +80,16 @@ public class MonthlyStockCountAlert implements NotificationMessage {
             context.startActivity(intent);
         }
     }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
 }
