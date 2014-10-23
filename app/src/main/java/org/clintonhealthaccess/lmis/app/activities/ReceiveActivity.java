@@ -38,6 +38,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.inject.Inject;
@@ -79,6 +80,9 @@ public class ReceiveActivity extends CommoditySelectableActivity {
 
     @InjectView(R.id.spinnerSource)
     public Spinner spinnerSource;
+
+    @InjectView(R.id.textViewAllocationLabel)
+    TextView textViewAllocationLabel;
 
     @Inject
     AllocationService allocationService;
@@ -170,11 +174,13 @@ public class ReceiveActivity extends CommoditySelectableActivity {
                             setAllocation(textViewAllocationId.getText().toString());
                             textViewAllocationId.setEnabled(true);
                             textViewAllocationId.setVisibility(View.VISIBLE);
+                            textViewAllocationLabel.setVisibility(View.VISIBLE);
 
                         } else {
                             allocation = null;
                             textViewAllocationId.setError(null);
                             textViewAllocationId.setVisibility(View.INVISIBLE);
+                            textViewAllocationLabel.setVisibility(View.INVISIBLE);
                             textViewAllocationId.setEnabled(false);
                         }
                         List<CommodityToggledEvent> events = new ArrayList<CommodityToggledEvent>();

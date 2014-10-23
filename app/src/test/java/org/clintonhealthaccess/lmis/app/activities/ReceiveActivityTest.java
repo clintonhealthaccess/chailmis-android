@@ -238,6 +238,7 @@ public class ReceiveActivityTest {
         setSource(receiveActivity, application.getString(R.string.zonal_store));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isInvisible();
+        ANDROID.assertThat(receiveActivity.textViewAllocationLabel).isInvisible();
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
     }
 
@@ -259,6 +260,7 @@ public class ReceiveActivityTest {
         setSource(receiveActivity, application.getString(R.string.lga));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isVisible();
+        ANDROID.assertThat(receiveActivity.textViewAllocationLabel).isVisible();
         CharSequence error = receiveActivity.textViewAllocationId.getError();
         assertThat(error, notNullValue());
         assertThat(error.toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
