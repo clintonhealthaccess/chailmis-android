@@ -45,14 +45,21 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItemName;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
@@ -75,6 +82,12 @@ public class CommodityService {
     CommodityActionService commodityActionService;
 
     @Inject
+    StockItemSnapshotService stockItemSnapshotService;
+
+    @Inject
+    ReceiveService receiveService;
+
+    @Inject
     private DbUtil dbUtil;
 
     @Inject
@@ -88,6 +101,8 @@ public class CommodityService {
 
     @InjectResource(R.string.routine_order_alert_day)
     private String routineOrderAlertDay;
+    @Inject
+    private DispensingService dispensingService;
 
     public void initialise(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "initialise");
@@ -245,4 +260,109 @@ public class CommodityService {
         }
     }
 
+    public List<UtilizationItem> getMonthlyUtilizationItems(Commodity commodity, Date date) throws Exception {
+        Date monthEndDate = DateUtil.getMonthEndDate(date);
+        Date monthStartDate = DateUtil.getMonthStartDate(date);
+
+        List<UtilizationItem> utilizationItems = new ArrayList<>();
+        for (UtilizationItemName utilizationItemName : UtilizationItemName.values()) {
+
+            if (utilizationItemName.equals(UtilizationItemName.DAY_OF_MONTH)) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        getDaysOfMonth(commodity, monthStartDate, monthEndDate)));
+            }
+
+            if (utilizationItemName.equals(UtilizationItemName.OPENING_BALANCE)) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        getOpeningBalances(commodity, monthStartDate, monthEndDate)));
+            }
+
+            if (utilizationItemName.equals(UtilizationItemName.RECEIVED)) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        receiveService.getReceivedValues(commodity, monthStartDate, monthEndDate)));
+            }
+
+            if (utilizationItemName.equals(UtilizationItemName.DOSES_OPENED)) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        dispensingService.getDispensedValues(commodity, monthStartDate, monthEndDate)));
+            }
+
+            if (utilizationItemName.equals(UtilizationItemName.ENDING_BALANCE)) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        getEndingBalance(commodity, monthStartDate, monthEndDate)));
+            }
+        }
+
+        return utilizationItems;
+    }
+
+    private List<UtilizationValue> getDaysOfMonth(Commodity commodity, Date startDate, Date endDate) {
+        Calendar calendar = DateUtil.calendarDate(startDate);
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+        while (calendar.getTime().before(upperLimitDate)) {
+
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()),
+                    DateUtil.getDayNumber(calendar.getTime()));
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return utilizationValues;
+    }
+
+    private List<UtilizationValue> getEndingBalance(Commodity commodity, Date startDate, Date endDate) throws Exception {
+        List<StockItemSnapshot> stockItemSnapshots = stockItemSnapshotService.get(commodity,
+                DateUtil.addDayOfMonth(startDate, -1), endDate);
+
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        int closingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
+        int previousDaysClosingStock = closingStock;
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
+
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+        while (calendar.getTime().before(upperLimitDate)) {
+
+            StockItemSnapshot closingStockSnapshot = stockItemSnapshotService.getLatest(commodity,
+                    DateUtil.addDayOfMonth(calendar.getTime()), stockItemSnapshots);
+            int closingBalance = closingStockSnapshot == null ? previousDaysClosingStock :
+                    closingStockSnapshot.getQuantity();
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), closingBalance);
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            previousDaysClosingStock = closingStock;
+        }
+
+        return utilizationValues;
+    }
+
+    private List<UtilizationValue> getOpeningBalances(Commodity commodity, Date startDate, Date endDate) throws Exception {
+        List<StockItemSnapshot> stockItemSnapshots = stockItemSnapshotService.get(commodity,
+                DateUtil.addDayOfMonth(startDate, -1), endDate);
+
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        int openingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, true);
+        int previousDaysOpeningStock = openingStock;
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
+
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+        while (calendar.getTime().before(upperLimitDate)) {
+
+            StockItemSnapshot openingStockSnapshot = stockItemSnapshotService.getLatest(commodity,
+                    DateUtil.addDayOfMonth(calendar.getTime(), -1), stockItemSnapshots);
+            int openingBalance = openingStockSnapshot == null ? previousDaysOpeningStock :
+                    openingStockSnapshot.getQuantity();
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), openingBalance);
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            previousDaysOpeningStock = openingStock;
+        }
+
+        return utilizationValues;
+    }
 }

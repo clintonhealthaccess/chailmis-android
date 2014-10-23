@@ -72,6 +72,14 @@ public class StockItemSnapshot {
         this.quantity = quantity;
     }
 
+    public Date getCreated(){
+        return  created;
+    }
+
+    public Commodity getCommodity(){
+        return  commodity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

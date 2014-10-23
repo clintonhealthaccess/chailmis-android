@@ -32,6 +32,8 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
@@ -43,12 +45,18 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -135,4 +143,38 @@ public class DispensingService {
         });
     }
 
+    public List<UtilizationValue> getDispensedValues(Commodity commodity, Date startDate, Date endDate) {
+        List<DispensingItem> items = GenericService.getItems(commodity, startDate, endDate, Dispensing.class, DispensingItem.class, context);
+
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
+
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+
+        while (calendar.getTime().before(upperLimitDate)) {
+            int dayDispensingItems = getTotal(calendar.getTime(), items);
+            UtilizationValue utilizationValue =
+                    new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), dayDispensingItems);
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return utilizationValues;
+    }
+
+    private int getTotal(final Date date, List<DispensingItem> dispensingItems) {
+        List<DispensingItem> daysDispensingItems = FluentIterable.from(dispensingItems).filter(new Predicate<DispensingItem>() {
+            @Override
+            public boolean apply(DispensingItem input) {
+                return DateUtil.equal(input.getCreated(), date);
+            }
+        }).toList();
+
+        int total = 0;
+        for (DispensingItem dispensingItem : daysDispensingItems) {
+            total += dispensingItem.getQuantity();
+        }
+
+        return total;
+    }
 }

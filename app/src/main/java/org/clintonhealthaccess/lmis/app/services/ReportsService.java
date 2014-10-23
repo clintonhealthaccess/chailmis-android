@@ -53,6 +53,8 @@ import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.joda.time.DateTime;
 
@@ -79,6 +81,8 @@ public class ReportsService {
     CommodityActionService commodityActionService;
     @Inject
     DbUtil dbUtil;
+    @Inject
+    private CommodityService commodityService;
 
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
@@ -268,4 +272,24 @@ public class ReportsService {
     }
 
 
+    public List<MonthlyVaccineUtilizationReportItem> getMonthlyVaccineUtilizationReportItems(Category category, String year, String month) {
+
+        ArrayList<MonthlyVaccineUtilizationReportItem> reportItems = new ArrayList<>();
+
+        try {
+            Date date = convertToDate(year, month, true);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            for(Commodity commodity: category.getCommodities()){
+                List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date);
+                MonthlyVaccineUtilizationReportItem monthlyVaccineUtilizationReportItem
+                        = new MonthlyVaccineUtilizationReportItem(commodity.getName(), utilizationItems);
+                reportItems.add(monthlyVaccineUtilizationReportItem);
+            }
+        } catch (Exception e) {
+            Log.e("ReportsService", e.getMessage());
+        }
+        return reportItems;
+    }
 }

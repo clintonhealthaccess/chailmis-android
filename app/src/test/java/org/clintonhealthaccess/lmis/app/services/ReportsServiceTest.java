@@ -44,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -559,5 +560,19 @@ public class ReportsServiceTest {
 
     public int daysBetween(Date d1, Date d2) {
         return Days.daysBetween(new DateTime(d1), new DateTime(d2)).getDays();
+    }
+
+    @Test
+    public void shouldReturnCorrectNumberOfMonthlyVaccineUtilizationReportItems() throws Exception {
+        Category category = categories.get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2014, Calendar.APRIL, 01);
+        Date date = calendar.getTime();
+        List<MonthlyVaccineUtilizationReportItem> reportItems = reportsService.getMonthlyVaccineUtilizationReportItems(category, dateFormatYear.format(date),
+                dateFormatMonth.format(date));
+
+        int expectedSize = category.getCommodities().size();
+        assertThat(reportItems.size(), is(expectedSize));
     }
 }

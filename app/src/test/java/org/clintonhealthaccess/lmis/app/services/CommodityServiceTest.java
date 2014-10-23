@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.SharedPreferences;
+import android.text.format.DateUtils;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -39,6 +40,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -47,6 +49,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -191,5 +195,17 @@ public class CommodityServiceTest {
         assertThat(antiMalarialCategory.getName(), equalTo("Anti Malarials"));
         assertThat(antiMalarialCategory.getCommodities().size(), is(6));
         assertThat(antiMalarialCategory.getCommodities().get(0).getName(), equalTo("Coartem"));
+    }
+
+    @Test
+    public void shouldReturnCorrectNumberOfUtilizationValuesForTheMonthInTheUtilizationItem() throws Exception {
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, Calendar.APRIL);
+        Date date = calendar.getTime();
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date);
+        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)));
     }
 }

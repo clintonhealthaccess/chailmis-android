@@ -32,14 +32,20 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -78,6 +84,25 @@ public class StockItemSnapshotService {
         return null;
     }
 
+    public List<StockItemSnapshot> get(final Commodity commodity, final Date startDate, final Date endDate) {
+        return dbUtil.withDao(StockItemSnapshot.class,
+                new DbUtil.Operation<StockItemSnapshot, List<StockItemSnapshot>>() {
+                    @Override
+                    public List<StockItemSnapshot> operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
+                        QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
+
+                        queryBuilder.where().eq("commodity_id", commodity.getId())
+                                .and().gt("created", startDate).or().eq("created", startDate)
+                                .and().lt("created", endDate).or().eq("created", endDate);
+
+                        PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
+
+                        return dao.query(query);
+                    }
+                }
+        );
+    }
+
     public void createOrUpdate(Commodity commodity) {
         try {
             StockItemSnapshot stockItemSnapshot = get(commodity, new Date());
@@ -99,12 +124,28 @@ public class StockItemSnapshotService {
     }
 
     private void create(Commodity commodity) {
-
         StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
         new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
     }
 
     public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (isOpeningStock) {
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+        }
+        Date requiredDate = calendar.getTime();
+
+        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity,
+                requiredDate);
+        if (latestStockItemSnapshot != null) {
+            return latestStockItemSnapshot.getQuantity();
+        }
+
+        return 0;
+    }
+
+    public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock, List<StockItemSnapshot> stockItemSnapshots) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         if (isOpeningStock) {
@@ -141,15 +182,25 @@ public class StockItemSnapshotService {
 
     }
 
+    public StockItemSnapshot getLatest(final Commodity commodity, final Date date, List<StockItemSnapshot> stockItemSnapshots) {
+        for (StockItemSnapshot snapshot : stockItemSnapshots) {
+            if (DateUtil.equal(snapshot.getCreated(), date) &&
+                    snapshot.getCommodity().equals(commodity)) {
+                return snapshot;
+            }
+        }
+        return null;
+    }
+
     public int getStockOutDays(Commodity commodity, Date startingDate, Date endDate) throws Exception {
-        int openingSock = getLatestStock(commodity, startingDate, true);
+        int openingStock = getLatestStock(commodity, startingDate, true);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(endDate);
         calendar.add(Calendar.DAY_OF_MONTH, -1);
 
-        int numOfStockOutDays = openingSock == 0 ? 1 : 0;
-        boolean previousDayWasStockOutDay = openingSock == 0 ? true : false;
+        int numOfStockOutDays = openingStock == 0 ? 1 : 0;
+        boolean previousDayWasStockOutDay = openingStock == 0 ? true : false;
 
         calendar.setTime(startingDate);
 

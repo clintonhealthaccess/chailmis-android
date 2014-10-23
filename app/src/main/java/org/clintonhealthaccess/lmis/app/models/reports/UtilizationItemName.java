@@ -29,18 +29,21 @@
 
 package org.clintonhealthaccess.lmis.app.models.reports;
 
-import java.util.List;
+public enum UtilizationItemName {
 
-import lombok.Getter;
+    DAY_OF_MONTH("Day of Month"),
+    OPENING_BALANCE("Opening Balance"),
+    RECEIVED("Received"),
+    DOSES_OPENED("Doses Opened"),
+    ENDING_BALANCE("Ending Balance");
 
-@Getter
-public class UtilizationItem {
-    String name;
-    List<UtilizationValue> utilizationValues;
+    private String name;
 
-    public UtilizationItem(String name, List<UtilizationValue> utilizationValues) {
+    UtilizationItemName(String name) {
         this.name = name;
-        this.utilizationValues = utilizationValues;
     }
 
+    public String getName() {
+        return name;
+    }
 }

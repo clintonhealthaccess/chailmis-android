@@ -39,6 +39,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.BaseItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.Receive;
+import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
@@ -56,6 +58,19 @@ public class GenericService {
                                                                          Class<ItemClass> itemClass, Context context) {
         int totalQuantity = 0;
 
+        List<ItemClass> items = getItems(commodity, startDate, endDate, actionClass, itemClass, context);
+
+        for (ItemClass item : items) {
+            totalQuantity += item.getQuantity();
+        }
+
+        return totalQuantity;
+    }
+
+
+    public static <ActionClass, ItemClass extends BaseItem> List<ItemClass> getItems(Commodity commodity, Date startDate,
+                                                                         Date endDate, Class<ActionClass> actionClass,
+                                                                         Class<ItemClass> itemClass, Context context) {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
             Dao<ActionClass, String> actionDao = initialiseDao(openHelper, actionClass);
@@ -68,19 +83,14 @@ public class GenericService {
             itemQueryBuilder.where().eq("commodity_id", commodity.getId());
             itemQueryBuilder.join(actionQueryBuilder);
 
-            List<ItemClass> items = itemQueryBuilder.query();
+            return itemQueryBuilder.query();
 
-            for (ItemClass item : items) {
-                totalQuantity += item.getQuantity();
-            }
         } catch (SQLException e) {
             throw new LmisException(e);
         } finally {
             releaseHelper();
-            return totalQuantity;
         }
-
-
     }
+
 }
 

@@ -29,18 +29,19 @@
 
 package org.clintonhealthaccess.lmis.app.models.reports;
 
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+
 import java.util.List;
 
 import lombok.Getter;
 
 @Getter
-public class UtilizationItem {
-    String name;
-    List<UtilizationValue> utilizationValues;
+public class MonthlyVaccineUtilizationReportItem {
+    public String commodityName;
+    List<UtilizationItem> utilizationItems;
 
-    public UtilizationItem(String name, List<UtilizationValue> utilizationValues) {
-        this.name = name;
-        this.utilizationValues = utilizationValues;
+    public MonthlyVaccineUtilizationReportItem(String commodityName, List<UtilizationItem> utilizationItems) {
+        this.commodityName = commodityName;
+        this.utilizationItems = utilizationItems;
     }
-
 }
