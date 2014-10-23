@@ -84,6 +84,25 @@
             android:padding="7dp"
             android:gravity="center" />
 
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/editTextEmptyText"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:gravity="center" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

@@ -120,6 +120,16 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             public String getMessage() {
                 return "Can't Be Received from " + spinnerSource.getSelectedItem().toString();
             }
+
+            @Override
+            public String getEmptyMessage() {
+                return "Commodities in this category can not be received from " + spinnerSource.getSelectedItem().toString();
+            }
+
+            @Override
+            public boolean hideCommodities() {
+                return true;
+            }
         };
     }
 

@@ -37,7 +37,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -74,6 +77,8 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private CommodityDisplayStrategy commodityDisplayStrategy;
     private CommoditiesToViewModelsConverter viewModelsConverter;
     private String activityName;
+    private View emptyView;
+    private TextView emptyTextView;
 
     public ItemSelectFragment() {
         // Required empty public constructor
@@ -114,6 +119,10 @@ public class ItemSelectFragment extends RoboDialogFragment {
         categoriesLayout = (LinearLayout) overlayView.findViewById(R.id.itemSelectOverlayCategories);
         setupCloseButton(overlayView);
         gridViewCommodities = (GridView) overlayView.findViewById(R.id.gridViewCommodities);
+        emptyView = overlayView.findViewById(R.id.emptyView);
+        emptyTextView = (TextView) overlayView.findViewById(R.id.editTextEmptyText);
+
+        gridViewCommodities.setEmptyView(emptyView);
         List<Category> categoryList = categoryService.all();
         adapterHashMap = new LinkedHashMap<>();
 
@@ -123,6 +132,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
                 @Override
                 public void onClick(View v) {
                     showCommodities(category);
+
                 }
             });
 
@@ -133,10 +143,21 @@ public class ItemSelectFragment extends RoboDialogFragment {
                     viewModel.toggleSelected();
                 }
             }
+            List<BaseCommodityViewModel> listOfCommodities = (List<BaseCommodityViewModel>) commodities;
+            if (commodityDisplayStrategy.hideCommodities()) {
+                listOfCommodities = FluentIterable.from((List<BaseCommodityViewModel>) commodities).filter(new Predicate<BaseCommodityViewModel>() {
+                    @Override
+                    public boolean apply(BaseCommodityViewModel input) {
+                        return commodityDisplayStrategy.allowClick(input);
+                    }
+                }).toList();
+            }
 
-            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, (List<BaseCommodityViewModel>) commodities, commodityDisplayStrategy));
+
+            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, listOfCommodities, commodityDisplayStrategy));
             categoriesLayout.addView(button);
         }
+
 
         showCommodities(category);
         return overlayView;
@@ -161,6 +182,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     }
 
     private void showCommodities(Category currentCategory) {
+        emptyTextView.setText(commodityDisplayStrategy.getEmptyMessage());
         final CommoditiesAdapter adapter = adapterHashMap.get(currentCategory);
         adapter.adaptGridViewCommodities(gridViewCommodities, commodityDisplayStrategy);
 

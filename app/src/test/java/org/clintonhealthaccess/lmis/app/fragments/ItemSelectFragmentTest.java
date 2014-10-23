@@ -33,6 +33,7 @@ import android.app.Dialog;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -40,6 +41,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
+import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -47,6 +49,7 @@ import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -182,6 +185,45 @@ public class ItemSelectFragmentTest {
         GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
         BaseCommodityViewModel loadedCommodity = (BaseCommodityViewModel) commoditiesLayout.getAdapter().getItem(0);
         assertTrue(loadedCommodity.isSelected());
+    }
+
+    @Test
+    public void testThatShouldNotShowSomeOfTheCommoditiesIfTheStrategyAllowsHiding() throws Exception {
+        Category antiMalarials = categoryService.all().get(0);
+        int commodityCount = antiMalarials.getCommodities().size();
+        Commodity firstCommodity = commodityService.all().get(0);
+        Commodity spyFirstCommodity = spy(firstCommodity);
+        when(spyFirstCommodity.isOutOfStock()).thenReturn(true);
+
+        ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
+        currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
+
+        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES, getViewModelConverter(), "Activity");
+        startFragment(itemSelectFragment);
+
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
+        assertThat(commoditiesLayout.getAdapter().getCount(), is(not(commodityCount)));
+        BaseCommodityViewModel loadedCommodity = (BaseCommodityViewModel) commoditiesLayout.getAdapter().getItem(0);
+        assertTrue(loadedCommodity.isSelected());
+
+    }
+
+    @Test
+    public void testCategoryButtonClickChangesTheEmptyViewText() throws Exception {
+        Dialog dialog = ShadowDialog.getLatestDialog();
+        TextView textViewEmptyText = (TextView) dialog.findViewById(R.id.editTextEmptyText);
+        LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
+
+        Button secondCategoryButton = (Button) categoriesLayout.getChildAt(1);
+        secondCategoryButton.performClick();
+
+        GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
+        assertThat(commoditiesLayout, not(nullValue()));
+        assertThat(commoditiesLayout.getAdapter().getCount(), is(1));
+
+        assertThat(secondCategoryButton.isSelected(), is(true));
+        ANDROID.assertThat(textViewEmptyText).hasText("No Commodities Available");
     }
 
     private CommoditiesToViewModelsConverter getViewModelConverter() {

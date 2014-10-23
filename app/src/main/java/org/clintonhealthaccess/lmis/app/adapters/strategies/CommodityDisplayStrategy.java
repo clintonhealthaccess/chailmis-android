@@ -52,6 +52,14 @@ abstract public class CommodityDisplayStrategy implements Serializable {
         return "Not In Stock";
     }
 
+    public boolean hideCommodities() {
+        return false;
+    }
+
+    public String getEmptyMessage() {
+        return "No Commodities Available";
+    }
+
     public static final CommodityDisplayStrategy DISALLOW_CLICK_WHEN_OUT_OF_STOCK = new CommodityDisplayStrategy() {
         @Override
         public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
@@ -75,6 +83,16 @@ abstract public class CommodityDisplayStrategy implements Serializable {
         @Override
         public String getMessage() {
             return "Can't Be Ordered Here";
+        }
+
+        @Override
+        public String getEmptyMessage() {
+            return "Non LGA Commodities Can't Be Ordered Here";
+        }
+
+        @Override
+        public boolean hideCommodities() {
+            return true;
         }
     };
 }
