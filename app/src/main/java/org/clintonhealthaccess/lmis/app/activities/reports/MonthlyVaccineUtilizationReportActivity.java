@@ -89,7 +89,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     LinearLayout linearLayoutUtilizationReportItemValues;
 
     private Category category;
-
+    private  ReportType reportType;
     public static final int NUMBER_OF_YEARS = 10;
 
     @Inject
@@ -100,10 +100,12 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
-        setContentView(R.layout.activity_monthly_vaccine_utilization_report);
-        textViewReportName.setText(ReportType.MonthlyHealthFacilityVaccinesUtilizationReport.getName());
 
         category = (Category) getIntent().getSerializableExtra(ReportsActivity.CATEGORY_BUNDLE_KEY);
+        reportType = (ReportType) getIntent().getSerializableExtra(ReportsActivity.REPORT_TYPE_BUNDLE_KEY);
+
+        setContentView(R.layout.activity_monthly_vaccine_utilization_report);
+        textViewReportName.setText(reportType.getName());
 
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
         ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths());
@@ -167,7 +169,8 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         String month = getMonth();
         Log.i("Set Items", "year: " + year);
         Log.i("Set Items", "month: " + month);
-        List<MonthlyVaccineUtilizationReportItem> reportItems = reportsService.getMonthlyVaccineUtilizationReportItems(category, year, month);
+        List<MonthlyVaccineUtilizationReportItem> reportItems =  reportsService.getMonthlyVaccineUtilizationReportItems(category, year, month,
+                reportType.equals(ReportType.MonthlyHealthFacilityDevicesUtilizationReport));
 
         clearReportItems();
 

@@ -282,7 +282,8 @@ public class CommodityService {
                         receiveService.getReceivedValues(commodity, monthStartDate, monthEndDate)));
             }
 
-            if (utilizationItemName.equals(UtilizationItemName.DOSES_OPENED)) {
+            if (utilizationItemName.equals(UtilizationItemName.DOSES_OPENED) && !commodity.isDevice()
+                    || utilizationItemName.equals(UtilizationItemName.USED) && commodity.isDevice()) {
                 utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
                         dispensingService.getDispensedValues(commodity, monthStartDate, monthEndDate)));
             }
@@ -290,6 +291,11 @@ public class CommodityService {
             if (utilizationItemName.equals(UtilizationItemName.ENDING_BALANCE)) {
                 utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
                         getEndingBalance(commodity, monthStartDate, monthEndDate)));
+            }
+
+            if (utilizationItemName.equals(UtilizationItemName.QUANTITY_RETURNED_TO_LGA) && commodity.isDevice()) {
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        getReturnedToLGA(commodity, monthStartDate, monthEndDate)));
             }
         }
 
@@ -305,6 +311,21 @@ public class CommodityService {
 
             UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()),
                     DateUtil.dayNumber(calendar.getTime()));
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        return utilizationValues;
+    }
+
+    private List<UtilizationValue> getReturnedToLGA(Commodity commodity, Date startDate, Date endDate) {
+        Calendar calendar = DateUtil.calendarDate(startDate);
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+        while (calendar.getTime().before(upperLimitDate)) {
+
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), 0);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }

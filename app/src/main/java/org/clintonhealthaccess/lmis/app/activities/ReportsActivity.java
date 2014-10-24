@@ -54,6 +54,8 @@ import roboguice.inject.InjectView;
 public class ReportsActivity extends BaseActivity {
 
     public static final String CATEGORY_BUNDLE_KEY = "Category";
+    public static final String REPORT_TYPE_BUNDLE_KEY = "ReportType";
+
     @Inject
     CategoryService categoryService;
     @InjectView(R.id.layoutCategories)

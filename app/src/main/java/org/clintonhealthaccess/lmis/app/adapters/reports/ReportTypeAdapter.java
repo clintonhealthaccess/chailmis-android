@@ -65,6 +65,7 @@ public class ReportTypeAdapter extends ArrayAdapter<ReportType> {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), reportType.getReportActivity());
                 intent.putExtra(ReportsActivity.CATEGORY_BUNDLE_KEY, category);
+                intent.putExtra(ReportsActivity.REPORT_TYPE_BUNDLE_KEY, reportType);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);
             }

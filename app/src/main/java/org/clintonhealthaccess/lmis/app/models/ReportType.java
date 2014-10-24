@@ -47,7 +47,7 @@ public enum ReportType {
     FacilityConsumptionReportRH1("Facility Consumption Report", FacilityConsumptionReportRH1Activity.class),
     FacilityConsumptionReportRH2("Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class),
     MonthlyHealthFacilityVaccinesUtilizationReport("Monthly Health Facility Vaccines Utilization Report", MonthlyVaccineUtilizationReportActivity.class),
-    MonthlyHealthFacilityDevicesUtilizationReport("Monthly Health Facility Devices/ Other Materials Utilization Report", HomeActivity.class);
+    MonthlyHealthFacilityDevicesUtilizationReport("Monthly Health Facility Devices/ Other Materials Utilization Report", MonthlyVaccineUtilizationReportActivity.class);
     public static final String VACCINE = "vaccine";
     public static final String MALARIA = "malaria";
     public static final String FAMILY = "family";

@@ -141,7 +141,7 @@ public class ReportsActivityTest {
     }
 
     @Test
-    public void shouldLoadReportAcitivityWhenReportButtonIsClicked() throws Exception {
+    public void shouldLoadReportActivityWhenReportButtonIsClicked() throws Exception {
 
         commodityService.initialise(new User("test", "pass"));
         List<Category> categories = categoryService.all();
