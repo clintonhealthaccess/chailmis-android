@@ -39,6 +39,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class SmsCommandConfigurationTest {
+    @Ignore
     @Test
     public void shouldCreateSmsCommandFromDataSet() throws Exception {
         List<SmsCommand> allSmsCommands = SmsCommand.all();

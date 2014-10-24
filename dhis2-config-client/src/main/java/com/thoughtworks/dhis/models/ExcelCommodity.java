@@ -37,9 +37,15 @@ import lombok.Setter;
 public class ExcelCommodity {
     private final boolean nonLGA;
     private String name;
+    private boolean device;
 
-    public ExcelCommodity(String name, boolean nonLGA) {
+    public ExcelCommodity(String name, boolean nonLGA, boolean isDevice) {
         this.name = name;
         this.nonLGA = nonLGA;
+        this.device = isDevice;
+    }
+
+    public boolean isDevice() {
+        return device;
     }
 }

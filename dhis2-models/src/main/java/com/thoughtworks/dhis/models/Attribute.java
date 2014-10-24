@@ -36,6 +36,7 @@ import lombok.experimental.Builder;
 @Builder
 public class Attribute {
     public static final String LMIS_NON_LGA = "Non LGA";
+    public static final String LMIS_DEVICE = "Is Device";
     private String id;
     private String created;
     private String name;

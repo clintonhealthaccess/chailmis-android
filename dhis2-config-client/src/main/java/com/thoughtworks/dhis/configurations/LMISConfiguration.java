@@ -86,6 +86,7 @@ public class LMISConfiguration implements IConfiguration {
     public static final String ATTRIBUTES = "attributes";
     public static final String CONSTANTS = "constants";
     private final Attribute lgaAttribute;
+    private final Attribute isDeviceAttribute;
 
 
     private CategoryCombo defaultCategoryCombo;
@@ -105,6 +106,7 @@ public class LMISConfiguration implements IConfiguration {
         this.defaultCategoryCombo = defaultCategoryCombo;
         actionAttribute = createAttribute("string", LMISConfiguration.LMIS_ACTIVITY, true, false);
         lgaAttribute = createAttribute("string", Attribute.LMIS_NON_LGA, false, true);
+        isDeviceAttribute = createAttribute("string", Attribute.LMIS_DEVICE, false, true);
         dataElementGroups = new ArrayList<DataElementGroup>();
         dataElementGroupSets = new ArrayList<DataElementGroupSet>();
         dataElements = new ArrayList<DataElement>();
@@ -163,7 +165,7 @@ public class LMISConfiguration implements IConfiguration {
         data.put(DATA_ELEMENTS, dataElements);
         data.put(DATA_ELEMENT_GROUPS, dataElementGroups);
         data.put(DATA_ELEMENT_GROUP_SETS, dataElementGroupSets);
-        data.put(ATTRIBUTES, Arrays.asList(actionAttribute,lgaAttribute));
+        data.put(ATTRIBUTES, Arrays.asList(actionAttribute, lgaAttribute, isDeviceAttribute));
 
         return data;
     }
@@ -204,7 +206,7 @@ public class LMISConfiguration implements IConfiguration {
                     for (DataElementType type : dataElementTypes) {
                         String element_name = commodity.getName() + " " + type.getActivity();
                         DataElement dataElement = createDataElement(actionAttribute, element_name, type);
-                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
+                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
                         group.getDataElements().add(dataElement);
                         dataSet.getDataElements().add(dataElement);
                         dataElements.add(dataElement);
@@ -255,7 +257,7 @@ public class LMISConfiguration implements IConfiguration {
                     if (type.getActivity().equals(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())) {
                         dataElement.setOptionSet(orderReasonOptionSet);
                     }
-                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
+                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), false);
                     group.getDataElements().add(dataElement);
                     dataSetEmergencyOrder.getDataElements().add(dataElement);
                     dataElements.add(dataElement);
@@ -290,7 +292,7 @@ public class LMISConfiguration implements IConfiguration {
 
             @Override
             public void onEachCommodity(ExcelCommodity commodity) {
-                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA());
+                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), false);
                 List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.ORDERED_AMOUNT, DataElementType.REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
@@ -323,14 +325,16 @@ public class LMISConfiguration implements IConfiguration {
             String categoryName = parts[0];
             String commodityName = parts[1];
             String isNonLGAText = parts[2];
+            String isDeviceText = parts[3];
             boolean isNonLGA = isNonLGAText.equalsIgnoreCase("1");
+            boolean isDevice = isDeviceText.equalsIgnoreCase("1");
 
 
             ExcelCategory category = new ExcelCategory(categoryName);
             if (!categories.contains(category)) {
                 categories.add(category);
             }
-            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA));
+            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA,isDevice));
         }
 
         return categories;
@@ -342,17 +346,23 @@ public class LMISConfiguration implements IConfiguration {
         return dataElementGroupSet;
     }
 
-    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups, boolean nonLGA) {
+    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups, boolean nonLGA, boolean isDevice) {
         String value = "0";
         if (nonLGA) {
             value = "1";
         }
+
+        String isDeviceValue = "0";
+        if (isDevice) {
+            isDeviceValue = "1";
+        }
         AttributeValue attributeValue = AttributeValue.builder().attribute(lgaAttribute).value(value).build();
+        AttributeValue isDeviceattributeValue = AttributeValue.builder().attribute(isDeviceAttribute).value(isDeviceValue).build();
         DataElementGroup build = DataElementGroup.builder().
                 name(groupName)
                 .id(generateID(groupName))
                 .shortName(getShortName(groupName))
-                .attributeValues(Arrays.asList(attributeValue))
+                .attributeValues(Arrays.asList(attributeValue, isDeviceattributeValue))
                 .dataElements(new ArrayList<DataElement>()).
                         build();
         if (groups.contains(build)) {

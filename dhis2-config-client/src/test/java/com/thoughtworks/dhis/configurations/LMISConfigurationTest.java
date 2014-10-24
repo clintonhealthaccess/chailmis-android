@@ -29,7 +29,10 @@
 
 package com.thoughtworks.dhis.configurations;
 
+import com.thoughtworks.dhis.models.Attribute;
 import com.thoughtworks.dhis.models.CategoryCombo;
+import com.thoughtworks.dhis.models.DataElementGroup;
+
 import org.junit.Test;
 
 import java.io.IOException;
@@ -74,6 +77,22 @@ public class LMISConfigurationTest {
         for (String key : keys) {
             assertKeyIsSetAndNotEmpty(configuration, key);
         }
+    }
+
+    @Test
+    public void shouldHaveTwoAttributesForEachDataElementGroup() throws Exception {
+        LMISConfiguration configuration = getLmisConfiguration();
+        List<DataElementGroup> groups = (List<DataElementGroup>) configuration.generateMetaData().get(LMISConfiguration.DATA_ELEMENT_GROUPS);
+
+        for (DataElementGroup group : groups) {
+            assertThat(group.getAttributeValues().size(), is(2));
+            assertThat(group.getAttributeValues().get(0).getAttribute().getDataElementGroupAttribute(), is(true));
+            assertThat(group.getAttributeValues().get(0).getAttribute().getDataElementAttribute(), is(false));
+            assertThat(group.getAttributeValues().get(0).getAttribute().getName(), is(Attribute.LMIS_NON_LGA));
+            assertThat(group.getAttributeValues().get(1).getAttribute().getDataElementAttribute(), is(false));
+            assertThat(group.getAttributeValues().get(1).getAttribute().getName(), is(Attribute.LMIS_DEVICE));
+        }
+
     }
 
     private void assertKeyIsSetAndNotEmpty(LMISConfiguration configuration, String key) throws IOException {
