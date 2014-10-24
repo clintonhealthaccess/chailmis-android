@@ -60,20 +60,13 @@ public class ConfirmDispenseAdapter extends ArrayAdapter<DispensingItem> {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.confirm_commodity_list_item, parent, false);
 
-        TextView textViewAdjustedQuantity = (TextView) rowView.findViewById(R.id.textViewAdjustedQuantity);
         TextView textViewSOH = (TextView) rowView.findViewById(R.id.textViewSOH);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
 
         DispensingItem item = getItem(position);
-        if (dispensing.isDispenseToFacility()) {
-            textViewCommodityName.setText(item.getCommodity().getName());
-            textViewAdjustedQuantity.setText(item.getQuantity().toString());
-            textViewSOH.setText(String.valueOf(item.getCommodity().getStockOnHand() - item.getQuantity()));
-        } else {
-            textViewCommodityName.setText(item.getCommodity().getName());
-            textViewAdjustedQuantity.setVisibility(View.INVISIBLE);
-            textViewSOH.setText(String.valueOf(item.getQuantity()));
-        }
+
+        textViewCommodityName.setText(item.getCommodity().getName());
+        textViewSOH.setText(String.valueOf(item.getQuantity()));
 
         return rowView;
     }

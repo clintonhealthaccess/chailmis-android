@@ -74,7 +74,10 @@ public class Commodity implements Serializable {
     private ForeignCollection<StockItem> stockItems;
 
     @ForeignCollectionField(eager = true, maxEagerLevel = 5)
-     private Collection<CommodityAction> commodityActionsSaved;
+    private Collection<CommodityAction> commodityActionsSaved;
+
+    @DatabaseField(canBeNull = false)
+    private boolean isDevice;
 
     private List<CommodityAction> commodityActions = newArrayList();
 
@@ -121,8 +124,6 @@ public class Commodity implements Serializable {
         return id.hashCode();
     }
 
-
-    //BAD
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -212,5 +213,9 @@ public class Commodity implements Serializable {
 
     public int getMonthsOfSOH() {
         return getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
+    }
+
+    public void setIsDevice(boolean isDevice) {
+        this.isDevice = isDevice;
     }
 }

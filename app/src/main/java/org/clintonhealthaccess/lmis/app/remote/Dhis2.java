@@ -147,9 +147,14 @@ public class Dhis2 implements LmisServer {
                         if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_NON_LGA)) {
                             commodity.setNonLGA(value.getValue().equalsIgnoreCase("1"));
                         }
+
+                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_DEVICE)) {
+                            commodity.setIsDevice(value.getValue().equalsIgnoreCase("1"));
+                        }
                     }
                 } else {
                     commodity.setNonLGA(false);
+                    commodity.setIsDevice(false);
                 }
             }
             commodity.setId(dataElementGroup.getId());

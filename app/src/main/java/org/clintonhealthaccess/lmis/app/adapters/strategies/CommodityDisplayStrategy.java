@@ -87,7 +87,7 @@ abstract public class CommodityDisplayStrategy implements Serializable {
 
         @Override
         public String getEmptyMessage() {
-            return "Non LGA Commodities Can't Be Ordered Here";
+            return "Commodities for this category Can Not be Ordered Here";
         }
 
         @Override
