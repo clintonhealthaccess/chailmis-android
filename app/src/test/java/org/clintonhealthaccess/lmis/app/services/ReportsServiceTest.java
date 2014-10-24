@@ -568,7 +568,7 @@ public class ReportsServiceTest {
         calendar.set(2014, Calendar.APRIL, 01);
         Date date = calendar.getTime();
         List<MonthlyVaccineUtilizationReportItem> reportItems = reportsService.getMonthlyVaccineUtilizationReportItems(category, dateFormatYear.format(date),
-                dateFormatMonth.format(date));
+                dateFormatMonth.format(date), false);
 
         int expectedSize = category.getCommodities().size();
         assertThat(reportItems.size(), is(expectedSize));
