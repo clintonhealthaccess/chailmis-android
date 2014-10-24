@@ -167,6 +167,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                 for (BaseCommodityViewModel model : selectedCommodities) {
                     AdjustmentsViewModel adjustmentsViewModel = (AdjustmentsViewModel) model;
                     adjustmentsViewModel.setAdjustmentReason(selectedReason);
+                    adjustmentsViewModel.setQuantityEntered(0);
                 }
                 arrayAdapter.notifyDataSetChanged();
             }

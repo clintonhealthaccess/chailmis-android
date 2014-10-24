@@ -93,6 +93,15 @@ public class ReportsActivity extends BaseActivity {
                     adapter.setCategory(category);
                     adapter.addAll(reportTypeList);
 
+                    for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
+                        TextView button = (TextView) categoriesLayout.getChildAt(i);
+                        if (button.getText().toString().equalsIgnoreCase(category.getName())) {
+                            button.setSelected(true);
+                        } else {
+                            button.setSelected(false);
+                        }
+                    }
+
                 }
             });
         }
