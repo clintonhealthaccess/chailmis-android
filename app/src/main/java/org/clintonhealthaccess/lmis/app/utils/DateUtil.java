@@ -35,6 +35,8 @@ import java.util.Date;
 
 public class DateUtil {
 
+    public static SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MMM-dd");
+
     public static Date getMonthStartDate(Date date) {
         Calendar calendar = calendarDate(date);
 
@@ -51,9 +53,9 @@ public class DateUtil {
         return endDate;
     }
 
-    public static int getDayNumber(Date date) {
+    public static int maxMonthDate(Date date) {
         Calendar calendar = calendarDate(date);
-        return calendar.get(Calendar.DAY_OF_MONTH);
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
     public static Date addDayOfMonth(Date date) {
@@ -75,7 +77,15 @@ public class DateUtil {
     }
 
     public static boolean equal(Date date1, Date date2) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        return dateFormat.format(date1).equals(dateFormat.format(date2));
+        return dateFormater.format(date1).equals(dateFormater.format(date2));
+    }
+
+    public static int dayNumber(Date date){
+        Calendar calender = calendarDate(date);
+        return calender.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static String dateString(Date date) {
+        return dateFormater.format(date);
     }
 }

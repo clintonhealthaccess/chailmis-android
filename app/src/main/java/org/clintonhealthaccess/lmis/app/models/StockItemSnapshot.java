@@ -45,7 +45,7 @@ public class StockItemSnapshot {
     @DatabaseField(generatedId = true)
     protected int id;
 
-    @DatabaseField(foreign = true, canBeNull = false)
+    @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
     private Commodity commodity;
 
     @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")

@@ -43,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +54,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.getDefaultCommodities;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -63,6 +66,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
@@ -79,9 +83,13 @@ public class CommodityServiceTest {
     public static final int MOCK_DAY = 15;
     @Inject
     private CategoryService categoryService;
-
+    @Inject
+    private DispensingService dispensingService;
     @Inject
     private CommodityService commodityService;
+    @Inject
+    private ReceiveService receiveService;
+
     private CommodityService spyedCommodityService;
     private CommodityActionService commodityActionService;
     @Inject
@@ -180,9 +188,7 @@ public class CommodityServiceTest {
         commodityService.initialise(new User("test", "pass"));
         categoryService.clearCache();
         List<Commodity> commodities = commodityService.getMost5HighlyConsumedCommodities();
-        for (Commodity commodity : commodities) {
-            System.out.println(commodity.getName() + " -- " + commodity.getAMC());
-        }
+
         assertThat(commodities.get(0).getAMC(), is(125));
         assertThat(commodities.get(0).getName(), is("Choloquine"));
     }
@@ -206,6 +212,107 @@ public class CommodityServiceTest {
         Date date = calendar.getTime();
 
         List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date);
-        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)));
+        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(30));
+
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        Date date2 = calendar.getTime();
+
+        List<UtilizationItem> decemberUtilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date2);
+        assertThat(decemberUtilizationItems.get(0).getUtilizationValues().size(), is(31));
+    }
+
+    @Test
+    public void shouldReturnOpeningBalanceUtilizationItemWithCorrectUtilizationValue() throws Exception {
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        int stockOnHand = commodity.getStockOnHand();
+        dispense(commodity, 3, dispensingService);
+
+        Date tomorrow = DateUtil.addDayOfMonth(today, 1);
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, tomorrow);
+
+        int expectedOpeningStock = stockOnHand - 3;
+        int utilizationValueIndex = DateUtil.dayNumber(tomorrow) - 1;
+
+        assertThat(utilizationItems.get(1).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                is(expectedOpeningStock));
+
+        Date furtherDate = DateUtil.addDayOfMonth(tomorrow, 1);
+        if(furtherDate.before(DateUtil.addDayOfMonth(DateUtil.getMonthEndDate(tomorrow)))){
+             utilizationValueIndex = DateUtil.dayNumber(furtherDate) - 1;
+
+            assertThat(utilizationItems.get(1).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                    is(expectedOpeningStock));
+        }
+    }
+
+
+    @Test
+    public void shouldReturnClosingBalanceUtilizationItemWithCorrectUtilizationValue() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        int stockOnHand = commodity.getStockOnHand();
+        dispense(commodity, 3, dispensingService);
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
+
+        int expectedClosingStock = stockOnHand - 3;
+        int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
+        System.out.println(utilizationItems.get(4).getName()+" "+utilizationItems.get(4).getUtilizationValues());
+        assertThat(utilizationItems.get(4).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                is(expectedClosingStock));
+    }
+
+    @Test
+    public void shouldReturnDosesOpenedUtilizationItemWithCorrectUtilizationValue() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        dispense(commodity, 2, dispensingService);
+        dispense(commodity, 5, dispensingService);
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
+
+        int expectedDosedOpened = 7;
+        int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
+
+        assertThat(utilizationItems.get(3).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                is(expectedDosedOpened));
+    }
+
+    @Test
+    public void shouldReturnReceivedUtilizationItemWithCorrectUtilizationValue() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        receive(commodity, 2, receiveService);
+        receive(commodity, 3, receiveService);
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
+
+        int expectedValue = 5;
+        int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
+
+        assertThat(utilizationItems.get(2).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                is(expectedValue));
     }
 }

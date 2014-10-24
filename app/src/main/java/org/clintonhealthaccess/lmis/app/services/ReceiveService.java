@@ -119,7 +119,7 @@ public class ReceiveService {
         while (calendar.getTime().before(upperLimitDate)) {
             int dayReceiveItems = getTotal(calendar.getTime(), receiveItems);
             UtilizationValue utilizationValue =
-                    new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), dayReceiveItems);
+                    new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), dayReceiveItems);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }

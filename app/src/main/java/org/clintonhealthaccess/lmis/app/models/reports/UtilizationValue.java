@@ -30,8 +30,10 @@
 package org.clintonhealthaccess.lmis.app.models.reports;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class UtilizationValue {
     int day;
     int value;

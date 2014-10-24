@@ -155,7 +155,7 @@ public class DispensingService {
         while (calendar.getTime().before(upperLimitDate)) {
             int dayDispensingItems = getTotal(calendar.getTime(), items);
             UtilizationValue utilizationValue =
-                    new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), dayDispensingItems);
+                    new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), dayDispensingItems);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }

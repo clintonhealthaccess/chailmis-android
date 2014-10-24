@@ -33,6 +33,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -162,7 +163,13 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     }
 
     void setItems() {
-        List<MonthlyVaccineUtilizationReportItem> reportItems = reportsService.getMonthlyVaccineUtilizationReportItems(category, getYear(), getMonth());
+        String year = getYear();
+        String month = getMonth();
+        Log.i("Set Items", "year: " + year);
+        Log.i("Set Items", "month: " + month);
+        List<MonthlyVaccineUtilizationReportItem> reportItems = reportsService.getMonthlyVaccineUtilizationReportItems(category, year, month);
+
+        clearReportItems();
 
         for(MonthlyVaccineUtilizationReportItem reportItem: reportItems){
             LinearLayout outerLayout = new LinearLayout(context);
@@ -197,47 +204,9 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         }
     }
 
-    private List<MonthlyVaccineUtilizationReportItem> getReportItems(Category category) {
-        MonthlyVaccineUtilizationReportItem item1 = new MonthlyVaccineUtilizationReportItem("BCG Vaccine", getUtilizationsItems());
-        MonthlyVaccineUtilizationReportItem item2 = new MonthlyVaccineUtilizationReportItem("BCGX Vaccine1", getUtilizationsItems());
-        MonthlyVaccineUtilizationReportItem item3 = new MonthlyVaccineUtilizationReportItem("BCGTY Vaccine3", getUtilizationsItems());
-
-        return Arrays.asList(item1, item2, item3);
-    }
-
-    private List<UtilizationItem> getUtilizationsItems() {
-        List<UtilizationValue> headerValues = new ArrayList<>();
-        for(int i = 1; i<=31; i++){
-            headerValues.add(new UtilizationValue(i, i));
-        }
-        UtilizationItem header = new UtilizationItem("Day of Month", headerValues);
-
-        List<UtilizationValue> openingBalanceValues = new ArrayList<>();
-        for(int i = 1; i<=31; i++){
-            openingBalanceValues.add(new UtilizationValue(i, 0));
-        }
-
-        List<UtilizationValue> receivedValues = new ArrayList<>();
-        for(int i = 1; i<=31; i++){
-            receivedValues.add(new UtilizationValue(i, 23));
-        }
-
-        List<UtilizationValue> doseValues = new ArrayList<>();
-        for(int i = 1; i<=31; i++){
-            doseValues.add(new UtilizationValue(i, 90));
-        }
-
-        List<UtilizationValue> endingValues = new ArrayList<>();
-        for(int i = 1; i<=31; i++){
-            endingValues.add(new UtilizationValue(i, 8));
-        }
-
-        UtilizationItem ui = new UtilizationItem("Opening Balance", openingBalanceValues);
-        UtilizationItem ui2 = new UtilizationItem("Received", receivedValues);
-        UtilizationItem ui3 = new UtilizationItem("Doses Opened", doseValues);
-        UtilizationItem ui4 = new UtilizationItem("Ending Balance", endingValues);
-
-        return Arrays.asList(header, ui, ui2,ui3, ui4);
+    private void clearReportItems() {
+        linearLayoutCommodityNamesAndItemNames.removeAllViews();
+        linearLayoutUtilizationReportItemValues.removeAllViews();
     }
 
     protected String getYear() {

@@ -32,17 +32,12 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
-import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
@@ -182,10 +177,9 @@ public class StockItemSnapshotService {
 
     }
 
-    public StockItemSnapshot getLatest(final Commodity commodity, final Date date, List<StockItemSnapshot> stockItemSnapshots) {
+    public StockItemSnapshot getSnapshot(final Date date, List<StockItemSnapshot> stockItemSnapshots) {
         for (StockItemSnapshot snapshot : stockItemSnapshots) {
-            if (DateUtil.equal(snapshot.getCreated(), date) &&
-                    snapshot.getCommodity().equals(commodity)) {
+            if (DateUtil.equal(snapshot.getCreated(), date)) {
                 return snapshot;
             }
         }

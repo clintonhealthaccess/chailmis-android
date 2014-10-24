@@ -168,10 +168,6 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
         assertThat(commoditySnapshots.size(), is(3));
-        for(CommoditySnapshot snapshot : commoditySnapshots){
-            System.out.println(snapshot.getValue());
-            System.out.println(snapshot.getPeriod());
-        }
         CommoditySnapshot receivedValueSnapshot = commoditySnapshots.get(0);
         assertThat(receivedValueSnapshot.getValue(), is("10"));
         assertThat(receivedValueSnapshot.getPeriod(), is(PERIOD_DATE_FORMAT.format(new Date())));

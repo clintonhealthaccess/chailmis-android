@@ -303,8 +303,8 @@ public class CommodityService {
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
         while (calendar.getTime().before(upperLimitDate)) {
 
-            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()),
-                    DateUtil.getDayNumber(calendar.getTime()));
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()),
+                    DateUtil.dayNumber(calendar.getTime()));
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -318,22 +318,22 @@ public class CommodityService {
 
         List<UtilizationValue> utilizationValues = new ArrayList<>();
 
-        int closingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
-        int previousDaysClosingStock = closingStock;
+        int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
 
         Calendar calendar = DateUtil.calendarDate(startDate);
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
         while (calendar.getTime().before(upperLimitDate)) {
 
-            StockItemSnapshot closingStockSnapshot = stockItemSnapshotService.getLatest(commodity,
+            StockItemSnapshot closingStockSnapshot = stockItemSnapshotService.getSnapshot(
                     DateUtil.addDayOfMonth(calendar.getTime()), stockItemSnapshots);
+
             int closingBalance = closingStockSnapshot == null ? previousDaysClosingStock :
                     closingStockSnapshot.getQuantity();
-            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), closingBalance);
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), closingBalance);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
-            previousDaysClosingStock = closingStock;
+            previousDaysClosingStock = closingBalance;
         }
 
         return utilizationValues;
@@ -353,14 +353,15 @@ public class CommodityService {
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
         while (calendar.getTime().before(upperLimitDate)) {
 
-            StockItemSnapshot openingStockSnapshot = stockItemSnapshotService.getLatest(commodity,
-                    DateUtil.addDayOfMonth(calendar.getTime(), -1), stockItemSnapshots);
+            Date previousDay = DateUtil.addDayOfMonth(calendar.getTime(), -1);
+            StockItemSnapshot openingStockSnapshot = stockItemSnapshotService.getSnapshot(
+                    previousDay, stockItemSnapshots);
+
             int openingBalance = openingStockSnapshot == null ? previousDaysOpeningStock :
                     openingStockSnapshot.getQuantity();
-            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.getDayNumber(calendar.getTime()), openingBalance);
-            utilizationValues.add(utilizationValue);
+            utilizationValues.add(new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), openingBalance));
+            previousDaysOpeningStock = openingBalance;
             calendar.add(Calendar.DAY_OF_MONTH, 1);
-            previousDaysOpeningStock = openingStock;
         }
 
         return utilizationValues;

@@ -532,8 +532,6 @@ public class ReportsServiceTest {
         calendar.set(2014, Calendar.APRIL, 06);
         Date endDate = calendar.getTime();
 
-        System.out.println("512   ");
-
         ArrayList<ConsumptionValue> values = reportsService.getConsumptionValuesForCommodityBetweenDates(commodity, startDate, endDate);
         assertThat(values.size(), is(daysBetween(startDate, endDate)));
         assertThat(values.get(0).getConsumption(), is(0));
