@@ -326,10 +326,11 @@ public class CommodityService {
         while (calendar.getTime().before(upperLimitDate)) {
 
             StockItemSnapshot closingStockSnapshot = stockItemSnapshotService.getSnapshot(
-                    DateUtil.addDayOfMonth(calendar.getTime()), stockItemSnapshots);
+                    calendar.getTime(), stockItemSnapshots);
 
             int closingBalance = closingStockSnapshot == null ? previousDaysClosingStock :
                     closingStockSnapshot.getQuantity();
+
             UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), closingBalance);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
