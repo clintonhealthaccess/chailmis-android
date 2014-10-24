@@ -257,7 +257,7 @@ public class LMISConfiguration implements IConfiguration {
                     if (type.getActivity().equals(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())) {
                         dataElement.setOptionSet(orderReasonOptionSet);
                     }
-                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), false);
+                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
                     group.getDataElements().add(dataElement);
                     dataSetEmergencyOrder.getDataElements().add(dataElement);
                     dataElements.add(dataElement);
@@ -292,7 +292,7 @@ public class LMISConfiguration implements IConfiguration {
 
             @Override
             public void onEachCommodity(ExcelCommodity commodity) {
-                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), false);
+                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
                 List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.ORDERED_AMOUNT, DataElementType.REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
@@ -317,7 +317,7 @@ public class LMISConfiguration implements IConfiguration {
         dataElements.add(dataElement);
     }
 
-    private List<ExcelCategory> getCategories(BufferedReader bufferedReader) throws IOException {
+    public static List<ExcelCategory> getCategories(BufferedReader bufferedReader) throws IOException {
         List<ExcelCategory> categories = new ArrayList<ExcelCategory>();
         String line;
         while ((line = bufferedReader.readLine()) != null) {
@@ -334,7 +334,7 @@ public class LMISConfiguration implements IConfiguration {
             if (!categories.contains(category)) {
                 categories.add(category);
             }
-            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA,isDevice));
+            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA, isDevice));
         }
 
         return categories;

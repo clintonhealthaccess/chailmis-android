@@ -32,14 +32,19 @@ package com.thoughtworks.dhis.configurations;
 import com.thoughtworks.dhis.models.Attribute;
 import com.thoughtworks.dhis.models.CategoryCombo;
 import com.thoughtworks.dhis.models.DataElementGroup;
+import com.thoughtworks.dhis.models.ExcelCategory;
+import com.thoughtworks.dhis.models.ExcelCommodity;
 
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.dhis.configurations.LMISConfiguration.getCategories;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.notNullValue;
@@ -91,6 +96,41 @@ public class LMISConfigurationTest {
             assertThat(group.getAttributeValues().get(0).getAttribute().getName(), is(Attribute.LMIS_NON_LGA));
             assertThat(group.getAttributeValues().get(1).getAttribute().getDataElementAttribute(), is(false));
             assertThat(group.getAttributeValues().get(1).getAttribute().getName(), is(Attribute.LMIS_DEVICE));
+        }
+
+    }
+
+    @Test
+    public void shouldHaveSomeGroupsConfiguredAsDevices() throws Exception {
+        LMISConfiguration configuration = getLmisConfiguration();
+        List<DataElementGroup> groups = (List<DataElementGroup>) configuration.generateMetaData().get(LMISConfiguration.DATA_ELEMENT_GROUPS);
+
+        for (DataElementGroup group : groups) {
+            if (group.getName().toLowerCase().contains("syringe")) {
+                assertThat(group.getName(),group.getAttributeValues().size(), is(2));
+                assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getDataElementGroupAttribute(), is(true));
+                assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getDataElementAttribute(), is(false));
+                assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getName(), is(Attribute.LMIS_NON_LGA));
+                assertThat(group.getName(),group.getAttributeValues().get(1).getAttribute().getDataElementAttribute(), is(false));
+                assertThat(group.getName(),group.getAttributeValues().get(1).getAttribute().getName(), is(Attribute.LMIS_DEVICE));
+                assertThat(group.getName(),group.getAttributeValues().get(1).getValue(), is("1"));
+            }
+
+        }
+
+    }
+
+    @Test
+    public void shouldHaveSomeDevices() throws Exception {
+        List<ExcelCategory> categories = getCategories(new BufferedReader(new FileReader("commodities.csv")));
+        for (ExcelCategory category : categories) {
+            for (ExcelCommodity commodity : category.getCommodityList()) {
+                if (commodity.getName().toLowerCase().contains("syringe")) {
+                    assertThat(commodity.isDevice(), is(true));
+                } else {
+                    assertThat(commodity.getName(), commodity.isDevice(), is(false));
+                }
+            }
         }
 
     }
