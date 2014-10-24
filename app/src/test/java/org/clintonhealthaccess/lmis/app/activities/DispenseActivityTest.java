@@ -138,9 +138,9 @@ public class DispenseActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(7));
+        assertThat(buttonAmount, is(8));
 
-        for (int i = 1; i < buttonAmount; i++) {
+        for (int i = 2; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);
             assertThat(childView, instanceOf(Button.class));
         }
@@ -484,6 +484,13 @@ public class DispenseActivityTest {
         assertThat(activity.checkboxDispenseToFacility.getVisibility(), is(View.GONE));
 
     }
+
+    @Test
+    public void shouldHaveAnAutoCompleteTextView() throws Exception {
+        DispenseActivity activity = getDispenseActivity();
+        assertThat(activity.autoCompleteTextViewCommodities, not(nullValue()));
+    }
+
 
     private class CommodityToggledEventDetails {
         public DispenseActivity dispenseActivity;

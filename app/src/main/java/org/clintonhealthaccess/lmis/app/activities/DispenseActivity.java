@@ -31,25 +31,32 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
+import org.clintonhealthaccess.lmis.app.adapters.SearchCommodityAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 import java.util.ArrayList;
@@ -58,6 +65,7 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
@@ -83,8 +91,14 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.textViewPageTitle)
     TextView textViewPageTitle;
 
+    @InjectView(R.id.autoCompleteTextViewCommodities)
+    AutoCompleteTextView autoCompleteTextViewCommodities;
     @Inject
     DispensingService dispensingService;
+
+    @Inject
+    CommodityService commodityService;
+    private SearchCommodityAdapter searchCommodityAdapter;
 
 
     @Override
@@ -163,7 +177,39 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     @Override
     protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+        searchCommodityAdapter = new SearchCommodityAdapter(this,
+                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
+        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
+        autoCompleteTextViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                onEvent(new CommodityToggledEvent(new BaseCommodityViewModel(commodity)));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        });
+    }
 
+    @Override
+    public void onCommodityToggledEventCompleted() {
+        Log.e("Toggled", "toggled");
+        searchCommodityAdapter = new SearchCommodityAdapter(this,
+                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
+        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
+
+    }
+
+    private List<Commodity> getCommoditiesThatCanBeSelected() {
+        return from(commodityService.all()).filter(new Predicate<Commodity>() {
+            @Override
+            public boolean apply(Commodity input) {
+                return !commodityHasBeenSelected(input) && getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(input));
+            }
+        }).toList();
+    }
+
+    private boolean commodityHasBeenSelected(Commodity input) {
+        return selectedCommodities.contains(new BaseCommodityViewModel(input));
     }
 
     @Override

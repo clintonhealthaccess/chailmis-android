@@ -139,6 +139,11 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             selectedCommodities.add(commodity);
         }
         onCommoditySelectionChanged(selectedCommodities);
+
+        onCommodityToggledEventCompleted();
+    }
+
+    public void onCommodityToggledEventCompleted() {
     }
 
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
