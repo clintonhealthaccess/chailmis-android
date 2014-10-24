@@ -35,6 +35,7 @@ import com.google.inject.AbstractModule;
 
 import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.ReportType;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
@@ -64,6 +65,7 @@ public class MonthlyVaccineUtilizationReportActivityTest {
     public static MonthlyVaccineUtilizationReportActivity getActivity() {
         Intent intent = new Intent();
         intent.putExtra(ReportsActivity.CATEGORY_BUNDLE_KEY, new Category("food"));
+        intent.putExtra(ReportsActivity.REPORT_TYPE_BUNDLE_KEY, ReportType.MonthlyHealthFacilityVaccinesUtilizationReport);
         return Robolectric.buildActivity(MonthlyVaccineUtilizationReportActivity.class).withIntent(intent).create().start().resume().visible().get();
     }
 

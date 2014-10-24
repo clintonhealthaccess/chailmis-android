@@ -159,6 +159,7 @@ public class ReportsActivityTest {
         ReportType facilityStockReport = ReportType.FacilityStockReport;
         Intent intent = new Intent(reportsActivity, facilityStockReport.getReportActivity());
         intent.putExtra(ReportsActivity.CATEGORY_BUNDLE_KEY, categories.get(0));
+        intent.putExtra(ReportsActivity.REPORT_TYPE_BUNDLE_KEY, facilityStockReport);
         assertThat(shadowOf(reportsActivity).getNextStartedActivity(), equalTo(intent));
     }
 }
