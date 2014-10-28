@@ -104,7 +104,7 @@
 
         <TextView
             android:layout_width="fill_parent"
-            android:text="@string/stock_on_hand"
+            android:text="@string/graph_title"
             android:gravity="center"
             android:textStyle="bold"
             android:textColor="#000"

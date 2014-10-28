@@ -52,9 +52,9 @@ public class StockOnHandGraphBar {
     private int heightOfColorHolder;
     private int heightForMinThreshold;
     private int heightForMaxThreshold;
-    private int sohHeight;
 
-    public StockOnHandGraphBar(String commodityName, int min, int max, int monthsOfStockOnHand, int color, int actualStockOnHand) {
+    public StockOnHandGraphBar(String commodityName, int min, int max,
+                               int monthsOfStockOnHand, int color, int actualStockOnHand) {
         this.commodityName = commodityName;
         this.minimumThreshold = min;
         this.maximumThreshold = max;
@@ -72,7 +72,6 @@ public class StockOnHandGraphBar {
         int barWidth = Math.round(applicationContext.getResources().getDimension(R.dimen.bar_width));
         int barLegendHeight = 70;
         int barHeight = height - barLegendHeight - 50;
-        sohHeight = barWidth;
 
         heightForMinThreshold = getHeightForMinThreshold(barHeight, biggestValue);
 
@@ -80,19 +79,19 @@ public class StockOnHandGraphBar {
 
         RelativeLayout relativeLayout = getRelativeLayout(applicationContext);
 
-        relativeLayout.addView(getTextViewForCommodityName(applicationContext, barWidth, barLegendHeight));
+        relativeLayout.addView(getSOHTextView(applicationContext, barWidth));
 
-        relativeLayout.addView(getColorViewHolder(applicationContext, biggestValue, barWidth, barHeight));
+        relativeLayout.addView(getTextViewForCommodityName(applicationContext,
+                barWidth, barLegendHeight));
 
+        relativeLayout.addView(getColorViewHolder(applicationContext,
+                biggestValue, barWidth, barHeight));
 
         if (heightForMaxThreshold > heightForMinThreshold) {
             ImageView imageViewSpaceBorderLeft = getImageViewForSpace(applicationContext, barWidth);
             relativeLayout.addView(imageViewSpaceBorderLeft);
             relativeLayout.addView(getMaxTextView(applicationContext, barWidth));
         }
-
-
-        relativeLayout.addView(getSOHTextView(applicationContext, barWidth));
 
 
         // if height of  max is greater than colorHolder
@@ -111,7 +110,7 @@ public class StockOnHandGraphBar {
         RelativeLayout.LayoutParams maxParams = new RelativeLayout.LayoutParams(widthForBorder, heightForBorder);
         maxParams.setMargins(0, 0, 0, heightForMinThreshold);
         maxParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        maxParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
+        maxParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityNameInGraphBar);
         imageViewSpaceBorderLeft.setLayoutParams(maxParams);
         imageViewSpaceBorderLeft.setId(R.id.imageViewSpaceBorderLeft);
         return imageViewSpaceBorderLeft;
@@ -119,7 +118,7 @@ public class StockOnHandGraphBar {
 
     private RelativeLayout getRelativeLayout(Context applicationContext) {
         RelativeLayout relativeLayout = new RelativeLayout(applicationContext);
-        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.FILL_PARENT));
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         relativeLayout.setPadding(5, 5, 5, 5);
         return relativeLayout;
     }
@@ -127,12 +126,14 @@ public class StockOnHandGraphBar {
     private TextView getSOHTextView(Context applicationContext, int barWidth) {
         TextView textViewSOH = new TextView(applicationContext);
 
-        RelativeLayout.LayoutParams textViewSOHParams = new RelativeLayout.LayoutParams(barWidth, sohHeight);
-        textViewSOHParams.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
+        RelativeLayout.LayoutParams textViewSOHParams =
+                new RelativeLayout.LayoutParams(barWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textViewSOHParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         textViewSOH.setLayoutParams(textViewSOHParams);
         textViewSOH.setText(getSOH());
         textViewSOH.setGravity(Gravity.CENTER_HORIZONTAL);
         textViewSOH.setTextSize(12);
+        textViewSOH.setId(R.id.textViewStockOnHand);
         textViewSOH.setTypeface(null, Typeface.BOLD);
         textViewSOH.setTextColor(applicationContext.getResources().getColor(R.color.white));
         return textViewSOH;
@@ -142,9 +143,7 @@ public class StockOnHandGraphBar {
         TextView textViewMax = new TextView(applicationContext);
         RelativeLayout.LayoutParams maxTextViewParams = new RelativeLayout.LayoutParams(barWidth, RelativeLayout.LayoutParams.WRAP_CONTENT);
         maxTextViewParams.addRule(RelativeLayout.ABOVE, R.id.imageViewSpaceBorderLeft);
-        if (abs(heightForMaxThreshold - sohHeight) <= 20) {
-            maxTextViewParams.setMargins(0, 0, 0, 20);
-        }
+
         textViewMax.setLayoutParams(maxTextViewParams);
         textViewMax.setText("Max");
         textViewMax.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -154,11 +153,13 @@ public class StockOnHandGraphBar {
     }
 
 
-    private View getColorViewHolder(Context applicationContext, int biggestValue, int barWidth, int barHeight) {
+    private View getColorViewHolder(Context applicationContext, int biggestValue,
+                                    int barWidth, int barHeight) {
         View colorHolderView = new View(applicationContext);
         heightOfColorHolder = getHeightForHolder(barHeight, biggestValue);
-        RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(barWidth, heightOfColorHolder);
-        params1.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityname);
+        RelativeLayout.LayoutParams params1 =
+                new RelativeLayout.LayoutParams(barWidth, heightOfColorHolder);
+        params1.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityNameInGraphBar);
         colorHolderView.setLayoutParams(params1);
         colorHolderView.setBackgroundColor(color);
         return colorHolderView;
@@ -166,12 +167,12 @@ public class StockOnHandGraphBar {
 
     private TextView getTextViewForCommodityName(Context applicationContext, int barWidth, int barLegendHeight) {
         TextView textViewName = new TextView(applicationContext);
-        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(barWidth, barLegendHeight);
-        params2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(barWidth,
+                barLegendHeight);
+        params2.addRule(RelativeLayout.ABOVE, R.id.textViewStockOnHand);
         textViewName.setLayoutParams(params2);
         textViewName.setText(commodityName.toUpperCase());
-        textViewName.setId(R.id.textViewCommodityname);
-//        textViewName.setRotation(270);
+        textViewName.setId(R.id.textViewCommodityNameInGraphBar);
         textViewName.setGravity(Gravity.CENTER_HORIZONTAL);
         textViewName.setTextColor(applicationContext.getResources().getColor(R.color.black));
         textViewName.setTextSize(11);
@@ -196,8 +197,11 @@ public class StockOnHandGraphBar {
     }
 
     protected int getRelativeHeight(int givenValue, int maxValue, int maxHeight) {
-        return (maxHeight * givenValue) / maxValue;
-
+        try {
+            return (maxHeight * givenValue) / maxValue;
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     @Override

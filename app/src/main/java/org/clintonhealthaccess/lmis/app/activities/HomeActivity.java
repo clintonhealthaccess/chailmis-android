@@ -33,6 +33,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.View;
@@ -222,7 +223,19 @@ public class HomeActivity extends BaseActivity {
 
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            bars.add(new StockOnHandGraphBar(commodity.getName(), commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_STOCK_LEVEL.toString()), commodity.getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString()), colors.get(count), commodity.getStockOnHand()));
+            int factor  = 100;
+            int amc = commodity.getLatestValueFromCommodityActionByName(DataElementType.AMC.toString());
+            int monthsOfStock =  (commodity.getStockOnHand() * factor / amc);
+
+            int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
+            int minThresholdInMonths = minimumThreshold * factor/ amc;
+
+            int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
+            int maxThresholdInMonths = maxThreshold *factor / amc;
+
+            bars.add(new StockOnHandGraphBar(commodity.getName(),
+                    minThresholdInMonths, maxThresholdInMonths, monthsOfStock,
+                    colors.get(count), commodity.getStockOnHand()));
             count++;
         }
         LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
@@ -231,28 +244,28 @@ public class HomeActivity extends BaseActivity {
         display.getSize(size);
         int height = size.y;
         int graphHeight = 2 * height / 3;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, graphHeight);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, graphHeight);
         barChartLayout.setLayoutParams(params);
-        int biggestValue = getBigestValue(bars);
+        int biggestValue = getBiggestValue(bars);
 
         for (StockOnHandGraphBar bar : bars) {
             barChartLayout.addView(bar.getView(getApplicationContext(), biggestValue, graphHeight));
         }
     }
 
-    private int getBigestValue(List<StockOnHandGraphBar> bars) {
+    private int getBiggestValue(List<StockOnHandGraphBar> bars) {
         int biggestValue = 0;
         for (StockOnHandGraphBar bar : bars) {
-            biggestValue = checkValue(biggestValue, bar.getMaximumThreshold());
-            biggestValue = checkValue(biggestValue, bar.getMinimumThreshold());
-            biggestValue = checkValue(biggestValue, bar.getMonthsOfStockOnHand());
+            biggestValue = getBiggest(biggestValue, bar.getMaximumThreshold());
+            biggestValue = getBiggest(biggestValue, bar.getMinimumThreshold());
+            biggestValue = getBiggest(biggestValue, bar.getMonthsOfStockOnHand());
         }
         return biggestValue;
     }
 
-    private int checkValue(int biggestValue, int maximumThreshold) {
-        if (biggestValue < maximumThreshold) {
-            biggestValue = maximumThreshold;
+    private int getBiggest(int biggestValue, int value) {
+        if (biggestValue < value) {
+            biggestValue = value;
         }
         return biggestValue;
     }

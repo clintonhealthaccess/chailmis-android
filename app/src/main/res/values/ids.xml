@@ -29,10 +29,11 @@
 
 <resources>
     <item name="imageMaximumThreshold" type="id" />
-    <item name="textViewCommodityname" type="id" />
+    <item name="textViewCommodityNameInGraphBar" type="id" />
     <item name="dynamicLinearLayout1" type="id"/>
     <item name="dynamicLinearLayout2" type="id"/>
     <item name="dynamicLinearLayout3" type="id"/>
     <item name="imageViewSpaceBorderLeft" type="id" />
     <item name="imageViewSpaceBorderRight" type="id" />
+    <item name="textViewStockOnHand" type="id"/>
 </resources>
