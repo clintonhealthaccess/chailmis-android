@@ -93,11 +93,6 @@ public class StockOnHandGraphBar {
             relativeLayout.addView(getMaxTextView(applicationContext, barWidth));
         }
 
-
-        // if height of  max is greater than colorHolder
-        // draw a vertical line from max to the holder
-
-
         return relativeLayout;
     }
 
