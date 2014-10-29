@@ -38,11 +38,13 @@ public class ExcelCommodity {
     private final boolean nonLGA;
     private String name;
     private boolean device;
+    private boolean isVaccine;
 
-    public ExcelCommodity(String name, boolean nonLGA, boolean isDevice) {
+    public ExcelCommodity(String name, boolean nonLGA, boolean isDevice, boolean isVaccine) {
         this.name = name;
         this.nonLGA = nonLGA;
         this.device = isDevice;
+        this.isVaccine = isVaccine;
     }
 
     public boolean isDevice() {

@@ -272,7 +272,8 @@ public class ReportsService {
     }
 
 
-    public List<MonthlyVaccineUtilizationReportItem> getMonthlyVaccineUtilizationReportItems(Category category, String year, String month, boolean isForDevices) {
+    public List<MonthlyVaccineUtilizationReportItem> getMonthlyVaccineUtilizationReportItems(
+            Category category, String year, String month, boolean isForDevices) {
 
         ArrayList<MonthlyVaccineUtilizationReportItem> reportItems = new ArrayList<>();
 
@@ -281,8 +282,8 @@ public class ReportsService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
 
-            for(Commodity commodity: category.getCommodities()){
-                if(isForDevices && !commodity.isDevice() || !isForDevices && commodity.isDevice()){
+            for (Commodity commodity : category.getCommodities()) {
+                if (isForDevices && !commodity.isDevice() || !isForDevices && commodity.isDevice()) {
                     continue;
                 }
                 List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date);

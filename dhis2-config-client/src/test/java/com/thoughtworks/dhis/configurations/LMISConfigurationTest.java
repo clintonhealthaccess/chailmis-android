@@ -90,12 +90,14 @@ public class LMISConfigurationTest {
         List<DataElementGroup> groups = (List<DataElementGroup>) configuration.generateMetaData().get(LMISConfiguration.DATA_ELEMENT_GROUPS);
 
         for (DataElementGroup group : groups) {
-            assertThat(group.getAttributeValues().size(), is(2));
+            assertThat(group.getAttributeValues().size(), is(3));
             assertThat(group.getAttributeValues().get(0).getAttribute().getDataElementGroupAttribute(), is(true));
             assertThat(group.getAttributeValues().get(0).getAttribute().getDataElementAttribute(), is(false));
             assertThat(group.getAttributeValues().get(0).getAttribute().getName(), is(Attribute.LMIS_NON_LGA));
             assertThat(group.getAttributeValues().get(1).getAttribute().getDataElementAttribute(), is(false));
             assertThat(group.getAttributeValues().get(1).getAttribute().getName(), is(Attribute.LMIS_DEVICE));
+            assertThat(group.getAttributeValues().get(2).getAttribute().getDataElementAttribute(), is(false));
+            assertThat(group.getAttributeValues().get(2).getAttribute().getName(), is(Attribute.LMIS_VACCINE));
         }
 
     }
@@ -107,13 +109,15 @@ public class LMISConfigurationTest {
 
         for (DataElementGroup group : groups) {
             if (group.getName().toLowerCase().contains("syringe")) {
-                assertThat(group.getName(),group.getAttributeValues().size(), is(2));
+                assertThat(group.getName(),group.getAttributeValues().size(), is(3));
                 assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getDataElementGroupAttribute(), is(true));
                 assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getDataElementAttribute(), is(false));
                 assertThat(group.getName(),group.getAttributeValues().get(0).getAttribute().getName(), is(Attribute.LMIS_NON_LGA));
                 assertThat(group.getName(),group.getAttributeValues().get(1).getAttribute().getDataElementAttribute(), is(false));
                 assertThat(group.getName(),group.getAttributeValues().get(1).getAttribute().getName(), is(Attribute.LMIS_DEVICE));
                 assertThat(group.getName(),group.getAttributeValues().get(1).getValue(), is("1"));
+                assertThat(group.getName(),group.getAttributeValues().get(2).getAttribute().getName(), is(Attribute.LMIS_VACCINE));
+                assertThat(group.getName(),group.getAttributeValues().get(2).getValue(), is("1"));
             }
 
         }

@@ -803,4 +803,36 @@
         "lmisId": "13",
         "name": "Others"
     }
+    {
+        "commodities": [
+            {
+                "commodityActions": [
+                    {
+                        "activityType": "dispense",
+                        "commodity": {
+                            "id": "109",
+                            "name": "Syringe 1.0",
+                            "orderDuration": 1,
+                            "nonLGA":"true"
+                            "isDevice":"true"
+                        },
+                        "dataSet": {
+                            "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
+                            "name": "lmis dataset",
+                            "periodType": "Monthly"
+                        },
+                        "id": "1229234",
+                        "name": "Syringe 1.0_DISPENSING"
+                    }
+                ],
+                "id": "109",
+                "name": "Syringe 1.0",
+                "orderDuration": 1,
+                "nonLGA":"true"
+                "isDevice":"true"
+            }
+        ],
+        "lmisId": "14",
+        "name": "Vaccines"
+    }
 ]

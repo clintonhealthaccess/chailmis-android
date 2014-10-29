@@ -47,7 +47,6 @@ import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
-import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 
@@ -134,7 +133,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         if (activity.spinnerAdjustmentReason.getSelectedItem().toString().equals(AdjustmentReason.RETURNED_TO_LGA_TEXT)
                 && !commodityViewModel.getCommodity().isDevice()) {
             textViewCommodityName.requestFocus();
-            textViewCommodityName.setError(activity.getString(R.string.not_a_vaccine_device));
+            textViewCommodityName.setError(activity.getString(R.string.not_a_vaccine));
         }
         editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
         editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment, spinnerAdjustmentType, types));

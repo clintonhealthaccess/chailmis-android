@@ -115,17 +115,9 @@ public class AdjustmentService {
         return totalQuantity;
     }
 
-    public int totalAdjustment(final Commodity commodity, final Date startingDate, final Date endDate, final AdjustmentReason adjustmentReason) {
-        List<Adjustment> adjustments =
-                dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
-                    @Override
-                    public List<Adjustment> operate(Dao<Adjustment, String> dao) throws SQLException {
-                        QueryBuilder<Adjustment, String> queryBuilder = dao.queryBuilder();
-                        queryBuilder.where().between("created", startingDate, endDate).
-                                and().eq("commodity_id", commodity.getId()).and().eq("reason", adjustmentReason);
-                        return queryBuilder.query();
-                    }
-                });
+    public int totalAdjustment(Commodity commodity, Date startingDate, Date endDate, AdjustmentReason adjustmentReason) {
+
+        List<Adjustment> adjustments = getAdjustments(commodity, startingDate, endDate, adjustmentReason);
 
         int totalQuantity = 0;
 
@@ -134,5 +126,20 @@ public class AdjustmentService {
             totalQuantity += quantity;
         }
         return totalQuantity;
+    }
+
+    public List<Adjustment> getAdjustments(
+            final Commodity commodity, final Date startingDate,
+            final Date endDate, final AdjustmentReason adjustmentReason) {
+
+        return dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
+            @Override
+            public List<Adjustment> operate(Dao<Adjustment, String> dao) throws SQLException {
+                QueryBuilder<Adjustment, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().between("created", startingDate, endDate).
+                        and().eq("commodity_id", commodity.getId()).and().eq("reason", adjustmentReason);
+                return queryBuilder.query();
+            }
+        });
     }
 }

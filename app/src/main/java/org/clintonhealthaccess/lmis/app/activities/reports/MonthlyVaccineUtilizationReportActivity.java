@@ -169,7 +169,8 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         String month = getMonth();
         Log.i("Set Items", "year: " + year);
         Log.i("Set Items", "month: " + month);
-        List<MonthlyVaccineUtilizationReportItem> reportItems =  reportsService.getMonthlyVaccineUtilizationReportItems(category, year, month,
+        List<MonthlyVaccineUtilizationReportItem> reportItems =  reportsService.getMonthlyVaccineUtilizationReportItems(
+                category, year, month,
                 reportType.equals(ReportType.MonthlyHealthFacilityDevicesUtilizationReport));
 
         clearReportItems();

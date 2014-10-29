@@ -87,7 +87,7 @@ public class LMISConfiguration implements IConfiguration {
     public static final String CONSTANTS = "constants";
     private final Attribute lgaAttribute;
     private final Attribute isDeviceAttribute;
-
+    private final Attribute isVaccineAttribute;
 
     private CategoryCombo defaultCategoryCombo;
     private List<DataElementGroup> dataElementGroups;
@@ -107,6 +107,7 @@ public class LMISConfiguration implements IConfiguration {
         actionAttribute = createAttribute("string", LMISConfiguration.LMIS_ACTIVITY, true, false);
         lgaAttribute = createAttribute("string", Attribute.LMIS_NON_LGA, false, true);
         isDeviceAttribute = createAttribute("string", Attribute.LMIS_DEVICE, false, true);
+        isVaccineAttribute = createAttribute("string", Attribute.LMIS_VACCINE, false, true);
         dataElementGroups = new ArrayList<DataElementGroup>();
         dataElementGroupSets = new ArrayList<DataElementGroupSet>();
         dataElements = new ArrayList<DataElement>();
@@ -165,22 +166,26 @@ public class LMISConfiguration implements IConfiguration {
         data.put(DATA_ELEMENTS, dataElements);
         data.put(DATA_ELEMENT_GROUPS, dataElementGroups);
         data.put(DATA_ELEMENT_GROUP_SETS, dataElementGroupSets);
-        data.put(ATTRIBUTES, Arrays.asList(actionAttribute, lgaAttribute, isDeviceAttribute));
+        data.put(ATTRIBUTES, Arrays.asList(actionAttribute, lgaAttribute, isDeviceAttribute, isVaccineAttribute));
 
         return data;
     }
 
     private void setupDefaultDataElements(List<ExcelCategory> categories) {
-        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED, DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
+        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED,
+                DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
         List<DataElementType> activitiesLosses = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EXPIRED,
                 DataElementType.WASTED, DataElementType.MISSING));
         List<DataElementType> activitiesLossesForVaccine = new ArrayList<DataElementType>(Arrays.asList(
                 DataElementType.EXPIRED, DataElementType.VVM_CHANGE, DataElementType.BREAKAGE, DataElementType.FROZEN,
                 DataElementType.LABEL_REMOVED, DataElementType.OTHERS));
 
-        List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED, DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
-        List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD, DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC,
-                DataElementType.TMC, DataElementType.BUFFER_STOCK, DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT, DataElementType.MAXIMUM_STOCK_LEVEL, DataElementType.MINIMUM_STOCK_LEVEL));
+        List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED,
+                DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
+        List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD,
+                DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC, DataElementType.TMC, DataElementType.BUFFER_STOCK,
+                DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND,
+                DataElementType.PROJECTED_ORDER_AMOUNT, DataElementType.MAXIMUM_STOCK_LEVEL, DataElementType.MINIMUM_STOCK_LEVEL));
 
         DataSet main = createDataSet(LMIS_COMMODITIES_DEFAULT, DAILY);
         DataSet losses = createDataSet(LMIS_COMMODITIES_LOSSES, DAILY);
@@ -207,7 +212,8 @@ public class LMISConfiguration implements IConfiguration {
                     for (DataElementType type : dataElementTypes) {
                         String element_name = commodity.getName() + " " + type.getActivity();
                         DataElement dataElement = createDataElement(actionAttribute, element_name, type);
-                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
+                        DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups,
+                                commodity.isNonLGA(), commodity.isDevice(), commodity.isVaccine());
                         group.getDataElements().add(dataElement);
                         dataSet.getDataElements().add(dataElement);
                         dataElements.add(dataElement);
@@ -251,14 +257,16 @@ public class LMISConfiguration implements IConfiguration {
         DataSet dataSetEmergencyOrder = createDataSet(LMIS_KEY_WORD + "Emergency Order", DAILY);
         for (ExcelCategory category : categories) {
             for (ExcelCommodity commodity : category.getCommodityList()) {
-                List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EMERGENCY_ORDERED_AMOUNT, DataElementType.EMERGENCY_REASON_FOR_ORDER));
+                List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EMERGENCY_ORDERED_AMOUNT,
+                        DataElementType.EMERGENCY_REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
                     DataElement dataElement = createDataElement(actionAttribute, element_name, type);
                     if (type.getActivity().equals(DataElementType.EMERGENCY_REASON_FOR_ORDER.getActivity())) {
                         dataElement.setOptionSet(orderReasonOptionSet);
                     }
-                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
+                    DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups,
+                            commodity.isNonLGA(), commodity.isDevice(), commodity.isVaccine());
                     group.getDataElements().add(dataElement);
                     dataSetEmergencyOrder.getDataElements().add(dataElement);
                     dataElements.add(dataElement);
@@ -293,7 +301,8 @@ public class LMISConfiguration implements IConfiguration {
 
             @Override
             public void onEachCommodity(ExcelCommodity commodity) {
-                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups, commodity.isNonLGA(), commodity.isDevice());
+                DataElementGroup group = getOrCreateDataElementGroup(commodity.getName(), dataElementGroups,
+                        commodity.isNonLGA(), commodity.isDevice(), commodity.isVaccine());
                 List<DataElementType> dataElementTypes = new ArrayList<DataElementType>(Arrays.asList(DataElementType.ORDERED_AMOUNT, DataElementType.REASON_FOR_ORDER));
                 for (DataElementType type : dataElementTypes) {
                     String element_name = commodity.getName() + " " + type.getActivity();
@@ -327,15 +336,18 @@ public class LMISConfiguration implements IConfiguration {
             String commodityName = parts[1];
             String isNonLGAText = parts[2];
             String isDeviceText = parts[3];
+            String isVaccineText = parts[4];
             boolean isNonLGA = isNonLGAText.equalsIgnoreCase("1");
             boolean isDevice = isDeviceText.equalsIgnoreCase("1");
+            boolean isVaccine = isVaccineText.equalsIgnoreCase("1");
 
 
             ExcelCategory category = new ExcelCategory(categoryName);
             if (!categories.contains(category)) {
                 categories.add(category);
             }
-            categories.get(categories.indexOf(category)).getCommodityList().add(new ExcelCommodity(commodityName, isNonLGA, isDevice));
+            categories.get(categories.indexOf(category)).getCommodityList().add(
+                    new ExcelCommodity(commodityName, isNonLGA, isDevice, isVaccine));
         }
 
         return categories;
@@ -347,23 +359,20 @@ public class LMISConfiguration implements IConfiguration {
         return dataElementGroupSet;
     }
 
-    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups, boolean nonLGA, boolean isDevice) {
-        String value = "0";
-        if (nonLGA) {
-            value = "1";
-        }
+    private DataElementGroup getOrCreateDataElementGroup(String groupName, List<DataElementGroup> groups,
+                                                         boolean nonLGA, boolean isDevice, boolean isVaccine) {
+        String nonLGAValue = nonLGA ? "1" : "0";
+        String isDeviceValue = isDevice ? "1" : "0";
+        String isVaccineValue = isVaccine ? "1" : "0";
 
-        String isDeviceValue = "0";
-        if (isDevice) {
-            isDeviceValue = "1";
-        }
-        AttributeValue attributeValue = AttributeValue.builder().attribute(lgaAttribute).value(value).build();
-        AttributeValue isDeviceattributeValue = AttributeValue.builder().attribute(isDeviceAttribute).value(isDeviceValue).build();
+        AttributeValue lgaAttribute = AttributeValue.builder().attribute(this.lgaAttribute).value(nonLGAValue).build();
+        AttributeValue isDeviceAttributeValue = AttributeValue.builder().attribute(isDeviceAttribute).value(isDeviceValue).build();
+        AttributeValue isVaccineAttributeValue = AttributeValue.builder().attribute(isVaccineAttribute).value(isVaccineValue).build();
         DataElementGroup build = DataElementGroup.builder().
                 name(groupName)
                 .id(generateID(groupName))
                 .shortName(getShortName(groupName))
-                .attributeValues(Arrays.asList(attributeValue, isDeviceattributeValue))
+                .attributeValues(Arrays.asList(lgaAttribute, isDeviceAttributeValue, isVaccineAttributeValue))
                 .dataElements(new ArrayList<DataElement>()).
                         build();
         if (groups.contains(build)) {
@@ -386,14 +395,18 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     private DataSet createDataSet(String name, String periodType) {
-        DataSet dataSet = DataSet.builder().name(name).id(generateID(name)).shortName(getShortName(name)).periodType(periodType).build();
+        DataSet dataSet = DataSet.builder().name(name).id(generateID(name)).shortName(getShortName(name))
+                .periodType(periodType).build();
         dataSet.setDataElements(new ArrayList<DataElement>());
         dataSet.setIndicators(new ArrayList<Indicator>());
         return dataSet;
     }
 
     private Attribute createAttribute(String type, String name, boolean dataElementAttribute, boolean dataElementGroupAttribute) {
-        return Attribute.builder().id(generateID(name)).name(name).code(name).dataElementAttribute(dataElementAttribute).dataElementGroupAttribute(dataElementGroupAttribute).valueType(type).build();
+        return Attribute.builder().id(generateID(name)).name(name).code(name)
+                .dataElementAttribute(dataElementAttribute)
+                .dataElementGroupAttribute(dataElementGroupAttribute)
+                .valueType(type).build();
     }
 
     private DataElement createDataElement(Attribute attribute, String dataElementName, DataElementType dataElementType) {

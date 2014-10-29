@@ -40,6 +40,8 @@ import com.j256.ormlite.dao.Dao;
 import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -77,6 +79,9 @@ public class CommodityService {
 
     @Inject
     private AllocationService allocationService;
+
+    @Inject
+    private AdjustmentService adjustmentService;
 
     @Inject
     CommodityActionService commodityActionService;
@@ -293,7 +298,7 @@ public class CommodityService {
                         getEndingBalance(commodity, monthStartDate, monthEndDate)));
             }
 
-            if (utilizationItemName.equals(UtilizationItemName.QUANTITY_RETURNED_TO_LGA) && commodity.isDevice()) {
+            if (utilizationItemName.equals(UtilizationItemName.QUANTITY_RETURNED_TO_LGA)) {
                 utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
                         getReturnedToLGA(commodity, monthStartDate, monthEndDate)));
             }
@@ -319,11 +324,17 @@ public class CommodityService {
     }
 
     private List<UtilizationValue> getReturnedToLGA(Commodity commodity, Date startDate, Date endDate) {
-        Calendar calendar = DateUtil.calendarDate(startDate);
+        List<Adjustment> adjustments = adjustmentService.getAdjustments(commodity,
+                startDate, endDate, AdjustmentReason.RETURNED_TO_LGA);
+
         List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
         while (calendar.getTime().before(upperLimitDate)) {
+
+            //int totalReturned = adjustmentService.totalAdjustments(calendar.getTime(), adjustments);
 
             UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), 0);
             utilizationValues.add(utilizationValue);

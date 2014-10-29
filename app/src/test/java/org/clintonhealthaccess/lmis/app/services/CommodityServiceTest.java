@@ -35,6 +35,7 @@ import android.text.format.DateUtils;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -54,6 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.adjust;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
@@ -100,6 +102,8 @@ public class CommodityServiceTest {
 
     private List<CommodityActionValue> mockStockLevels;
     private LmisServer mockLmisServer;
+    @Inject
+    private AdjustmentService adjustmentService;
 
     @Before
     public void setUp() throws Exception {
@@ -306,6 +310,28 @@ public class CommodityServiceTest {
 
         receive(commodity, 2, receiveService);
         receive(commodity, 3, receiveService);
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
+
+        int expectedValue = 5;
+        int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
+
+        assertThat(utilizationItems.get(2).getUtilizationValues().get(utilizationValueIndex).getValue(),
+                is(expectedValue));
+    }
+
+    @Test
+    public void shouldReturnReturnedToLGAUtilizationItemWithCorrectUtilizationValue() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+
+        Commodity commodity = categoryService.all().get(6).getCommodities().get(0);
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        adjust(commodity, 2, false, AdjustmentReason.RETURNED_TO_LGA, adjustmentService);
+        adjust(commodity, 3, false, AdjustmentReason.RETURNED_TO_LGA, adjustmentService);
 
         List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
 

@@ -53,7 +53,6 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.ListTestUtils;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
-import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -196,7 +195,7 @@ public class AdjustmentsActivityTest extends TestCase {
         Button submitButton = activity.getSubmitButton();
         submitButton.performClick();
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.not_a_vaccine_device)));
+        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.not_a_vaccine)));
     }
 
 }

@@ -32,12 +32,10 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -78,7 +76,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     }, R.id.spinnerAdjustmentType);
 
     protected final ViewValidator<TextView> TEXT_VIEW_HAS_ERROR =
-            new ViewValidator<>(R.string.not_a_vaccine_device, new Predicate<TextView>() {
+            new ViewValidator<>(R.string.not_a_vaccine, new Predicate<TextView>() {
                 @Override
                 public boolean apply(TextView input) {
                     return input.getError() != null;
@@ -116,7 +114,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
             @Override
             public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
                 if (spinnerAdjustmentReason.getSelectedItem().toString().equals(AdjustmentReason.RETURNED_TO_LGA_TEXT)) {
-                    return commodityViewModel.getCommodity().isDevice();
+                    return commodityViewModel.getCommodity().getCategory().getName().toLowerCase().contains("vaccine");
                 } else {
                     return true;
                 }
