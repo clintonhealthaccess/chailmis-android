@@ -32,11 +32,14 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -73,8 +76,17 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
             return view.getChildCount() < 1;
         }
     }, R.id.spinnerAdjustmentType);
+
+    protected final ViewValidator<TextView> TEXT_VIEW_HAS_ERROR =
+            new ViewValidator<>(R.string.not_a_vaccine_device, new Predicate<TextView>() {
+                @Override
+                public boolean apply(TextView input) {
+                    return input.getError() != null;
+                }
+            }, R.id.textViewCommodityName);
+
     @InjectView(R.id.spinnerAdjustmentReason)
-    Spinner spinnerAdjustmentReason;
+    public Spinner spinnerAdjustmentReason;
 
     @InjectView(R.id.buttonSubmitAdjustments)
     Button buttonSubmitAdjustments;
@@ -83,7 +95,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     CommodityService commodityService;
 
     @Override
-    protected Button getSubmitButton() {
+    public Button getSubmitButton() {
         return buttonSubmitAdjustments;
     }
 
@@ -99,7 +111,33 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
-        return CommodityDisplayStrategy.ALLOW_CLICK_WHEN_OUT_OF_STOCK;
+        return new CommodityDisplayStrategy() {
+
+            @Override
+            public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
+                if (spinnerAdjustmentReason.getSelectedItem().toString().equals(AdjustmentReason.RETURNED_TO_LGA_TEXT)) {
+                    return commodityViewModel.getCommodity().isDevice();
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public String getMessage() {
+                return "Not vaccine device";
+            }
+
+            @Override
+            public String getEmptyMessage() {
+                return "Commodities in this category can not be returned to LGA";
+            }
+
+            @Override
+            public boolean hideCommodities() {
+                return true;
+            }
+
+        };
     }
 
     @Override
@@ -122,9 +160,15 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                             return;
                         }
 
+                        if (hasInvalidTextViewField(of(TEXT_VIEW_HAS_ERROR))) {
+                            return;
+                        }
+
                         List<Adjustment> adjustments = getAdjustments();
+
                         FragmentManager fragmentManager = getSupportFragmentManager();
-                        ConfirmAdjustmentsFragment dialog = ConfirmAdjustmentsFragment.newInstance(new ArrayList<Adjustment>(adjustments));
+                        ConfirmAdjustmentsFragment dialog = ConfirmAdjustmentsFragment.newInstance(
+                                new ArrayList<>(adjustments));
                         dialog.show(fragmentManager, "confirmAdjustments");
                     }
                 }
@@ -198,5 +242,15 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                 return viewModels;
             }
         };
+    }
+
+    private boolean hasInvalidTextViewField(List<ViewValidator<TextView>> validators) {
+        for (final ViewValidator validator : validators) {
+            if (!validator.isValid()) {
+                showToastMessage(validator.toastMessage());
+                return true;
+            }
+        }
+        return false;
     }
 }

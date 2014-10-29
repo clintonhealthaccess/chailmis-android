@@ -165,5 +165,6 @@
     <string name="commodities">Commodities</string>
     <string name="choose_category">Please choose a Category</string>
     <string name="select_commodity">Select a Commodity</string>
+    <string name="not_a_vaccine_device">Not a Vaccine Device</string>
 
 </resources>

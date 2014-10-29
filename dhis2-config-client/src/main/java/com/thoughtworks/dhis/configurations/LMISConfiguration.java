@@ -172,7 +172,8 @@ public class LMISConfiguration implements IConfiguration {
 
     private void setupDefaultDataElements(List<ExcelCategory> categories) {
         List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED, DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
-        List<DataElementType> activitiesLosses = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EXPIRED, DataElementType.WASTED, DataElementType.MISSING));
+        List<DataElementType> activitiesLosses = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EXPIRED,
+                DataElementType.WASTED, DataElementType.MISSING));
         List<DataElementType> activitiesLossesForVaccine = new ArrayList<DataElementType>(Arrays.asList(
                 DataElementType.EXPIRED, DataElementType.VVM_CHANGE, DataElementType.BREAKAGE, DataElementType.FROZEN,
                 DataElementType.LABEL_REMOVED, DataElementType.OTHERS));

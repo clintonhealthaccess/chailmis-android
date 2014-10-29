@@ -107,7 +107,7 @@ public class AdjustmentServiceTest {
 
 
     @Test
-    public void shouldCreateSnapShotsForSavedAdjusments() throws Exception {
+    public void shouldCreateSnapShotsForSavedAdjustments() throws Exception {
         final Commodity commodity = commodityService.all().get(0);
         Adjustment adjustment = new Adjustment(commodity, 5, true, "Sent to another facility");
         List<Adjustment> adjustments = Arrays.asList(
@@ -139,7 +139,6 @@ public class AdjustmentServiceTest {
         );
         adjustmentService.save(adjustments);
         verify(stockService, atLeastOnce()).reduceStockLevelFor(adjustment.getCommodity(), 5);
-
     }
 
     @Test
@@ -208,6 +207,22 @@ public class AdjustmentServiceTest {
 
         int sentToFacility = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
         assertThat(sentToFacility, is(5));
+    }
 
+    @Test
+    public void shouldReturnQuantityAdjustedWhenReturnedToLGA() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+
+        adjust(commodity, 40, true, AdjustmentReason.RETURNED_TO_LGA, adjustmentService);
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DAY_OF_MONTH, -5);
+        Date startingDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 10);
+        Date endDate = calendar.getTime();
+
+        int returnedAdjustments = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.RETURNED_TO_LGA);
+        assertThat(returnedAdjustments, is(40));
     }
 }

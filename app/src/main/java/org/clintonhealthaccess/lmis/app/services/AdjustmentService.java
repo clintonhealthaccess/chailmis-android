@@ -68,9 +68,10 @@ public class AdjustmentService {
     public static ArrayList<AdjustmentReason> getAdjustmentReasons() {
         return new ArrayList<>(Arrays.asList(
                 new AdjustmentReason(AdjustmentReason.SELECT_REASON, false, false),
-                new AdjustmentReason(AdjustmentReason.PHYSICAL_COUNT_TEXT, true, true),
-                new AdjustmentReason(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY_TEXT, true, false),
-                new AdjustmentReason(AdjustmentReason.SENT_TO_ANOTHER_FACILITY_TEXT, false, true)));
+                AdjustmentReason.PHYSICAL_COUNT,
+                AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY,
+                AdjustmentReason.SENT_TO_ANOTHER_FACILITY,
+                AdjustmentReason.RETURNED_TO_LGA));
     }
 
     public void save(final List<Adjustment> adjustments) {

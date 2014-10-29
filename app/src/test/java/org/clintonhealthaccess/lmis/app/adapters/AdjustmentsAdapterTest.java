@@ -252,6 +252,26 @@ public class AdjustmentsAdapterTest {
 
     }
 
+    @Test
+    public void shouldShowErrorMessageForNonDevicesWhenReturnToLGAIsSelected() throws Exception {
+        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
+
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.isDevice()).thenReturn(false);
+
+        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
+        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+        commodities.add(adjustmentsViewModel);
+
+        AdjustmentsAdapter adjustmentsAdapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+
+        activity.spinnerAdjustmentReason.setSelection(4);
+        View row = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_list_item);
+
+        TextView textView = (TextView) row.findViewById(R.id.textViewCommodityName);
+        ANDROID.assertThat(textView).hasError();
+    }
+
     private AdjustmentsAdapter getAdjustmentsAdapter(AdjustmentReason adjustmentReason) {
         return getAdjustmentsAdapterForQuantity(adjustmentReason, 12);
     }

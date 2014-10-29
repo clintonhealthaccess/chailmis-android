@@ -145,16 +145,18 @@ public class ItemSelectFragment extends RoboDialogFragment {
             }
             List<BaseCommodityViewModel> listOfCommodities = (List<BaseCommodityViewModel>) commodities;
             if (commodityDisplayStrategy.hideCommodities()) {
-                listOfCommodities = FluentIterable.from((List<BaseCommodityViewModel>) commodities).filter(new Predicate<BaseCommodityViewModel>() {
-                    @Override
-                    public boolean apply(BaseCommodityViewModel input) {
-                        return commodityDisplayStrategy.allowClick(input);
-                    }
-                }).toList();
+                listOfCommodities = FluentIterable.from((List<BaseCommodityViewModel>) commodities)
+                        .filter(new Predicate<BaseCommodityViewModel>() {
+                            @Override
+                            public boolean apply(BaseCommodityViewModel input) {
+                                return commodityDisplayStrategy.allowClick(input);
+                            }
+                        }).toList();
             }
 
 
-            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item, listOfCommodities, commodityDisplayStrategy));
+            adapterHashMap.put(category, new CommoditiesAdapter(getActivity(), R.layout.commodity_list_item,
+                    listOfCommodities, commodityDisplayStrategy));
             categoriesLayout.addView(button);
         }
 

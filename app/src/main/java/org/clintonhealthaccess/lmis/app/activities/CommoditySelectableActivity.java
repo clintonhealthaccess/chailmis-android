@@ -46,6 +46,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -114,7 +115,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+                | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
@@ -297,7 +299,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             this.viewId = viewId;
         }
 
-        private boolean isValid() {
+        public boolean isValid() {
             return filter(wrap(gridViewSelectedCommodities), new Predicate<View>() {
                 @Override
                 public boolean apply(View view) {

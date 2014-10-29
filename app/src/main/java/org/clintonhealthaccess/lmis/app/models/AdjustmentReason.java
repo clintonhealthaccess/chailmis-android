@@ -34,9 +34,12 @@ public class AdjustmentReason {
     public static final String RECEIVED_FROM_ANOTHER_FACILITY_TEXT = "Received from another facility";
     public static final String SENT_TO_ANOTHER_FACILITY_TEXT = "Sent to another facility";
     public static final String SELECT_REASON = "--Select reason--";
+    public static final String RETURNED_TO_LGA_TEXT = "Returned to LGA";
+
     public static final AdjustmentReason PHYSICAL_COUNT = new AdjustmentReason(PHYSICAL_COUNT_TEXT, true, true);
     public static final AdjustmentReason RECEIVED_FROM_ANOTHER_FACILITY = new AdjustmentReason(RECEIVED_FROM_ANOTHER_FACILITY_TEXT, true, false);
     public static final AdjustmentReason SENT_TO_ANOTHER_FACILITY = new AdjustmentReason(SENT_TO_ANOTHER_FACILITY_TEXT, false, true);
+    public static final AdjustmentReason RETURNED_TO_LGA = new AdjustmentReason(RETURNED_TO_LGA_TEXT, true, false);
     private String name;
     private boolean allowsPostive, allowsNegative;
 
@@ -85,6 +88,8 @@ public class AdjustmentReason {
     }
 
     public boolean isPhysicalCount() {
-        return name.equalsIgnoreCase("Physical Count");
+        return name.equalsIgnoreCase(PHYSICAL_COUNT_TEXT);
     }
+
+
 }
