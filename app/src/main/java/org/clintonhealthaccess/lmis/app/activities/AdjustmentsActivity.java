@@ -144,8 +144,26 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void afterCreate(Bundle savedInstanceState) {
+    protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity);
+                adjustmentsViewModel.setAdjustmentReason((AdjustmentReason) spinnerAdjustmentReason.getSelectedItem());
+                onEvent(new CommodityToggledEvent(adjustmentsViewModel));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        };
+    }
+
+    @Override
+    protected void beforeSetUpCommoditySearch() {
         setUpSpinnerAdjustmentReason();
+    }
+
+    @Override
+    protected void afterCreate(Bundle savedInstanceState) {
         buttonSubmitAdjustments.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -219,11 +237,6 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
             }
         });
-    }
-
-    @Override
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-
     }
 
     @Override

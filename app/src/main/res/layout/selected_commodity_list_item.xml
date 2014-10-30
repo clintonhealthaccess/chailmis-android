@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/imageButtonCancel"
         android:inputType="number"
+        android:hint="Quantity"
         android:textSize="16sp" />
 
     <ImageButton

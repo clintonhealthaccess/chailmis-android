@@ -37,16 +37,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -54,6 +56,7 @@ import com.google.inject.Inject;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
+import org.clintonhealthaccess.lmis.app.adapters.SearchCommodityAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.events.NumberTextViewFocusChanged;
@@ -62,7 +65,9 @@ import org.clintonhealthaccess.lmis.app.events.NumberTextViewOnTouch;
 import org.clintonhealthaccess.lmis.app.fragments.ItemSelectFragment;
 import org.clintonhealthaccess.lmis.app.listeners.NumberKeyBoardActionListener;
 import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
+import org.clintonhealthaccess.lmis.app.services.CommodityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +77,13 @@ import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.Collections2.filter;
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
 abstract public class CommoditySelectableActivity extends BaseActivity {
+
+    @Inject
+    CommodityService commodityService;
 
     public final static int CodeDelete = -5;
     public final static int CodeCancel = -3;
@@ -101,16 +110,26 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
             return editTextQuantity.getError() != null;
         }
     }, R.id.editTextQuantity);
+
     @InjectView(R.id.gridViewSelectedCommodities)
     GridView gridViewSelectedCommodities;
+
     ArrayAdapter arrayAdapter;
+
     ArrayList<BaseCommodityViewModel> selectedCommodities = newArrayList();
+
     Keyboard keyBoard;
+
     @Inject
     private CategoryService categoryService;
 
     @InjectView(R.id.keyBoardView)
     public KeyboardView keyBoardView;
+
+    @InjectView(R.id.autoCompleteTextViewCommodities)
+    AutoCompleteTextView autoCompleteTextViewCommodities;
+
+    public SearchCommodityAdapter searchCommodityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +141,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(getLayoutId());
         setupKeyBoard();
-        beforeArrayAdapterCreate(savedInstanceState);
+        beforeSetUpCommoditySearch();
+        setUpCommoditySearch();
         setupCategories();
         arrayAdapter = getArrayAdapter();
         gridViewSelectedCommodities.setAdapter(arrayAdapter);
@@ -146,6 +166,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     }
 
     public void onCommodityToggledEventCompleted() {
+        Log.e("Toggled", "toggled");
+        searchCommodityAdapter = new SearchCommodityAdapter(this,
+                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
+        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
     }
 
     protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
@@ -204,7 +228,33 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
-    abstract protected void beforeArrayAdapterCreate(Bundle savedInstanceState);
+    protected void setUpCommoditySearch(){
+        searchCommodityAdapter = new SearchCommodityAdapter(this,
+                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
+        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
+        autoCompleteTextViewCommodities.setOnItemClickListener(getAutoCompleteTextViewCommoditiesAdapterListener());
+    }
+
+    protected void beforeSetUpCommoditySearch(){
+
+    }
+
+    abstract protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener();
+
+    private List<Commodity> getCommoditiesThatCanBeSelected() {
+        return from(commodityService.all()).filter(new Predicate<Commodity>() {
+            @Override
+            public boolean apply(Commodity input) {
+                return !commodityHasBeenSelected(input) && getCheckBoxVisibilityStrategy()
+                        .allowClick(new BaseCommodityViewModel(input));
+            }
+        }).toList();
+    }
+
+    private boolean commodityHasBeenSelected(Commodity input) {
+        return selectedCommodities.contains(new BaseCommodityViewModel(input));
+    }
+
 
     public void hideCustomKeyboard() {
         keyBoardView.setVisibility(View.GONE);

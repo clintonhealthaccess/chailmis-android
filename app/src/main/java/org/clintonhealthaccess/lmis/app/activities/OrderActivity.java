@@ -116,6 +116,18 @@ public class OrderActivity extends CommoditySelectableActivity {
                 getBaseContext(), getSelectedCommoditiesAdapterId(), new ArrayList<OrderCommodityViewModel>(), orderService.allOrderReasons(), getOrderType());
     }
 
+    @Override
+    protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                onEvent(new CommodityToggledEvent(new OrderCommodityViewModel(commodity)));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        };
+    }
+
     private OrderType getOrderType() {
         return (OrderType) spinnerOrderType.getSelectedItem();
     }
@@ -126,7 +138,7 @@ public class OrderActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+    protected void beforeSetUpCommoditySearch() {
 
 
         Intent intent = getIntent();

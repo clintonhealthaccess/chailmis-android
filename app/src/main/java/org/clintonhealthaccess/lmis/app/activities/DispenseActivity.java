@@ -91,15 +91,8 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.textViewPageTitle)
     TextView textViewPageTitle;
 
-    @InjectView(R.id.autoCompleteTextViewCommodities)
-    AutoCompleteTextView autoCompleteTextViewCommodities;
     @Inject
     DispensingService dispensingService;
-
-    @Inject
-    CommodityService commodityService;
-    private SearchCommodityAdapter searchCommodityAdapter;
-
 
     @Override
     protected int getLayoutId() {
@@ -114,6 +107,18 @@ public class DispenseActivity extends CommoditySelectableActivity {
     protected ArrayAdapter getArrayAdapter() {
         return new SelectedCommoditiesAdapter(
                 this, getSelectedCommoditiesAdapterId(), new ArrayList<BaseCommodityViewModel>());
+    }
+
+    @Override
+    protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                onEvent(new CommodityToggledEvent(new BaseCommodityViewModel(commodity)));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        };
     }
 
     @Override
@@ -173,43 +178,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
             }
         }
 
-    }
-
-    @Override
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-        searchCommodityAdapter = new SearchCommodityAdapter(this,
-                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
-        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
-        autoCompleteTextViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Commodity commodity = searchCommodityAdapter.getItem(position);
-                onEvent(new CommodityToggledEvent(new BaseCommodityViewModel(commodity)));
-                autoCompleteTextViewCommodities.setText("");
-            }
-        });
-    }
-
-    @Override
-    public void onCommodityToggledEventCompleted() {
-        Log.e("Toggled", "toggled");
-        searchCommodityAdapter = new SearchCommodityAdapter(this,
-                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
-        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
-
-    }
-
-    private List<Commodity> getCommoditiesThatCanBeSelected() {
-        return from(commodityService.all()).filter(new Predicate<Commodity>() {
-            @Override
-            public boolean apply(Commodity input) {
-                return !commodityHasBeenSelected(input) && getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(input));
-            }
-        }).toList();
-    }
-
-    private boolean commodityHasBeenSelected(Commodity input) {
-        return selectedCommodities.contains(new BaseCommodityViewModel(input));
     }
 
     @Override

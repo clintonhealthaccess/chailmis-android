@@ -138,11 +138,11 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
         editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment, spinnerAdjustmentType, types));
         int quantity = commodityViewModel.getQuantityEntered();
-        if (quantity >= 0) {
+        if (quantity > 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
         int counted = commodityViewModel.getStockCounted();
-        if (counted >= 0) {
+        if (counted > 0) {
             editTextStockCounted.setText(Integer.toString(counted));
         }
         activateCancelButton(imageButtonCancel, commodityViewModel);

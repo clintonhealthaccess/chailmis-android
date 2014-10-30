@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.LossesCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.LossesConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
@@ -79,6 +81,18 @@ public class LossesActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                onEvent(new CommodityToggledEvent(new LossesCommodityViewModel(commodity)));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        };
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         buttonSubmitLosses.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,11 +106,6 @@ public class LossesActivity extends CommoditySelectableActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
-
     }
 
     private Loss generateLoss() {

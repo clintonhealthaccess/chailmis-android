@@ -77,7 +77,7 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewMo
         TextWatcher watcher = new QuantityTextWatcher(editTextQuantity, commodityViewModel);
         editTextQuantity.addTextChangedListener(watcher);
         int quantity = commodityViewModel.getQuantityEntered();
-        if (quantity >= 0) {
+        if (quantity > 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
     }

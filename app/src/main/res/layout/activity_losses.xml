@@ -58,6 +58,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextViewCommodities"
+                android:layout_width="match_parent"
+                android:hint="Search"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 

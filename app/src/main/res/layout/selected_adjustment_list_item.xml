@@ -36,9 +36,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/textViewCommodityName"
@@ -73,7 +71,8 @@
             android:layout_alignParentRight="true"
             android:inputType="number"
             android:layout_marginRight="20dp"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:hint="Quantity"/>
 
         <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextStockCounted"
@@ -84,7 +83,8 @@
             android:layout_toLeftOf="@+id/textViewAdjustment"
             android:inputType="number"
             android:layout_marginRight="20dp"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:hint="Quantity" />
 
         <Spinner
             android:id="@+id/spinnerAdjustmentType"

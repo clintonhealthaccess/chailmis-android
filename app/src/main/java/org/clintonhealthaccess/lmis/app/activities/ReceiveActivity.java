@@ -143,6 +143,18 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     @Override
+    protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener() {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Commodity commodity = searchCommodityAdapter.getItem(position);
+                onEvent(new CommodityToggledEvent(new ReceiveCommodityViewModel(commodity)));
+                autoCompleteTextViewCommodities.setText("");
+            }
+        };
+    }
+
+    @Override
     protected void afterCreate(Bundle savedInstanceState) {
         completedAllocationIds = allocationService.getReceivedAllocationIds();
         setupAllocationIdTextView();
@@ -159,7 +171,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     @Override
-    protected void beforeArrayAdapterCreate(Bundle savedInstanceState) {
+    protected void beforeSetUpCommoditySearch() {
         Intent intent = getIntent();
         presetAllocationId = intent.getStringExtra(ALLOCATION_ID);
 
