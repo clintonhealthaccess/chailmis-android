@@ -202,7 +202,9 @@
                 "id": "1",
                 "name": "Coartem",
                 "orderDuration": 30,
-                "nonLGA":"false"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             },
             {
                 "commodityActions": [
@@ -345,7 +347,9 @@
                 "id": "3",
                 "name": "Choloquine",
                 "orderDuration": 90,
-                 "nonLGA":"false"
+                 "nonLGA":"false",
+                 "isDevice":"false",
+                 "isVaccine":"false"
             },
             {
                 "commodityActions": [
@@ -468,7 +472,9 @@
                 "id": "4",
                 "name": "Quinine",
                 "orderDuration": 180,
-                "nonLGA":"false"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             },
             {
                 "commodityActions": [
@@ -561,7 +567,9 @@
                 "id": "5",
                 "name": "Fansida",
                 "orderDuration": 360,
-                "nonLGA":"false"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             },
             {
                 "commodityActions": [
@@ -654,7 +662,9 @@
                 "id": "6",
                 "name": "Hedex",
                 "orderDuration": 60,
-                "nonLGA":"false"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             },
             {
                 "commodityActions": [
@@ -747,7 +757,9 @@
                 "id": "7",
                 "name": "Septrin",
                 "orderDuration": 60,
-                "nonLGA":"true"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             }
         ],
         "lmisId": "1",
@@ -763,7 +775,9 @@
                             "id": "9",
                             "name": "Condom",
                             "orderDuration": 30,
-                            "nonLGA":"true"
+                            "nonLGA":"false",
+                            "isDevice":"false",
+                            "isVaccine":"false"
                         },
                         "dataSet": {
                             "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
@@ -777,7 +791,9 @@
                 "id": "9",
                 "name": "Condom",
                 "orderDuration": 14,
-                "nonLGA":"true"
+                "nonLGA":"false",
+                "isDevice":"false",
+                "isVaccine":"false"
             }
         ],
         "lmisId": "8",
@@ -802,7 +818,7 @@
         "commodities": [],
         "lmisId": "13",
         "name": "Others"
-    }
+    },
     {
         "commodities": [
             {
@@ -813,8 +829,9 @@
                             "id": "109",
                             "name": "Syringe 1.0",
                             "orderDuration": 1,
-                            "nonLGA":"true"
-                            "isDevice":"true"
+                            "nonLGA":"true",
+                            "isDevice":"true",
+                            "isVaccine":"true"
                         },
                         "dataSet": {
                             "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
@@ -828,8 +845,9 @@
                 "id": "109",
                 "name": "Syringe 1.0",
                 "orderDuration": 1,
-                "nonLGA":"true"
-                "isDevice":"true"
+                "nonLGA":"true",
+                "isDevice":"true",
+                "isVaccine":"true"
             }
         ],
         "lmisId": "14",
