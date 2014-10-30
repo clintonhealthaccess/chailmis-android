@@ -131,9 +131,9 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         });
         textViewCommodityName.setText(commodityViewModel.getName());
         if (activity.spinnerAdjustmentReason.getSelectedItem().toString().equals(AdjustmentReason.RETURNED_TO_LGA_TEXT)
-                && !commodityViewModel.getCommodity().isDevice()) {
+                && !commodityViewModel.getCommodity().isVaccine()) {
             textViewCommodityName.requestFocus();
-            textViewCommodityName.setError(activity.getString(R.string.not_a_vaccine));
+            textViewCommodityName.setError(activity.getString(R.string.not_related_to_vaccine));
         }
         editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
         editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment, spinnerAdjustmentType, types));

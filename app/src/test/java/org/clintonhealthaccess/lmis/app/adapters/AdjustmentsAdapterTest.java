@@ -257,7 +257,7 @@ public class AdjustmentsAdapterTest {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
 
         Commodity commodity = mock(Commodity.class);
-        when(commodity.isDevice()).thenReturn(false);
+        when(commodity.isVaccine()).thenReturn(false);
 
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);

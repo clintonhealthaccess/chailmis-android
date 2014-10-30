@@ -128,8 +128,7 @@ public class AdjustmentService {
         return totalQuantity;
     }
 
-    public List<Adjustment> getAdjustments(
-            final Commodity commodity, final Date startingDate,
+    public List<Adjustment> getAdjustments(final Commodity commodity, final Date startingDate,
             final Date endDate, final AdjustmentReason adjustmentReason) {
 
         return dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {

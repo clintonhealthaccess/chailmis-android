@@ -76,7 +76,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
     }, R.id.spinnerAdjustmentType);
 
     protected final ViewValidator<TextView> TEXT_VIEW_HAS_ERROR =
-            new ViewValidator<>(R.string.not_a_vaccine, new Predicate<TextView>() {
+            new ViewValidator<>(R.string.not_related_to_vaccine, new Predicate<TextView>() {
                 @Override
                 public boolean apply(TextView input) {
                     return input.getError() != null;
@@ -122,7 +122,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
             @Override
             public String getMessage() {
-                return "Not vaccine device";
+                return getResources().getString(R.string.not_related_to_vaccine);
             }
 
             @Override

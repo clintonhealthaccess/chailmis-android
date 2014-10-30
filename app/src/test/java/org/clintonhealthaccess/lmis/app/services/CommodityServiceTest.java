@@ -30,7 +30,6 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.SharedPreferences;
-import android.text.format.DateUtils;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -70,7 +69,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
@@ -324,7 +322,6 @@ public class CommodityServiceTest {
                 is(expectedValue));
     }
 
-    @Ignore
     @Test
     public void shouldReturnReturnedToLGAUtilizationItemWithCorrectUtilizationValue() throws Exception {
         commodityService.initialise(new User("test", "pass"));
@@ -336,7 +333,6 @@ public class CommodityServiceTest {
         Date today = calendar.getTime();
 
         assertNotNull(commodity);
-        System.out.println("commodity is " + commodity + " adj reason is " + AdjustmentReason.RETURNED_TO_LGA);
         adjust(commodity, 2, false, AdjustmentReason.RETURNED_TO_LGA, adjustmentService);
         adjust(commodity, 3, false, AdjustmentReason.RETURNED_TO_LGA, adjustmentService);
 

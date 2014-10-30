@@ -79,6 +79,9 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false)
     private boolean isDevice;
 
+    @DatabaseField(canBeNull = false)
+    private boolean isVaccine;
+
     private List<CommodityAction> commodityActions = newArrayList();
 
     public Commodity() {
@@ -221,5 +224,9 @@ public class Commodity implements Serializable {
 
     public void setIsDevice(boolean isDevice) {
         this.isDevice = isDevice;
+    }
+
+    public void setIsVaccine(boolean isVaccine) {
+        this.isVaccine = isVaccine;
     }
 }

@@ -150,11 +150,11 @@ public class AdjustmentsActivityTest extends TestCase {
     }
 
     @Test
-    public void shouldShowErrorMessageForNonDevicesWhenReturnToLGAIsSelected() throws Exception {
+    public void shouldShowErrorMessageForNonVaccinesWhenReturnToLGAIsSelected() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
 
         Commodity commodity = mock(Commodity.class);
-        when(commodity.isDevice()).thenReturn(false);
+        when(commodity.isVaccine()).thenReturn(false);
 
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
@@ -177,11 +177,11 @@ public class AdjustmentsActivityTest extends TestCase {
 
     @Ignore("WIP-JOB")
     @Test
-    public void shouldShowErrorToastIfNotAVaccineDevice() throws Exception {
+    public void shouldShowErrorToastIfNotAVaccine() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
 
         Commodity commodity = mock(Commodity.class);
-        when(commodity.isDevice()).thenReturn(false);
+        when(commodity.isVaccine()).thenReturn(false);
         when(commodity.getName()).thenReturn("Panadol");
 
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
@@ -195,7 +195,7 @@ public class AdjustmentsActivityTest extends TestCase {
         Button submitButton = activity.getSubmitButton();
         submitButton.performClick();
         ShadowHandler.idleMainLooper();
-        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.not_a_vaccine)));
+        assertThat(ShadowToast.getTextOfLatestToast(), is(application.getResources().getString(R.string.not_related_to_vaccine)));
     }
 
 }

@@ -332,16 +332,25 @@ public class CommodityService {
         Calendar calendar = DateUtil.calendarDate(startDate);
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+
         while (calendar.getTime().before(upperLimitDate)) {
 
-            //int totalReturned = adjustmentService.totalAdjustments(calendar.getTime(), adjustments);
-
-            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), 0);
+            int totalAdjustments = getTotalAdjustments(calendar.getTime(), adjustments);
+            UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), totalAdjustments);
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-
         return utilizationValues;
+    }
+
+    private int getTotalAdjustments(Date date, List<Adjustment> adjustments) {
+        int totalAdjustments = 0;
+        for (Adjustment adjustment : adjustments) {
+            if (DateUtil.equal(adjustment.getCreated(), date)){
+                totalAdjustments += adjustment.getQuantity();
+            }
+        }
+        return totalAdjustments;
     }
 
     private List<UtilizationValue> getEndingBalance(Commodity commodity, Date startDate, Date endDate) throws Exception {
