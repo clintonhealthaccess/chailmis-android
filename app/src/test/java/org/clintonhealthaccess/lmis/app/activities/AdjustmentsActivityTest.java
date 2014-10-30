@@ -83,7 +83,6 @@ public class AdjustmentsActivityTest extends TestCase {
 
     @Inject
     private CommodityService commodityService;
-    private AdjustmentService adjustmentService;
     private UserService userService;
     private StockService stockService;
 
@@ -145,7 +144,8 @@ public class AdjustmentsActivityTest extends TestCase {
     public void shouldSetAdjustmentReasonFromIntent() throws Exception {
         Intent intent = new Intent();
         intent.putExtra(AdjustmentsActivity.ADJUSTMENT_REASON, AdjustmentReason.PHYSICAL_COUNT_TEXT);
-        AdjustmentsActivity adjustmentsActivity = Robolectric.buildActivity(AdjustmentsActivity.class).withIntent(intent).create().start().resume().visible().get();
+        AdjustmentsActivity adjustmentsActivity = Robolectric.buildActivity(AdjustmentsActivity.class)
+                .withIntent(intent).create().start().resume().visible().get();
         assertThat(adjustmentsActivity.spinnerAdjustmentReason.getSelectedItem().toString(), is(AdjustmentReason.PHYSICAL_COUNT_TEXT));
     }
 

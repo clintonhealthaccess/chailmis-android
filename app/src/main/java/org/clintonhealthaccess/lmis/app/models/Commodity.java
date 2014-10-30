@@ -147,6 +147,10 @@ public class Commodity implements Serializable {
         return true;
     }
 
+    public boolean isLGA(){
+        return !nonLGA;
+    }
+
     public int getStockOnHand() {
         return getStockItem().getQuantity();
     }

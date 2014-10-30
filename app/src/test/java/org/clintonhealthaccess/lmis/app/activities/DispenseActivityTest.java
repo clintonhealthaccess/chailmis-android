@@ -138,7 +138,7 @@ public class DispenseActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(8));
+        assertThat(buttonAmount, is(9));
 
         for (int i = 2; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);

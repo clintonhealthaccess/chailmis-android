@@ -165,7 +165,7 @@
                             "name": "lmis dataset",
                             "periodType": "Daily"
                         },
-                        "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c",
+                        "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c2",
                         "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
                     },
                     {
@@ -175,7 +175,7 @@
                             "name": "lmis dataset",
                             "periodType": "Daily"
                         },
-                        "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
+                        "id": "f5e23dee-865c-4fcf-9fff-05eb201b435-2",
                         "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
                     },
                     {
@@ -840,6 +840,26 @@
                         },
                         "id": "1229234",
                         "name": "Syringe 1.0_DISPENSING"
+                    },
+                    {
+                        "activityType": "ADJUSTMENTS",
+                        "dataSet": {
+                            "id": "cf6eaf9a-6987-43df-b010-2329381727ab",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c",
+                        "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
+                    },
+                    {
+                        "activityType": "ADJUSTMENT_REASON",
+                        "dataSet": {
+                            "id": "7e415e35-dd77-4eee-93b2-df4df667bfd8",
+                            "name": "lmis dataset",
+                            "periodType": "Daily"
+                        },
+                        "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
+                        "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
                     }
                 ],
                 "id": "109",

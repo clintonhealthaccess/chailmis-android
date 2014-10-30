@@ -77,7 +77,8 @@ abstract public class CommodityDisplayStrategy implements Serializable {
     public static final CommodityDisplayStrategy ALLOW_ONLY_LGA_COMMODITIES = new CommodityDisplayStrategy() {
         @Override
         public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
-            return !commodityViewModel.getCommodity().isNonLGA();
+            System.out.println("Commodity "+commodityViewModel.getCommodity().getName()+" is LGA -- "+ commodityViewModel.getCommodity().isLGA());
+            return commodityViewModel.getCommodity().isLGA();
         }
 
         @Override

@@ -189,6 +189,17 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                     }
                 }
         );
+
+        Intent intent = getIntent();
+        String presetReason = intent.getStringExtra(ADJUSTMENT_REASON);
+
+        if (presetReason != null && presetReason.equals(AdjustmentReason.PHYSICAL_COUNT_TEXT)) {
+            for (Commodity commodity : commodityService.all()) {
+                AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, commodity.getStockOnHand());
+                adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
+                onEvent(new CommodityToggledEvent(adjustmentsViewModel));
+            }
+        }
     }
 
     private List<Adjustment> getAdjustments() {
@@ -213,11 +224,6 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
         if (presetReason != null) {
             int selectedIndex = adjustmentReasons.indexOf(new AdjustmentReason(presetReason, true, true));
             spinnerAdjustmentReason.setSelection(selectedIndex);
-            for (Commodity commodity : commodityService.all()) {
-                AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, commodity.getStockOnHand());
-                adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
-                onEvent(new CommodityToggledEvent(adjustmentsViewModel));
-            }
         }
 
         spinnerAdjustmentReason.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

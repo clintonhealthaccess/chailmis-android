@@ -113,7 +113,7 @@ public class ItemSelectFragmentTest {
         LinearLayout categoriesLayout = (LinearLayout) dialog.findViewById(R.id.itemSelectOverlayCategories);
         assertThat(categoriesLayout, not(nullValue()));
 
-        assertThat(categoriesLayout.getChildCount(), is(6));
+        assertThat(categoriesLayout.getChildCount(), is(7));
         for (int i = 0; i < categoriesLayout.getChildCount(); i++) {
             Button button = (Button) categoriesLayout.getChildAt(i);
             Category currentCategory = categoryService.all().get(i);
@@ -189,24 +189,18 @@ public class ItemSelectFragmentTest {
 
     @Test
     public void testThatShouldNotShowSomeOfTheCommoditiesIfTheStrategyAllowsHiding() throws Exception {
-        Category antiMalarials = categoryService.all().get(0);
-        int commodityCount = antiMalarials.getCommodities().size();
-        Commodity firstCommodity = commodityService.all().get(0);
-        Commodity spyFirstCommodity = spy(firstCommodity);
-        when(spyFirstCommodity.isOutOfStock()).thenReturn(true);
+        Category vaccines = categoryService.all().get(6);
+        int commodityCount = vaccines.getCommodities().size();
 
-        ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
-        currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
-
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES, getViewModelConverter(), "Activity");
+        itemSelectFragment = ItemSelectFragment.newInstance(vaccines,
+                new ArrayList<BaseCommodityViewModel>(), CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES,
+                getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
         GridView commoditiesLayout = (GridView) dialog.findViewById(R.id.gridViewCommodities);
-        assertThat(commoditiesLayout.getAdapter().getCount(), is(not(commodityCount)));
-        BaseCommodityViewModel loadedCommodity = (BaseCommodityViewModel) commoditiesLayout.getAdapter().getItem(0);
-        assertTrue(loadedCommodity.isSelected());
-
+        int expectedCount = commodityCount - 1;
+        assertThat(commoditiesLayout.getAdapter().getCount(), is(expectedCount));
     }
 
     @Test
