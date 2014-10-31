@@ -45,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.QuantityTextWatcher;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -63,12 +64,21 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewMo
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(resource, parent, false);
-        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
-        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
         final BaseCommodityViewModel commodityViewModel = getItem(position);
+
+        TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodityViewModel.getName());
+
+        TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
+        textViewCurrentStock.setText("Current Stock: "+String.valueOf(commodityViewModel.getStockOnHand()));
+
+        TextView textViewMonthsOfStock = (TextView) rowView.findViewById(R.id.textViewMonthsOfStock);
+        DecimalFormat format = new DecimalFormat("0.00");
+        textViewMonthsOfStock.setText("Month Of Stock: "+format.format(commodityViewModel.getMonthsOfStock()));
+
+        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
         setupQuantity(editTextQuantity, commodityViewModel);
+        ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         activateCancelButton(imageButtonCancel, commodityViewModel);
         return rowView;
     }

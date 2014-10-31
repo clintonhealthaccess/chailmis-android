@@ -95,4 +95,9 @@ public class BaseCommodityViewModel implements Serializable {
     public int hashCode() {
         return commodity.hashCode();
     }
+
+    public float getMonthsOfStock() {
+        return (float)getStockOnHand() / commodity.getAMC();
+    }
+
 }
