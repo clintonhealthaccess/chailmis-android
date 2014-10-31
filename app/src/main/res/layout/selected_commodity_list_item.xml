@@ -52,12 +52,14 @@
             android:id="@+id/textViewCurrentStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/textViewMonthsOfStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:textStyle="bold"/>
 
         </LinearLayout>
 

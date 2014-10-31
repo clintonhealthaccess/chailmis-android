@@ -91,5 +91,9 @@ public class AdjustmentReason {
         return name.equalsIgnoreCase(PHYSICAL_COUNT_TEXT);
     }
 
+    public boolean isReturnToAnotherFacility() {
+        return name.equalsIgnoreCase(RECEIVED_FROM_ANOTHER_FACILITY_TEXT);
+    }
+
 
 }

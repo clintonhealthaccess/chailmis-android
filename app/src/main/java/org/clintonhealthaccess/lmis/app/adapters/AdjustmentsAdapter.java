@@ -39,6 +39,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,6 +51,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,10 +76,13 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(resource, parent, false);
+
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
-        TextView textViewLabel = (TextView) rowView.findViewById(R.id.textViewLabel);
+        TextView textViewCounted = (TextView) rowView.findViewById(R.id.textViewCounted);
         TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
+        LinearLayout linearLayoutStockValues = (LinearLayout) rowView.findViewById(R.id.linearLayoutStockValues);
+        TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
+        TextView textViewMonthsOfStock = (TextView) rowView.findViewById(R.id.textViewMonthsOfStock);
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
         final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
         final NumberTextView editTextStockCounted = (NumberTextView) rowView.findViewById(R.id.editTextStockCounted);
@@ -95,19 +100,21 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             }
             if (commodityViewModel.getAdjustmentReason().isPhysicalCount()) {
                 textViewAdjustment.setVisibility(View.VISIBLE);
-                textViewLabel.setVisibility(View.VISIBLE);
-                textViewCurrentStock.setVisibility(View.VISIBLE);
+                textViewCounted.setVisibility(View.VISIBLE);
                 editTextStockCounted.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.INVISIBLE);
                 editTextQuantity.setVisibility(View.INVISIBLE);
-                textViewCurrentStock.setText("Current Stock:   " + commodityViewModel.getStockOnHand());
-            } else {
+                showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
+            }else {
                 editTextQuantity.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.VISIBLE);
                 editTextStockCounted.setVisibility(View.GONE);
                 textViewAdjustment.setVisibility(View.GONE);
-                textViewLabel.setVisibility(View.GONE);
-                textViewCurrentStock.setVisibility(View.GONE);
+                textViewCounted.setVisibility(View.GONE);
+                //textViewCurrentStock.setVisibility(View.GONE);
+                if(commodityViewModel.getAdjustmentReason().isReturnToAnotherFacility()){
+                    showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
+                }
             }
             if (types.size() < 2) {
                 spinnerAdjustmentType.setEnabled(false);
@@ -148,6 +155,13 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         activateCancelButton(imageButtonCancel, commodityViewModel);
 
         return rowView;
+    }
+
+    private void showAndSetStockValueFields(LinearLayout linearLayoutStockValues, TextView textViewCurrentStock, TextView textViewMonthsOfStock, AdjustmentsViewModel commodityViewModel) {
+        linearLayoutStockValues.setVisibility(View.VISIBLE);
+        textViewCurrentStock.setText("Current Stock:  " + commodityViewModel.getStockOnHand());
+        DecimalFormat format = new DecimalFormat("0.00");
+        textViewMonthsOfStock.setText("Month Of Stock:  "+format.format(commodityViewModel.getMonthsOfStock()));
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {

@@ -46,6 +46,7 @@
             android:focusable="true"
             android:clickable="true"
             android:focusableInTouchMode="true"
+            android:layout_alignParentLeft="true"
             android:textSize="18sp" />
 
         <ImageButton
@@ -103,18 +104,31 @@
             android:layout_height="wrap_content"
             android:text="Counted :"
             android:layout_toLeftOf="@id/editTextStockCounted"
-            android:id="@+id/textViewLabel" />
+            android:id="@+id/textViewCounted" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/linearLayoutStockValues"
             android:layout_width="wrap_content"
-            android:visibility="gone"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/textViewLabel"
-            android:paddingRight="10dp"
-            android:id="@+id/textViewCurrentStock" />
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/textViewCounted"
+            android:layout_marginRight="20dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/textViewCurrentStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/textViewMonthsOfStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
