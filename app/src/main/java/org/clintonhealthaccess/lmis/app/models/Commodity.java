@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import android.util.Log;
+
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -150,7 +152,7 @@ public class Commodity implements Serializable {
         return true;
     }
 
-    public boolean isLGA(){
+    public boolean isLGA() {
         return !nonLGA;
     }
 
@@ -228,5 +230,25 @@ public class Commodity implements Serializable {
 
     public void setIsVaccine(boolean isVaccine) {
         this.isVaccine = isVaccine;
+    }
+
+    public boolean isVial() {
+        return name.toLowerCase().contains("vial");
+    }
+
+    public int dosesPerVial() {
+        return isVial() ? findDosesPerVial() : 1;
+    }
+
+    private int findDosesPerVial() {
+        String trimmedName = name.trim();
+        String dosesString = trimmedName.substring(trimmedName.lastIndexOf(" ")).trim();
+        String numberOfDosesString = dosesString.substring(0, dosesString.indexOf("_"));
+        try {
+            return Integer.parseInt(numberOfDosesString);
+        } catch (NumberFormatException e) {
+            Log.e("Commodity", e.getMessage());
+            return 1;
+        }
     }
 }

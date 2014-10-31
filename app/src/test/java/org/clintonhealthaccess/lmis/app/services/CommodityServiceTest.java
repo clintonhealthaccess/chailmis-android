@@ -213,12 +213,17 @@ public class CommodityServiceTest {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, Calendar.APRIL);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date date = calendar.getTime();
 
-        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date);
+        System.out.println("Our guys sent in " + DateUtil.dateString(date));
+
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(
+                commodity, date);
         assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(30));
 
         calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date date2 = calendar.getTime();
 
         List<UtilizationItem> decemberUtilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date2);

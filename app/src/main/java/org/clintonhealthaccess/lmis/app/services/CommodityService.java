@@ -290,7 +290,7 @@ public class CommodityService {
             if (utilizationItemName.equals(UtilizationItemName.DOSES_OPENED) && !commodity.isDevice()
                     || utilizationItemName.equals(UtilizationItemName.USED) && commodity.isDevice()) {
                 utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
-                        dispensingService.getDispensedValues(commodity, monthStartDate, monthEndDate)));
+                        dispensingService.getDispensedValues(commodity, monthStartDate, monthEndDate, utilizationItemName.equals(UtilizationItemName.DOSES_OPENED))));
             }
 
             if (utilizationItemName.equals(UtilizationItemName.ENDING_BALANCE)) {
@@ -313,7 +313,6 @@ public class CommodityService {
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
         while (calendar.getTime().before(upperLimitDate)) {
-
             UtilizationValue utilizationValue = new UtilizationValue(DateUtil.dayNumber(calendar.getTime()),
                     DateUtil.dayNumber(calendar.getTime()));
             utilizationValues.add(utilizationValue);

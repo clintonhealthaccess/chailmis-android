@@ -143,7 +143,7 @@ public class DispensingService {
         });
     }
 
-    public List<UtilizationValue> getDispensedValues(Commodity commodity, Date startDate, Date endDate) {
+    public List<UtilizationValue> getDispensedValues(Commodity commodity, Date startDate, Date endDate, boolean forVial) {
         List<DispensingItem> items = GenericService.getItems(commodity, startDate, endDate, Dispensing.class, DispensingItem.class, context);
 
         List<UtilizationValue> utilizationValues = new ArrayList<>();
@@ -152,8 +152,15 @@ public class DispensingService {
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
 
+        int dosesPerVial = commodity.dosesPerVial();
+
         while (calendar.getTime().before(upperLimitDate)) {
             int dayDispensingItems = getTotal(calendar.getTime(), items);
+
+            if (forVial) {
+                dayDispensingItems = dayDispensingItems * dosesPerVial;
+            }
+
             UtilizationValue utilizationValue =
                     new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), dayDispensingItems);
             utilizationValues.add(utilizationValue);

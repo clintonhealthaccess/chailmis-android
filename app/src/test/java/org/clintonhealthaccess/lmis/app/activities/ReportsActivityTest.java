@@ -91,8 +91,6 @@ public class ReportsActivityTest {
                 bind(UserService.class).toInstance(userService);
             }
         });
-
-
     }
 
     @Test
