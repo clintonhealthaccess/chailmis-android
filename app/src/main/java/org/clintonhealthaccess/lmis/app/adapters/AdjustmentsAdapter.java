@@ -111,8 +111,9 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 editTextStockCounted.setVisibility(View.GONE);
                 textViewAdjustment.setVisibility(View.GONE);
                 textViewCounted.setVisibility(View.GONE);
-                //textViewCurrentStock.setVisibility(View.GONE);
-                if(commodityViewModel.getAdjustmentReason().isReturnToAnotherFacility()){
+                textViewCurrentStock.setVisibility(View.GONE);
+                if(commodityViewModel.getAdjustmentReason().isSentToAnotherFacility()){
+                    textViewCurrentStock.setVisibility(View.VISIBLE);
                     showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
                 }
             }

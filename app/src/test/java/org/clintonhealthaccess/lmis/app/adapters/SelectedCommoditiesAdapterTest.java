@@ -80,7 +80,9 @@ public class SelectedCommoditiesAdapterTest {
 
     @Test
     public void shouldShowKeyboardWhenTextIsEnteredIntoQuantityField() throws Exception {
-        Commodity commodity = new Commodity("food");
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getName()).thenReturn("food");
+        when(commodity.getStockOnHand()).thenReturn(10);
         BaseCommodityViewModel viewModel = new BaseCommodityViewModel(commodity);
         adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_commodity_list_item, Arrays.asList(viewModel));
         View rowView = getRowView();

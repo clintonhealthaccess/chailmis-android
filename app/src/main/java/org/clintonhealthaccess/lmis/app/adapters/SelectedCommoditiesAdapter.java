@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,11 +71,12 @@ public class SelectedCommoditiesAdapter extends ArrayAdapter<BaseCommodityViewMo
         textViewCommodityName.setText(commodityViewModel.getName());
 
         TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
-        textViewCurrentStock.setText("Current Stock:  "+String.valueOf(commodityViewModel.getStockOnHand()));
+
+        textViewCurrentStock.setText("Current Stock:  " + String.valueOf(commodityViewModel.getStockOnHand()));
 
         TextView textViewMonthsOfStock = (TextView) rowView.findViewById(R.id.textViewMonthsOfStock);
         DecimalFormat format = new DecimalFormat("0.00");
-        textViewMonthsOfStock.setText("Month Of Stock:  "+format.format(commodityViewModel.getMonthsOfStock()));
+        textViewMonthsOfStock.setText("Month Of Stock:  " + format.format(commodityViewModel.getMonthsOfStock()));
 
         final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
         setupQuantity(editTextQuantity, commodityViewModel);

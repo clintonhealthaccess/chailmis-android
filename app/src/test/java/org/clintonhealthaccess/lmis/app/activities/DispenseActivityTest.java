@@ -201,7 +201,10 @@ public class DispenseActivityTest {
     }
 
     private CommodityToggledEventDetails fireCommodityToggledEvent(DispenseActivity dispenseActivity) {
-        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity("name"));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getName()).thenReturn("food");
+        when(commodity.getStockOnHand()).thenReturn(10);
+        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(commodity);
         CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
 
         refire(commodityToggledEvent);

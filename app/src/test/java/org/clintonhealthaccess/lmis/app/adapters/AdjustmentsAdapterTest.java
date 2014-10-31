@@ -107,7 +107,7 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldNotShowTheCurrentStockWhenTheReasonIsNotPhysicalCount() throws Exception {
+    public void shouldNotShowTheCurrentStockWhenTheReasonIsNotPhysicalCountOrSentToFacility() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
         TextView textView = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.textViewCurrentStock);
         ANDROID.assertThat(textView).isGone();
@@ -283,6 +283,7 @@ public class AdjustmentsAdapterTest {
     private AdjustmentsAdapter getAdjustmentsAdapterWithQuantityAndPositive(AdjustmentReason adjustmentReason, int quantityEntered, boolean positive) {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
+        when(commodity.getName()).thenReturn("Food");
         when(commodity.getStockOnHand()).thenReturn(100);
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, quantityEntered, positive);
         adjustmentsViewModel.setAdjustmentReason(adjustmentReason);
