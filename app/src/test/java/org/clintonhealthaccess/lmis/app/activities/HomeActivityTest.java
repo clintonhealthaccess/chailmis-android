@@ -47,10 +47,13 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
+import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.buildActivity;
@@ -143,13 +146,9 @@ public class HomeActivityTest {
 
     @Test
     public void testClickDispenseButtonNavigatesToDispenseActivity() {
-
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonDispense).performClick();
-
         Intent intent = new Intent(homeActivity, DispenseActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -158,11 +157,8 @@ public class HomeActivityTest {
     @Test
     public void testClickReceiveButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonReceive).performClick();
-
         Intent intent = new Intent(homeActivity, ReceiveActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -171,11 +167,8 @@ public class HomeActivityTest {
     @Test
     public void testClickOrderButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonOrder).performClick();
-
         Intent intent = new Intent(homeActivity, OrderActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -184,11 +177,8 @@ public class HomeActivityTest {
     @Test
     public void testClickLossesButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonLosses).performClick();
-
         Intent intent = new Intent(homeActivity, LossesActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -197,11 +187,8 @@ public class HomeActivityTest {
     @Test
     public void testClickReportsButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonReports).performClick();
-
         Intent intent = new Intent(homeActivity, ReportsActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -210,11 +197,8 @@ public class HomeActivityTest {
     @Test
     public void testClickMessagesButtonNavigatesToReceiveActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonMessages).performClick();
-
         Intent intent = new Intent(homeActivity, MessagesActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -223,11 +207,8 @@ public class HomeActivityTest {
     @Test
     public void testClickAdjustmentsButtonNavigatesToDispenseActivity() {
         setRegistrationStatus(true);
-
         HomeActivity homeActivity = getHomeActivity();
-
         homeActivity.findViewById(R.id.buttonAdjustments).performClick();
-
         Intent intent = new Intent(homeActivity, AdjustmentsActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
@@ -235,13 +216,26 @@ public class HomeActivityTest {
 
     @Test
     public void testShouldRenderRegisterActivityIfThereIsNoUserRegistered() throws Exception {
-
         setRegistrationStatus(false);
-
         HomeActivity homeActivity = getHomeActivity();
-
         Intent registerIntent = new Intent(homeActivity, RegisterActivity.class);
 
         assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(registerIntent));
+    }
+
+    @Test
+    public void shouldEnsureBinCardButtonIsConnectedToView() throws Exception {
+        HomeActivity homeActivity = getHomeActivity();
+        assertThat(homeActivity.buttonBinCard, is(notNullValue()));
+    }
+
+    @Test
+    public void shouldRenderBinCardActivityWhenBinCardButtonIsClicked() {
+        setRegistrationStatus(true);
+        HomeActivity homeActivity = getHomeActivity();
+        homeActivity.findViewById(R.id.buttonBinCard).performClick();
+        Intent intent = new Intent(homeActivity, BinCardActivity.class);
+
+        assertThat(shadowOf(homeActivity).getNextStartedActivity(), equalTo(intent));
     }
 }

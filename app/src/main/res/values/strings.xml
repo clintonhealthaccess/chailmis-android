@@ -166,5 +166,6 @@
     <string name="choose_category">Please choose a Category</string>
     <string name="select_commodity">Select a Commodity</string>
     <string name="not_related_to_vaccine">Not related to Vaccine</string>
+    <string name="bin_card">Bin Card</string>
 
 </resources>

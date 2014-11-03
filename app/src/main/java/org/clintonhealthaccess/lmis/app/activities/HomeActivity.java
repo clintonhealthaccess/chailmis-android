@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.View;
@@ -104,6 +103,9 @@ public class HomeActivity extends BaseActivity {
     @InjectView(R.id.listViewNotifications)
     ListView listViewNotifications;
 
+    @InjectView(R.id.buttonBinCard)
+    Button buttonBinCard;
+
     @Inject
     private SyncManager syncManager;
 
@@ -123,6 +125,7 @@ public class HomeActivity extends BaseActivity {
                     put(R.id.buttonMessages, MessagesActivity.class);
                     put(R.id.buttonReports, ReportsActivity.class);
                     put(R.id.buttonAdjustments, AdjustmentsActivity.class);
+                    put(R.id.buttonBinCard, BinCardActivity.class);
                 }
             };
 
@@ -154,14 +157,12 @@ public class HomeActivity extends BaseActivity {
                 startActivity(new Intent(getApplicationContext(), navigationRoutes.get(view.getId())));
             }
         };
-
-        asignListenerToButtons(onClickListener);
-
+        assignListenerToButtons(onClickListener);
     }
 
-    private void asignListenerToButtons(OnClickListener onClickListener) {
+    private void assignListenerToButtons(OnClickListener onClickListener) {
         List<Button> navigationButtons = of(buttonDispense, buttonOrder, buttonReceive,
-                buttonLosses, buttonAdjustments, buttonMessages, buttonReports);
+                buttonLosses, buttonAdjustments, buttonMessages, buttonReports, buttonBinCard);
         for (Button navigationButton : navigationButtons) {
             navigationButton.setOnClickListener(onClickListener);
         }
@@ -171,9 +172,7 @@ public class HomeActivity extends BaseActivity {
     private void setupAlerts() {
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = createAlertsTask();
         getAlerts.execute();
-
         AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = createNotifcationsMessageTask();
-
         getNotificationsMessageTask.execute();
     }
 

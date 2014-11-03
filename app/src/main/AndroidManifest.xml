@@ -195,6 +195,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ReportsActivity" />
         </activity>
+        <activity
+            android:name=".activities.BinCardActivity"
+            android:label="@string/bin_card"
+            android:parentActivityName=".activities.HomeActivity"
+            android:screenOrientation="landscape">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.HomeActivity" />
+        </activity>
+
     </application>
 
 </manifest>
