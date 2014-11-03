@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -86,20 +87,6 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldShowStockCountEditTextForPhysicalCount() throws Exception {
-        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
-        EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
-        ANDROID.assertThat(editText).isVisible();
-    }
-
-    @Test
-    public void shouldNotShowStockCountEditTextForAnyReasonNotPhysicalCount() throws Exception {
-        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
-        EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
-        ANDROID.assertThat(editText).isGone();
-    }
-
-    @Test
     public void shouldShowTheCurrentStockWhenItIsPhysicalCount() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
         TextView textView = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.textViewCurrentStock);
@@ -107,10 +94,10 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldNotShowTheCurrentStockWhenTheReasonIsNotPhysicalCountOrSentToFacility() throws Exception {
+    public void shouldNotShowTheLinearLayoutStockValuesWhenTheReasonIsNotPhysicalCountOrSentToFacility() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
-        TextView textView = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.textViewCurrentStock);
-        ANDROID.assertThat(textView).isGone();
+        LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.linearLayoutStockValues);
+        ANDROID.assertThat(linearLayout).isGone();
     }
 
     @Test
@@ -122,14 +109,6 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldNotShowTheQuantityEditTextWhenTheReasonIsPhysicalCount() throws Exception {
-        AdjustmentReason adjustmentReason = AdjustmentReason.PHYSICAL_COUNT;
-        AdjustmentsAdapter adapter = getAdjustmentsAdapter(adjustmentReason);
-        EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
-        ANDROID.assertThat(editText).isInvisible();
-    }
-
-    @Test
     public void shouldErrorWhenGivingAwayMoreStockThanIsAvailable() throws Exception {
         EditText editText = (EditText) getViewFromListRow(getAdjustmentsAdapterWithQuantityAndPositive(AdjustmentReason.SENT_TO_ANOTHER_FACILITY, 150, false), R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
         ANDROID.assertThat(editText).isVisible();
@@ -137,35 +116,37 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldSetAdjustmentToViewModelToPositiveForPhysicalStockCountIfCounterIsGreaterThanSOH() throws Exception {
+    public void shouldSetAdjustmentViewModelToPositiveForPhysicalStockCountIfQuantityCountedIsGreaterThanSOH() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
         when(commodity.getStockOnHand()).thenReturn(100);
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities),
+                R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
         editText.setText("200");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
         assertThat(adjustmentsViewModel.isPositive(), is(true));
     }
 
     @Test
-    public void shouldSetAdjustmentToViewModelToNegativeForPhysicalStockCountIfCountedIsLessGrThanSOH() throws Exception {
+    public void shouldSetAdjustmentViewModelToNegativeForPhysicalStockCountIfQuantityCountedIsLessGrThanSOH() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
         when(commodity.getStockOnHand()).thenReturn(100);
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities), R.layout.selected_adjustment_list_item, R.id.editTextStockCounted);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities),
+                R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
         editText.setText("50");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
     }
 
     @Test
-    public void shouldSetAdjustmentTypeToPositiveForPhysicalStockCountIfCounterIsGreaterThanSOH() throws Exception {
+    public void shouldSetAdjustmentTypeToPositiveForPhysicalStockCountIfQuantityCountedIsGreaterThanSOH() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
         when(commodity.getStockOnHand()).thenReturn(100);
@@ -174,7 +155,7 @@ public class AdjustmentsAdapterTest {
         commodities.add(adjustmentsViewModel);
         AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
-        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("200");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
@@ -193,7 +174,7 @@ public class AdjustmentsAdapterTest {
         AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
 
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
-        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("50");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
@@ -218,22 +199,6 @@ public class AdjustmentsAdapterTest {
     }
 
     @Test
-    public void shouldShowKeyboardWhenTextIsEnteredIntoStockCountedField() throws Exception {
-        ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
-        Commodity commodity = mock(Commodity.class);
-        when(commodity.getStockOnHand()).thenReturn(100);
-        AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
-        adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
-        commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
-        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
-        ANDROID.assertThat(activity.keyBoardView).isNotShown();
-        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
-        editText.performClick();
-        ANDROID.assertThat(activity.keyBoardView).isShown();
-    }
-
-    @Test
     public void shouldSetTheCountedTextViewIfTheCountedIsSetInTheViewModel() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
@@ -241,15 +206,15 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         int stockCounted = 300;
-        adjustmentsViewModel.setStockCounted(stockCounted);
         commodities.add(adjustmentsViewModel);
         AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
 
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
-        EditText editText = (EditText) row.findViewById(R.id.editTextStockCounted);
+        EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
+        TextView textView = (TextView) row.findViewById(R.id.textViewAdjustment);
+        editText.setText(Integer.toString(stockCounted));
 
-        ANDROID.assertThat(editText).containsText("300");
-
+        ANDROID.assertThat(textView).containsText("200");
     }
 
     @Test

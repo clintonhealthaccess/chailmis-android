@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +49,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.views.NumberTextView;
+import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -78,15 +78,15 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         View rowView = inflater.inflate(resource, parent, false);
 
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
-        TextView textViewCounted = (TextView) rowView.findViewById(R.id.textViewCounted);
-        TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
         LinearLayout linearLayoutStockValues = (LinearLayout) rowView.findViewById(R.id.linearLayoutStockValues);
         TextView textViewCurrentStock = (TextView) rowView.findViewById(R.id.textViewCurrentStock);
         TextView textViewMonthsOfStock = (TextView) rowView.findViewById(R.id.textViewMonthsOfStock);
-        ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
-        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
-        final NumberTextView editTextStockCounted = (NumberTextView) rowView.findViewById(R.id.editTextStockCounted);
+        TextView textViewCounted = (TextView) rowView.findViewById(R.id.textViewCounted);
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
+        final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
+        TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
+        ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
+
         final AdjustmentsViewModel commodityViewModel = getItem(position);
 
         final List<String> types = new ArrayList<>();
@@ -101,19 +101,14 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             if (commodityViewModel.getAdjustmentReason().isPhysicalCount()) {
                 textViewAdjustment.setVisibility(View.VISIBLE);
                 textViewCounted.setVisibility(View.VISIBLE);
-                editTextStockCounted.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.INVISIBLE);
-                editTextQuantity.setVisibility(View.INVISIBLE);
                 showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
-            }else {
-                editTextQuantity.setVisibility(View.VISIBLE);
+            } else {
                 spinnerAdjustmentType.setVisibility(View.VISIBLE);
-                editTextStockCounted.setVisibility(View.GONE);
                 textViewAdjustment.setVisibility(View.GONE);
                 textViewCounted.setVisibility(View.GONE);
-                textViewCurrentStock.setVisibility(View.GONE);
-                if(commodityViewModel.getAdjustmentReason().isSentToAnotherFacility()){
-                    textViewCurrentStock.setVisibility(View.VISIBLE);
+                linearLayoutStockValues.setVisibility(View.GONE);
+                if (commodityViewModel.getAdjustmentReason().isSentToAnotherFacility()) {
                     showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
                 }
             }
@@ -143,16 +138,12 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             textViewCommodityName.requestFocus();
             textViewCommodityName.setError(activity.getString(R.string.not_related_to_vaccine));
         }
-        editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity));
-        editTextStockCounted.addTextChangedListener(new PhysicalCountTextWatcher(commodityViewModel, textViewAdjustment, spinnerAdjustmentType, types));
+        editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity, textViewAdjustment, spinnerAdjustmentType, types));
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity > 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
-        int counted = commodityViewModel.getStockCounted();
-        if (counted > 0) {
-            editTextStockCounted.setText(Integer.toString(counted));
-        }
+
         activateCancelButton(imageButtonCancel, commodityViewModel);
 
         return rowView;
@@ -162,7 +153,7 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         linearLayoutStockValues.setVisibility(View.VISIBLE);
         textViewCurrentStock.setText("Current Stock:  " + commodityViewModel.getStockOnHand());
         DecimalFormat format = new DecimalFormat("0.00");
-        textViewMonthsOfStock.setText("Month Of Stock:  "+format.format(commodityViewModel.getMonthsOfStock()));
+        textViewMonthsOfStock.setText("Month Of Stock:  " + format.format(commodityViewModel.getMonthsOfStock()));
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {
@@ -174,90 +165,46 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         });
     }
 
-    private static class AdjustmentQuantityTextWatcher implements TextWatcher {
-        public static final int PLUS = 0;
-        public static final int MINUS = 1;
-        private final AdjustmentsViewModel commodityViewModel;
-        private final EditText editText;
-
-        public AdjustmentQuantityTextWatcher(AdjustmentsViewModel commodityViewModel, EditText editText) {
-            this.commodityViewModel = commodityViewModel;
-            this.editText = editText;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            String value = editable.toString();
-            if (!value.isEmpty()) {
-                int quantity = getIntFromString(value);
-                commodityViewModel.setQuantityEntered(quantity);
-                if (!commodityViewModel.isPositive()) {
-                    int stockOnHand = commodityViewModel.getStockOnHand();
-                    int result = stockOnHand - quantity;
-                    if (result < 0) {
-                        editText.setError(String.format("Can't reduce stock by more than %d", stockOnHand));
-                    } else {
-                        editText.setError(null);
-                    }
-                }
-            }
-        }
-    }
-
-    private static class PhysicalCountTextWatcher implements TextWatcher {
+    private static class AdjustmentQuantityTextWatcher extends LmisTextWatcher {
         private final AdjustmentsViewModel adjustmentsViewModel;
+        private final EditText editTextQuantity;
         private final TextView textViewAdjustment;
         private final Spinner spinnerAdjustmentType;
         private final List<String> types;
 
-        public PhysicalCountTextWatcher(AdjustmentsViewModel adjustmentsViewModel, TextView textViewAdjustment, Spinner spinnerAdjustmentType, List<String> types) {
+        public AdjustmentQuantityTextWatcher(AdjustmentsViewModel adjustmentsViewModel,
+                                             EditText editTextQuantity, TextView textViewAdjustment,
+                                             Spinner spinnerAdjustmentType, List<String> types) {
             this.adjustmentsViewModel = adjustmentsViewModel;
+            this.editTextQuantity = editTextQuantity;
             this.textViewAdjustment = textViewAdjustment;
             this.spinnerAdjustmentType = spinnerAdjustmentType;
             this.types = types;
         }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
         public void afterTextChanged(Editable editable) {
             String value = editable.toString();
-            if (!value.isEmpty()) {
-                int quantity = getIntFromString(value);
-                adjustmentsViewModel.setStockCounted(quantity);
-                if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
-                    int difference = quantity - adjustmentsViewModel.getStockOnHand();
-                    boolean isPositive = difference > 0;
-                    adjustmentsViewModel.setPositive(isPositive);
-                    int selectedPostion = 0;
-                    if (isPositive) {
-                        selectedPostion = types.indexOf("+");
+            int quantity = getIntFromString(value);
+            adjustmentsViewModel.setQuantityEntered(quantity);
+            if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
+                int difference = quantity - adjustmentsViewModel.getStockOnHand();
+                boolean isPositive = difference > 0;
+                adjustmentsViewModel.setPositive(isPositive);
+                spinnerAdjustmentType.setSelection(isPositive ? types.indexOf("+") : types.indexOf("-"));
+                int adjustment = abs(difference);
+                textViewAdjustment.setText(String.valueOf(adjustment));
+                adjustmentsViewModel.setQuantityEntered(adjustment);
+            } else {
+                if (!adjustmentsViewModel.isPositive()) {
+                    int stockOnHand = adjustmentsViewModel.getStockOnHand();
+                    if (stockOnHand - quantity < 0) {
+                        editTextQuantity.setError(String.format("Can't reduce stock by more than %d", stockOnHand));
                     } else {
-                        selectedPostion = types.indexOf("-");
+                        editTextQuantity.setError(null);
                     }
-                    spinnerAdjustmentType.setSelection(selectedPostion);
-                    int adjustment = abs(difference);
-                    textViewAdjustment.setText(String.valueOf(adjustment));
-                    adjustmentsViewModel.setQuantityEntered(adjustment);
                 }
+
             }
         }
     }

@@ -34,16 +34,14 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 public class AdjustmentsViewModel extends BaseCommodityViewModel {
     private boolean positive;
-    private int stockCounted;
     private AdjustmentReason adjustmentReason;
 
     public AdjustmentsViewModel(Commodity commodity) {
         super(commodity);
     }
 
-    public AdjustmentsViewModel(Commodity commodity, int counted) {
-        super(commodity);
-        this.stockCounted = counted;
+    public AdjustmentsViewModel(Commodity commodity, int quantity) {
+        super(commodity, quantity);
     }
 
     public AdjustmentsViewModel(Commodity commodity, int quantityEntered, boolean positive) {
@@ -67,11 +65,4 @@ public class AdjustmentsViewModel extends BaseCommodityViewModel {
         this.positive = positive;
     }
 
-    public int getStockCounted() {
-        return stockCounted;
-    }
-
-    public void setStockCounted(int stockCounted) {
-        this.stockCounted = stockCounted;
-    }
 }
