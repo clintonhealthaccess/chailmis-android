@@ -223,15 +223,19 @@ public class HomeActivity extends BaseActivity {
 
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            int factor  = 100;
+            int factor = 100;
             int amc = commodity.getLatestValueFromCommodityActionByName(DataElementType.AMC.toString());
-            int monthsOfStock =  (commodity.getStockOnHand() * factor / amc);
+
+            //FIXME hack to fix 0 AMC error
+            amc = amc == 0 ? 1 : amc;
+
+            int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
 
             int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
-            int minThresholdInMonths = minimumThreshold * factor/ amc;
+            int minThresholdInMonths = minimumThreshold * factor / amc;
 
             int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
-            int maxThresholdInMonths = maxThreshold *factor / amc;
+            int maxThresholdInMonths = maxThreshold * factor / amc;
 
             bars.add(new StockOnHandGraphBar(commodity.getName(),
                     minThresholdInMonths, maxThresholdInMonths, monthsOfStock,
