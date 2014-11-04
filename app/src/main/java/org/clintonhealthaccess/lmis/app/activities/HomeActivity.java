@@ -223,10 +223,10 @@ public class HomeActivity extends BaseActivity {
         int count = 0;
         for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
             int factor = 100;
-            int amc = commodity.getLatestValueFromCommodityActionByName(DataElementType.AMC.toString());
+            int amc = commodity.getAMC();
 
             //FIXME hack to fix 0 AMC error
-            amc = amc == 0 ? 1 : amc;
+            amc = amc == 0 ? commodity.getStockOnHand() : amc;
 
             int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
 

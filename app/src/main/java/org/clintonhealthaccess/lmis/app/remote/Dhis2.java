@@ -227,7 +227,7 @@ public class Dhis2 implements LmisServer {
         try {
             String dataSet2 = getDataSetId(commodities, DataElementType.AMC.getActivity());
             String dataSetId = getDataSetId(commodities, DataElementType.STOCK_ON_HAND.getActivity());
-            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today(), dataSet2);
+            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today(), dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
@@ -240,7 +240,7 @@ public class Dhis2 implements LmisServer {
         DataValueSet valueSet = new DataValueSet();
         try {
             String dataSetId = getDataSetId(commodities, DataElementType.ALLOCATED.getActivity());
-            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), twoMonthsAgo(), today());
+            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today());
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
@@ -267,9 +267,9 @@ public class Dhis2 implements LmisServer {
         return commodities.get(0).getCommodityAction(activityType);
     }
 
-    private String twoMonthsAgo() {
+    private String threeMonthsAgo() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -2);
+        calendar.add(Calendar.MONTH, -3);
         return SIMPLE_DATE_FORMAT.format(calendar.getTime());
     }
 

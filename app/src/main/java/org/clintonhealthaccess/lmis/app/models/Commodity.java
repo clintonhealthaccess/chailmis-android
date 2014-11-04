@@ -220,10 +220,6 @@ public class Commodity implements Serializable {
         return getLatestValueFromCommodityActionByName(DataElementType.AMC.toString());
     }
 
-    public int getMonthsOfSOH() {
-        return getLatestValueFromCommodityActionByName(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
-    }
-
     public void setIsDevice(boolean isDevice) {
         this.isDevice = isDevice;
     }

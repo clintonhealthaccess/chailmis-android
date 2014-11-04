@@ -38,6 +38,7 @@ import com.google.inject.AbstractModule;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -75,6 +76,7 @@ public class RegisterActivityTest {
     private OrderService mockOrderService;
     private StockService mockStockService;
     private SmsSyncService mockSmsSyncService;
+    private CommodityActionService mockCommodityActionService;
 
     @Before
     public void setUp() throws Exception {
@@ -83,6 +85,7 @@ public class RegisterActivityTest {
         mockStockService = mock(StockService.class);
         mockOrderService = mock(OrderService.class);
         mockSmsSyncService = mock(SmsSyncService.class);
+        mockCommodityActionService = mock(CommodityActionService.class);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -92,6 +95,7 @@ public class RegisterActivityTest {
                 bind(StockService.class).toInstance(mockStockService);
                 bind(OrderService.class).toInstance(mockOrderService);
                 bind(SmsSyncService.class).toInstance(mockSmsSyncService);
+                bind(CommodityActionService.class).toInstance(mockCommodityActionService);
             }
         });
 

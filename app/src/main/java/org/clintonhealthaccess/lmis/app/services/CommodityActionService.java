@@ -47,14 +47,11 @@ import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.transform.Source;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;

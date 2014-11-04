@@ -97,7 +97,8 @@ public class BaseCommodityViewModel implements Serializable {
     }
 
     public float getMonthsOfStock() {
-        return (float)getStockOnHand() / commodity.getAMC();
+        int AMC = commodity.getAMC();
+        return AMC == 0 ? 1 : (float) commodity.getStockOnHand() / AMC;
     }
 
 }

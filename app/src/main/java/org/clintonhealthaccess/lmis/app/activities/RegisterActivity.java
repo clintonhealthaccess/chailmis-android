@@ -42,7 +42,9 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -62,18 +64,16 @@ import static org.clintonhealthaccess.lmis.app.R.layout;
 public class RegisterActivity extends RoboActionBarActivity {
     @Inject
     private UserService userService;
-
     @Inject
     private CommodityService commodityService;
-
     @Inject
     private StockService stockService;
-
     @Inject
     private OrderService orderService;
-
     @Inject
     private SmsSyncService smsSyncService;
+    @Inject
+    private CommodityActionService commodityActionService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -147,10 +147,15 @@ public class RegisterActivity extends RoboActionBarActivity {
             User user;
             try {
                 user = userService.register(username, password);
+                Log.i("Inital sync:", "initializing");
                 commodityService.initialise(user);
+                Log.i("Inital sync:", "<========== syncing Order Reasons");
                 orderService.syncOrderReasons();
+                Log.i("Inital sync:", "<========== syncing Order Types");
                 orderService.syncOrderTypes();
                 smsSyncService.syncGatewayNumber();
+                Log.i("Inital sync:", "<========== syncing Commodity Action Values");
+                commodityActionService.syncCommodityActionValues(user, commodityService.all());
             } catch (Exception e) {
                 this.failureCause = e;
                 Log.e("Registration Error", e.getLocalizedMessage());
