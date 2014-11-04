@@ -40,6 +40,8 @@ import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCardItem;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
@@ -47,10 +49,12 @@ import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -73,6 +77,7 @@ import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionVal
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -572,5 +577,38 @@ public class ReportsServiceTest {
 
         int expectedSize = category.getCommodities().size();
         assertThat(reportItems.size(), is(expectedSize));
+    }
+
+    @Test
+    @Ignore
+    public void shouldReturnBinCardReportItems() throws Exception {
+        //Date date. int minimumStockLevel;
+        // int maximumStockLevel receivedFromIssuedTo;int quantityReceived; quantityDispensed; quantityLost; stockBalance;
+
+        Commodity commodity = categories.get(0).getCommodities().get(0);
+        int stock = commodity.getStockOnHand();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -20);
+        Date date = calendar.getTime();
+
+        receive(commodity, 200, receiveService, date);
+        dispense(commodity, 30, dispensingService, date);
+        lose(commodity, 20, lossService, date);
+
+        int expectedMax = stock + 200;
+        int expectedMin = expectedMax - 50;
+        int expectedBalance = expectedMin;
+
+        BinCard binCard = reportsService.generateBinCard(commodity);
+        assertThat(binCard.getBinCardItems().size(), is(1));
+        assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
+        assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
+
+        BinCardItem binCardItem = binCard.getBinCardItems().get(0);
+        assertTrue(DateUtil.equal(binCardItem.getDate(), date));
+        assertThat(binCardItem.getQuantityReceived(), is(200));
+        assertThat(binCardItem.getQuantityDispensed(), is(30));
+        assertThat(binCardItem.getQuantityLost(), is(20));
+        assertThat(binCardItem.getStockBalance(), is(expectedBalance));
     }
 }

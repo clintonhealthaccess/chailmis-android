@@ -162,7 +162,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     public void shouldCreateCommoditySnapshotForReceiving() throws Exception {
         Commodity commodity = commodityDao.queryForAll().get(0);
         ReceiveItem receiveItem = new ReceiveItem(commodity, 10, 10);
-        receiveItem.setReceive(new Receive("Facility", null));
+        receiveItem.setReceive(new Receive("Facility"));
 
         commoditySnapshotService.add(receiveItem);
 

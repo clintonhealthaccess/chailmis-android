@@ -77,7 +77,7 @@ public class ReceiveServiceTest {
     public void shouldSaveReceiveAndReceiveItems() {
         Commodity commodity = commodityService.all().get(0);
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
-        Receive receive = new Receive("LGA", null);
+        Receive receive = new Receive("LGA");
         receive.addReceiveItem(receiveItem);
 
         receiveService.saveReceive(receive);
@@ -92,7 +92,7 @@ public class ReceiveServiceTest {
         int newStockOnHand = commodity.getStockOnHand() + QUANTITY_RECEIVED;
 
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
-        Receive receive = new Receive("LGA", null);
+        Receive receive = new Receive("LGA");
         receive.addReceiveItem(receiveItem);
 
         receiveService.saveReceive(receive);

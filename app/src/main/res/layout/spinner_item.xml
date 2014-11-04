@@ -32,5 +32,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:textSize="16sp" />
+    android:gravity="left"
+    android:textSize="16sp"
+    android:textColor="@color/black"
+    android:padding="10dp"/>

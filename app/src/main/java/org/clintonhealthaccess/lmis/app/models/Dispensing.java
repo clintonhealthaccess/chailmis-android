@@ -61,8 +61,12 @@ public class Dispensing implements Serializable {
     }
 
     public Dispensing() {
+        this(new Date());
+    }
+
+    public Dispensing(Date date) {
         dispenseToFacility = false;
-        created = new Date();
+        created = date;
     }
 
     public void addItem(DispensingItem dispensingItem) {

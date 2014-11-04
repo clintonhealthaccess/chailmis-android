@@ -49,7 +49,7 @@ public class ReceiveItemTest {
         CommodityAction activity = new CommodityAction(commodity, "12", "12", DataElementType.RECEIVED.getActivity());
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(activity));
 
-        Receive receive = new Receive("LGA", null);
+        Receive receive = new Receive("LGA");
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         item.setReceive(receive);
         assertThat(item.getActivitiesValues().get(0).getValue(), is("20"));
@@ -63,7 +63,7 @@ public class ReceiveItemTest {
         CommodityAction receiveDateActivity = new CommodityAction(commodity, "2", "0.05ml Syringe x 1 RECEIVE_DATE", DataElementType.RECEIVE_DATE.getActivity());
         when(commodity.getCommodityActionsSaved()).thenReturn(newArrayList(receivedActivity, receiveDateActivity));
 
-        Receive receive = new Receive("LGA", null);
+        Receive receive = new Receive("LGA");
         ReceiveItem item = new ReceiveItem(commodity, 10, 20);
         item.setReceive(receive);
 

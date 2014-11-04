@@ -102,7 +102,12 @@ public class LMISTestCase {
     }
 
     public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService) {
-        Receive receive = new Receive("LGA");
+        receive(commodity, quantityReceived, receiveService, new Date());
+    }
+
+
+    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService, Date date) {
+        Receive receive = new Receive("LGA", date);
 
         ReceiveItem receiveItem = new ReceiveItem();
         receiveItem.setCommodity(commodity);
@@ -115,20 +120,26 @@ public class LMISTestCase {
     }
 
     public static void dispense(Commodity commodity, int quantity, DispensingService dispensingService) {
+        dispense(commodity, quantity, dispensingService, new Date());
+    }
+
+    public static void dispense(Commodity commodity, int quantity, DispensingService dispensingService, Date date) {
         Dispensing dispensing = new Dispensing();
         DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
         dispensing.addItem(dispensingItem);
         dispensingService.addDispensing(dispensing);
     }
 
-
     public static void lose(Commodity commodity, int quantityLost, LossService lossService) {
-        Loss loss = new Loss();
+        lose(commodity, quantityLost, lossService, new Date());
+    }
+
+    public static void lose(Commodity commodity, int quantityLost, LossService lossService, Date date) {
+        Loss loss = new Loss(date);
         LossItem lossItem = new LossItem(commodity, quantityLost);
         loss.addLossItem(lossItem);
         lossService.saveLoss(loss);
     }
-
 
     public static void order(Commodity commodity, int quantity, OrderService orderService) {
         Order order = new Order();

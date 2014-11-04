@@ -49,6 +49,7 @@ import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
@@ -295,5 +296,11 @@ public class ReportsService {
             Log.e("ReportsService", e.getMessage());
         }
         return reportItems;
+    }
+
+    public BinCard generateBinCard(Commodity commodity) {
+        BinCard binCard = new BinCard();
+
+        return null;
     }
 }

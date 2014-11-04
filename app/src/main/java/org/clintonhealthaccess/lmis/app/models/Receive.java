@@ -68,8 +68,12 @@ public class Receive implements Serializable {
     }
 
     public Receive(String source) {
+        this(source, new Date());
+    }
+
+    public Receive(String source, Date date) {
         this.setSource(source);
-        setDateCreated();
+        this.created = date;
     }
 
 

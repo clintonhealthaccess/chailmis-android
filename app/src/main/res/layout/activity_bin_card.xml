@@ -36,18 +36,20 @@
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewCommodities"
-        android:layout_width="match_parent"
-        android:hint="Search"
         android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:hint="Search"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="10dp"/>
+
     <Spinner
         android:id="@+id/spinnerCommodities"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/autoCompleteTextViewCommodities"
         android:layout_alignParentLeft="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp"
+        />
 
 </RelativeLayout>

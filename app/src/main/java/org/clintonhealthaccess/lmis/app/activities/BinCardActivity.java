@@ -31,11 +31,13 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -55,6 +57,7 @@ import java.util.List;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static android.widget.AdapterView.OnItemSelectedListener;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -76,15 +79,26 @@ public class BinCardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        commodities = commodityService.all();
         populateCommoditiesSpinner();
         setUpCommoditySearch();
     }
 
     private void populateCommoditiesSpinner() {
-        commodities = commodityService.all();
         ArrayAdapter<Commodity> spinnerCommoditiesAdapter = new SpinnerCommoditiesAdapter(getApplicationContext(),
                 R.layout.spinner_item, commodities);
         spinnerCommodities.setAdapter(spinnerCommoditiesAdapter);
+        spinnerCommodities.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                populateBinCard((Commodity) spinnerCommodities.getItemAtPosition(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     protected void setUpCommoditySearch(){
@@ -100,4 +114,7 @@ public class BinCardActivity extends BaseActivity {
         });
     }
 
-   }
+    public void populateBinCard(Commodity commodity) {
+        Toast.makeText(this, "After Here am going to beat Jaf with my left many games", Toast.LENGTH_LONG).show();
+    }
+}

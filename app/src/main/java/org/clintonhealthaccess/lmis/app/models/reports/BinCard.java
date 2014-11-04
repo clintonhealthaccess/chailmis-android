@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,49 +28,25 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.models;
+package org.clintonhealthaccess.lmis.app.models.reports;
 
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@DatabaseTable(tableName = "losses")
-public class Loss implements Serializable {
+public class BinCard {
+    int minimumStockLevel;
+    int maximumStockLevel;
+    List<BinCardItem> binCardItems;
 
-    @DatabaseField(uniqueIndex = true, generatedId = true)
-    private long id;
-
-    @ForeignCollectionField(eager = true, maxEagerLevel = 3)
-    private ForeignCollection<LossItem> lossItemsCollection;
-
-    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
-    private Date created;
-
-    private List<LossItem> lossItems = new ArrayList<>();
-
-    public Loss(){
-        this(new Date());
+    public BinCard(int minimumStockLevel, int maximumStockLevel, List<BinCardItem> binCardItems) {
+        this.minimumStockLevel = minimumStockLevel;
+        this.maximumStockLevel = maximumStockLevel;
+        this.binCardItems = binCardItems;
     }
 
-    public Loss(Date date){
-        this.created = date;
-    }
+    public BinCard() {
 
-    public void addLossItem(LossItem lossItem) {
-        lossItem.setLoss(this);
-        lossItems.add(lossItem);
     }
 }
