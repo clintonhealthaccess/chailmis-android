@@ -49,20 +49,25 @@ import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCardItem;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.joda.time.DateTime;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -80,6 +85,8 @@ public class ReportsService {
     Context context;
     @Inject
     CommodityActionService commodityActionService;
+    @Inject
+    ReceiveService receiveService;
     @Inject
     DbUtil dbUtil;
     @Inject
@@ -153,7 +160,8 @@ public class ReportsService {
 
     protected ArrayList<ConsumptionValue> getConsumptionValuesForCommodityBetweenDates(final Commodity commodity, final Date startingDate, final Date endDate) {
         ArrayList<ConsumptionValue> consumptionValues = new ArrayList<>();
-        List<DispensingItem> dispensingItems = getDispensingItems(commodity, startingDate, endDate);
+        List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startingDate, endDate,
+                Dispensing.class, DispensingItem.class, context);
         ListMultimap<Date, DispensingItem> listMultimap = groupDispensingItems(dispensingItems);
         HashMap<Date, Integer> values = mapDispensingItemsToDates(listMultimap, startingDate, endDate);
         for (Date date : values.keySet()) {
@@ -206,23 +214,10 @@ public class ReportsService {
         return Multimaps.index(dispensingItems, new Function<DispensingItem, Date>() {
             @Override
             public Date apply(DispensingItem input) {
-                return new DateTime(input.getCreated()).withTimeAtStartOfDay().toDate();
+                return new DateTime(input.created()).withTimeAtStartOfDay().toDate();
             }
         });
     }
-
-    private List<DispensingItem> getDispensingItems(final Commodity commodity, final Date startingDate, final Date endDate) {
-        return dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, List<DispensingItem>>() {
-            @Override
-            public List<DispensingItem> operate(Dao<DispensingItem, String> dao) throws SQLException {
-                QueryBuilder<DispensingItem, String> queryBuilder = dao.queryBuilder();
-                queryBuilder.where().between("created", startingDate, endDate).
-                        and().eq("commodity_id", commodity.getId());
-                return queryBuilder.query();
-            }
-        });
-    }
-
 
     public List<FacilityConsumptionReportRH2Item> getFacilityConsumptionReportRH2Items(Category category, String startingYear, String startingMonth, String endingYear, String endingMonth) {
         ArrayList<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items = new ArrayList<>();
@@ -298,9 +293,49 @@ public class ReportsService {
         return reportItems;
     }
 
-    public BinCard generateBinCard(Commodity commodity) {
-        BinCard binCard = new BinCard();
+    public BinCard generateBinCard(Commodity commodity) throws Exception {
 
-        return null;
+        Date today = new Date();
+        Date tomorrow = DateUtil.addDayOfMonth(today, 1);
+        Date startDate = DateUtil.addDayOfMonth(today, -30);
+
+        List<ReceiveItem> receiveItems = GenericService.getItems(commodity, startDate, today, Receive.class, ReceiveItem.class, context);
+        List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startDate, today, Dispensing.class, DispensingItem.class, context);
+        List<LossItem> lossItems = GenericService.getItems(commodity, startDate, today, Loss.class, LossItem.class, context);
+        List<StockItemSnapshot> stockItemSnapshots = stockItemSnapshotService.get(commodity, startDate, today);
+
+        int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
+
+        int firstQuantity = stockItemSnapshots.size() > 0 ? stockItemSnapshots.get(0).getQuantity() : 0;
+        int minimumStock = firstQuantity;
+        int maximumStock = firstQuantity;
+
+        List<BinCardItem> binCardItems = new ArrayList<>();
+        Date date = startDate;
+        while (date.before(tomorrow)) {
+            int quantityReceived = GenericService.getTotal(date, receiveItems);
+            int quantityDispensed = GenericService.getTotal(date, dispensingItems);
+            int quantityLost = GenericService.getTotal(date, lossItems);
+            int closingBalance = previousDaysClosingStock;
+
+            StockItemSnapshot daystockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
+            if(daystockItemSnapshot!=null){
+                closingBalance = daystockItemSnapshot.getQuantity();
+                if (daystockItemSnapshot.maximumStockLevel() > maximumStock) {
+                    maximumStock = daystockItemSnapshot.maximumStockLevel();
+                }
+                if (daystockItemSnapshot.minimumStockLevel() < minimumStock) {
+                    minimumStock = daystockItemSnapshot.minimumStockLevel();
+                }
+            }
+
+            if (quantityDispensed > 0 || quantityLost > 0 || quantityReceived > 0) {
+                binCardItems.add(new BinCardItem(date, "NOT APPLICABLE", quantityReceived, quantityDispensed, quantityLost, closingBalance));
+            }
+            previousDaysClosingStock = closingBalance;
+            date = DateUtil.addDayOfMonth(date, 1);
+        }
+        return new BinCard(minimumStock, maximumStock, binCardItems);
+
     }
 }

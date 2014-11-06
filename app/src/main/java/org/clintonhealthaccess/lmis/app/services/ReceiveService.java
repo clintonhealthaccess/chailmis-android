@@ -104,7 +104,7 @@ public class ReceiveService {
         GenericDao<ReceiveItem> receiveItemDao = new GenericDao<>(ReceiveItem.class, context);
         for (ReceiveItem receiveItem : receiveItems) {
             receiveItemDao.create(receiveItem);
-            stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived());
+            stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived(), receiveItem.created());
             commoditySnapshotService.add(receiveItem);
         }
     }
@@ -126,7 +126,7 @@ public class ReceiveService {
         return utilizationValues;
     }
 
-    private int getTotal(final Date date, List<ReceiveItem> receiveItems) {
+    public int getTotal(final Date date, List<ReceiveItem> receiveItems) {
         List<ReceiveItem> daysReceiveItems = FluentIterable.from(receiveItems).filter(new Predicate<ReceiveItem>() {
             @Override
             public boolean apply(ReceiveItem input) {

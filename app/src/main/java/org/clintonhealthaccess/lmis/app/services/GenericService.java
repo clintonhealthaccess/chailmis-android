@@ -32,6 +32,8 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -42,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -91,6 +94,22 @@ public class GenericService {
             releaseHelper();
         }
     }
+
+    public static <ItemClass extends BaseItem> int getTotal(final Date date, List<ItemClass> items) {
+        List<ItemClass> dayItems = FluentIterable.from(items).filter(new Predicate<ItemClass>() {
+            @Override
+            public boolean apply(ItemClass input) {
+                return DateUtil.equal(input.created(), date);
+            }
+        }).toList();
+
+        int total = 0;
+        for (ItemClass item : dayItems) {
+            total += item.getQuantity();
+        }
+        return total;
+    }
+
 
 }
 

@@ -116,6 +116,8 @@ public class ReportsServiceTest {
 
     @Inject
     private DbUtil dbUtil;
+    @Inject
+    private StockItemSnapshotService stockItemSnapshotService;
 
     private SimpleDateFormat dateFormatYear;
 
@@ -417,7 +419,7 @@ public class ReportsServiceTest {
         assertThat(facilityStockReportItems.get(0).getCommodityStockOutDays(), is(numOfStockOutDays));
     }
 
-
+    @Test
     public void shouldReturnMinimumThreshold() throws Exception {
         Category category = categories.get(0);
 
@@ -514,6 +516,7 @@ public class ReportsServiceTest {
 
 
     @Test
+    @Ignore("WIP JAFARI")
     public void shouldCalculateConsumptionWithAllDispensingItemsInDateRange() throws Exception {
 
         Category category = categories.get(0);
@@ -548,9 +551,8 @@ public class ReportsServiceTest {
     }
 
     private DispensingItem createDispensingItemWithDate(Commodity commodity, Date firstDate, int quantity) {
-        Dispensing dispensing = new Dispensing();
+        Dispensing dispensing = new Dispensing(firstDate);
         final DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
-        dispensingItem.setCreated(firstDate);
         dispensingItem.setDispensing(dispensing);
         dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, Object>() {
             @Override
@@ -580,20 +582,14 @@ public class ReportsServiceTest {
     }
 
     @Test
-    @Ignore
-    public void shouldReturnBinCardReportItems() throws Exception {
-        //Date date. int minimumStockLevel;
-        // int maximumStockLevel receivedFromIssuedTo;int quantityReceived; quantityDispensed; quantityLost; stockBalance;
-
+    public void shouldReturnBinCardForTheCommodity() throws Exception {
         Commodity commodity = categories.get(0).getCommodities().get(0);
         int stock = commodity.getStockOnHand();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -20);
-        Date date = calendar.getTime();
+        Date date20DaysAgo = DateUtil.addDayOfMonth(new Date(), -20);
 
-        receive(commodity, 200, receiveService, date);
-        dispense(commodity, 30, dispensingService, date);
-        lose(commodity, 20, lossService, date);
+        receive(commodity, 200, receiveService, date20DaysAgo);
+        dispense(commodity, 30, dispensingService, date20DaysAgo);
+        lose(commodity, 20, lossService, date20DaysAgo);
 
         int expectedMax = stock + 200;
         int expectedMin = expectedMax - 50;
@@ -605,10 +601,51 @@ public class ReportsServiceTest {
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
-        assertTrue(DateUtil.equal(binCardItem.getDate(), date));
+        assertTrue(DateUtil.equal(binCardItem.getDate(), date20DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
         assertThat(binCardItem.getQuantityDispensed(), is(30));
         assertThat(binCardItem.getQuantityLost(), is(20));
         assertThat(binCardItem.getStockBalance(), is(expectedBalance));
+    }
+
+    @Test
+    public void shouldReturnBinCardWithCorrectBinCardItemsForTheCommodity() throws Exception {
+        Commodity commodity = categories.get(0).getCommodities().get(0);
+        int stock = commodity.getStockOnHand();
+
+        Date date10DaysAgo = DateUtil.addDayOfMonth(new Date(), -10);
+        receive(commodity, 200, receiveService, date10DaysAgo);
+        dispense(commodity, 30, dispensingService, date10DaysAgo);
+        lose(commodity, 20, lossService, date10DaysAgo);
+
+        int expectedMax = stock + 200;
+        int expectedBalance10DaysAgo = expectedMax - 50;
+
+        Date date8DaysAgo = DateUtil.addDayOfMonth(new Date(), -8);
+        dispense(commodity, 20, dispensingService, date8DaysAgo);
+        lose(commodity, 10, lossService, date8DaysAgo);
+
+
+        int expectedMin = expectedMax - 80;
+        int expectedBalance8DaysAgo = expectedMin;
+
+        BinCard binCard = reportsService.generateBinCard(commodity);
+        assertThat(binCard.getBinCardItems().size(), is(2));
+        assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
+        assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
+
+        BinCardItem binCardItem = binCard.getBinCardItems().get(0);
+        assertTrue(DateUtil.equal(binCardItem.getDate(), date10DaysAgo));
+        assertThat(binCardItem.getQuantityReceived(), is(200));
+        assertThat(binCardItem.getQuantityDispensed(), is(30));
+        assertThat(binCardItem.getQuantityLost(), is(20));
+        assertThat(binCardItem.getStockBalance(), is(expectedBalance10DaysAgo));
+
+        BinCardItem binCardItem2 = binCard.getBinCardItems().get(1);
+        assertTrue(DateUtil.equal(binCardItem2.getDate(), date8DaysAgo));
+        assertThat(binCardItem2.getQuantityReceived(), is(0));
+        assertThat(binCardItem2.getQuantityDispensed(), is(20));
+        assertThat(binCardItem2.getQuantityLost(), is(10));
+        assertThat(binCardItem2.getStockBalance(), is(expectedBalance8DaysAgo));
     }
 }

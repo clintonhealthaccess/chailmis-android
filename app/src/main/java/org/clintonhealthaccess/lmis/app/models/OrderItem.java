@@ -98,6 +98,11 @@ public class OrderItem extends BaseItem implements Snapshotable {
     }
 
     @Override
+    public Date created() {
+        return order.getCreated();
+    }
+
+    @Override
     public Commodity getCommodity() {
         return commodity;
     }

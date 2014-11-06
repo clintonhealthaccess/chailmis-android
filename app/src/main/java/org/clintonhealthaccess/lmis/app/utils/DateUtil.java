@@ -88,4 +88,8 @@ public class DateUtil {
     public static String dateString(Date date) {
         return dateFormater.format(date);
     }
+
+    public static Date today() {
+       return Calendar.getInstance().getTime();
+    }
 }

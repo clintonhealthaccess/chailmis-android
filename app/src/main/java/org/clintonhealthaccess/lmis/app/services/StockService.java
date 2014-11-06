@@ -37,6 +37,7 @@ import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 
 public class StockService {
@@ -53,26 +54,26 @@ public class StockService {
         return commodity.getStockOnHand();
     }
 
-    public void reduceStockLevelFor(final Commodity commodity, int quantity) {
+    public void reduceStockLevelFor(final Commodity commodity, int quantity, Date date) {
         commodity.reduceStockOnHandBy(quantity);
-        saveStockLevel(commodity);
+        saveStockLevel(commodity, date);
         categoryService.clearCache();
     }
 
-    public void increaseStockLevelFor(Commodity commodity, int quantity) {
+    public void increaseStockLevelFor(Commodity commodity, int quantity, Date date) {
         commodity.increaseStockOnHandBy(quantity);
-        saveStockLevel(commodity);
+        saveStockLevel(commodity, date);
         categoryService.clearCache();
     }
 
 
-    private void saveStockLevel(final Commodity commodity) {
+    private void saveStockLevel(final Commodity commodity, final Date date) {
         dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
 
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
                 dao.update(commodity.getStockItem());
-                stockItemSnapshotService.createOrUpdate(commodity);
+                stockItemSnapshotService.createOrUpdate(commodity, date);
                 return null;
             }
         });

@@ -94,17 +94,12 @@ public class DispensingService {
 
 
     private void saveDispensing(final Dispensing dispensing) throws SQLException {
-        dbUtil.withDao(Dispensing.class, new DbUtil.Operation<Dispensing, Dispensing>() {
-            @Override
-            public Dispensing operate(Dao<Dispensing, String> dao) throws SQLException {
-                dao.create(dispensing);
-                return dispensing;
-            }
-        });
+        GenericDao<Dispensing> dispensingDao = new GenericDao<>(Dispensing.class, context);
+        dispensingDao.create(dispensing);
     }
 
     private void adjustStockLevel(DispensingItem dispensing) throws SQLException {
-        stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity());
+        stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity(), dispensing.created());
     }
 
     public String getNextPrescriptionId() {
@@ -173,7 +168,7 @@ public class DispensingService {
         List<DispensingItem> daysDispensingItems = FluentIterable.from(dispensingItems).filter(new Predicate<DispensingItem>() {
             @Override
             public boolean apply(DispensingItem input) {
-                return DateUtil.equal(input.getCreated(), date);
+                return DateUtil.equal(input.created(), date);
             }
         }).toList();
 

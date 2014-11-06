@@ -45,11 +45,13 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -148,5 +150,10 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
     @Override
     public Integer getQuantity() {
         return quantityReceived;
+    }
+
+    @Override
+    public Date created() {
+        return receive.getCreated();
     }
 }

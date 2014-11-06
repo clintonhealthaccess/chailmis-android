@@ -29,6 +29,9 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import java.util.Date;
+
 public abstract class BaseItem {
     public abstract Integer getQuantity();
+    public abstract Date created();
 }

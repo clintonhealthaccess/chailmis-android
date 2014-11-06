@@ -54,6 +54,12 @@ public class StockItemSnapshot {
     @DatabaseField(canBeNull = false)
     private int quantity;
 
+    @DatabaseField(canBeNull = false)
+    private int minimumStockLevel;
+
+    @DatabaseField(canBeNull = false)
+    private int maximumStockLevel;
+
     public StockItemSnapshot() {
         //OrlLite likes
     }
@@ -62,6 +68,8 @@ public class StockItemSnapshot {
         this.commodity = commodity;
         this.created = created;
         this.quantity = quantity;
+        this.minimumStockLevel = quantity;
+        this.maximumStockLevel = quantity;
     }
 
     public int getQuantity() {
@@ -70,14 +78,20 @@ public class StockItemSnapshot {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+        if (quantity < this.minimumStockLevel) {
+            this.minimumStockLevel = quantity;
+        }
+        if (quantity > this.maximumStockLevel) {
+            this.maximumStockLevel = quantity;
+        }
     }
 
-    public Date getCreated(){
-        return  created;
+    public Date getCreated() {
+        return created;
     }
 
-    public Commodity getCommodity(){
-        return  commodity;
+    public Commodity getCommodity() {
+        return commodity;
     }
 
     @Override
@@ -102,4 +116,13 @@ public class StockItemSnapshot {
         result = 31 * result + quantity;
         return result;
     }
+
+    public int minimumStockLevel() {
+        return minimumStockLevel;
+    }
+
+    public int maximumStockLevel() {
+        return this.maximumStockLevel;
+    }
+
 }

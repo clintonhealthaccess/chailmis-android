@@ -44,6 +44,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 @DatabaseTable(tableName = "dispensingItems")
 public class DispensingItem extends BaseItem implements Serializable, Snapshotable {
     public static final String DISPENSE = "dispense";
@@ -58,20 +61,16 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Dispensing dispensing;
-
-    @DatabaseField
-    private Date created;
 
     public DispensingItem(Commodity commodity, int quantity) {
         this.commodity = commodity;
         this.quantity = quantity;
-        created = new Date();
     }
 
     public DispensingItem() {
-        created = new Date();
+        //orm likes
     }
 
     public Commodity getCommodity() {
@@ -90,13 +89,13 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
                 }).filter(new Predicate<CommoditySnapshotValue>() {
                     @Override
                     public boolean apply(CommoditySnapshotValue input) {
-                        return selectDispenseOrAdjusments(input);
+                        return selectDispenseOrAdjustments(input);
                     }
                 }).toList();
         return new ArrayList<>(values);
     }
 
-    private boolean selectDispenseOrAdjusments(CommoditySnapshotValue input) {
+    private boolean selectDispenseOrAdjustments(CommoditySnapshotValue input) {
         String testString = input.getCommodityAction().getActivityType().toLowerCase();
         if (dispensing.isDispenseToFacility()) {
             return testString.contains(ADJUSTMENTS);
@@ -106,21 +105,18 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
     }
 
 
-
     @Override
     public Integer getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public Date created() {
+        return dispensing.getCreated();
     }
 
     public void setDispensing(Dispensing dispensing) {
         this.dispensing = dispensing;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
 }

@@ -73,8 +73,10 @@ public class StockItemSnapshotService {
             throw new Exception("Multiple stock item snapshots found for " + commodity.getName() +
                     " on " + new SimpleDateFormat("yyyy-MM-dd").format(date));
         }
-        if (stockItemSnapshots.size() == 1)
+
+        if (stockItemSnapshots.size() == 1) {
             return stockItemSnapshots.get(0);
+        }
 
         return null;
     }
@@ -98,12 +100,12 @@ public class StockItemSnapshotService {
         );
     }
 
-    public void createOrUpdate(Commodity commodity) {
-        try {
-            StockItemSnapshot stockItemSnapshot = get(commodity, new Date());
+    public void createOrUpdate(Commodity commodity, Date date) {
 
+        try {
+            StockItemSnapshot stockItemSnapshot = get(commodity, date);
             if (stockItemSnapshot == null) {
-                create(commodity);
+                create(commodity, date);
             } else {
                 stockItemSnapshot.setQuantity(commodity.getStockOnHand());
                 update(stockItemSnapshot);
@@ -118,8 +120,8 @@ public class StockItemSnapshotService {
         new GenericDao<>(StockItemSnapshot.class, context).update(stockItemSnapshot);
     }
 
-    private void create(Commodity commodity) {
-        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
+    private void create(Commodity commodity, Date date) {
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, date, commodity.getStockOnHand());
         new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
     }
 

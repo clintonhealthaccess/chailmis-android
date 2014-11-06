@@ -41,6 +41,7 @@ import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.ToString;
@@ -158,5 +159,10 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
     @Override
     public Integer getQuantity() {
         return getTotalLosses();
+    }
+
+    @Override
+    public Date created() {
+        return loss.getCreated();
     }
 }

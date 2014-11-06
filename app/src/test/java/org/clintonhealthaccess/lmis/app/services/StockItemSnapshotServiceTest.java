@@ -37,6 +37,7 @@ import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -49,6 +50,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.createStockItemSnapshot;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.lose;
+import static org.clintonhealthaccess.lmis.utils.LMISTestCase.receive;
 import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
@@ -74,6 +77,10 @@ public class StockItemSnapshotServiceTest {
     private LmisServer mockLmisServer;
     @Inject
     private StockItemSnapshotService stockItemSnapshotService;
+    @Inject
+    private ReceiveService receiveService;
+    @Inject
+    private LossService lossService;
 
     @Before
     public void setUp() throws Exception {
@@ -98,7 +105,7 @@ public class StockItemSnapshotServiceTest {
         int initialQuantity = commodity.getStockOnHand();
 
         int increase = 5;
-        stockService.increaseStockLevelFor(commodity, increase);
+        stockService.increaseStockLevelFor(commodity, increase, new Date());
 
         StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, new Date());
 
@@ -114,7 +121,7 @@ public class StockItemSnapshotServiceTest {
         int initialQuantity = commodity.getStockOnHand();
 
         int increase = 5;
-        stockService.increaseStockLevelFor(commodity, increase);
+        stockService.increaseStockLevelFor(commodity, increase, new Date());
 
         StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, new Date());
         int expectedQuantity = initialQuantity + increase;
@@ -127,7 +134,7 @@ public class StockItemSnapshotServiceTest {
         int initialQuantity = commodity.getStockOnHand();
 
         int decrease = 6;
-        stockService.reduceStockLevelFor(commodity, decrease);
+        stockService.reduceStockLevelFor(commodity, decrease, new Date());
 
         StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, new Date());
         int expectedQuantity = initialQuantity - decrease;
@@ -140,8 +147,8 @@ public class StockItemSnapshotServiceTest {
 
         int decrease = 6;
         int increase = 10;
-        stockService.reduceStockLevelFor(commodity, decrease);
-        stockService.increaseStockLevelFor(commodity, increase);
+        stockService.reduceStockLevelFor(commodity, decrease, new Date());
+        stockService.increaseStockLevelFor(commodity, increase, new Date());
 
         stockItemSnapshotService.get(commodity, new Date());
     }
@@ -214,5 +221,24 @@ public class StockItemSnapshotServiceTest {
         int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, endDate);
 
         assertThat(numOfStockOutDays, is(expectedNumOfStockOutDays));
+    }
+
+    @Test
+    public void shouldReturnMinimumAndMaximumStockValuesForACommodityOnADay() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        int initialStock = commodity.getStockOnHand();
+
+        Date today = DateUtil.today();
+        Date stockDay = DateUtil.addDayOfMonth(today, -5);
+
+        receive(commodity, 150, receiveService, stockDay);
+        lose(commodity, 152, lossService, stockDay);
+        receive(commodity, 50, receiveService, stockDay);
+
+        StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, stockDay);
+
+        int expectedMaxStockLevel = initialStock + 150;
+        assertThat(stockItemSnapshot.minimumStockLevel(), is(expectedMaxStockLevel - 152));
+        assertThat(stockItemSnapshot.maximumStockLevel(), is(expectedMaxStockLevel));
     }
 }

@@ -101,4 +101,8 @@ public class Order implements Serializable {
     public void setOrderType(OrderType orderType) {
         this.orderType = orderType;
     }
+
+    public Date getCreated() {
+        return created;
+    }
 }

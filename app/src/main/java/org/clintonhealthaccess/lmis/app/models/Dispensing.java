@@ -38,6 +38,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.ToString;
+
+@ToString
 @DatabaseTable(tableName = "dispensings")
 public class Dispensing implements Serializable {
 
@@ -65,8 +68,8 @@ public class Dispensing implements Serializable {
     }
 
     public Dispensing(Date date) {
-        dispenseToFacility = false;
-        created = date;
+        this.dispenseToFacility = false;
+        this.created = date;
     }
 
     public void addItem(DispensingItem dispensingItem) {
@@ -91,5 +94,9 @@ public class Dispensing implements Serializable {
 
     public String getPrescriptionId() {
         return prescriptionId;
+    }
+
+    public Date getCreated() {
+        return created;
     }
 }

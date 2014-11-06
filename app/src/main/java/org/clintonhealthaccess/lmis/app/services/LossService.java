@@ -74,6 +74,6 @@ public class LossService {
     }
 
     private void adjustStockLevel(LossItem lossItem) {
-        stockService.reduceStockLevelFor(lossItem.getCommodity(), lossItem.getTotalLosses());
+        stockService.reduceStockLevelFor(lossItem.getCommodity(), lossItem.getTotalLosses(), lossItem.created());
     }
 }

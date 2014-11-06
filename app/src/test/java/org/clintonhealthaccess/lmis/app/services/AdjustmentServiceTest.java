@@ -126,7 +126,7 @@ public class AdjustmentServiceTest {
                 adjustment
         );
         adjustmentService.save(adjustments);
-        verify(stockService, atLeastOnce()).increaseStockLevelFor(adjustment.getCommodity(), 5);
+        verify(stockService, atLeastOnce()).increaseStockLevelFor(adjustment.getCommodity(), 5, adjustment.getCreated());
 
     }
 
@@ -138,7 +138,7 @@ public class AdjustmentServiceTest {
                 adjustment
         );
         adjustmentService.save(adjustments);
-        verify(stockService, atLeastOnce()).reduceStockLevelFor(adjustment.getCommodity(), 5);
+        verify(stockService, atLeastOnce()).reduceStockLevelFor(adjustment.getCommodity(), 5, adjustment.getCreated());
     }
 
     @Test

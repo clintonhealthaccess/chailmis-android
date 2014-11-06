@@ -29,6 +29,10 @@
 
 package org.clintonhealthaccess.lmis.utils;
 
+import android.util.Log;
+
+import com.google.inject.Inject;
+
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
@@ -51,6 +55,7 @@ import org.clintonhealthaccess.lmis.app.services.GenericDao;
 import org.clintonhealthaccess.lmis.app.services.LossService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;
+import org.clintonhealthaccess.lmis.app.services.StockItemSnapshotService;
 import org.robolectric.Robolectric;
 import org.robolectric.tester.org.apache.http.TestHttpResponse;
 
@@ -65,6 +70,8 @@ import roboguice.inject.InjectResource;
 import static org.robolectric.Robolectric.application;
 
 public class LMISTestCase {
+    @Inject
+    private static StockItemSnapshotService stockItemSnapshotService;
     @InjectResource(R.string.dhis2_base_url)
     protected String dhis2BaseUrl;
 
@@ -124,7 +131,7 @@ public class LMISTestCase {
     }
 
     public static void dispense(Commodity commodity, int quantity, DispensingService dispensingService, Date date) {
-        Dispensing dispensing = new Dispensing();
+        Dispensing dispensing = new Dispensing(date);
         DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
         dispensing.addItem(dispensingItem);
         dispensingService.addDispensing(dispensing);
@@ -173,5 +180,29 @@ public class LMISTestCase {
                 .create(stockItemSnapshot);
 
         return stockItemSnapshot;
+    }
+
+    public static void createStockItemSnapshot(Commodity commodity, Date date) {
+        System.out.println("\nIn createStockItemSnapShot for date:"+date);
+        try {
+        System.out.println("In createStockItemSnapShot TRY for date....."+date);
+
+            StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, date);
+            System.out.println("Found snapshot:"+ stockItemSnapshot);
+            GenericDao<StockItemSnapshot> stockItemSnapshotGenericDao = new GenericDao<>(StockItemSnapshot.class, application);
+            if (stockItemSnapshot == null) {
+                StockItemSnapshot snapshot = new StockItemSnapshot(commodity, date, commodity.getStockOnHand());
+                System.out.println("Saving snapshot" + snapshot);
+                stockItemSnapshotGenericDao
+                        .create(snapshot);
+            } else {
+                stockItemSnapshot.setQuantity(commodity.getStockOnHand());
+                stockItemSnapshotGenericDao.update(stockItemSnapshot);
+            }
+
+        } catch (Exception e) {
+            Log.e("StockItemSnapshot", e.getMessage());
+        }
+
     }
 }

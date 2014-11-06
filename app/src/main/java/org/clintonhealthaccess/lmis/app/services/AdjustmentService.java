@@ -82,9 +82,9 @@ public class AdjustmentService {
                     dao.create(adjustment);
                     commoditySnapshotService.add(adjustment);
                     if (adjustment.isPositive()) {
-                        stockService.increaseStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity());
+                        stockService.increaseStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
                     } else {
-                        stockService.reduceStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity());
+                        stockService.reduceStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
                     }
                 }
                 return null;
