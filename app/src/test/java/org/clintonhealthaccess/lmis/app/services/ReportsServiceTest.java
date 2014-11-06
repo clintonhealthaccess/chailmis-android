@@ -516,7 +516,6 @@ public class ReportsServiceTest {
 
 
     @Test
-    @Ignore("WIP JAFARI")
     public void shouldCalculateConsumptionWithAllDispensingItemsInDateRange() throws Exception {
 
         Category category = categories.get(0);
@@ -552,6 +551,7 @@ public class ReportsServiceTest {
 
     private DispensingItem createDispensingItemWithDate(Commodity commodity, Date firstDate, int quantity) {
         Dispensing dispensing = new Dispensing(firstDate);
+        new GenericDao(Dispensing.class, application).create(dispensing);
         final DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
         dispensingItem.setDispensing(dispensing);
         dbUtil.withDao(DispensingItem.class, new DbUtil.Operation<DispensingItem, Object>() {
