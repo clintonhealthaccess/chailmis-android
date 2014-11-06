@@ -39,6 +39,7 @@ import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -124,6 +125,9 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     @InjectView(R.id.keyBoardView)
     public KeyboardView keyBoardView;
+
+    @InjectView(R.id.scrollCategoriesContainer)
+    LinearLayout scrollCategoriesContainer;
 
     @InjectView(R.id.autoCompleteTextViewCommodities)
     AutoCompleteTextView autoCompleteTextViewCommodities;
@@ -228,6 +232,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     abstract protected void afterCreate(Bundle savedInstanceState);
 
     protected void setUpCommoditySearch(){
+        //stop search field from getting default focus
+        scrollCategoriesContainer.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        scrollCategoriesContainer.setFocusableInTouchMode(true);
+
         searchCommodityAdapter = new SearchCommodityAdapter(this,
                 R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
         autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);

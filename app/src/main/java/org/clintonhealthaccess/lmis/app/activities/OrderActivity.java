@@ -139,8 +139,6 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected void beforeSetUpCommoditySearch() {
-
-
         Intent intent = getIntent();
         prepopulatedOrderType = intent.getStringExtra(AlertClickListener.ORDER_TYPE);
         setupOrderTypes();
@@ -266,5 +264,4 @@ public class OrderActivity extends CommoditySelectableActivity {
         }
         return order;
     }
-
 }
