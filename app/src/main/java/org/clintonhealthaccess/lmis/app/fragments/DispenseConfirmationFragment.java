@@ -95,13 +95,9 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         setUpButtons();
         setupDialog();
         confirmDispenseAdapter = new ConfirmDispenseAdapter(getActivity(), R.layout.confirm_commodity_list_item, dispensing.getDispensingItems(), dispensing);
-        if (dispensing.isDispenseToFacility()) {
-            listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header_facility, container));
-            buttonDispenseConfirm.setText(getString(R.string.confirm_facility));
-        } else {
-            listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header, container));
-            buttonDispenseConfirm.setText(getString(R.string.confirm));
-        }
+
+        listViewConfirmItems.addHeaderView(inflater.inflate(R.layout.confirm_header, container));
+        buttonDispenseConfirm.setText(getString(R.string.confirm));
 
         listViewConfirmItems.setAdapter(confirmDispenseAdapter);
         return view;
@@ -163,11 +159,8 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         protected void onPostExecute(Boolean success) {
             super.onPostExecute(success);
             if (success) {
-                if (dispensing.isDispenseToFacility()) {
-                    showToastMessage(getString(R.string.dispense_to_facility_successful));
-                } else {
-                    showToastMessage(getString(R.string.dispense_to_successful));
-                }
+                showToastMessage(getString(R.string.dispense_to_successful));
+
                 fragment.dismiss();
                 FragmentActivity activity = getActivity();
                 if (activity != null) {

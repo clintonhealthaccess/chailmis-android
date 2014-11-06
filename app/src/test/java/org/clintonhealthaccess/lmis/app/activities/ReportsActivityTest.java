@@ -116,7 +116,7 @@ public class ReportsActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(8));
+        assertThat(buttonAmount, is(7));
 
         for (int i = 1; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);
@@ -131,8 +131,8 @@ public class ReportsActivityTest {
         LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
         ListView reportButtonsLayout = (ListView) reportsActivity.findViewById(R.id.listViewCategoryReports);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(8));
-        Button button = (Button) categoryLayout.getChildAt(1);
+        assertThat(buttonAmount, is(7));
+        Button button = (Button) categoryLayout.getChildAt(0);
         ANDROID.assertThat(button).hasTextString("Anti Malarials");
         button.performClick();
         assertThat(reportButtonsLayout.getAdapter().getCount(), is(2));
@@ -146,7 +146,7 @@ public class ReportsActivityTest {
         ReportsActivity reportsActivity = getReportsActivity();
         LinearLayout categoryLayout = (LinearLayout) reportsActivity.findViewById(R.id.layoutCategories);
         ListView reportButtonsLayout = (ListView) reportsActivity.findViewById(R.id.listViewCategoryReports);
-        Button antiMalarialsButton = (Button) categoryLayout.getChildAt(1);
+        Button antiMalarialsButton = (Button) categoryLayout.getChildAt(0);
         antiMalarialsButton.performClick();
         int buttonAmount = reportButtonsLayout.getAdapter().getCount();
         assertThat(buttonAmount, is(2));

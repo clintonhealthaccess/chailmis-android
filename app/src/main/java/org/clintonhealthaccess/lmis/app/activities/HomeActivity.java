@@ -71,7 +71,7 @@ import static com.google.common.collect.ImmutableList.of;
 
 @ContentView(R.layout.activity_home)
 public class HomeActivity extends BaseActivity {
-    public static final String IS_ADJUSTMENT = "is_adjustment";
+
     @InjectView(R.id.layoutGraph)
     LinearLayout layout;
 

@@ -34,8 +34,14 @@
     <color name="m_grey">#ddd</color>
     <color name="blue">#1D5288</color>
     <color name="white">#FFFFFF</color>
+    <color name="dispense_theme_color">#FFFF55</color>
+    <color name="order_theme_color">#FA850C</color>
+    <color name="receive_theme_color">#FCC187</color>
+    <color name="loses_theme_color">#877CFF</color>
+    <color name="adjustments_theme_color">#8438FF</color>
+    <color name="reports_theme_color">#8FFF87</color>
+    <color name="messages_theme_color">#F82C40</color>
     <color name="losses_background">#474747</color>
-    <color name="losses_text">#FFFFFF</color>
     <color name="black">#000</color>
     <color name="receive_background">#FF6421</color>
     <color name="green_header">#57A127</color>
@@ -43,7 +49,7 @@
     <color name="alerts_red">#990033</color>
     <color name="alerts_bright_red">#ffff0000</color>
     <color name="chart0">#16a085</color>
-    <color name="chart1">#c0392b</color>
+    <color name="chart1">#57A127</color>
     <color name="chart2">#2c3e50</color>
     <color name="chart3">#7f8c8d</color>
     <color name="chart4">#f39c12</color>

@@ -77,7 +77,6 @@ public class ConfirmDispenseAdapterTest {
         DispensingItem dispensingItem = new DispensingItem(commodity, quantity);
         items.add(dispensingItem);
         Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(false);
 
         this.adapter = new ConfirmDispenseAdapter(Robolectric.application, R.layout.confirm_commodity_list_item, items, dispensing);
         View view = this.adapter.getView(0, null, parent);

@@ -4,7 +4,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "1",
                             "name": "Coartem",
@@ -209,7 +209,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "3",
                             "name": "Choloquine",
@@ -354,7 +354,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "4",
                             "name": "Quinine",
@@ -479,7 +479,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "5",
                             "name": "Fansida",
@@ -574,7 +574,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "6",
                             "name": "Hedex",
@@ -669,7 +669,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "7",
                             "name": "Septrin",
@@ -770,7 +770,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "9",
                             "name": "Condom",
@@ -824,7 +824,7 @@
             {
                 "commodityActions": [
                     {
-                        "activityType": "dispense",
+                        "activityType": "DISPENSED",
                         "commodity": {
                             "id": "109",
                             "name": "Syringe 1.0",

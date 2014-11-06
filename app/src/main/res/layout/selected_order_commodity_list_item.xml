@@ -37,8 +37,7 @@
         android:id="@+id/textViewCommodityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textStyle="bold"
+        android:textSize="18sp"
         android:textColor="@color/black"
         android:text="@string/commodityName" />
 
@@ -73,7 +72,7 @@
                 android:clickable="true"
                 android:textColor="@color/black"
                 android:hint="@string/hint_start_date"
-                android:textSize="20sp" />
+                android:textSize="19sp" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -92,7 +91,7 @@
                 android:clickable="true"
                 android:textColor="@color/black"
                 android:hint="@string/hint_end_date"
-                android:textSize="20sp" />
+                android:textSize="19sp" />
 
 
         </LinearLayout>

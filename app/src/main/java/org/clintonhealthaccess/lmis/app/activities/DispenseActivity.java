@@ -76,9 +76,6 @@ public class DispenseActivity extends CommoditySelectableActivity {
     @InjectView(R.id.buttonSubmitDispense)
     Button buttonSubmitDispense;
 
-    @InjectView(R.id.checkboxDispenseToFacility)
-    CheckBox checkboxDispenseToFacility;
-
     @InjectView(R.id.textViewPrescriptionId)
     TextView textViewPrescriptionId;
 
@@ -148,36 +145,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
                 }
         );
 
-        checkboxDispenseToFacility.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    textViewPrescriptionId.setVisibility(View.INVISIBLE);
-                    textViewPrescriptionText.setVisibility(View.INVISIBLE);
-                } else {
-                    textViewPrescriptionId.setVisibility(View.VISIBLE);
-                    textViewPrescriptionText.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
         textViewPrescriptionId.setText(dispensingService.getNextPrescriptionId());
-        checkboxDispenseToFacility.setVisibility(View.GONE);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            boolean is_adjustments = bundle.getBoolean(HomeActivity.IS_ADJUSTMENT);
-            if (is_adjustments) {
-                checkboxDispenseToFacility.setVisibility(View.VISIBLE);
-                checkboxDispenseToFacility.setChecked(true);
-                checkboxDispenseToFacility.setEnabled(false);
-                textViewCategories.setBackgroundColor(getResources().getColor(R.color.losses_background));
-                textViewPageTitle.setBackgroundColor(getResources().getColor(R.color.losses_background));
-                textViewPageTitle.setTextColor(getResources().getColor(R.color.losses_text));
-                textViewCategories.setTextColor(getResources().getColor(R.color.losses_text));
-                textViewPageTitle.setText(getString(R.string.adjustments));
-            }
-        }
-
     }
 
     @Override
@@ -200,11 +168,8 @@ public class DispenseActivity extends CommoditySelectableActivity {
 
     Dispensing getDispensing() {
         final Dispensing dispensing = new Dispensing();
-        boolean dispenseToFacility = checkboxDispenseToFacility.isChecked();
-        dispensing.setDispenseToFacility(dispenseToFacility);
-        if (!dispenseToFacility) {
-            dispensing.setPrescriptionId(textViewPrescriptionId.getText().toString());
-        }
+        dispensing.setPrescriptionId(textViewPrescriptionId.getText().toString());
+
         onEachSelectedCommodity(new SelectedCommodityHandler() {
             @Override
             public void operate(View view, BaseCommodityViewModel commodityViewModel) {

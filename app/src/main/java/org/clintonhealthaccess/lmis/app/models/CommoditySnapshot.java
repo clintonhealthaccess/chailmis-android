@@ -39,6 +39,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -70,6 +71,11 @@ public class CommoditySnapshot {
 
     @DatabaseField(canBeNull = true)
     private String attributeOptionCombo;
+
+    @Override
+    public String toString() {
+        return id+" "+value+" "+commodityAction+" "+commodity.getName()+" "+period;
+    }
 
     public static DataValueSet toDataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
         DataValueSet dataValueSet = new DataValueSet();

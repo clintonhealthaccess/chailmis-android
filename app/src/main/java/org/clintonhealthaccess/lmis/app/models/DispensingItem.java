@@ -35,10 +35,13 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -46,11 +49,12 @@ import java.util.List;
 
 import lombok.ToString;
 
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.ImmutableList.copyOf;
+
 @ToString
 @DatabaseTable(tableName = "dispensingItems")
 public class DispensingItem extends BaseItem implements Serializable, Snapshotable {
-    public static final String DISPENSE = "dispense";
-    public static final String ADJUSTMENTS = "adjustments";
 
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     Commodity commodity;
@@ -79,31 +83,30 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
 
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
-        List<CommodityAction> fields = ImmutableList.copyOf(getCommodity().getCommodityActionsSaved());
-        Collection<CommoditySnapshotValue> values = FluentIterable
-                .from(fields).transform(new Function<CommodityAction, CommoditySnapshotValue>() {
-                    @Override
-                    public CommoditySnapshotValue apply(CommodityAction input) {
-                        return new CommoditySnapshotValue(input, quantity);
-                    }
-                }).filter(new Predicate<CommoditySnapshotValue>() {
-                    @Override
-                    public boolean apply(CommoditySnapshotValue input) {
-                        return selectDispenseOrAdjustments(input);
-                    }
-                }).toList();
-        return new ArrayList<>(values);
+        Function<CommodityAction, CommoditySnapshotValue> forDispensed = new Function<CommodityAction, CommoditySnapshotValue>() {
+            @Override
+            public CommoditySnapshotValue apply(CommodityAction input) {
+                return new CommoditySnapshotValue(input, quantity);
+            }
+        };
+
+        List<CommoditySnapshotValue> dispensedValues = filterCommodityActions(DataElementType.DISPENSED.getActivity()).transform(forDispensed).toList();
+        return  dispensedValues;
     }
 
-    private boolean selectDispenseOrAdjustments(CommoditySnapshotValue input) {
-        String testString = input.getCommodityAction().getActivityType().toLowerCase();
-        if (dispensing.isDispenseToFacility()) {
-            return testString.contains(ADJUSTMENTS);
-        } else {
-            return testString.contains(DISPENSE);
-        }
+    private FluentIterable<CommodityAction> filterCommodityActions(final String type) {
+        List<CommodityAction> fields = copyOf(getCommodity().getCommodityActionsSaved());
+        return from(fields).filter(new Predicate<CommodityAction>() {
+            @Override
+            public boolean apply(CommodityAction input) {
+                return selectActivity(input, type);
+            }
+        });
     }
 
+    private boolean selectActivity(CommodityAction input, String type) {
+        return input.getActivityType().contains(type);
+    }
 
     @Override
     public Integer getQuantity() {

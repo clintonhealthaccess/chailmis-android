@@ -35,45 +35,54 @@
     tools:context="org.clintonhealthaccess.lmis.app.activities.ReportsActivity">
 
 
-    <ScrollView
-        android:id="@+id/scrollCategories"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/scrollCategoriesContainer"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true">
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="10dp">
 
-        <LinearLayout
-            android:id="@+id/layoutCategories"
+        <TextView
+            android:layout_width="fill_parent"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:background="@color/reports_theme_color"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/commodity_categories"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ScrollView
+            android:id="@+id/scrollCategories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
+            android:layout_alignParentLeft="true">
 
-
-            <TextView
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:id="@+id/layoutCategories"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/dark_blue_header"
-                android:textColor="@color/white"
-                android:padding="10dp"
-                android:text="Commodity Categories"
-                android:id="@+id/textViewCategories"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:orientation="vertical" />
 
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutSelectedItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/scrollCategories"
+        android:layout_toRightOf="@id/scrollCategoriesContainer"
         android:orientation="vertical"
         android:paddingLeft="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:background="@color/dark_blue_header"
+            android:background="@color/reports_theme_color"
             android:layout_height="wrap_content">
 
 
@@ -81,7 +90,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:padding="10dp"
                 android:text="@string/reports"
                 android:id="@+id/textViewPageTitle"

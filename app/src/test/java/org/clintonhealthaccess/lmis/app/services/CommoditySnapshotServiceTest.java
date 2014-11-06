@@ -123,12 +123,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         generateTestCommodities();
     }
 
+
+    
     @Test
     public void shouldCreateNewDailyCommoditySnapshotIfNotExist() throws SQLException {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
 
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         DispensingItem snapshotable = new DispensingItem(fetchedCommodity1, 3);
         DispensingItem snapshotable1 = new DispensingItem(fetchedCommodity2, 4);
         snapshotable.setDispensing(dispensing);
@@ -142,12 +144,13 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.get(0).getValue(), is("3"));
     }
 
+    
     @Test
     public void shouldUpdateDailyCommoditySummaryIfItExists() throws Exception {
         Commodity fetchedCommodity = commodityDao.queryForAll().get(0);
 
         DispensingItem dispensingItem = new DispensingItem(fetchedCommodity, 3);
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         dispensingItem.setDispensing(dispensing);
         commoditySnapshotService.add(dispensingItem);
         commoditySnapshotService.add(dispensingItem);
@@ -158,6 +161,7 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.get(0).getValue(), is("9"));
     }
 
+    
     @Test
     public void shouldCreateCommoditySnapshotForReceiving() throws Exception {
         Commodity commodity = commodityDao.queryForAll().get(0);
@@ -176,6 +180,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(receiveDateSnapshot.getValue(), is(new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
     }
 
+
+    
     @Test
     public void shouldCreateCommoditySnapshotForReceivingWithAllocatedPeriod() throws Exception {
         String allocatedPeriod = "20140827";
@@ -204,12 +210,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(receiveDateSnapshot.getPeriod(), is(allocatedPeriod));
     }
 
+
+    
     @Test
     public void shouldMarkSyncedItemAsUnSyncedWhenAnUpdateOccurs() throws Exception {
 
         Commodity fetchedCommodity = commodityDao.queryForAll().get(0);
         DispensingItem dispensingItem = new DispensingItem(fetchedCommodity, 3);
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         dispensingItem.setDispensing(dispensing);
 
         CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity, dispensingItem.getActivitiesValues().get(0).getCommodityAction(), "3");
@@ -222,13 +230,15 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.get(0).isSynced(), is(false));
     }
 
+
+    
     @Test
     public void shouldGetCommoditySnapshotsWithSyncedAsFalse() {
 
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
         Commodity fetchedCommodity2 = commodityDao.queryForAll().get(1);
         DispensingItem dispensingItem = new DispensingItem(fetchedCommodity1, 3);
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         dispensingItem.setDispensing(dispensing);
 
         CommoditySnapshot commoditySnapshot = new CommoditySnapshot(fetchedCommodity1, dispensingItem.getActivitiesValues().get(0).getCommodityAction(), "3");
@@ -243,6 +253,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(unsynchedSnapshots.size(), is(1));
     }
 
+
+    
     @Test
     public void shouldConvertSnapshotsToDataValueSets() throws Exception {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
@@ -268,6 +280,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(valueSet.getDataValues().get(0).getDataElement(), is(commodityAction.getId()));
     }
 
+
+    
     @Test
     public void shouldMarkSnapshotsAsSyncedIfSyncIsSuccessful() throws Exception {
         setUpSuccessHttpPostRequest(200, "successfulSnapshotPush.json");
@@ -284,6 +298,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
 
     }
 
+
+    
     @Test
     public void shouldNotMarkSnapshotsAsSyncedIfSyncFails() throws Exception {
 
@@ -297,6 +313,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
     }
 
+
+    
     @Test
     public void shouldSyncThroughSms() throws Exception {
         createTwoSnapshotsInSameDataSet();
@@ -310,6 +328,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshotService.getUnSyncedSnapshots().size(), is(2));
     }
 
+
+    
     @Test
     public void shouldNotSendSmsIfSnapshotsAreAlreadySentBySms() throws Exception {
         createTwoSnapshotsInSameDataSet();
@@ -336,12 +356,13 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         return newArrayList(snapshot1, snapshot2);
     }
 
-    @Ignore
+
+    
     @Test
     public void shouldSetAttributeAllocationNumberIfAvailable() throws Exception {
 //        String testAttributeOptionCombo = "12asdjkla";
 //        Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
-//        Dispensing dispensing = new Dispensing(false);
+//        Dispensing dispensing = new Dispensing();
 //
 //        DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
 //        snapshotable.setDispensing(dispensing);
@@ -353,13 +374,14 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
     }
 
 
+    
     @Test
     public void shouldCreateOrUpdateSnapshotForEachActivityValue() throws Exception {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         assertThat(fetchedCommodity1.getCommodityActionsSaved().size(), is(greaterThan(1)));
-        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.DISPENSE), 1);
-        CommoditySnapshotValue otherActivityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DispensingItem.ADJUSTMENTS), 2);
+        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DataElementType.DISPENSED.getActivity()), 1);
+        CommoditySnapshotValue otherActivityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DataElementType.ADJUSTMENTS.getActivity()), 2);
         List<CommoditySnapshotValue> values = new ArrayList<>(Arrays.asList(activityValue, otherActivityValue));
         DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
         snapshotable.setDispensing(dispensing);
@@ -369,26 +391,29 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         assertThat(commoditySnapshots.size(), is(2));
     }
 
+
     @Test
     public void shouldReplaceValueForNonIntegerValues() throws Exception {
         Commodity fetchedCommodity1 = commodityDao.queryForAll().get(0);
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         String reasonForUnexpectedQuantity = "work";
-        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction("dispense"), reasonForUnexpectedQuantity);
+        CommoditySnapshotValue activityValue = new CommoditySnapshotValue(
+                fetchedCommodity1.getCommodityAction(DataElementType.DISPENSED.getActivity()), reasonForUnexpectedQuantity);
+
         List<CommoditySnapshotValue> values = new ArrayList<>(Arrays.asList(activityValue));
-        DispensingItem snapshotable = spy(new DispensingItem(fetchedCommodity1, 3));
-        snapshotable.setDispensing(dispensing);
-        doReturn(values).when(snapshotable).getActivitiesValues();
-        commoditySnapshotService.add(snapshotable);
+        DispensingItem snapShotable = spy(new DispensingItem(fetchedCommodity1, 3));
+        snapShotable.setDispensing(dispensing);
+        doReturn(values).when(snapShotable).getActivitiesValues();
+        commoditySnapshotService.add(snapShotable);
         List<CommoditySnapshot> commoditySnapshots = snapshotDao.queryForAll();
         assertThat(commoditySnapshots.size(), is(1));
         assertThat(commoditySnapshots.get(0).getValue(), is(reasonForUnexpectedQuantity));
 
         String otherReason = "other reason";
-        activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction("dispense"), otherReason);
+        activityValue = new CommoditySnapshotValue(fetchedCommodity1.getCommodityAction(DataElementType.DISPENSED.getActivity()), otherReason);
         values = new ArrayList<>(Arrays.asList(activityValue));
-        doReturn(values).when(snapshotable).getActivitiesValues();
-        commoditySnapshotService.add(snapshotable);
+        doReturn(values).when(snapShotable).getActivitiesValues();
+        commoditySnapshotService.add(snapShotable);
         commoditySnapshots = snapshotDao.queryForAll();
         assertThat(commoditySnapshots.size(), is(1));
         assertThat(commoditySnapshots.get(0).getValue(), is(otherReason));
@@ -410,8 +435,8 @@ public class CommoditySnapshotServiceTest extends LMISTestCase {
         Commodity commodity = new Commodity(commodityName, category);
         commodityDao.create(commodity);
 
-        generateCommodityAction(dataSet, commodity, "DISPENSING", DispensingItem.DISPENSE);
-        generateCommodityAction(dataSet, commodity, "ADJUSTMENTS", DispensingItem.ADJUSTMENTS);
+        generateCommodityAction(dataSet, commodity, "DISPENSING", DataElementType.DISPENSED.getActivity());
+        generateCommodityAction(dataSet, commodity, "ADJUSTMENTS", DataElementType.ADJUSTMENTS.getActivity());
         generateCommodityAction(dataSet, commodity, "RECEIVED", DataElementType.RECEIVED.getActivity());
         generateCommodityAction(dataSet, commodity, "RECEIVE_DATE", DataElementType.RECEIVE_DATE.getActivity());
         generateCommodityAction(dataSet, commodity, "RECEIVE_SOURCE", DataElementType.RECEIVE_SOURCE.getActivity());

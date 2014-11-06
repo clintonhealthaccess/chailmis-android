@@ -78,7 +78,8 @@ public class CommoditySnapshotService {
         snapshotGenericDao.bulkOperation(new DbUtil.Operation<CommoditySnapshot, Object>() {
             @Override
             public Object operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
-                for (CommoditySnapshotValue value : snapshotable.getActivitiesValues()) {
+                List<CommoditySnapshotValue> commoditySnapshotValues = snapshotable.getActivitiesValues();
+                for (CommoditySnapshotValue value : commoditySnapshotValues) {
                     List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value, dao);
                     if (commoditySnapshots.isEmpty()) {
                         createNewSnapshot(value, dao);

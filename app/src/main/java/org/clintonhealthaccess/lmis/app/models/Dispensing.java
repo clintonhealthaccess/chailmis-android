@@ -50,26 +50,17 @@ public class Dispensing implements Serializable {
     private long id;
 
     @DatabaseField
-    private boolean dispenseToFacility;
-
-    @DatabaseField
     private String prescriptionId;
 
     @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date created;
-
-    public Dispensing(boolean willDispenseToFacility) {
-        dispenseToFacility = willDispenseToFacility;
-        created = new Date();
-    }
 
     public Dispensing() {
         this(new Date());
     }
 
     public Dispensing(Date date) {
-        this.dispenseToFacility = false;
-        this.created = date;
+        created = date;
     }
 
     public void addItem(DispensingItem dispensingItem) {
@@ -78,14 +69,6 @@ public class Dispensing implements Serializable {
 
     public List<DispensingItem> getDispensingItems() {
         return dispensingItems;
-    }
-
-    public void setDispenseToFacility(boolean dispenseToFacility) {
-        this.dispenseToFacility = dispenseToFacility;
-    }
-
-    public boolean isDispenseToFacility() {
-        return dispenseToFacility;
     }
 
     public void setPrescriptionId(String prescriptionId) {

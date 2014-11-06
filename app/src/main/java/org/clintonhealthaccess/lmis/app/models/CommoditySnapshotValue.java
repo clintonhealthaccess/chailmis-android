@@ -31,9 +31,11 @@ package org.clintonhealthaccess.lmis.app.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import static java.lang.String.valueOf;
 
+@ToString
 @Getter
 @Setter
 public class CommoditySnapshotValue {
@@ -54,8 +56,8 @@ public class CommoditySnapshotValue {
         this.value = reasonForUnexpectedQuantity;
     }
 
-    public CommoditySnapshotValue(CommodityAction input, String value, String period) {
-        this.commodityAction = input;
+    public CommoditySnapshotValue(CommodityAction commodityAction, String value, String period) {
+        this.commodityAction = commodityAction;
         this.value = value;
         this.period = period;
     }

@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.thoughtworks.dhis.models.DataElementType;
+
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,32 +47,15 @@ import static org.mockito.Mockito.when;
 public class DispensingItemTest {
 
     @Test
-    public void shouldGetDispenseActivityIfNotDispensingToFacility() throws Exception {
+    public void shouldGetDispenseActivity() throws Exception {
         Commodity commodity = mock(Commodity.class);
-        CommodityAction dispensingActivity = new CommodityAction(commodity, "12", "12", "DISPENSE");
-        CommodityAction adjustments = new CommodityAction(commodity, "12", "12", "ADJUSTMENTS");
-        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
+        CommodityAction dispensingActivity = new CommodityAction(commodity, "12", "12", DataElementType.DISPENSED.getActivity());
+        when(commodity.getCommodityActionsSaved()).
+                thenReturn(new ArrayList<>(Arrays.asList(dispensingActivity)));
         Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(false);
         DispensingItem dispensingItem = new DispensingItem(commodity, 10);
         dispensingItem.setDispensing(dispensing);
         dispensing.addItem(dispensingItem);
-        assertThat(dispensingItem.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("DISPENSE"));
-    }
-
-
-    @Test
-    public void shouldGetADJUSTMENTSActivityIfDispensingToFacility() throws Exception {
-        Commodity commodity = mock(Commodity.class);
-        CommodityAction dispensingActivity = new CommodityAction(commodity, "12", "12", "DISPENSE");
-        CommodityAction adjustments = new CommodityAction(commodity, "12", "12", "ADJUSTMENTS");
-        when(commodity.getCommodityActionsSaved()).thenReturn(new ArrayList<CommodityAction>(Arrays.asList(dispensingActivity, adjustments)));
-        Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(true);
-        DispensingItem dispensingItem = new DispensingItem(commodity, 10);
-        dispensingItem.setDispensing(dispensing);
-        dispensing.addItem(dispensingItem);
-        assertThat(dispensingItem.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("ADJUSTMENTS"));
-
+        assertThat(dispensingItem.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is(DataElementType.DISPENSED.getActivity()));
     }
 }

@@ -172,11 +172,7 @@ public class OrderActivity extends CommoditySelectableActivity {
                     onEvent(new CommodityToggledEvent(orderCommodityViewModel));
                 }
             }
-
-
         }
-
-
     }
 
     @Override

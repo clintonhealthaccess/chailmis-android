@@ -38,7 +38,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -272,33 +271,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         return keyBoardView.getVisibility() == View.VISIBLE;
     }
 
-    public void setupEditTextForNumberInput(View edittext) {
-        edittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) showCustomKeyboard(v);
-                else hideCustomKeyboard();
-            }
-        });
-        edittext.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCustomKeyboard(v);
-            }
-        });
-        edittext.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                EditText edittext = (EditText) v;
-                int inType = edittext.getInputType();
-                edittext.setInputType(InputType.TYPE_NULL);
-                edittext.onTouchEvent(event);
-                edittext.setInputType(inType);
-                return true;
-            }
-        });
-    }
-
     abstract protected CommoditiesToViewModelsConverter getViewModelConverter();
 
     private void setupCategories() {
@@ -331,6 +303,8 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
                 dialog.show(fragmentManager, "selectCommodities");
             }
         });
+        LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        button.setWidth(200);
         return button;
     }
 

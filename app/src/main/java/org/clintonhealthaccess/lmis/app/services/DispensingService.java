@@ -128,7 +128,7 @@ public class DispensingService {
                 QueryBuilder<Dispensing, String> dispensingStringQueryBuilder = dao.queryBuilder();
                 Date firstDay = Helpers.firstDayOfMonth(new Date());
                 Date lastDay = Helpers.lastDayOfMonth(new Date());
-                dispensingStringQueryBuilder.where().between("created", firstDay, lastDay).and().eq("dispenseToFacility", false);
+                dispensingStringQueryBuilder.where().between("created", firstDay, lastDay);
                 PreparedQuery<Dispensing> query = dispensingStringQueryBuilder.prepare();
                 List<Dispensing> dispensingList = dao.query(query);
                 return dispensingList.size();

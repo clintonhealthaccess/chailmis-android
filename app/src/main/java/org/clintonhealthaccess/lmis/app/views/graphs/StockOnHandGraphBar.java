@@ -130,7 +130,7 @@ public class StockOnHandGraphBar {
         textViewSOH.setTextSize(12);
         textViewSOH.setId(R.id.textViewStockOnHand);
         textViewSOH.setTypeface(null, Typeface.BOLD);
-        textViewSOH.setTextColor(applicationContext.getResources().getColor(R.color.white));
+        textViewSOH.setTextColor(applicationContext.getResources().getColor(R.color.black));
         return textViewSOH;
     }
 
@@ -142,7 +142,7 @@ public class StockOnHandGraphBar {
         textViewMax.setLayoutParams(maxTextViewParams);
         textViewMax.setText("Max");
         textViewMax.setGravity(Gravity.CENTER_HORIZONTAL);
-        textViewMax.setTextColor(applicationContext.getResources().getColor(R.color.white));
+        textViewMax.setTextColor(applicationContext.getResources().getColor(R.color.black));
         textViewMax.setTypeface(null, Typeface.BOLD);
         return textViewMax;
     }
@@ -156,7 +156,10 @@ public class StockOnHandGraphBar {
                 new RelativeLayout.LayoutParams(barWidth, heightOfColorHolder);
         params1.addRule(RelativeLayout.ABOVE, R.id.textViewCommodityNameInGraphBar);
         colorHolderView.setLayoutParams(params1);
-        colorHolderView.setBackgroundColor(color);
+
+        int colorBrightRed = applicationContext.getResources().getColor(R.color.alerts_bright_red);
+        colorHolderView.setBackgroundColor(heightOfColorHolder < heightForMinThreshold ? colorBrightRed : color);
+
         return colorHolderView;
     }
 

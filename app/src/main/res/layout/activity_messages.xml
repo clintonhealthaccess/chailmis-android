@@ -48,7 +48,7 @@
             android:textStyle="bold"
             android:padding="10dp"
             android:textColor="@color/white"
-            android:background="@color/alerts_red"
+            android:background="@color/messages_theme_color"
             android:layout_centerHorizontal="true"
             android:textSize="20sp"
             android:text="@string/alerts_title" />
@@ -117,7 +117,7 @@
             android:textStyle="bold"
             android:padding="10dp"
             android:textColor="@color/white"
-            android:background="@color/alerts_red"
+            android:background="@color/messages_theme_color"
             android:layout_centerHorizontal="true"
             android:textSize="20sp"
             android:text="@string/notifications_title" />

@@ -35,7 +35,7 @@
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
-    <string name="register_label">Please register with your LMIS credentials:</string>
+    <string name="register_label">Please register with Facility Credentials:</string>
     <string name="losses">Losses</string>
     <string name="adjustments">Adjustments</string>
     <string name="reports">Reports</string>
@@ -69,7 +69,6 @@
     <string name="dispense_submit_validation_message_zero">Please make sure all the quantities are greater than 0</string>
     <string name="dispense_submit_validation_message_filled">Please make sure all the quantities are filled</string>
     <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
-    <string name="dispense_to_facility">Dispense To Facility</string>
     <string name="go_back">Go Back</string>
     <string name="commodity">Commodity</string>
     <string name="adjusted_quantity">Adjusted Quantity</string>
@@ -167,5 +166,6 @@
     <string name="select_commodity">Select a Commodity</string>
     <string name="not_related_to_vaccine">Not related to Vaccine</string>
     <string name="bin_card">Bin Card</string>
+    <string name="graph_caption">[for five most frequently prescribed commodities]</string>
 
 </resources>

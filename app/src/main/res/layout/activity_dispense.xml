@@ -34,58 +34,65 @@
     android:paddingTop="15dp"
     tools:context="org.clintonhealthaccess.lmis.app.activities.DispenseActivity">
 
-    <ScrollView
-        android:id="@+id/scrollCategories"
+    <LinearLayout
+        android:id="@+id/scrollCategoriesContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true">
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="10dp">
 
-        <LinearLayout
-            android:id="@+id/layoutCategories"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="10dp">
+            android:background="@color/dispense_theme_color"
+            android:textColor="@color/black"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/commodity_categories"
+            android:id="@+id/textViewCategories"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewCommodities"
+            android:layout_width="match_parent"
+            android:hint="Search"
+            android:layout_height="wrap_content" />
 
-            <TextView
-                android:layout_width="fill_parent"
+        <ScrollView
+            android:id="@+id/scrollCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutCategories"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/dark_blue_header"
-                android:textColor="@color/white"
-                android:padding="10dp"
-                android:text="@string/commodity_categories"
-                android:id="@+id/textViewCategories"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextViewCommodities"
-                android:layout_width="match_parent"
-                android:hint="Search"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </ScrollView>
-
+                android:orientation="vertical"/>
+        </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutSelectedItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/scrollCategories"
+        android:layout_toRightOf="@id/scrollCategoriesContainer"
         android:orientation="vertical"
         android:paddingLeft="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:background="@color/dark_blue_header"
+            android:background="@color/dispense_theme_color"
             android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:padding="10dp"
                 android:text="@string/dispense"
                 android:id="@+id/textViewPageTitle"
@@ -97,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:padding="10dp"
                 android:textSize="18sp" />
 
@@ -106,7 +113,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/textViewPrescriptionId"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:padding="10dp"
                 android:text="@string/dispense_no"
                 android:textSize="18sp" />
@@ -119,14 +126,6 @@
             android:layout_height="wrap_content"
             android:paddingRight="10dp"
             android:paddingTop="10dp">
-
-
-            <CheckBox
-                android:id="@+id/checkboxDispenseToFacility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/dispense_to_facility" />
 
             <Button
                 android:id="@+id/buttonSubmitDispense"

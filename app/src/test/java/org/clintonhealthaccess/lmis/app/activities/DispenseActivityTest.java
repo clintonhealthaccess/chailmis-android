@@ -138,7 +138,7 @@ public class DispenseActivityTest {
 
         LinearLayout categoryLayout = (LinearLayout) dispenseActivity.findViewById(R.id.layoutCategories);
         int buttonAmount = categoryLayout.getChildCount();
-        assertThat(buttonAmount, is(9));
+        assertThat(buttonAmount, is(7));
 
         for (int i = 2; i < buttonAmount; i++) {
             View childView = categoryLayout.getChildAt(i);
@@ -190,12 +190,6 @@ public class DispenseActivityTest {
         assertThat(activity.buttonSubmitDispense, is(notNullValue()));
     }
 
-    @Test
-    public void testThatDispenseToFacilityExists() throws Exception {
-        DispenseActivity activity = getDispenseActivity();
-        assertThat(activity.checkboxDispenseToFacility, is(notNullValue()));
-    }
-
     private void refire(CommodityToggledEvent commodityToggledEvent) {
         EventBus.getDefault().post(commodityToggledEvent);
     }
@@ -231,8 +225,6 @@ public class DispenseActivityTest {
 
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        dispenseActivity.checkboxDispenseToFacility.setChecked(true);
-
         GridView mockGridView = mock(GridView.class);
         View mockListItemView = mock(View.class);
         EditText mockEditText = new EditText(application);
@@ -257,7 +249,6 @@ public class DispenseActivityTest {
         Dispensing dispensing = dispenseActivity.getDispensing();
 
         assertThat(dispensing.getDispensingItems().size(), is(1));
-        assertThat(dispensing.isDispenseToFacility(), is(true));
 
         assertThat(dispensing.getDispensingItems().get(0).getQuantity(), is(12));
         assertThat(dispensing.getDispensingItems().get(0).getCommodity().getName(), is(commodityName));
@@ -366,40 +357,8 @@ public class DispenseActivityTest {
     }
 
     @Test
-    public void testThatIfDispenseToAnotherFacilityCheckBox() throws Exception {
-
-        DispenseActivity dispenseActivity = getDispenseActivity();
-
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
-
-        Dispensing dispensing = dispenseActivity.getDispensing();
-
-        assertTrue(dispensing.isDispenseToFacility());
-
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
-
-        dispensing = dispenseActivity.getDispensing();
-
-        assertFalse(dispensing.isDispenseToFacility());
-
-
-    }
-
-    @Test
-    public void whenYouDispenseToAFacilityYouShouldNotSeeAPrescriptionId() throws Exception {
-        DispenseActivity dispenseActivity = getDispenseActivity();
-
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
-
-        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionId).getVisibility(), is(INVISIBLE));
-        assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionText).getVisibility(), is(INVISIBLE));
-    }
-
-    @Test
     public void whenYouDispenseToaPatientYouShouldSeeAPrescriptionId() throws Exception {
         DispenseActivity dispenseActivity = getDispenseActivity();
-
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
 
         assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionId).getVisibility(), is(VISIBLE));
         assertThat(dispenseActivity.findViewById(R.id.textViewPrescriptionText).getVisibility(), is(VISIBLE));
@@ -411,8 +370,6 @@ public class DispenseActivityTest {
         when(dispenseService.getNextPrescriptionId()).thenReturn(resultExpected);
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
-
         assertThat(((TextView) dispenseActivity.findViewById(R.id.textViewPrescriptionId)).getText().toString(), is(resultExpected));
     }
 
@@ -421,11 +378,7 @@ public class DispenseActivityTest {
         String resultExpected = "0003-Jul";
         when(dispenseService.getNextPrescriptionId()).thenReturn(resultExpected);
         DispenseActivity dispenseActivity = getDispenseActivity();
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(false);
         assertThat(dispenseActivity.getDispensing().getPrescriptionId(), is(resultExpected));
-
-        ((CheckBox) dispenseActivity.findViewById(R.id.checkboxDispenseToFacility)).setChecked(true);
-        assertThat(dispenseActivity.getDispensing().getPrescriptionId(), is(Matchers.nullValue()));
     }
 
     @Test
@@ -454,37 +407,6 @@ public class DispenseActivityTest {
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertThat(dialog, is(notNullValue()));
 
-
-    }
-
-    @Test
-    public void dispenseToFacilityShouldBeVisibleWhenAdjustment() throws Exception {
-        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
-        intent.putExtra(HomeActivity.IS_ADJUSTMENT, true);
-        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
-        assertThat(activity.checkboxDispenseToFacility.getVisibility(), is(View.VISIBLE));
-        assertThat(activity.checkboxDispenseToFacility.isChecked(), is(true));
-        assertThat(activity.checkboxDispenseToFacility.isEnabled(), is(false));
-
-    }
-
-    @Test
-    public void shouldReadAdjustmentsWhenAdjustmentFlagIsSet() throws Exception {
-        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
-        intent.putExtra(HomeActivity.IS_ADJUSTMENT, true);
-        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
-        assertThat(activity.textViewPageTitle.getText().toString(), is(application.getString(R.string.adjustments)));
-        assertThat(((ColorDrawable) activity.textViewPageTitle.getBackground()).getColor(), is(application.getResources().getColor(R.color.losses_background)));
-        assertThat(((ColorDrawable) activity.textViewCategories.getBackground()).getColor(), is(application.getResources().getColor(R.color.losses_background)));
-
-
-    }
-
-    @Test
-    public void dispenseToFacilityShouldNotBeVisibleWhenNotAdjustment() throws Exception {
-        Intent intent = new Intent(Robolectric.getShadowApplication().getApplicationContext(), DispenseActivity.class);
-        DispenseActivity activity = Robolectric.buildActivity(DispenseActivity.class).withIntent(intent).create().get();
-        assertThat(activity.checkboxDispenseToFacility.getVisibility(), is(View.GONE));
 
     }
 

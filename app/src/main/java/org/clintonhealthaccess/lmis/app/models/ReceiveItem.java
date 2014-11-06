@@ -130,7 +130,6 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
             return allocation.getPeriod();
         }
         return "";
-
     }
 
     private FluentIterable<CommodityAction> filterCommodityActions(final String type) {

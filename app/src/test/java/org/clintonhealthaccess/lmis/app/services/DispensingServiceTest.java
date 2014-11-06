@@ -33,6 +33,7 @@ import android.app.Application;
 
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
@@ -99,10 +100,10 @@ public class DispensingServiceTest {
         Commodity commodity = commodityService.all().get(0);
         int stockLevel = stockService.getStockLevelFor(commodity);
         assertThat(stockLevel, is(10));
-        Dispensing dispensing = new Dispensing(false);
+        Dispensing dispensing = new Dispensing();
         DispensingItem item1 = new DispensingItem(commodity, 1);
         item1.setDispensing(dispensing);
-        assertThat(item1.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is("dispense"));
+        assertThat(item1.getActivitiesValues().get(0).getCommodityAction().getActivityType(), is(DataElementType.DISPENSED.getActivity()));
         dispensing.addItem(item1);
         dispensingService.addDispensing(dispensing);
 
@@ -118,7 +119,6 @@ public class DispensingServiceTest {
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0001-%s", currentMonth)));
         for (int i = 0; i < 20; i++) {
             Dispensing dispensing = new Dispensing();
-            dispensing.setDispenseToFacility(false);
             dispensingService.addDispensing(dispensing);
         }
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0021-%s", currentMonth)));

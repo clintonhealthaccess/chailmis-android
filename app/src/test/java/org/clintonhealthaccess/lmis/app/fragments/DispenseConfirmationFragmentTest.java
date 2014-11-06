@@ -91,18 +91,6 @@ public class DispenseConfirmationFragmentTest {
     }
 
     @Test
-    public void testConfirmButtonHasDifferentTextIfDispensingToFacility() throws Exception {
-        Dispensing dispensing = new Dispensing();
-        dispensing.setDispenseToFacility(true);
-        dispenseConfirmationFragment = DispenseConfirmationFragment.newInstance(dispensing);
-        startFragment(dispenseConfirmationFragment);
-        Dialog dialog = ShadowDialog.getLatestDialog();
-        Button buttonClose = (Button) dialog.findViewById(R.id.buttonDispenseConfirm);
-        assertThat(buttonClose, not(nullValue()));
-        assertThat(buttonClose.getText().toString(), is(Robolectric.application.getString(R.string.confirm_facility)));
-    }
-
-    @Test
     public void testListViewExists() throws Exception {
         Dialog dialog = ShadowDialog.getLatestDialog();
         ListView listView = (ListView) dialog.findViewById(R.id.listViewConfirmItems);
@@ -110,7 +98,6 @@ public class DispenseConfirmationFragmentTest {
         assertThat(listView.getAdapter(), not(nullValue()));
 
     }
-
 
     @Test
     public void testGoBackButtonExists() throws Exception {
