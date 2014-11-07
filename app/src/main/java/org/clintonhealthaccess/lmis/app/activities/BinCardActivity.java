@@ -30,26 +30,29 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
-import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.adapters.BinCardAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SearchCommodityAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SpinnerCommoditiesAdapter;
-import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCardItem;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.ReportsService;
+import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +61,6 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
 import static android.widget.AdapterView.OnItemSelectedListener;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
 @ContentView(R.layout.activity_bin_card)
@@ -70,18 +72,37 @@ public class BinCardActivity extends BaseActivity {
     @InjectView(R.id.autoCompleteTextViewCommodities)
     public AutoCompleteTextView autoCompleteTextViewCommodities;
 
+    @InjectView(R.id.textViewMinimumStock)
+    TextView textViewMinimumStock;
+
+    @InjectView(R.id.textViewMaximumStock)
+    TextView textViewMaximumStock;
+
+    @InjectView(R.id.listViewBinCardItems)
+    ListView listViewBinCarditems;
+
     @Inject
     CommodityService commodityService;
+    @Inject
+    private ReportsService reportsService;
 
     public SearchCommodityAdapter searchCommodityAdapter;
     private List<Commodity> commodities;
+    private BinCardAdapter binCardAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         commodities = commodityService.all();
+        setUpAdapter();
         populateCommoditiesSpinner();
         setUpCommoditySearch();
+    }
+
+    private void setUpAdapter() {
+        binCardAdapter = new BinCardAdapter(getApplicationContext(),
+                R.layout.bin_card_item, new ArrayList<BinCardItem>());
+        listViewBinCarditems.setAdapter(binCardAdapter);
     }
 
     private void populateCommoditiesSpinner() {
@@ -101,7 +122,7 @@ public class BinCardActivity extends BaseActivity {
         });
     }
 
-    protected void setUpCommoditySearch(){
+    protected void setUpCommoditySearch() {
         searchCommodityAdapter = new SearchCommodityAdapter(this, R.layout.search_commodity_item, newArrayList(commodities));
         autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
         autoCompleteTextViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -115,6 +136,44 @@ public class BinCardActivity extends BaseActivity {
     }
 
     public void populateBinCard(Commodity commodity) {
-        Toast.makeText(this, "After Here am going to beat Jaf with my left many games", Toast.LENGTH_LONG).show();
+        new BinCardAsyncTask().execute(commodity);
+    }
+
+    public void handleBinCard(BinCard binCard){
+        this.textViewMinimumStock.setText(String.valueOf(binCard.getMinimumStockLevel()));
+        this.textViewMaximumStock.setText(String.valueOf(binCard.getMaximumStockLevel()));
+        this.binCardAdapter.addAll(binCard.getBinCardItems());
+        this.binCardAdapter.notifyDataSetChanged();
+    }
+
+    private class BinCardAsyncTask extends AsyncTask<Commodity, Void, BinCard> {
+        LmisProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new LmisProgressDialog(BinCardActivity.this, getString(R.string.loading_report));
+            this.dialog.show();
+        }
+
+        @Override
+        protected BinCard doInBackground(Commodity... commodities) {
+            try {
+                return reportsService.generateBinCard(commodities[0]);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(BinCard binCard) {
+            if(binCard==null){
+                Toast.makeText(BinCardActivity.this, getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                return;
+            }
+            handleBinCard(binCard);
+            dialog.dismiss();
+        }
     }
 }

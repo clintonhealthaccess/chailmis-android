@@ -41,15 +41,64 @@
         android:hint="Search"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp" />
 
     <Spinner
         android:id="@+id/spinnerCommodities"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/autoCompleteTextViewCommodities"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="10dp"
-        />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/autoCompleteTextViewCommodities"
+        android:layout_margin="10dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutBinCardExtremes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerCommodities"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/minimum_stock"
+            android:layout_margin="5dp"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/textViewMinimumStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/maximum_stock"
+            android:layout_margin="5dp"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/textViewMaximumStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:gravity="center_horizontal"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listViewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></ListView>
+
+    <ListView
+        android:id="@+id/listViewBinCardItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutBinCardExtremes"></ListView>
 
 </RelativeLayout>

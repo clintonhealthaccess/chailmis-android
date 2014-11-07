@@ -167,5 +167,9 @@
     <string name="not_related_to_vaccine">Not related to Vaccine</string>
     <string name="bin_card">Bin Card</string>
     <string name="graph_caption">[for five most frequently prescribed commodities]</string>
+    <string name="minimum_stock">Minimum Stock:</string>
+    <string name="maximum_stock">Maximum Stock:</string>
+    <string name="report_generation_error">There was error while generating the report</string>
+    <string name="loading_report">Loading Report...</string>
 
 </resources>
