@@ -72,12 +72,14 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT);
     public static final String ROUTINE = "Routine";
     public static final int MIN_ORDER_PERIOD = 7;
+    private final Context context;
     private List<OrderReason> unexpectedOrderReasons = new ArrayList<>();
     private OrderType orderType;
 
 
     public SelectedOrderCommoditiesAdapter(Context context, int resource, List<OrderCommodityViewModel> commodities, List<OrderReason> reasons, OrderType type) {
         super(context, resource, commodities);
+        this.context = context;
         unexpectedOrderReasons.addAll(reasons);
         unexpectedOrderReasons.add(0, new OrderReason(getContext().getString(R.string.select_reason)));
         this.orderType = type;
@@ -287,7 +289,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
     }
 
     private void openDialog(final TextView textViewDate, Calendar calendar, Calendar calendarMinDate, Calendar calendarMaxDate) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 textViewDate.setText(getDateString(year, monthOfYear, dayOfMonth));
