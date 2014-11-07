@@ -44,6 +44,8 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:text="@string/commodityName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:textSize="18sp" />
 
     <ImageButton
@@ -51,15 +53,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:clickable="false"
         android:padding="1dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewCommodityName"
-        android:layout_toLeftOf="@id/imageButtonCancel"
+        android:layout_below="@+id/imageButtonCancel"
+        android:layout_toLeftOf="@+id/imageButtonCancel"
         android:orientation="horizontal"
         android:paddingTop="10dp">
 
@@ -71,10 +74,9 @@
 
         <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextAllocatedQuantity"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/number_text_view_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:hint="@string/quantity"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
@@ -84,14 +86,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/received"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginLeft="@dimen/small_margin"/>
 
         <org.clintonhealthaccess.lmis.app.views.NumberTextView
             android:id="@+id/editTextReceivedQuantity"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/number_text_view_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:hint="@string/hint_quantity"
             android:inputType="number"
             android:imeOptions="flagNoExtractUi"
@@ -101,11 +103,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/difference"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginLeft="@dimen/small_margin"/>
 
         <TextView
             android:id="@+id/textViewDifferenceQuantity"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/number_text_view_width"
             android:layout_height="wrap_content"
             android:text="@string/quantity"
             android:textStyle="bold"

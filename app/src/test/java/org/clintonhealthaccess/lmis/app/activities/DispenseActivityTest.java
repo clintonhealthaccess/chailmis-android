@@ -30,12 +30,9 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -61,14 +58,12 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
 import org.robolectric.shadows.ShadowToast;
 
 import de.greenrobot.event.EventBus;
 
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
@@ -176,7 +171,7 @@ public class DispenseActivityTest {
 
         SelectedCommoditiesAdapter adapter = (SelectedCommoditiesAdapter) eventDetails.dispenseActivity.arrayAdapter;
 
-        ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_commodity_list_item, R.id.imageButtonCancel);
+        ImageButton cancelButton = (ImageButton) getViewFromListRow(adapter, R.layout.selected_dispense_commodity_list_item, R.id.imageButtonCancel);
 
         cancelButton.performClick();
 

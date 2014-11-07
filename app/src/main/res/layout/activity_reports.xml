@@ -35,7 +35,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.clintonhealthaccess.lmis.app.activities.ReportsActivity">
 
-
     <LinearLayout
         android:id="@+id/scrollCategoriesContainer"
         android:layout_width="wrap_content"
@@ -56,7 +55,11 @@
             android:text="@string/commodity_categories"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowColor="@color/white"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"/>
 
         <ScrollView
             android:id="@+id/scrollCategories"
@@ -95,7 +98,11 @@
                 android:text="@string/reports"
                 android:id="@+id/textViewPageTitle"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:shadowColor="@color/white"
+                android:shadowDx="-1"
+                android:shadowDy="-1"
+                android:shadowRadius="1"/>
 
 
         </RelativeLayout>

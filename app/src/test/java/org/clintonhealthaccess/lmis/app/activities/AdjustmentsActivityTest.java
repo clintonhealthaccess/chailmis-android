@@ -46,7 +46,6 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
@@ -161,15 +160,15 @@ public class AdjustmentsActivityTest extends TestCase {
         commodities.add(adjustmentsViewModel);
 
         AdjustmentsActivity activity = getAdjustmentsActivity();
-        AdjustmentsAdapter adjustmentsAdapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adjustmentsAdapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
 
-        View row = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_list_item);
+        View row = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_commodity_list_item);
         TextView textView = (TextView) row.findViewById(R.id.textViewCommodityName);
         assertThat(textView.getError(), is(Matchers.nullValue()));
 
         activity.spinnerAdjustmentReason.setSelection(4);
 
-        View row2 = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_list_item);
+        View row2 = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_commodity_list_item);
         textView = (TextView) row2.findViewById(R.id.textViewCommodityName);
         ANDROID.assertThat(textView).hasError();
 

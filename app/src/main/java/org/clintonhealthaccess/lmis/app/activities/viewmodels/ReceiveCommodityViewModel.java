@@ -61,7 +61,7 @@ public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public int getDifference() {
-        return quantityAllocated - quantityReceived;
+        return quantityReceived - quantityAllocated;
     }
 
     public ReceiveItem getReceiveItem() {

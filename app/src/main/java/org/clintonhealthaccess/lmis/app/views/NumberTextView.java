@@ -35,6 +35,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.events.NumberTextViewFocusChanged;
 import org.clintonhealthaccess.lmis.app.events.NumberTextViewOnClick;
 import org.clintonhealthaccess.lmis.app.events.NumberTextViewOnTouch;

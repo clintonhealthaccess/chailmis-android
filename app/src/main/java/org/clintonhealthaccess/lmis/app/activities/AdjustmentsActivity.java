@@ -140,7 +140,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
 
     @Override
     protected ArrayAdapter getArrayAdapter() {
-        return new AdjustmentsAdapter(AdjustmentsActivity.this, R.layout.selected_adjustment_list_item, new ArrayList<AdjustmentsViewModel>());
+        return new AdjustmentsAdapter(AdjustmentsActivity.this, R.layout.selected_adjustment_commodity_list_item, new ArrayList<AdjustmentsViewModel>());
     }
 
     @Override

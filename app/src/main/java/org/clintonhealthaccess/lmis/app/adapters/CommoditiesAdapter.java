@@ -68,8 +68,13 @@ public class CommoditiesAdapter extends ArrayAdapter<BaseCommodityViewModel> {
         CheckBox checkboxCommoditySelected = (CheckBox) rowView.findViewById(R.id.checkboxCommoditySelected);
         BaseCommodityViewModel commodityViewModel = getItem(position);
         checkboxCommoditySelected.setChecked(commodityViewModel.isSelected());
+
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(commodityViewModel.getName());
+        if (commodityViewModel.isSelected()) {
+            textViewCommodityName.setTextColor(getContext()
+                    .getResources().getColor(R.color.light_blue));
+        }
 
         TextView textViewCommodityOutOfStock = (TextView) rowView.findViewById(R.id.textViewCommodityOutOfStock);
 

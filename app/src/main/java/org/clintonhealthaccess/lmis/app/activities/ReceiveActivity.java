@@ -139,7 +139,7 @@ public class ReceiveActivity extends CommoditySelectableActivity {
 
     @Override
     protected ArrayAdapter getArrayAdapter() {
-        return new ReceiveCommoditiesAdapter(this, R.layout.receive_commodity_list_item, new ArrayList<ReceiveCommodityViewModel>());
+        return new ReceiveCommoditiesAdapter(this, R.layout.selected_receive_commodity_list_item, new ArrayList<ReceiveCommodityViewModel>());
     }
 
     @Override

@@ -28,49 +28,47 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
     android:background="@drawable/card"
-    android:padding="10dp">
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/textViewCommodityName"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textSize="18sp" />
+        android:focusable="true"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:textSize="16sp"
+        android:layout_alignParentLeft="true" />
 
     <LinearLayout
         android:id="@+id/linearLayoutStockValues"
         android:layout_width="wrap_content"
         android:orientation="vertical"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/textViewCommodityName"
-        android:paddingLeft="10dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:visibility="gone"
+        android:layout_toRightOf="@id/textViewCommodityName">
 
         <TextView
             android:id="@+id/textViewCurrentStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/textViewMonthsOfStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-        </LinearLayout>
-
-    <org.clintonhealthaccess.lmis.app.views.NumberTextView
-        android:id="@+id/editTextQuantity"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/imageButtonCancel"
-        android:inputType="number"
-        android:hint="Quantity"
-        android:textSize="16sp" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/imageButtonCancel"
@@ -79,4 +77,57 @@
         android:layout_alignParentRight="true"
         android:padding="1dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutDifference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingRight="10dp"
+        android:layout_toLeftOf="@id/imageButtonCancel"
+        android:layout_marginLeft="@dimen/small_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/diff"
+            android:layout_marginRight="@dimen/small_margin"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/textViewAdjustment"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <org.clintonhealthaccess.lmis.app.views.NumberTextView
+        android:id="@+id/editTextQuantity"
+        android:layout_width="@dimen/number_text_view_width"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_marginRight="20dp"
+        android:textSize="16sp"
+        android:hint="@string/quantity"
+        android:layout_toLeftOf="@id/linearLayoutDifference" />
+
+    <TextView
+        android:id="@+id/textViewCounted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:text="Counted :"
+        android:layout_toLeftOf="@id/editTextQuantity"
+        android:layout_toRightOf="@+id/linearLayoutStockValues"/>
+
+    <Spinner
+        android:id="@+id/spinnerAdjustmentType"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@id/editTextQuantity" />
+
 </RelativeLayout>

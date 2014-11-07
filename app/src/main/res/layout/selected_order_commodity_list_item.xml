@@ -104,7 +104,7 @@
 
             <org.clintonhealthaccess.lmis.app.views.NumberTextView
                 android:id="@+id/editTextOrderQuantity"
-                android:layout_width="fill_parent"
+                android:layout_width="@dimen/number_text_view_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"

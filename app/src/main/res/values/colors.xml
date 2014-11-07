@@ -33,6 +33,7 @@
     <color name="m_light_grey">#f5f5f5</color>
     <color name="m_grey">#ddd</color>
     <color name="blue">#1D5288</color>
+    <color name="light_blue">#0087BD</color>
     <color name="white">#FFFFFF</color>
     <color name="dispense_theme_color">#FFFF55</color>
     <color name="order_theme_color">#FA850C</color>

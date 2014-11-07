@@ -31,24 +31,18 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
-import org.clintonhealthaccess.lmis.app.adapters.SearchCommodityAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
@@ -56,7 +50,6 @@ import org.clintonhealthaccess.lmis.app.fragments.DispenseConfirmationFragment;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 
 import java.util.ArrayList;
@@ -163,7 +156,7 @@ public class DispenseActivity extends CommoditySelectableActivity {
     }
 
     private int getSelectedCommoditiesAdapterId() {
-        return R.layout.selected_commodity_list_item;
+        return R.layout.selected_dispense_commodity_list_item;
     }
 
     Dispensing getDispensing() {

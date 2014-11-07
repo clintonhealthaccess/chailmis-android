@@ -56,7 +56,7 @@ public class ReceiveCommoditiesAdapterTest {
     public static final String PANADOL = "Panadol";
     public static final int QUANTITY_ORDERED = 4;
     public static final int QUANTITY_RECEIVED = 3;
-    public static final int QUANTITY_DIFFERENCE = 1;
+    public static final int QUANTITY_DIFFERENCE = -1;
     private ListView parent;
     private ReceiveCommoditiesAdapter adapter;
 
@@ -65,7 +65,7 @@ public class ReceiveCommoditiesAdapterTest {
         parent = new ListView(Robolectric.application);
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL), QUANTITY_ORDERED, QUANTITY_RECEIVED);
         List<ReceiveCommodityViewModel> receiveCommodityViewModels = Arrays.asList(viewModel);
-        adapter = new ReceiveCommoditiesAdapter(Robolectric.application, R.layout.receive_commodity_list_item, receiveCommodityViewModels);
+        adapter = new ReceiveCommoditiesAdapter(Robolectric.application, R.layout.selected_receive_commodity_list_item, receiveCommodityViewModels);
     }
 
     @Test
@@ -90,11 +90,11 @@ public class ReceiveCommoditiesAdapterTest {
 
         editTextQuantityOrdered.setText("7");
         int difference = getIntFromString(((TextView) rowView.findViewById(R.id.textViewDifferenceQuantity)).getText().toString());
-        assertThat(difference, is(4));
+        assertThat(difference, is(-4));
 
         editTextQuantityReceived.setText("2");
         difference = getIntFromString(((TextView) rowView.findViewById(R.id.textViewDifferenceQuantity)).getText().toString());
-        assertThat(difference, is(5));
+        assertThat(difference, is(-5));
     }
 
     @Test

@@ -45,11 +45,11 @@ public class ReceiveCommodityViewModelTest {
     @Test
     public void shouldReturnTheDifferenceQuantity() {
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity("Panadol"), QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
-        assertThat(viewModel.getDifference(), is(1));
+        assertThat(viewModel.getDifference(), is(-1));
     }
 
     @Test
-    public void shouldGenerateRecieveItem() {
+    public void shouldGenerateReceiveItem() {
         ReceiveCommodityViewModel viewModel = new ReceiveCommodityViewModel(new Commodity(PANADOL));
         viewModel.setQuantityAllocated(QUANTITY_ALLOCATED);
         viewModel.setQuantityReceived(QUANTITY_RECEIVED);

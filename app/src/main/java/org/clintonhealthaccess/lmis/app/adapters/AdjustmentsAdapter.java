@@ -39,6 +39,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -84,7 +85,10 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         TextView textViewCounted = (TextView) rowView.findViewById(R.id.textViewCounted);
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
         final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
+
+        LinearLayout linearLayoutDifference = (LinearLayout)rowView.findViewById(R.id.linearLayoutDifference);
         TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
+
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
 
         final AdjustmentsViewModel commodityViewModel = getItem(position);
@@ -99,13 +103,13 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 types.add("-");
             }
             if (commodityViewModel.getAdjustmentReason().isPhysicalCount()) {
-                textViewAdjustment.setVisibility(View.VISIBLE);
+                linearLayoutDifference.setVisibility(View.VISIBLE);
                 textViewCounted.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.INVISIBLE);
                 showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
             } else {
                 spinnerAdjustmentType.setVisibility(View.VISIBLE);
-                textViewAdjustment.setVisibility(View.GONE);
+                linearLayoutDifference.setVisibility(View.GONE);
                 textViewCounted.setVisibility(View.GONE);
                 linearLayoutStockValues.setVisibility(View.GONE);
                 if (commodityViewModel.getAdjustmentReason().isSentToAnotherFacility()) {
@@ -188,11 +192,10 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             int quantity = getIntFromString(value);
             adjustmentsViewModel.setQuantityEntered(quantity);
             if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
-                int difference = quantity - adjustmentsViewModel.getStockOnHand();
-                boolean isPositive = difference > 0;
+                int adjustment = quantity - adjustmentsViewModel.getStockOnHand();
+                boolean isPositive = adjustment > 0;
                 adjustmentsViewModel.setPositive(isPositive);
                 spinnerAdjustmentType.setSelection(isPositive ? types.indexOf("+") : types.indexOf("-"));
-                int adjustment = abs(difference);
                 textViewAdjustment.setText(String.valueOf(adjustment));
                 adjustmentsViewModel.setQuantityEntered(adjustment);
             } else {

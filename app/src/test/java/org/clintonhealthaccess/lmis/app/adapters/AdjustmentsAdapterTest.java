@@ -73,7 +73,7 @@ public class AdjustmentsAdapterTest {
     @Test
     public void shouldDisableTypeSpinnerForAnyReasonThatIsNotPhysicalStockCount() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
-        Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.spinnerAdjustmentType);
+        Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.spinnerAdjustmentType);
         ANDROID.assertThat(spinner).isDisabled();
 
     }
@@ -81,7 +81,7 @@ public class AdjustmentsAdapterTest {
     @Test
     public void shouldHideTypeSpinnerForPhysicalCount() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
-        Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.spinnerAdjustmentType);
+        Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.spinnerAdjustmentType);
         ANDROID.assertThat(spinner).isEnabled();
         ANDROID.assertThat(spinner).isInvisible();
     }
@@ -89,14 +89,14 @@ public class AdjustmentsAdapterTest {
     @Test
     public void shouldShowTheCurrentStockWhenItIsPhysicalCount() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
-        TextView textView = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.textViewCurrentStock);
+        TextView textView = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.textViewCurrentStock);
         ANDROID.assertThat(textView).isVisible();
     }
 
     @Test
     public void shouldNotShowTheLinearLayoutStockValuesWhenTheReasonIsNotPhysicalCountOrSentToFacility() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
-        LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.linearLayoutStockValues);
+        LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.linearLayoutStockValues);
         ANDROID.assertThat(linearLayout).isGone();
     }
 
@@ -104,13 +104,13 @@ public class AdjustmentsAdapterTest {
     public void shouldShowTheQuantityEditTextWhenTheReasonIsNotPhysicalCount() throws Exception {
         AdjustmentReason adjustmentReason = AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY;
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(adjustmentReason);
-        EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
+        EditText editText = (EditText) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         ANDROID.assertThat(editText).isVisible();
     }
 
     @Test
     public void shouldErrorWhenGivingAwayMoreStockThanIsAvailable() throws Exception {
-        EditText editText = (EditText) getViewFromListRow(getAdjustmentsAdapterWithQuantityAndPositive(AdjustmentReason.SENT_TO_ANOTHER_FACILITY, 150, false), R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
+        EditText editText = (EditText) getViewFromListRow(getAdjustmentsAdapterWithQuantityAndPositive(AdjustmentReason.SENT_TO_ANOTHER_FACILITY, 150, false), R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         ANDROID.assertThat(editText).isVisible();
         ANDROID.assertThat(editText).hasError();
     }
@@ -123,8 +123,8 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities),
-                R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities),
+                R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         editText.setText("200");
         assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
         assertThat(adjustmentsViewModel.isPositive(), is(true));
@@ -138,10 +138,10 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities),
-                R.layout.selected_adjustment_list_item, R.id.editTextQuantity);
+        EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities),
+                R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         editText.setText("50");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(-50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
     }
 
@@ -153,8 +153,8 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
-        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_commodity_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("200");
@@ -171,13 +171,13 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
 
-        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_commodity_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("50");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(-50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
         assertThat(spinnerType.getSelectedItem().toString(), is("-"));
     }
@@ -190,8 +190,8 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
-        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_commodity_list_item);
         ANDROID.assertThat(activity.keyBoardView).isNotShown();
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         editText.performClick();
@@ -207,9 +207,9 @@ public class AdjustmentsAdapterTest {
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         int stockCounted = 300;
         commodities.add(adjustmentsViewModel);
-        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
 
-        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_list_item);
+        View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_commodity_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         TextView textView = (TextView) row.findViewById(R.id.textViewAdjustment);
         editText.setText(Integer.toString(stockCounted));
@@ -228,10 +228,10 @@ public class AdjustmentsAdapterTest {
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
 
-        AdjustmentsAdapter adjustmentsAdapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        AdjustmentsAdapter adjustmentsAdapter = new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
 
         activity.spinnerAdjustmentReason.setSelection(4);
-        View row = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_list_item);
+        View row = ListTestUtils.getRowFromListView(0, adjustmentsAdapter, R.layout.selected_adjustment_commodity_list_item);
 
         TextView textView = (TextView) row.findViewById(R.id.textViewCommodityName);
         ANDROID.assertThat(textView).hasError();
@@ -253,6 +253,6 @@ public class AdjustmentsAdapterTest {
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, quantityEntered, positive);
         adjustmentsViewModel.setAdjustmentReason(adjustmentReason);
         commodities.add(adjustmentsViewModel);
-        return new AdjustmentsAdapter(activity, R.layout.selected_adjustment_list_item, commodities);
+        return new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
     }
 }

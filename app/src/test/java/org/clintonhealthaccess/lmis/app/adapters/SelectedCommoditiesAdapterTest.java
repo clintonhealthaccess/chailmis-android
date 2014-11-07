@@ -75,7 +75,7 @@ public class SelectedCommoditiesAdapterTest {
             }
         });
         dispenseActivity = setupActivity(DispenseActivity.class);
-        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_commodity_list_item, new ArrayList<BaseCommodityViewModel>());
+        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_dispense_commodity_list_item, new ArrayList<BaseCommodityViewModel>());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class SelectedCommoditiesAdapterTest {
         when(commodity.getName()).thenReturn("food");
         when(commodity.getStockOnHand()).thenReturn(10);
         BaseCommodityViewModel viewModel = new BaseCommodityViewModel(commodity);
-        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_commodity_list_item, Arrays.asList(viewModel));
+        adapter = new SelectedCommoditiesAdapter(dispenseActivity, R.layout.selected_dispense_commodity_list_item, Arrays.asList(viewModel));
         View rowView = getRowView();
         ANDROID.assertThat(dispenseActivity.keyBoardView).isNotShown();
         EditText editText = (EditText) rowView.findViewById(R.id.editTextQuantity);
@@ -94,7 +94,7 @@ public class SelectedCommoditiesAdapterTest {
 
     private View getRowView() {
         ViewGroup genericLayout = getLinearLayout();
-        View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_commodity_list_item, null);
+        View convertView = LayoutInflater.from(Robolectric.application).inflate(R.layout.selected_dispense_commodity_list_item, null);
         return adapter.getView(0, convertView, genericLayout);
     }
 
