@@ -30,13 +30,16 @@
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityCommodityConsumptionReportRH1Adapter;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
@@ -69,10 +72,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
     @Override
     void setItems() {
-        List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory = reportsService.getFacilityCommodityConsumptionReportRH1(category, getStartingYear(), getStartingMonth(), getStartingYear(), getStartingMonth());
-        adapter.clear();
-        adapter.addAll(itemsForCategory);
-        adapter.notifyDataSetChanged();
+        new LoadReportAsyncTask().execute();
     }
 
     @Override
@@ -107,5 +107,43 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     @Override
     SpinnerVisibilityStrategy getStrategy() {
         return SpinnerVisibilityStrategy.startVisible;
+    }
+
+    private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<FacilityCommodityConsumptionRH1ReportItem>> {
+        LmisProgressDialog dialog;
+
+        private LoadReportAsyncTask() {
+            this.dialog = new LmisProgressDialog(FacilityConsumptionReportRH1Activity.this, getString(R.string.loading_report));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog.show();
+        }
+
+        @Override
+        protected List<FacilityCommodityConsumptionRH1ReportItem> doInBackground(Void... voids) {
+            try {
+                return reportsService.getFacilityCommodityConsumptionReportRH1(category,
+                        getStartingYear(), getStartingMonth(), getStartingYear(), getStartingMonth());
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<FacilityCommodityConsumptionRH1ReportItem> itemsForCategory) {
+            if (itemsForCategory == null) {
+                Toast.makeText(FacilityConsumptionReportRH1Activity.this,
+                        getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                return;
+            }
+            adapter.clear();
+            adapter.addAll(itemsForCategory);
+            adapter.notifyDataSetChanged();
+            dialog.dismiss();
+        }
     }
 }
