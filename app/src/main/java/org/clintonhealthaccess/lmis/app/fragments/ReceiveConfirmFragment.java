@@ -129,7 +129,9 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
         protected Boolean doInBackground(Void... voids) {
             try {
                 receiveService.saveReceive(receive);
+                Log.e("Save Receive Successful!", receive.toString());
             } catch (Exception ex) {
+                Log.e("Save Receive failed!", ex.getMessage());
                 return false;
             }
             return true;

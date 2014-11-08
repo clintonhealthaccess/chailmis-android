@@ -91,14 +91,15 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/listViewHeader"
+        android:id="@+id/listViewHeaderItems"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayoutBinCardExtremes"></ListView>
 
     <ListView
         android:id="@+id/listViewBinCardItems"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayoutBinCardExtremes"></ListView>
+        android:layout_below="@id/listViewHeaderItems"></ListView>
 
 </RelativeLayout>

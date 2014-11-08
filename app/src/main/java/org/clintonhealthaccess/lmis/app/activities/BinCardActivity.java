@@ -45,8 +45,10 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.BinCardAdapter;
+import org.clintonhealthaccess.lmis.app.adapters.BinCardItemHeaderAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SearchCommodityAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.SpinnerCommoditiesAdapter;
+import org.clintonhealthaccess.lmis.app.models.BinCardHeader;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
 import org.clintonhealthaccess.lmis.app.models.reports.BinCardItem;
@@ -55,6 +57,7 @@ import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import roboguice.inject.ContentView;
@@ -81,6 +84,9 @@ public class BinCardActivity extends BaseActivity {
     @InjectView(R.id.listViewBinCardItems)
     ListView listViewBinCarditems;
 
+    @InjectView(R.id.listViewHeaderItems)
+    ListView listViewHeaderitems;
+
     @Inject
     CommodityService commodityService;
     @Inject
@@ -94,15 +100,24 @@ public class BinCardActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         commodities = commodityService.all();
-        setUpAdapter();
+        setUpAdapters();
         populateCommoditiesSpinner();
         setUpCommoditySearch();
     }
 
-    private void setUpAdapter() {
+    private void setUpAdapters() {
         binCardAdapter = new BinCardAdapter(getApplicationContext(),
                 R.layout.bin_card_item, new ArrayList<BinCardItem>());
         listViewBinCarditems.setAdapter(binCardAdapter);
+
+        BinCardHeader binCardHeader
+                = new BinCardHeader(getString(R.string.date),"Received from/Issued to",
+                getString(R.string.quantity_received), getString(R.string.quantity_dispensed),
+                getString(R.string.quantity_lost), getString(R.string.stock_balance));
+
+        BinCardItemHeaderAdapter headerAdapter
+                = new BinCardItemHeaderAdapter(getApplicationContext(), R.layout.bin_card_item, Arrays.asList(binCardHeader));
+        listViewHeaderitems.setAdapter(headerAdapter);
     }
 
     private void populateCommoditiesSpinner() {

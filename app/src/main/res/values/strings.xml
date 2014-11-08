@@ -172,5 +172,8 @@
     <string name="maximum_stock">Maximum Stock:</string>
     <string name="report_generation_error">There was error while generating the report</string>
     <string name="loading_report">Loading Report...</string>
+    <string name="quantity_dispensed">Quantity Dispensed</string>
+    <string name="stock_balance">Stock Balance</string>
+    <string name="date">Date</string>
 
 </resources>
