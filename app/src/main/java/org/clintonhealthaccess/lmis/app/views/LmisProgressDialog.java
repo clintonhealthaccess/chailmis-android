@@ -39,6 +39,5 @@ public class LmisProgressDialog extends ProgressDialog {
         this.setMessage(message);
         this.setCancelable(false);
         this.setCanceledOnTouchOutside(false);
-        this.setProgress(STYLE_HORIZONTAL);
     }
 }

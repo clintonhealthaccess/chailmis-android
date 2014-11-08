@@ -29,15 +29,22 @@
 
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
+import android.os.AsyncTask;
+import android.widget.Toast;
+
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.BinCardActivity;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityStockReportAdapter;
+import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<FacilityStockReportAdapter> {
-
 
     @Override
     String getReportName() {
@@ -61,11 +68,44 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
 
     @Override
     void setItems() {
-        List<FacilityStockReportItem> facilityReportItemsForCategory = reportsService.getFacilityReportItemsForCategory(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(facilityReportItemsForCategory);
-        adapter.notifyDataSetChanged();
+        new LoadReportAsyncTask().execute();
     }
 
+    private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<FacilityStockReportItem>> {
+        LmisProgressDialog dialog;
+
+        private LoadReportAsyncTask() {
+            this.dialog = new LmisProgressDialog(FacilityStockReportActivity.this, getString(R.string.loading_report));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog.show();
+        }
+
+        @Override
+        protected List<FacilityStockReportItem> doInBackground(Void... voids) {
+            try {
+                return reportsService.getFacilityReportItemsForCategory(category, getStartingYear(),
+                        getStartingMonth(), getEndingYear(), getEndingMonth());
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<FacilityStockReportItem> facilityStockReportItems) {
+            if (facilityStockReportItems == null) {
+                Toast.makeText(FacilityStockReportActivity.this, getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                return;
+            }
+            adapter.clear();
+            adapter.addAll(facilityStockReportItems);
+            adapter.notifyDataSetChanged();
+            dialog.dismiss();
+        }
+    }
 
 }

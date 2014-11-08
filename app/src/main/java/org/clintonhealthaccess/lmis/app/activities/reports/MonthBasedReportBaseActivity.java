@@ -99,7 +99,6 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         adapter = getAdapter();
         textViewReportName.setText(getReportName());
         setupSpinners();
-        setItems();
         setupListViewHeader();
         listViewReport.setAdapter(adapter);
     }
