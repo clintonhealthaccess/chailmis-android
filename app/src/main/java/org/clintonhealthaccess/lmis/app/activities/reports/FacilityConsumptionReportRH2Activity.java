@@ -30,14 +30,18 @@
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.reports.FacilityConsumptionReportRH2Adapter;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +72,44 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
 
     @Override
     void setItems() {
-        List<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items = reportsService.getFacilityConsumptionReportRH2Items(category, getStartingYear(), getStartingMonth(), getEndingYear(), getEndingMonth());
-        adapter.clear();
-        adapter.addAll(facilityConsumptionReportRH2Items);
-        adapter.notifyDataSetChanged();
+        new LoadReportAsyncTask().execute();
+    }
+
+    private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<FacilityConsumptionReportRH2Item>> {
+        LmisProgressDialog dialog;
+
+        private LoadReportAsyncTask() {
+            this.dialog = new LmisProgressDialog(FacilityConsumptionReportRH2Activity.this, getString(R.string.loading_report));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog.show();
+        }
+
+        @Override
+        protected List<FacilityConsumptionReportRH2Item> doInBackground(Void... voids) {
+            try {
+                return reportsService.getFacilityConsumptionReportRH2Items(category, getStartingYear(),
+                        getStartingMonth(), getEndingYear(), getEndingMonth());
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<FacilityConsumptionReportRH2Item> facilityConsumptionReportRH2Items) {
+            if (facilityConsumptionReportRH2Items == null) {
+                Toast.makeText(FacilityConsumptionReportRH2Activity.this,
+                        getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                return;
+            }
+            adapter.clear();
+            adapter.addAll(facilityConsumptionReportRH2Items);
+            adapter.notifyDataSetChanged();
+            dialog.dismiss();
+        }
     }
 }

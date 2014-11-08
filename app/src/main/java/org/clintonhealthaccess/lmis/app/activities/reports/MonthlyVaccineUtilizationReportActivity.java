@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -43,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -55,10 +57,12 @@ import org.clintonhealthaccess.lmis.app.adapters.reports.MonthlyVaccineUtilizati
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.ReportType;
+import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
+import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -89,7 +93,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     LinearLayout linearLayoutUtilizationReportItemValues;
 
     private Category category;
-    private  ReportType reportType;
+    private ReportType reportType;
     public static final int NUMBER_OF_YEARS = 10;
 
     @Inject
@@ -116,7 +120,6 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         spinnerYear.setAdapter(yearsAdapter);
 
         setupListeners();
-        setItems();
     }
 
     protected void setupActionBar() {
@@ -165,17 +168,13 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     }
 
     void setItems() {
-        String year = getYear();
-        String month = getMonth();
-        Log.i("Set Items", "year: " + year);
-        Log.i("Set Items", "month: " + month);
-        List<MonthlyVaccineUtilizationReportItem> reportItems =  reportsService.getMonthlyVaccineUtilizationReportItems(
-                category, year, month,
-                reportType.equals(ReportType.MonthlyHealthFacilityDevicesUtilizationReport));
+        new LoadReportAsyncTask().execute();
+    }
 
+    private void reloadReport(List<MonthlyVaccineUtilizationReportItem> reportItems) {
         clearReportItems();
 
-        for(MonthlyVaccineUtilizationReportItem reportItem: reportItems){
+        for (MonthlyVaccineUtilizationReportItem reportItem : reportItems) {
             LinearLayout outerLayout = new LinearLayout(context);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 230);
             outerLayout.setLayoutParams(params);
@@ -198,7 +197,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
 
 
             ListView listViewItemValues = new ListView(context);
-            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,230);
+            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 230);
             listViewItemValues.setLayoutParams(paramsListViewValues);
 
             listViewItemValues.setAdapter(new MonthlyVaccineUtilizationReportAdapter(context,
@@ -219,6 +218,42 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
 
     protected String getMonth() {
         return (String) spinnerMonth.getSelectedItem();
+    }
+
+    private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<MonthlyVaccineUtilizationReportItem>> {
+        LmisProgressDialog dialog;
+
+        private LoadReportAsyncTask() {
+            this.dialog = new LmisProgressDialog(MonthlyVaccineUtilizationReportActivity.this, getString(R.string.loading_report));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog.show();
+        }
+
+        @Override
+        protected List<MonthlyVaccineUtilizationReportItem> doInBackground(Void... voids) {
+            try {
+                return reportsService.getMonthlyVaccineUtilizationReportItems(category, getYear(),
+                        getMonth(), reportType.equals(ReportType.MonthlyHealthFacilityDevicesUtilizationReport));
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<MonthlyVaccineUtilizationReportItem> reportItems) {
+            if (reportItems == null) {
+                Toast.makeText(MonthlyVaccineUtilizationReportActivity.this,
+                        getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
+                dialog.dismiss();
+                return;
+            }
+            reloadReport(reportItems);
+            dialog.dismiss();
+        }
     }
 
 }
