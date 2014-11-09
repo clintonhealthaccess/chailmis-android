@@ -33,8 +33,10 @@ package org.clintonhealthaccess.lmis.app.models.reports;
 import java.util.Date;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class BinCardItem {
     Date date;
     String receivedFromIssuedTo;

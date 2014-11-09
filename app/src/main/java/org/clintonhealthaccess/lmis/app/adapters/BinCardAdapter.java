@@ -42,9 +42,6 @@ import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.util.List;
 
-/**
- * Created by jafari on 11/7/14.
- */
 public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
 
     private final Context context;
@@ -67,6 +64,9 @@ public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
 
         TextView textViewDate = (TextView) rowView.findViewById(R.id.textViewDate);
         textViewDate.setText(DateUtil.dateString(binCardItem.getDate()));
+
+        TextView textViewReceivedFromIssuedTo = (TextView) rowView.findViewById(R.id.textViewReceivedFromIssuedTo);
+        textViewReceivedFromIssuedTo.setText(String.valueOf(binCardItem.getReceivedFromIssuedTo()));
 
         TextView textViewQuantityReceived = (TextView) rowView.findViewById(R.id.textViewQuantityReceived);
         textViewQuantityReceived.setText(String.valueOf(binCardItem.getQuantityReceived()));

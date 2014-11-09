@@ -157,6 +157,7 @@ public class BinCardActivity extends BaseActivity {
     public void handleBinCard(BinCard binCard){
         this.textViewMinimumStock.setText(String.valueOf(binCard.getMinimumStockLevel()));
         this.textViewMaximumStock.setText(String.valueOf(binCard.getMaximumStockLevel()));
+        this.binCardAdapter.clear();
         this.binCardAdapter.addAll(binCard.getBinCardItems());
         this.binCardAdapter.notifyDataSetChanged();
     }

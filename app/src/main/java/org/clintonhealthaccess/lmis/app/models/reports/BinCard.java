@@ -33,8 +33,10 @@ package org.clintonhealthaccess.lmis.app.models.reports;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class BinCard {
     int minimumStockLevel;
     int maximumStockLevel;
@@ -46,7 +48,4 @@ public class BinCard {
         this.binCardItems = binCardItems;
     }
 
-    public BinCard() {
-
-    }
 }
