@@ -34,29 +34,32 @@
     android:paddingTop="15dp"
     tools:context="org.clintonhealthaccess.lmis.app.activities.BinCardActivity">
 
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextViewCommodities"
-        android:layout_height="wrap_content"
-        android:layout_width="300dp"
-        android:hint="Search"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp" />
-
-    <Spinner
-        android:id="@+id/spinnerCommodities"
+    <LinearLayout
+        android:id="@+id/linearLayoutSearchContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/autoCompleteTextViewCommodities"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/autoCompleteTextViewCommodities"
-        android:layout_margin="10dp" />
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextViewCommodities"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:hint="Search"
+            android:layout_margin="10dp" />
+
+        <Spinner
+            android:id="@+id/spinnerCommodities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutBinCardExtremes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spinnerCommodities"
+        android:layout_below="@id/scrollCategoriesContainer"
         android:orientation="horizontal">
 
         <TextView
@@ -72,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:padding="5dp"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:padding="5dp"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
     <ListView

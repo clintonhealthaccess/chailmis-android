@@ -33,9 +33,11 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -86,6 +88,9 @@ public class BinCardActivity extends BaseActivity {
 
     @InjectView(R.id.listViewHeaderItems)
     ListView listViewHeaderitems;
+
+    @InjectView(R.id.linearLayoutSearchContainer)
+    LinearLayout linearLayoutSearchContainer;
 
     @Inject
     CommodityService commodityService;
@@ -138,6 +143,10 @@ public class BinCardActivity extends BaseActivity {
     }
 
     protected void setUpCommoditySearch() {
+        //stop search field from getting default focus
+        linearLayoutSearchContainer.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        linearLayoutSearchContainer.setFocusableInTouchMode(true);
+
         searchCommodityAdapter = new SearchCommodityAdapter(this, R.layout.search_commodity_item, newArrayList(commodities));
         autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
         autoCompleteTextViewCommodities.setOnItemClickListener(new AdapterView.OnItemClickListener() {

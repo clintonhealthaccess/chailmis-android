@@ -58,10 +58,13 @@ public class ReportsActivity extends BaseActivity {
 
     @Inject
     CategoryService categoryService;
+
     @InjectView(R.id.layoutCategories)
     private LinearLayout categoriesLayout;
+
     @InjectView(R.id.listViewCategoryReports)
     private ListView listViewCategoryReports;
+
     @InjectView(R.id.relativeLayoutEmpty)
     private View emptyView;
 
@@ -74,8 +77,6 @@ public class ReportsActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
         setContentView(R.layout.activity_reports);
         setupCategories();
-
-
     }
 
     private void setupCategories() {
