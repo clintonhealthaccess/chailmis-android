@@ -30,21 +30,47 @@
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.os.AsyncTask;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
+
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.BinCardActivity;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityStockReportAdapter;
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
+import org.clintonhealthaccess.lmis.app.events.LMISHorizontalScrollViewOnScroll;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
+import org.clintonhealthaccess.lmis.app.views.LMISHorizontalScrollView;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+import roboguice.inject.InjectView;
+
 public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<FacilityStockReportAdapter> {
+
+    @InjectView(R.id.listViewDummyHeader)
+    ListView listViewDummyHeader;
+
+    @InjectView(R.id.listViewDummyColumn)
+    ListView listViewDummyColumn;
+
+    @InjectView(R.id.horizontalScrollView)
+    HorizontalScrollView horizontalScrollView;
+
+    ArrayAdapter<String> listViewDummyColumnAdapter;
+    //View currentView = null;
+    private boolean isLoading = false;
+    private boolean isVisible = false;
 
     @Override
     String getReportName() {
@@ -68,7 +94,37 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
 
     @Override
     void setItems() {
-        new LoadReportAsyncTask().execute();
+        if (!isLoading) {
+            isLoading = true;
+            new LoadReportAsyncTask().execute();
+        }
+    }
+
+    @Override
+    void afterCreate() {
+        listViewDummyHeader.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
+        listViewDummyHeader.setAdapter(getAdapter());
+
+        listViewReport.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (firstVisibleItem != 0) {
+                    listViewDummyHeader.setVisibility(View.VISIBLE);
+                } else {
+                    listViewDummyHeader.setVisibility(View.GONE);
+                }
+                //currentView = listViewReport.getAdapter().getView(firstVisibleItem, null, listViewReport);
+            }
+        });
+        listViewDummyColumnAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.single_report_item, new ArrayList<String>());
+        listViewDummyColumn.setAdapter(listViewDummyColumnAdapter);
+
+        EventBus.getDefault().register(this);
     }
 
     private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<FacilityStockReportItem>> {
@@ -99,13 +155,61 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
             if (facilityStockReportItems == null) {
                 Toast.makeText(FacilityStockReportActivity.this, getString(R.string.report_generation_error), Toast.LENGTH_LONG).show();
                 dialog.dismiss();
+                isLoading = false;
                 return;
             }
-            adapter.clear();
-            adapter.addAll(facilityStockReportItems);
-            adapter.notifyDataSetChanged();
+            reloadReport(facilityStockReportItems);
             dialog.dismiss();
         }
     }
+
+    private void reloadReport(List<FacilityStockReportItem> facilityStockReportItems) {
+        reloadColumnNames(facilityStockReportItems);
+        adapter.clear();
+        adapter.addAll(facilityStockReportItems);
+        adapter.notifyDataSetChanged();
+        isLoading = false;
+    }
+
+    private void reloadColumnNames(List<FacilityStockReportItem> facilityStockReportItems) {
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add(getString(R.string.commodity));
+        columnNames.addAll(FluentIterable.from(facilityStockReportItems).transform(new Function<FacilityStockReportItem, String>() {
+            @Override
+            public String apply(FacilityStockReportItem facilityStockReportItem) {
+                return facilityStockReportItem.getCommodityName();
+            }
+        }).toList());
+        listViewDummyColumnAdapter.clear();
+        listViewDummyColumnAdapter.addAll(columnNames);
+        listViewDummyColumnAdapter.notifyDataSetChanged();
+    }
+
+    public View getViewByPosition(int position, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (position < firstListItemPosition || position > lastListItemPosition) {
+            return listView.getAdapter().getView(position, null, listView);
+        } else {
+            final int childIndex = position - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
+    }
+
+    public void onEvent(LMISHorizontalScrollViewOnScroll event){
+        View firstView = listViewReport.getChildAt(listViewReport.getFirstVisiblePosition());
+        TextView textViewCommodityName = (TextView) firstView.findViewById(R.id.textViewCommodityName);
+        Log.i("TextView:::::::::", "null");
+        if (textViewCommodityName == null && isVisible) {
+            listViewDummyColumn.setVisibility(View.VISIBLE);
+            isVisible = true;
+        } else if (!isVisible) {
+            listViewDummyColumn.setVisibility(View.GONE);
+            isVisible = false;
+        }
+
+    }
+
 
 }

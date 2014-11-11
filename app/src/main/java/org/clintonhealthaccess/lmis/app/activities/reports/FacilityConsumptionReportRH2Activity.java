@@ -75,6 +75,11 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
         new LoadReportAsyncTask().execute();
     }
 
+    @Override
+    void afterCreate() {
+
+    }
+
     private class LoadReportAsyncTask extends AsyncTask<Void, Void, List<FacilityConsumptionReportRH2Item>> {
         LmisProgressDialog dialog;
 

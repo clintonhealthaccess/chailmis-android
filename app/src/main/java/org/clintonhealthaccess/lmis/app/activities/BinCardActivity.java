@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;

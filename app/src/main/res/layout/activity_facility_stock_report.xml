@@ -72,8 +72,7 @@
             android:layout_width="fill_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerStartingMonth">
-        </Spinner>
+            android:id="@+id/spinnerStartingMonth"></Spinner>
 
         <TextView
             android:id="@+id/textViewEndingYear"
@@ -106,17 +105,38 @@
 
     </LinearLayout>
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <ListView
-            android:id="@+id/listViewReport"
-            android:layout_width="1000dp"
-            android:layout_height="fill_parent">
+            android:id="@+id/listViewDummyColumn"
+            android:layout_width="@dimen/report_row_width"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
-        </ListView>
-    </HorizontalScrollView>
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ListView
+                    android:id="@+id/listViewDummyHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+                <ListView
+                    android:id="@+id/listViewReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
 
+        </HorizontalScrollView>
+
+    </LinearLayout>
 </LinearLayout>

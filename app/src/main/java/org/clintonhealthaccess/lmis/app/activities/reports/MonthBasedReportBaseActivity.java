@@ -101,7 +101,9 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         setupSpinners();
         setupListViewHeader();
         listViewReport.setAdapter(adapter);
-    }
+        afterCreate();
+;    }
+
 
     private void setupSpinners() {
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
@@ -133,6 +135,8 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
     abstract int getLayoutId();
 
     abstract void setItems();
+
+    abstract void afterCreate();
 
     private void setupListeners() {
 

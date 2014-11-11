@@ -37,77 +37,90 @@
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
-        android:text="Commodity" />
-
-    <TextView
-        android:layout_width="@dimen/report_row_width"
-        android:layout_height="wrap_content"
-        
+        android:text="Commodity"
         android:padding="10dp"
-        android:text="Opening Balance" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Opening Balance"
         android:padding="10dp"
-        android:text="Quantities Received" />
-
-
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Quantities Received"
         android:padding="10dp"
-        android:text="Adjustments" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
+
+
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
-        android:text="Losses" />
-
-    <TextView
-        android:layout_width="@dimen/report_row_width"
-        android:layout_height="wrap_content"
-        
+        android:text="Adjustments"
         android:padding="10dp"
-        android:text="Stock On Hand" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Losses"
         android:padding="10dp"
-        android:text="Days out of Stock" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Stock On Hand"
         android:padding="10dp"
-        android:text="AMC" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Days out of Stock"
         android:padding="10dp"
-        android:text="Consumption" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="AMC"
         android:padding="10dp"
-        android:text="Maximum Quantity" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        
+        android:text="Consumption"
         android:padding="10dp"
-        android:text="Order Quantity" />
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="@dimen/report_row_width"
+        android:layout_height="wrap_content"
+        android:text="Maximum Quantity"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="@dimen/report_row_width"
+        android:layout_height="wrap_content"
+        android:text="Order Quantity"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"/>
 </LinearLayout>

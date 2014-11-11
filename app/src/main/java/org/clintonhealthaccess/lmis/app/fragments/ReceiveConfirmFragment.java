@@ -33,6 +33,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +131,7 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
             try {
                 receiveService.saveReceive(receive);
             } catch (Exception ex) {
+                ex.printStackTrace();
                 return false;
             }
             return true;
@@ -140,7 +142,6 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
             super.onPostExecute(success);
             if (success) {
                 Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_successful), Toast.LENGTH_LONG).show();
-
 
                 fragment.dismiss();
                 FragmentActivity activity = getActivity();

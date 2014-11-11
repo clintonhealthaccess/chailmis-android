@@ -648,4 +648,35 @@ public class ReportsServiceTest {
         assertThat(binCardItem2.getQuantityLost(), is(10));
         assertThat(binCardItem2.getStockBalance(), is(expectedBalance8DaysAgo));
     }
+
+    @Test
+    public void shouldReturnBinCardWithCorrectBinCardItemsForCorrectMinimumAndMaximum() throws Exception {
+        Commodity commodity1 = categories.get(0).getCommodities().get(0);
+        int commodity1Stock = commodity1.getStockOnHand();
+
+        Date date10DaysAgo = DateUtil.addDayOfMonth(new Date(), -10);
+        receive(commodity1, 200, receiveService, date10DaysAgo);
+        dispense(commodity1, 130, dispensingService, date10DaysAgo);
+
+        int commodity1ExpectedMax = commodity1Stock + 200;
+        int commodity1ExpectedMin = commodity1ExpectedMax  - 130;
+
+        BinCard commodity1BinCard = reportsService.generateBinCard(commodity1);
+        assertThat(commodity1BinCard.getMinimumStockLevel(), is(commodity1ExpectedMin));
+        assertThat(commodity1BinCard.getMaximumStockLevel(), is(commodity1ExpectedMax));
+
+        Commodity commodity2 = categories.get(0).getCommodities().get(1);
+        int commodity2Stock = commodity2.getStockOnHand();
+
+        receive(commodity2, 100, receiveService, date10DaysAgo);
+        dispense(commodity2, 90, dispensingService, date10DaysAgo);
+
+        int commodity2ExpectedMax = commodity2Stock + 100;
+        int commodity2ExpectedMin = commodity2ExpectedMax  - 90;
+
+        BinCard commodity2BinCard = reportsService.generateBinCard(commodity2);
+        assertThat(commodity2BinCard.getMinimumStockLevel(), is(commodity2ExpectedMin));
+        assertThat(commodity2BinCard.getMaximumStockLevel(), is(commodity2ExpectedMax));
+
+    }
 }

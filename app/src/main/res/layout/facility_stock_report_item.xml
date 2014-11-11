@@ -38,23 +38,24 @@
         android:textColor="@color/black"
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewCommodityName" />
+        android:id="@+id/textViewCommodityName"
+        android:padding="10dp"
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:textColor="@color/black"
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewOpeningBalance" />
 
     <TextView
         android:textColor="@color/black"
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewQuantityReceived" />
 
 
@@ -62,9 +63,8 @@
         android:textColor="@color/black"
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
-
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewAdjusments" />
 
     <TextView
@@ -72,7 +72,7 @@
         android:layout_width="@dimen/report_row_width"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewLosses" />
 
     <TextView
@@ -81,7 +81,7 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewCommoditySOH" />
 
     <TextView
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewCommodityDaysOutOfStock" />
 
     <TextView
@@ -99,7 +99,7 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewCommodityAMC" />
 
     <TextView
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewConsumption" />
 
     <TextView
@@ -117,7 +117,7 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewMaxQuantity" />
 
     <TextView
@@ -126,6 +126,6 @@
         android:layout_height="wrap_content"
 
         android:padding="10dp"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:id="@+id/textViewOrderQuantity" />
 </LinearLayout>
