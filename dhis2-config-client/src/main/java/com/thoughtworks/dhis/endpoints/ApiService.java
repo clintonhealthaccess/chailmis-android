@@ -31,11 +31,13 @@ package com.thoughtworks.dhis.endpoints;
 
 import com.thoughtworks.dhis.models.CategoryCombo;
 import com.thoughtworks.dhis.models.CategoryComboSearchResponse;
+import com.thoughtworks.dhis.models.DataElement;
 import com.thoughtworks.dhis.models.DataSet;
 import com.thoughtworks.dhis.models.DataSetSearchResponse;
 import com.thoughtworks.dhis.models.DataValueSet;
 import com.thoughtworks.dhis.models.UserProfile;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -70,6 +72,9 @@ public interface ApiService {
 
     @GET("/me")
     UserProfile getProfile();
+
+    @GET("/dataElements")
+    List<DataElement> getDataElements(@Query("fields") String fields);
 
 
 }

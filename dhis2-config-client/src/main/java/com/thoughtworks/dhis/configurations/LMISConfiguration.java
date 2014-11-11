@@ -133,7 +133,9 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     private HashMap<String, Object> buildConfigurationFromFile() throws IOException {
-        List<ExcelCategory> categories = getCategories(new BufferedReader(new FileReader("commodities.csv")));
+        List<ExcelCategory> categories =
+                getCategories(new BufferedReader(
+                        new FileReader("commodities.csv")));
 
         setUpRoutineOrder(categories);
 
@@ -185,7 +187,7 @@ public class LMISConfiguration implements IConfiguration {
         List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD,
                 DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC, DataElementType.TMC, DataElementType.BUFFER_STOCK,
                 DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND,
-                DataElementType.PROJECTED_ORDER_AMOUNT, DataElementType.MAXIMUM_STOCK_LEVEL, DataElementType.MINIMUM_STOCK_LEVEL));
+                DataElementType.PROJECTED_ORDER_AMOUNT));
 
         DataSet main = createDataSet(LMIS_COMMODITIES_DEFAULT, DAILY);
         DataSet losses = createDataSet(LMIS_COMMODITIES_LOSSES, DAILY);
@@ -440,7 +442,7 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     String generateID(String text) {
-        return generateHashOfString(text).substring(0, 11);
+        return "a" + generateHashOfString(text).substring(0, 10);
     }
 
     void actOnCommodity(List<ExcelCategory> categories, IActor actor) {

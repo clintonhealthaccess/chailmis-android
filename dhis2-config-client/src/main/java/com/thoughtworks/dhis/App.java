@@ -41,6 +41,7 @@ import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataSet;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
+import com.thoughtworks.dhis.models.OrganisationUnit;
 import com.thoughtworks.dhis.models.User;
 import com.thoughtworks.dhis.models.UserProfile;
 import com.thoughtworks.dhis.tasks.Task;
@@ -85,18 +86,18 @@ public class App {
         commands.put("calculatedData", submitCalculatedData);
         commands.put("defaultData", submitDefaultData);
         commands.put("testData", submitTestData);
-        commands.put("maxMinStockLevel", submitMaxAndMinStockLevel);
+        // commands.put("maxMinStockLevel", submitMaxAndMinStockLevel);
+        // commands.put("deleteDataValues", deleteDataValues);
         return commands;
     }
 
     private static Task submitMonthsStockOnHand = new Task() {
         @Override
         public void operateOnService(ApiService service) throws IOException {
-
             UserProfile me = service.getProfile();
-            DataSet set = service.getDataSetWithDetails("53218436405", "id,name,dataElements[id,name,attributeValues]");
+            DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
             System.out.println(set.getDataElements().size());
-            List<String> periods = Arrays.asList("201409", "201410");
+            List<String> periods = Arrays.asList("201410", "201411");
             final List<String> dataElementTypes = Arrays.asList(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
             for (String period : periods) {
                 DataValueSet valueSet = new DataValueSet();
@@ -203,22 +204,22 @@ public class App {
 
         }
     };
-    private static Task submitMaxAndMinStockLevel = new Task() {
-        @Override
-        public void operateOnService(ApiService service) throws IOException {
-            String maxType = DataElementType.MAXIMUM_STOCK_LEVEL.toString();
-            String minType = DataElementType.MINIMUM_STOCK_LEVEL.toString();
-            int middleValue = 3;
-            int maxValue = 6;
-            submitMaxMinValues(service, maxType, minType, middleValue, maxValue);
-
-        }
-    };
+//    private static Task submitMaxAndMinStockLevel = new Task() {
+//        @Override
+//        public void operateOnService(ApiService service) throws IOException {
+//            String maxType = DataElementType.MAXIMUM_STOCK_LEVEL.toString();
+//            String minType = DataElementType.MINIMUM_STOCK_LEVEL.toString();
+//            int middleValue = 3;
+//            int maxValue = 6;
+//            submitMaxMinValues(service, maxType, minType, middleValue, maxValue);
+//
+//        }
+//    };
 
     private static void submitMaxMinValues(ApiService service, String maxType, String minType, int middleValue, int maxValue) {
         UserProfile me = service.getProfile();
-        DataSet set = service.getDataSetWithDetails("53218436405", "id,name,dataElements[id,name,attributeValues]");
-        List<String> periods = Arrays.asList("201409", "201410");
+        DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
+        List<String> periods = Arrays.asList("201408", "201411");
 
         final List<String> dataElementTypes = Arrays.asList(maxType, minType);
         for (String period : periods) {
@@ -271,10 +272,10 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
-            DataSet set = service.getDataSet("53218436405");
+            DataSet set = service.getDataSet("a5321843640");
             System.out.println(set.getDataElements().size());
 
-            for (int i = 9; i < 10; i++) {
+            for (int i = 10; i < 11; i++) {
                 String period = "20140";
                 String period1 = period + String.valueOf(i);
                 for (DataElement element : set.getDataElements()) {
@@ -302,7 +303,7 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
-            DataSet set = service.getDataSet("1ce7aa8c65e");
+            DataSet set = service.getDataSet("a1ce7aa8c65");
             System.out.println(set.getDataElements().size());
             DataValueSet valueSet = new DataValueSet();
             valueSet.setDataValues(new ArrayList<DataValue>());
