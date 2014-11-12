@@ -95,6 +95,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         View rowView = getRowView(parent);
         final OrderCommodityViewModel orderCommodityViewModel = getCommodityViewModel(position);
         TextView textViewCommodityName = (TextView) rowView.findViewById(R.id.textViewCommodityName);
+        TextView textViewExpectedQuantity = (TextView) rowView.findViewById(R.id.textViewExpectedQuantity);
         final NumberTextView editTextOrderQuantity = (NumberTextView) rowView.findViewById(R.id.editTextOrderQuantity);
         final Spinner spinnerUnexpectedReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
@@ -103,6 +104,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
         textViewCommodityName.setText(orderCommodityViewModel.getName());
+        textViewExpectedQuantity.setText(String.format(context.getString(R.string.expected_quantity), orderCommodityViewModel.getExpectedOrderQuantity()));
         setupSpinners(orderCommodityViewModel, spinnerUnexpectedReasons, textViewStartDate, textViewEndDate);
         setupQuantity(orderCommodityViewModel, editTextOrderQuantity, spinnerUnexpectedReasons);
         initialiseDates(orderCommodityViewModel, textViewStartDate, textViewEndDate);
@@ -360,7 +362,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
         private String getErrorMessage(String commodityName) {
             String formatString = adapter.getContext().getString(R.string.unexpected_order_quantity_error);
-            return String.format(formatString, commodityName, orderCommodityViewModel.getQuantityEntered());
+            return String.format(formatString, commodityName, orderCommodityViewModel.getExpectedOrderQuantity());
         }
     }
 

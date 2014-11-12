@@ -125,8 +125,8 @@
     <string name="allocation_number">Allocation Number</string>
     <string name="date_of_allocations">Date of Allocations</string>
     <string name="order_type">Type:</string>
-    <string name="start_date">Start Date</string>
-    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date:</string>
+    <string name="end_date">End Date:</string>
     <string name="monthly_stock_count_search_key">Monthly Stock</string>
     <string name="routine_order_alert_day">Routine Order Alert Day</string>
     <string name="alert_icon">Alert Icon</string>
@@ -175,5 +175,6 @@
     <string name="quantity_dispensed">Quantity Dispensed</string>
     <string name="stock_balance">Stock Balance</string>
     <string name="date">Date</string>
+    <string name="expected_quantity">(Expected Quantity: %d)</string>
 
 </resources>
