@@ -30,7 +30,6 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.TimingLogger;
 
 import com.google.common.base.Function;
@@ -76,6 +75,7 @@ import java.util.Map;
 import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
+import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
@@ -117,7 +117,7 @@ public class Dhis2 implements LmisServer {
         List<DataElement> elements = newArrayList();
 
         for (DataSet dataSet : dataSets) {
-            e(SYNC, String.format("DataSet: %s", dataSet.getName()));
+            i(SYNC, String.format("DataSet: %s", dataSet.getName()));
             if (dataSet.getDataElements() != null) {
                 for (DataElement elm : dataSet.getDataElements()) {
                     elm.setDataSets(newArrayList(dataSet.toRawDataSet()));
@@ -127,7 +127,7 @@ public class Dhis2 implements LmisServer {
         }
 
         for (DataElement element : elements) {
-            e(SYNC, String.format("DatElement: %s", element.getName()));
+            i(SYNC, String.format("DatElement: %s", element.getName()));
             getOrCreateCommodity(element, commodities, categories);
 
         }
@@ -281,10 +281,10 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user) {
-        Log.i("pushing DataValueSet", valueSet.toString());
+        i("pushing DataValueSet", valueSet.toString());
         for (DataValue dataValue : valueSet.getDataValues()) {
-            Log.i("DataValue", dataValue.getDataElement() + " : " + dataValue.getValue());
-            Log.i("more info", "org unit: " + dataValue.getOrgUnit() + ", " + "period: " + dataValue.getPeriod());
+            i("DataValue", dataValue.getDataElement() + " : " + dataValue.getValue());
+            i("more info", "org unit: " + dataValue.getOrgUnit() + ", " + "period: " + dataValue.getPeriod());
         }
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.pushDataValueSet(valueSet);

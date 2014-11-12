@@ -178,7 +178,6 @@ public class Commodity implements Serializable {
 
     public CommodityAction getCommodityAction(String activityType) {
         for (CommodityAction commodityAction : new ArrayList<>(getCommodityActionsSaved())) {
-            System.out.println("Looking for " + activityType + "    Found " + commodityAction);
             if (commodityAction.getActivityType().equalsIgnoreCase(activityType))
                 return commodityAction;
         }

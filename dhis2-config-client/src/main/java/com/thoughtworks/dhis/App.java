@@ -41,14 +41,16 @@ import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataSet;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
-import com.thoughtworks.dhis.models.OrganisationUnit;
 import com.thoughtworks.dhis.models.User;
 import com.thoughtworks.dhis.models.UserProfile;
 import com.thoughtworks.dhis.tasks.Task;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,9 +87,7 @@ public class App {
         commands.put("monthSOH", submitMonthsStockOnHand);
         commands.put("calculatedData", submitCalculatedData);
         commands.put("defaultData", submitDefaultData);
-        commands.put("testData", submitTestData);
-        // commands.put("maxMinStockLevel", submitMaxAndMinStockLevel);
-        // commands.put("deleteDataValues", deleteDataValues);
+        commands.put("allTestData", submitAllTestData);
         return commands;
     }
 
@@ -97,15 +97,12 @@ public class App {
             UserProfile me = service.getProfile();
             DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
             System.out.println(set.getDataElements().size());
-            List<String> periods = Arrays.asList("201410", "201411");
+            List<String> periods = previousAndCurrentPeriods();
             final List<String> dataElementTypes = Arrays.asList(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
             for (String period : periods) {
                 DataValueSet valueSet = new DataValueSet();
-
                 valueSet.setDataValues(new ArrayList<DataValue>());
-
                 valueSet.setOrgUnit(me.getOrganisationUnits().get(0).getId());
-
                 valueSet.setDataSet(set.getId());
 
                 for (DataElement element : set.getDataElements()) {
@@ -140,9 +137,17 @@ public class App {
 
     };
 
-    private static Task submitTestData = new Task() {
+    private static Task submitAllTestData = new Task() {
         @Override
         public void operateOnService(ApiService service) throws IOException {
+
+            try {
+                submitDefaultData.operateOnService(service);
+            } catch (Exception ex) {
+                System.err.println("Submitting Default Data timed out");
+                ex.printStackTrace();
+            }
+
             try {
                 submitCalculatedData.operateOnService(service);
             } catch (Exception ex) {
@@ -151,9 +156,16 @@ public class App {
             }
 
             try {
-                submitDefaultData.operateOnService(service);
+                submitMaxAndMinThreshold.operateOnService(service);
             } catch (Exception ex) {
-                System.err.println("Submitting Default Data timed out");
+                System.err.println("Submitting Minimum and Maximum Threshold Data timed out");
+                ex.printStackTrace();
+            }
+
+            try {
+                submitMonthsStockOnHand.operateOnService(service);
+            } catch (Exception ex) {
+                System.err.println("Submitting MonthsStockOnHand Data timed out");
                 ex.printStackTrace();
             }
 
@@ -204,24 +216,15 @@ public class App {
 
         }
     };
-//    private static Task submitMaxAndMinStockLevel = new Task() {
-//        @Override
-//        public void operateOnService(ApiService service) throws IOException {
-//            String maxType = DataElementType.MAXIMUM_STOCK_LEVEL.toString();
-//            String minType = DataElementType.MINIMUM_STOCK_LEVEL.toString();
-//            int middleValue = 3;
-//            int maxValue = 6;
-//            submitMaxMinValues(service, maxType, minType, middleValue, maxValue);
-//
-//        }
-//    };
 
     private static void submitMaxMinValues(ApiService service, String maxType, String minType, int middleValue, int maxValue) {
         UserProfile me = service.getProfile();
         DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
-        List<String> periods = Arrays.asList("201408", "201411");
 
         final List<String> dataElementTypes = Arrays.asList(maxType, minType);
+
+        List<String> periods = previousAndCurrentPeriods();
+
         for (String period : periods) {
             DataValueSet valueSet = new DataValueSet();
 
@@ -275,9 +278,9 @@ public class App {
             DataSet set = service.getDataSet("a5321843640");
             System.out.println(set.getDataElements().size());
 
-            for (int i = 10; i < 11; i++) {
-                String period = "20140";
-                String period1 = period + String.valueOf(i);
+            List<String> periods = previousAndCurrentPeriods();
+
+            for (String period : periods) {
                 for (DataElement element : set.getDataElements()) {
 
                     DataValueSet valueSet = new DataValueSet();
@@ -287,7 +290,7 @@ public class App {
                     Random rand = new Random();
                     int n = rand.nextInt(randomLimit) + 1;
                     DataValue value = DataValue.builder()
-                            .dataElement(element.getId()).value(String.valueOf(n)).period(period1).build();
+                            .dataElement(element.getId()).value(String.valueOf(n)).period(period).build();
                     valueSet.getDataValues().add(value);
 
                     Object data = service.submitValueSet(valueSet);
@@ -305,19 +308,19 @@ public class App {
             UserProfile me = service.getProfile();
             DataSet set = service.getDataSet("a1ce7aa8c65");
             System.out.println(set.getDataElements().size());
+
             DataValueSet valueSet = new DataValueSet();
             valueSet.setDataValues(new ArrayList<DataValue>());
-            String period = "201409";
+
+            Date currentDate = Calendar.getInstance().getTime();
+            String period = getYearMonthDayString(currentDate);
             valueSet.setOrgUnit(me.getOrganisationUnits().get(0).getId());
-            for (int i = 13; i < 14; i++) {
-                String period1 = period + String.valueOf(i);
-                for (DataElement element : set.getDataElements()) {
-                    Random rand = new Random();
-                    int n = rand.nextInt(randomLimit) + 1;
-                    DataValue value = DataValue.builder()
-                            .dataElement(element.getId()).value(String.valueOf(n)).period(period1).build();
-                    valueSet.getDataValues().add(value);
-                }
+            for (DataElement element : set.getDataElements()) {
+                Random rand = new Random();
+                int n = rand.nextInt(randomLimit) + 1;
+                DataValue value = DataValue.builder()
+                        .dataElement(element.getId()).value(String.valueOf(n)).period(period).build();
+                valueSet.getDataValues().add(value);
             }
             Object data = service.submitValueSet(valueSet);
             System.out.println(data);
@@ -335,5 +338,22 @@ public class App {
         return randomNum;
     }
 
+    public static String getYearMonthString(Date date) {
+        return new SimpleDateFormat("yyyyMM").format(date);
+    }
+
+    public static String getYearMonthDayString(Date date) {
+        return new SimpleDateFormat("yyyyMMdd").format(date);
+    }
+
+    private static List<String> previousAndCurrentPeriods() {
+        Calendar calender = Calendar.getInstance();
+        String currentPeriod = getYearMonthString(calender.getTime());
+
+        calender.add(Calendar.MONTH, -1);
+        String previousMonthDate = getYearMonthString(calender.getTime());
+
+        return Arrays.asList(previousMonthDate, currentPeriod);
+    }
 
 }

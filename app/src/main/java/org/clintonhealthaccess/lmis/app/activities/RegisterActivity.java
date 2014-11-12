@@ -136,7 +136,7 @@ public class RegisterActivity extends RoboActionBarActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             this.dialog = new ProgressDialog(RegisterActivity.this);
-            this.dialog.setMessage("Registering");
+            this.dialog.setMessage("Registering...");
             dialog.setCancelable(false);
             dialog.setCanceledOnTouchOutside(false);
             this.dialog.show();
