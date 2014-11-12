@@ -312,8 +312,10 @@ public class App {
             DataValueSet valueSet = new DataValueSet();
             valueSet.setDataValues(new ArrayList<DataValue>());
 
-            Date currentDate = Calendar.getInstance().getTime();
-            String period = getYearMonthDayString(currentDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+            Date firstDayOfMonth = calendar.getTime();
+            String period = getYearMonthDayString(firstDayOfMonth);
             valueSet.setOrgUnit(me.getOrganisationUnits().get(0).getId());
             for (DataElement element : set.getDataElements()) {
                 Random rand = new Random();
