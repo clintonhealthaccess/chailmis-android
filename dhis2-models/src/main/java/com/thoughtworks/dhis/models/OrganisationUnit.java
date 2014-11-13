@@ -31,9 +31,11 @@ package com.thoughtworks.dhis.models;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class OrganisationUnit {
     private String name;
     private String created;

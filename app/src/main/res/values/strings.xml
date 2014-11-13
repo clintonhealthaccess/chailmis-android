@@ -62,7 +62,7 @@
     <string name="message_invalid_login_credential">Invalid Username or Password.</string>
     <string name="message_network_error">Network issue. Please try again later.</string>
     <string name="registration_successful_message">Registration Successful</string>
-    <string name="commodity_categories">Commodity Categories</string>
+    <string name="commodity_categories">Commodity by Program</string>
     <string name="submit">Submit</string>
     <string name="confirm">Confirm</string>
     <string name="close_selection">Close Selection</string>

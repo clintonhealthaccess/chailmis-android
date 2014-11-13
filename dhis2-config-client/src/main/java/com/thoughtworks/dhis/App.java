@@ -95,6 +95,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
+            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
+
             DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
             System.out.println(set.getDataElements().size());
             List<String> periods = previousAndCurrentPeriods();
@@ -219,6 +221,8 @@ public class App {
 
     private static void submitMaxMinValues(ApiService service, String maxType, String minType, int middleValue, int maxValue) {
         UserProfile me = service.getProfile();
+        System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
+
         DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
 
         final List<String> dataElementTypes = Arrays.asList(maxType, minType);
@@ -275,6 +279,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
+            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
+
             DataSet set = service.getDataSet("a5321843640");
             System.out.println(set.getDataElements().size());
 
@@ -306,6 +312,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
+            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
+
             DataSet set = service.getDataSet("a1ce7aa8c65");
             System.out.println(set.getDataElements().size());
 

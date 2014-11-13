@@ -32,29 +32,27 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:minWidth="790dp"
-    android:minHeight="300dp"
+    android:maxHeight="300dp"
     android:layout_gravity="center_horizontal|top">
 
     <RelativeLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:id="@+id/itemSelectOverlayHeader"
-        android:background="@color/blue"
-        android:layout_weight="3">
+        android:background="@color/blue">
 
         <Button
             android:id="@+id/buttonClose"
             android:layout_width="wrap_content"
-            android:textColor="@color/white"
             android:layout_height="fill_parent"
+            android:textColor="@color/white"
             android:layout_alignParentRight="true"
             android:text="@string/close_selection" />
     </RelativeLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_weight="6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#eee"
@@ -63,7 +61,6 @@
         <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
@@ -74,8 +71,8 @@
 
         <GridView
             android:id="@+id/gridViewCommodities"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:numColumns="2"
             android:verticalSpacing="7dp"
             android:horizontalSpacing="10dp"
@@ -99,8 +96,8 @@
                 android:layout_gravity="center"
                 android:textSize="18sp"
                 android:gravity="center" />
-        </LinearLayout>
 
+        </LinearLayout>
 
     </LinearLayout>
 
