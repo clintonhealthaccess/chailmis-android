@@ -106,8 +106,6 @@ public class MessagesActivity extends BaseActivity {
         };
 
         getNotificationsMessageTask.execute();
-
     }
-
 
 }
