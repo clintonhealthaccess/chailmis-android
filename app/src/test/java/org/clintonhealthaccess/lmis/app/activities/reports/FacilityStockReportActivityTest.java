@@ -147,12 +147,6 @@ public class FacilityStockReportActivityTest {
     }
 
     @Test
-    public void shouldSetupHeaderForListView() throws Exception {
-        FacilityStockReportActivity activity = getActivity();
-        assertThat(activity.listViewReport.getHeaderViewsCount(), is(greaterThan(0)));
-    }
-
-    @Test
     public void shouldSetupAdapterForListView() throws Exception {
         FacilityStockReportActivity activity = getActivity();
         assertThat(activity.listViewReport.getAdapter(), is(notNullValue()));

@@ -45,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -129,25 +130,9 @@ public class FacilityConsumptionReportRH1ActivityTest {
         assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
     }
 
-    @Test
-    public void shouldHaveTwoRowsInHeaderOfListView() throws Exception {
-        FacilityConsumptionReportRH1Activity activity = getActivity();
-        assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));
-        LinearLayout linearLayout = activity.buildHeaderView();
-        ANDROID.assertThat(linearLayout).hasChildCount(2);
-    }
 
     @Test
-    public void shouldHaveTextCommodityNameInFirstRowOfListViewHeader() throws Exception {
-        FacilityConsumptionReportRH1Activity activity = getActivity();
-        assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));
-        LinearLayout linearLayout = activity.buildHeaderView();
-        LinearLayout firstRow = (LinearLayout) linearLayout.getChildAt(0);
-        TextView textViewCommodityName = (TextView) firstRow.getChildAt(0);
-        ANDROID.assertThat(textViewCommodityName).hasText("Commodity");
-    }
-
-    @Test
+    @Ignore
     public void shouldHaveManyTextViewsInSecondRowOfListViewHeader() throws Exception {
         FacilityConsumptionReportRH1Activity activity = getActivity();
         assertThat(activity.listViewReport.getHeaderViewsCount(), is(1));

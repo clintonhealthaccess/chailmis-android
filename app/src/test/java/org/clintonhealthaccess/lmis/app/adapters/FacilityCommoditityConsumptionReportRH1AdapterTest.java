@@ -59,7 +59,7 @@ public class FacilityCommoditityConsumptionReportRH1AdapterTest {
         FacilityCommodityConsumptionRH1ReportItem reportItem = new FacilityCommodityConsumptionRH1ReportItem(new Commodity("food"));
         reportItem.setValues(newArrayList(Arrays.asList(new ConsumptionValue(new Date(), 5), new ConsumptionValue(new Date(), 5))));
         reportItems.add(reportItem);
-        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems, forHeader);
+        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems);
         LinearLayout view = (LinearLayout) adapter.getView(0, null, null);
         assertThat(view.getChildCount(), is(3));
     }
@@ -71,7 +71,7 @@ public class FacilityCommoditityConsumptionReportRH1AdapterTest {
         FacilityCommodityConsumptionRH1ReportItem reportItem = new FacilityCommodityConsumptionRH1ReportItem(new Commodity(commodityName));
         reportItem.setValues(newArrayList(Arrays.asList(new ConsumptionValue(new Date(), 5), new ConsumptionValue(new Date(), 5))));
         reportItems.add(reportItem);
-        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems, forHeader);
+        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems);
         LinearLayout view = (LinearLayout) adapter.getView(0, null, null);
         assertThat(view.getChildCount(), is(3));
 
@@ -88,7 +88,7 @@ public class FacilityCommoditityConsumptionReportRH1AdapterTest {
         int firstConsumptionValue = 20;
         reportItem.setValues(newArrayList(Arrays.asList(new ConsumptionValue(new Date(), firstConsumptionValue), new ConsumptionValue(new Date(), 5))));
         reportItems.add(reportItem);
-        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems, forHeader);
+        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems);
         LinearLayout view = (LinearLayout) adapter.getView(0, null, null);
         assertThat(view.getChildCount(), is(3));
 
@@ -106,7 +106,7 @@ public class FacilityCommoditityConsumptionReportRH1AdapterTest {
         int secondConsumptionValue = 5;
         reportItem.setValues(newArrayList(Arrays.asList(new ConsumptionValue(new Date(), firstConsumptionValue), new ConsumptionValue(new Date(), secondConsumptionValue))));
         reportItems.add(reportItem);
-        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems, forHeader);
+        FacilityCommodityConsumptionReportRH1Adapter adapter = new FacilityCommodityConsumptionReportRH1Adapter(Robolectric.application, R.layout.facility_commodity_consumption_report_rh1_item, reportItems);
         LinearLayout view = (LinearLayout) adapter.getView(0, null, null);
         assertThat(view.getChildCount(), is(3));
 
