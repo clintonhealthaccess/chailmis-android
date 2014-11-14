@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.clintonhealthaccess.lmis.app.R.color.green_header;
+
 public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReportItem> {
     private final int resource;
+    private final int color;
+    boolean isGrey = true;
 
-    public FacilityStockReportAdapter(Context context, int resource, List<FacilityStockReportItem> objects) {
+    public FacilityStockReportAdapter(Context context, int resource, List<FacilityStockReportItem> objects, int color) {
         super(context, resource, objects);
         this.resource = resource;
+        this.color = color;
     }
 
     @Override
@@ -73,7 +79,13 @@ public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReport
         for (Integer key : integerStringMap.keySet()) {
             TextView textView = (TextView) view.findViewById(key);
             textView.setText(integerStringMap.get(key));
+
         }
+        if(isGrey){
+            view.setBackgroundColor(color);
+
+        }
+        isGrey = !isGrey;
         return view;
     }
 }

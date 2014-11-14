@@ -67,7 +67,8 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
 
     @Override
     FacilityStockReportAdapter getAdapter() {
-        return new FacilityStockReportAdapter(getApplicationContext(), R.layout.facility_stock_report_item, new ArrayList<FacilityStockReportItem>());
+        return new FacilityStockReportAdapter(getApplicationContext(), R.layout.facility_stock_report_item,
+                new ArrayList<FacilityStockReportItem>(), getResources().getColor(R.color.m_grey));
     }
 
     @Override
