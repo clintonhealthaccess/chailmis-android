@@ -143,7 +143,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setItems();
+                //setItems();
             }
 
             @Override
@@ -158,7 +158,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupEndYearSpinner();
-                setItems();
+                //setItems();
             }
 
             @Override
@@ -170,7 +170,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         spinnerStartingMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setItems();
+                //setItems();
                 setupEndMonthSpinner();
             }
 

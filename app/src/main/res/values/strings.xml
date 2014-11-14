@@ -177,5 +177,7 @@
     <string name="date">Date</string>
     <string name="expected_quantity">(Expected Quantity: %d)</string>
     <string name="counted">Counted:</string>
+    <string name="load_report">Load Report</string>
+    <string name="before_facility_stock_report_load">Please Select Start Date And End Date.</string>
 
 </resources>

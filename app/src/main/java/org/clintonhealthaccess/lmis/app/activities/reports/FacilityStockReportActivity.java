@@ -32,7 +32,10 @@ package org.clintonhealthaccess.lmis.app.activities.reports;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.common.base.Function;
@@ -52,6 +55,15 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
 
     @InjectView(R.id.listViewDummyHeader)
     ListView listViewDummyHeader;
+
+    @InjectView(R.id.buttonLoadReport)
+    Button buttonLoadReport;
+
+    @InjectView(R.id.textViewBeforeLoad)
+    TextView textViewBeforeLoad;
+
+    @InjectView(R.id.horizontalScrollView)
+    HorizontalScrollView horizontalScrollView;
 
     private boolean isLoading = false;
 
@@ -102,6 +114,15 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
                 } else {
                     listViewDummyHeader.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        buttonLoadReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewBeforeLoad.setVisibility(View.GONE);
+                horizontalScrollView.setVisibility(View.VISIBLE);
+                setItems();
             }
         });
 
