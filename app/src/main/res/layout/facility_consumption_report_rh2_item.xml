@@ -36,69 +36,66 @@
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/report_row_commodity_name_width"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewCommodityName" />
+        android:id="@+id/textViewCommodityName"
+        android:padding="5dp"/>
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewOpeningBalance" />
+        android:id="@+id/textViewOpeningBalance"
+        android:layout_marginLeft="3dp"/>
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewQuantityReceived" />
 
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewQuantityDispensedToClients" />
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewQuantityDispensedToFacilities" />
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewTotalDispensed" />
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewQuantityLost" />
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-
-        android:padding="10dp"
+        android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewClosingStock" />
 

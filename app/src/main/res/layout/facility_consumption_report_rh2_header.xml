@@ -35,59 +35,76 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/report_commodity_name_width"
         android:layout_height="wrap_content"
-        
-        android:text="@string/commodity" />
+        android:text="@string/commodity"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/opening_balance" />
+        android:text="@string/opening_balance"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"
+        android:layout_marginLeft="3dp"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/quantity_received" />
-
-
+        android:text="@string/quantity_received"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center" />
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/quantity_dispensed_to_clients" />
+        android:text="@string/quantity_dispensed_to_clients"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:text="@string/quantity_dispensed_to_facility" />
+        android:text="@string/quantity_dispensed_to_facility"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/total_quantity_dispensed" />
+        android:text="@string/total_quantity_dispensed"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/quantity_lost" />
+        android:text="@string/quantity_lost"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
     <TextView
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        
-        android:padding="10dp"
-        android:text="@string/closing_balance" />
+        android:text="@string/closing_balance"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="3dp"
+        android:gravity="center"/>
 
 </LinearLayout>

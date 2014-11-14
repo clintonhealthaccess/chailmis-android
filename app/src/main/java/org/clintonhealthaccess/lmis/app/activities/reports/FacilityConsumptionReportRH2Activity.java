@@ -42,9 +42,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.reports.FacilityConsumptionReportRH2Adapter;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReportRH2Item;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.util.ArrayList;
@@ -67,7 +65,7 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
 
     @Override
     String getReportName() {
-        return getString(R.string.rh2_report_header);
+        return getString(R.string.rh2_report_name);
     }
 
     @Override
@@ -77,7 +75,8 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
 
     @Override
     ArrayAdapter getAdapter() {
-        return new FacilityConsumptionReportRH2Adapter(context, R.layout.facility_consumption_report_rh2_item, new ArrayList<FacilityConsumptionReportRH2Item>());
+        return new FacilityConsumptionReportRH2Adapter(context, R.layout.facility_consumption_report_rh2_item,
+                new ArrayList<FacilityConsumptionReportRH2Item>(), getResources().getColor(R.color.m_grey));
     }
 
     @Override
