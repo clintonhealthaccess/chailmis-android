@@ -36,6 +36,7 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 public class CategoryService {
@@ -52,6 +53,7 @@ public class CategoryService {
                     return dao.queryForAll();
                 }
             });
+            Collections.sort(allCategories);
         }
         return allCategories;
     }

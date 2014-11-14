@@ -134,8 +134,7 @@ public class LMISConfiguration implements IConfiguration {
 
     private HashMap<String, Object> buildConfigurationFromFile() throws IOException {
         List<ExcelCategory> categories =
-                getCategories(new BufferedReader(
-                        new FileReader("commodities.csv")));
+                getCategories(new BufferedReader(new FileReader("commodities.csv")));
 
         setUpRoutineOrder(categories);
 
@@ -174,20 +173,30 @@ public class LMISConfiguration implements IConfiguration {
     }
 
     private void setupDefaultDataElements(List<ExcelCategory> categories) {
-        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(DataElementType.DISPENSED,
-                DataElementType.STOCK_ON_HAND, DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
-        List<DataElementType> activitiesLosses = new ArrayList<DataElementType>(Arrays.asList(DataElementType.EXPIRED,
-                DataElementType.WASTED, DataElementType.MISSING));
-        List<DataElementType> activitiesLossesForVaccine = new ArrayList<DataElementType>(Arrays.asList(
-                DataElementType.EXPIRED, DataElementType.VVM_CHANGE, DataElementType.BREAKAGE, DataElementType.FROZEN,
+        List<DataElementType> activitiesDaily = new ArrayList<DataElementType>(Arrays.asList(
+                DataElementType.DISPENSED, DataElementType.STOCK_ON_HAND,
+                DataElementType.ADJUSTMENTS, DataElementType.ADJUSTMENT_REASON));
+
+        List<DataElementType> activitiesLosses = new ArrayList<>(Arrays.asList(
+                DataElementType.EXPIRED, DataElementType.WASTED, DataElementType.MISSING));
+
+        List<DataElementType> activitiesLossesForVaccine = new ArrayList<>(Arrays.asList(
+                DataElementType.EXPIRED, DataElementType.VVM_CHANGE,
+                DataElementType.BREAKAGE, DataElementType.FROZEN,
                 DataElementType.LABEL_REMOVED, DataElementType.OTHERS));
 
-        List<DataElementType> activitiesAllocated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.RECEIVED,
-                DataElementType.ALLOCATED, DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
-        List<DataElementType> activitiesCalculated = new ArrayList<DataElementType>(Arrays.asList(DataElementType.MAXIMUM_THRESHOLD,
-                DataElementType.MINIMUM_THRESHOLD, DataElementType.AMC, DataElementType.TMC, DataElementType.BUFFER_STOCK,
-                DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS, DataElementType.MONTHS_OF_STOCK_ON_HAND,
-                DataElementType.PROJECTED_ORDER_AMOUNT));
+        List<DataElementType> activitiesLossesVaccineDevices = new ArrayList<>(Arrays.asList(
+                DataElementType.EXPIRED, DataElementType.BREAKAGE, DataElementType.OTHERS));
+
+        List<DataElementType> activitiesAllocated = new ArrayList<>(Arrays.asList(
+                DataElementType.RECEIVED, DataElementType.ALLOCATED,
+                DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
+
+        List<DataElementType> activitiesCalculated = new ArrayList<>(Arrays.asList(
+                DataElementType.MAXIMUM_THRESHOLD, DataElementType.MINIMUM_THRESHOLD,
+                DataElementType.AMC, DataElementType.TMC, DataElementType.BUFFER_STOCK,
+                DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS,
+                DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT));
 
         DataSet main = createDataSet(LMIS_COMMODITIES_DEFAULT, DAILY);
         DataSet losses = createDataSet(LMIS_COMMODITIES_LOSSES, DAILY);
@@ -195,7 +204,7 @@ public class LMISConfiguration implements IConfiguration {
         DataSet calculated = createDataSet(LMIS_COMMODITIES_CALCULATED, MONTHLY);
 
 
-        Map<DataSet, List<DataElementType>> dataSetMapping = new HashMap<DataSet, List<DataElementType>>();
+        Map<DataSet, List<DataElementType>> dataSetMapping = new HashMap<>();
         dataSetMapping.put(main, activitiesDaily);
         dataSetMapping.put(losses, activitiesLosses);
         dataSetMapping.put(allocated, activitiesAllocated);
@@ -205,11 +214,15 @@ public class LMISConfiguration implements IConfiguration {
             for (ExcelCategory category : categories) {
                 List<DataElementType> dataElementTypes = dataSetMapping.get(dataSet);
 
-                if (category.getName().contains("Vaccines") && dataSet.equals(losses)) {
-                    dataElementTypes = activitiesLossesForVaccine;
-                }
-
                 for (ExcelCommodity commodity : category.getCommodityList()) {
+
+                    if (category.getName().contains("Vaccines") && dataSet.equals(losses)) {
+                        if (commodity.isDevice())
+                            dataElementTypes = activitiesLossesVaccineDevices;
+                        else
+                            dataElementTypes = activitiesLossesForVaccine;
+                    }
+
                     List<DataElement> elementsInIndicator = new ArrayList<DataElement>();
                     for (DataElementType type : dataElementTypes) {
                         String element_name = commodity.getName() + " " + type.getActivity();

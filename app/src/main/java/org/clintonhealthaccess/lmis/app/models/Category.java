@@ -48,7 +48,7 @@ import static com.google.common.collect.Lists.newArrayList;
 @Setter
 
 @DatabaseTable(tableName = "commodity_categories")
-public class Category implements Serializable {
+public class Category implements Serializable, Comparable<Category> {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -112,4 +112,8 @@ public class Category implements Serializable {
     }
 
 
+    @Override
+    public int compareTo(Category another) {
+        return this.getName().compareToIgnoreCase(another.getName());
+    }
 }

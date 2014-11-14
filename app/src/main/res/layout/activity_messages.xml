@@ -99,7 +99,7 @@
             android:layout_below="@id/alertsHeaderView"
             android:id="@+id/listViewAlerts"
             android:layout_width="fill_parent"
-            android:background="@color/blue"
+            android:background="@color/light_blue"
             android:layout_height="wrap_content">
 
         </ListView>
@@ -125,7 +125,7 @@
         <ListView
             android:layout_below="@id/textViewNotificationsTitle"
             android:id="@+id/listViewNotifications"
-            android:background="@color/blue"
+            android:background="@color/light_blue"
             android:padding="5dp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">

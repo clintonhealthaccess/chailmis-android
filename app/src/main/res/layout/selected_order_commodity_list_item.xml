@@ -33,27 +33,35 @@
     android:background="@drawable/card"
     android:padding="10dp">
 
-    <TextView
-        android:id="@+id/textViewCommodityName"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@color/black"
-        android:layout_marginRight="@dimen/big_margin"
-        android:text="@string/commodityName" />
+        android:layout_alignParentTop="true">
 
-    <TextView
-        android:id="@+id/textViewExpectedQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/green_header"
-        android:text="Expected: "
-        android:layout_toRightOf="@id/textViewCommodityName"/>
+        <TextView
+            android:id="@+id/textViewCommodityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginRight="@dimen/big_margin"
+            android:text="@string/commodityName"
+            android:layout_alignParentLeft="true"/>
+
+        <TextView
+            android:id="@+id/textViewExpectedQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green_header"
+            android:text="Expected: "
+            android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewCommodityName"
+        android:layout_below="@+id/relativeLayoutContainer"
         android:layout_toLeftOf="@id/imageButtonCancel"
         android:textColor="@color/black"
         android:orientation="vertical">
@@ -108,7 +116,7 @@
                 android:inputType="number"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:layout_marginLeft="@dimen/big_margin"/>
+                android:layout_marginLeft="@dimen/big_margin" />
 
             <Spinner
                 android:id="@+id/spinnerUnexpectedQuantityReasons"
@@ -116,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:visibility="invisible"
-                android:layout_marginLeft="@dimen/big_margin"/>
+                android:layout_marginLeft="@dimen/big_margin" />
         </LinearLayout>
 
     </LinearLayout>
