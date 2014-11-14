@@ -32,6 +32,9 @@ package org.clintonhealthaccess.lmis.app.activities.reports;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,8 +50,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import roboguice.inject.InjectView;
+
 public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseActivity<FacilityCommodityConsumptionReportRH1Adapter> {
     private static final String TAG = "REPORTS";
+
+    @InjectView(R.id.buttonLoadReport)
+    Button buttonLoadReport;
+
+    @InjectView(R.id.textViewBeforeLoad)
+    TextView textViewBeforeLoad;
+
+    @InjectView(R.id.horizontalScrollView)
+    HorizontalScrollView horizontalScrollView;
 
     @Override
     String getReportName() {
@@ -77,7 +91,14 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
     @Override
     void afterCreate() {
-
+        buttonLoadReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewBeforeLoad.setVisibility(View.GONE);
+                horizontalScrollView.setVisibility(View.VISIBLE);
+                setItems();
+            }
+        });
     }
 
     @Override

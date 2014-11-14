@@ -61,7 +61,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerStartingYear"></Spinner>
+            android:id="@+id/spinnerStartingYear"/>
 
         <TextView
             android:layout_width="fill_parent"
@@ -73,8 +73,7 @@
             android:layout_width="fill_parent"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerStartingMonth">
-        </Spinner>
+            android:id="@+id/spinnerStartingMonth"/>
 
         <TextView
             android:id="@+id/textViewEndingYear"
@@ -87,7 +86,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerEndingYear"></Spinner>
+            android:id="@+id/spinnerEndingYear"/>
 
         <TextView
             android:id="@+id/textViewEndingMonth"
@@ -100,24 +99,49 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerEndingMonth">
+            android:id="@+id/spinnerEndingMonth"/>
 
-        </Spinner>
+        <Button
+            android:id="@+id/buttonLoadReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/load_report"
+            android:textSize="15dp"
+            android:textStyle="bold"/>
 
 
     </LinearLayout>
 
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <ListView
-            android:id="@+id/listViewReport"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        <TextView
+            android:id="@+id/textViewBeforeLoad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="50dp"
+            android:textSize="18dp"
+            android:text="@string/before_facility_stock_report_load" />
 
-        </ListView>
-    </HorizontalScrollView>
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
+            <ListView
+                android:id="@+id/listViewReport"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+            </ListView>
+        </HorizontalScrollView>
+
+        </LinearLayout>
 
 </LinearLayout>

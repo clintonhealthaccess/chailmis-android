@@ -36,7 +36,7 @@
 
     <TextView
         android:textColor="@color/black"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/report_row_commodity_name_width"
         android:padding="10dp"
         android:layout_height="wrap_content"
         android:id="@+id/textViewCommodityName" />
