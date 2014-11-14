@@ -50,6 +50,9 @@ public class Adjustment implements Serializable, Snapshotable {
     @DatabaseField(canBeNull = false)
     private int quantity;
 
+    @DatabaseField(canBeNull = true)
+    private int allocated;
+
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -67,11 +70,19 @@ public class Adjustment implements Serializable, Snapshotable {
         setDate();
     }
 
-    public Adjustment(Commodity commodity, int quantityEntered, boolean positive, String reason) {
+    public Adjustment(Commodity commodity, int quantityEntered,
+                      boolean positive, String reason) {
         this.commodity = commodity;
         this.quantity = quantityEntered;
         this.positive = positive;
         this.reason = reason;
+        setDate();
+    }
+
+    public Adjustment(Commodity commodity, int quantityEntered, int quantityAllocated,
+                      boolean positive, String reason) {
+        this(commodity, quantityEntered, positive, reason);
+        this.allocated = quantityAllocated;
         setDate();
     }
 
@@ -128,5 +139,13 @@ public class Adjustment implements Serializable, Snapshotable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public int getAllocated() {
+        return allocated;
+    }
+
+    public void setAllocated(int allocated) {
+        this.allocated = allocated;
     }
 }

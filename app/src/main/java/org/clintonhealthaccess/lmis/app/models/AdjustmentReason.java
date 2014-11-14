@@ -41,16 +41,16 @@ public class AdjustmentReason {
     public static final AdjustmentReason SENT_TO_ANOTHER_FACILITY = new AdjustmentReason(SENT_TO_ANOTHER_FACILITY_TEXT, false, true);
     public static final AdjustmentReason RETURNED_TO_LGA = new AdjustmentReason(RETURNED_TO_LGA_TEXT, false, true);
     private String name;
-    private boolean allowsPostive, allowsNegative;
+    private boolean allowsPositive, allowsNegative;
 
-    public AdjustmentReason(String name, boolean allowsPostive, boolean allowsNegative) {
+    public AdjustmentReason(String name, boolean allowsPositive, boolean allowsNegative) {
         this.name = name;
-        this.allowsPostive = allowsPostive;
+        this.allowsPositive = allowsPositive;
         this.allowsNegative = allowsNegative;
     }
 
     public boolean allowsBoth() {
-        return allowsNegative && allowsPostive;
+        return allowsNegative && allowsPositive;
     }
 
     public String getName() {
@@ -58,7 +58,7 @@ public class AdjustmentReason {
     }
 
     public boolean allowsPostive() {
-        return allowsPostive;
+        return allowsPositive;
     }
 
     public boolean allowsNegative() {
@@ -93,6 +93,10 @@ public class AdjustmentReason {
 
     public boolean isSentToAnotherFacility() {
         return name.equalsIgnoreCase(SENT_TO_ANOTHER_FACILITY_TEXT);
+    }
+
+    public boolean isReceivedFromAnotherFacility() {
+        return name.equalsIgnoreCase(RECEIVED_FROM_ANOTHER_FACILITY_TEXT);
     }
 
 

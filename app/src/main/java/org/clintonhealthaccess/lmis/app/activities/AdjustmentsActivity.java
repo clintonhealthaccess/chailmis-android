@@ -208,7 +208,8 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
             public Adjustment apply(BaseCommodityViewModel input) {
                 AdjustmentsViewModel model = (AdjustmentsViewModel) input;
 
-                return new Adjustment(model.getCommodity(), model.getQuantityEntered(), model.isPositive(), model.getAdjustmentReason().getName());
+                return new Adjustment(model.getCommodity(), model.getQuantityEntered(), model.getQuantityAllocated(),
+                        model.isPositive(), model.getAdjustmentReason().getName());
             }
         }).toList();
     }
@@ -234,6 +235,7 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
                     AdjustmentsViewModel adjustmentsViewModel = (AdjustmentsViewModel) model;
                     adjustmentsViewModel.setAdjustmentReason(selectedReason);
                     adjustmentsViewModel.setQuantityEntered(0);
+                    adjustmentsViewModel.setQuantityAllocated(0);
                 }
                 arrayAdapter.notifyDataSetChanged();
             }

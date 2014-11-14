@@ -66,7 +66,6 @@ public class AdjustmentsAdapterTest {
     @Before
     public void setUp() {
         setUpInjection(this);
-
         activity = setupActivity(AdjustmentsActivity.class);
     }
 
@@ -75,7 +74,6 @@ public class AdjustmentsAdapterTest {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
         Spinner spinner = (Spinner) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.spinnerAdjustmentType);
         ANDROID.assertThat(spinner).isDisabled();
-
     }
 
     @Test
@@ -211,7 +209,7 @@ public class AdjustmentsAdapterTest {
 
         View row = ListTestUtils.getRowFromListView(0, adapter, R.layout.selected_adjustment_commodity_list_item);
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
-        TextView textView = (TextView) row.findViewById(R.id.textViewAdjustment);
+        TextView textView = (TextView) row.findViewById(R.id.textViewDifference);
         editText.setText(Integer.toString(stockCounted));
 
         ANDROID.assertThat(textView).containsText("200");
@@ -255,4 +253,35 @@ public class AdjustmentsAdapterTest {
         commodities.add(adjustmentsViewModel);
         return new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities);
     }
+
+    @Test
+    public void shouldShowLinearLayoutAllocatedForReceivedFromAnotherFacility() throws Exception {
+        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
+        LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.linearLayoutAllocated);
+        ANDROID.assertThat(linearLayout).isVisible();
+    }
+
+    @Test
+    public void shouldHideLinearLayoutAllocatedForWhenReasonIsNotReceivedFromAnotherFacility() throws Exception {
+        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
+        LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.linearLayoutAllocated);
+        ANDROID.assertThat(linearLayout).isGone();
+    }
+
+    @Test
+    public void shouldHaveTextCountedForPhysicalCount() throws Exception {
+        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.PHYSICAL_COUNT);
+        TextView textViewCounted = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.textViewCounted);
+        ANDROID.assertThat(textViewCounted).isVisible();
+        ANDROID.assertThat(textViewCounted).hasText(R.string.counted);
+    }
+
+    @Test
+    public void shouldHaveTextReceivedForReceivedFromAnotherFacility() throws Exception {
+        AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
+        TextView textViewCounted = (TextView) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.textViewCounted);
+        ANDROID.assertThat(textViewCounted).isVisible();
+        ANDROID.assertThat(textViewCounted).hasText(R.string.received);
+    }
+
 }

@@ -86,8 +86,11 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         Spinner spinnerAdjustmentType = (Spinner) rowView.findViewById(R.id.spinnerAdjustmentType);
         final NumberTextView editTextQuantity = (NumberTextView) rowView.findViewById(R.id.editTextQuantity);
 
-        LinearLayout linearLayoutDifference = (LinearLayout)rowView.findViewById(R.id.linearLayoutDifference);
-        TextView textViewAdjustment = (TextView) rowView.findViewById(R.id.textViewAdjustment);
+        LinearLayout linearLayoutDifference = (LinearLayout) rowView.findViewById(R.id.linearLayoutDifference);
+        TextView textViewDifference = (TextView) rowView.findViewById(R.id.textViewDifference);
+
+        LinearLayout linearLayoutAllocated = (LinearLayout) rowView.findViewById(R.id.linearLayoutAllocated);
+        EditText editTextAllocated = (EditText) rowView.findViewById(R.id.editTextAllocatedQuantity);
 
         ImageButton imageButtonCancel = (ImageButton) rowView.findViewById(R.id.imageButtonCancel);
 
@@ -103,19 +106,32 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 types.add("-");
             }
             if (commodityViewModel.getAdjustmentReason().isPhysicalCount()) {
+                hideReceivedFromAnotherFacilityFields(
+                        linearLayoutAllocated, textViewCounted, spinnerAdjustmentType, linearLayoutDifference);
+
                 linearLayoutDifference.setVisibility(View.VISIBLE);
+                textViewCounted.setText(getContext().getString(R.string.counted));
                 textViewCounted.setVisibility(View.VISIBLE);
                 spinnerAdjustmentType.setVisibility(View.INVISIBLE);
+
                 showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
             } else {
-                spinnerAdjustmentType.setVisibility(View.VISIBLE);
-                linearLayoutDifference.setVisibility(View.GONE);
-                textViewCounted.setVisibility(View.GONE);
-                linearLayoutStockValues.setVisibility(View.GONE);
+                if (commodityViewModel.getAdjustmentReason().isReceivedFromAnotherFacility()) {
+                    showReceivedFromAnotherFacilityFields(linearLayoutAllocated,
+                            textViewCounted, spinnerAdjustmentType, linearLayoutDifference);
+                } else {
+                    hideReceivedFromAnotherFacilityFields(linearLayoutAllocated, textViewCounted,
+                            spinnerAdjustmentType, linearLayoutDifference);
+                    spinnerAdjustmentType.setVisibility(View.VISIBLE);
+                    linearLayoutDifference.setVisibility(View.GONE);
+                    linearLayoutStockValues.setVisibility(View.GONE);
+                }
+
                 if (commodityViewModel.getAdjustmentReason().isSentToAnotherFacility()) {
                     showAndSetStockValueFields(linearLayoutStockValues, textViewCurrentStock, textViewMonthsOfStock, commodityViewModel);
                 }
             }
+
             if (types.size() < 2) {
                 spinnerAdjustmentType.setEnabled(false);
             } else {
@@ -142,14 +158,20 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             textViewCommodityName.requestFocus();
             textViewCommodityName.setError(activity.getString(R.string.not_related_to_vaccine));
         }
-        editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity, textViewAdjustment, spinnerAdjustmentType, types));
+        editTextQuantity.addTextChangedListener(new AdjustmentQuantityTextWatcher(commodityViewModel, editTextQuantity, textViewDifference, spinnerAdjustmentType, types));
+        editTextAllocated.addTextChangedListener(new AllocatedQuantityTextWatcher(commodityViewModel, editTextAllocated, textViewDifference));
+
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity > 0) {
             editTextQuantity.setText(Integer.toString(quantity));
         }
 
-        activateCancelButton(imageButtonCancel, commodityViewModel);
+        int quantityAllocated = commodityViewModel.getQuantityAllocated();
+        if (quantityAllocated > 0) {
+            editTextAllocated.setText(Integer.toString(quantityAllocated));
+        }
 
+        activateCancelButton(imageButtonCancel, commodityViewModel);
         return rowView;
     }
 
@@ -158,6 +180,28 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         textViewCurrentStock.setText("Current Stock:  " + commodityViewModel.getStockOnHand());
         DecimalFormat format = new DecimalFormat("0.00");
         textViewMonthsOfStock.setText("Month Of Stock:  " + format.format(commodityViewModel.getMonthsOfStock()));
+    }
+
+    private void showReceivedFromAnotherFacilityFields(
+            LinearLayout linearLayoutAllocated, TextView textViewCounted,
+            Spinner spinnerAdjustmentType, LinearLayout linearLayoutDifference) {
+        linearLayoutAllocated.setVisibility(View.VISIBLE);
+        textViewCounted.setVisibility(View.VISIBLE);
+        textViewCounted.setText(getContext().getString(R.string.received));
+        spinnerAdjustmentType.setVisibility(View.INVISIBLE);
+        linearLayoutDifference.setVisibility(View.VISIBLE);
+    }
+
+    private void hideReceivedFromAnotherFacilityFields(
+            LinearLayout linearLayoutAllocated, TextView textViewCounted,
+            Spinner spinnerAdjustmentType, LinearLayout linearLayoutDifference) {
+        linearLayoutAllocated.setVisibility(View.GONE);
+        textViewCounted.setVisibility(View.GONE);
+        spinnerAdjustmentType.setVisibility(View.INVISIBLE);
+        linearLayoutDifference.setVisibility(View.VISIBLE);
+
+        spinnerAdjustmentType.setVisibility(View.VISIBLE);
+        linearLayoutDifference.setVisibility(View.INVISIBLE);
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final BaseCommodityViewModel commodityViewModel) {
@@ -198,6 +242,8 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 spinnerAdjustmentType.setSelection(isPositive ? types.indexOf("+") : types.indexOf("-"));
                 textViewAdjustment.setText(String.valueOf(adjustment));
                 adjustmentsViewModel.setQuantityEntered(adjustment);
+            } else if (adjustmentsViewModel.getAdjustmentReason().isReceivedFromAnotherFacility()) {
+                textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getAllocatedReceivedDifference()));
             } else {
                 if (!adjustmentsViewModel.isPositive()) {
                     int stockOnHand = adjustmentsViewModel.getStockOnHand();
@@ -207,7 +253,29 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                         editTextQuantity.setError(null);
                     }
                 }
+            }
+        }
+    }
 
+    private static class AllocatedQuantityTextWatcher extends LmisTextWatcher {
+        private final AdjustmentsViewModel adjustmentsViewModel;
+        private final EditText editTextAllocated;
+        private final TextView textViewAdjustment;
+
+        public AllocatedQuantityTextWatcher(AdjustmentsViewModel adjustmentsViewModel,
+                                            EditText editTextAllocated, TextView textViewAdjustment) {
+            this.adjustmentsViewModel = adjustmentsViewModel;
+            this.editTextAllocated = editTextAllocated;
+            this.textViewAdjustment = textViewAdjustment;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String value = editable.toString();
+            int quantity = getIntFromString(value);
+            adjustmentsViewModel.setQuantityAllocated(quantity);
+            if (adjustmentsViewModel.getAdjustmentReason().isReceivedFromAnotherFacility()) {
+                textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getAllocatedReceivedDifference()));
             }
         }
     }

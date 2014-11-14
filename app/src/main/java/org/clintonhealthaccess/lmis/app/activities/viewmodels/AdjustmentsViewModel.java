@@ -35,6 +35,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 public class AdjustmentsViewModel extends BaseCommodityViewModel {
     private boolean positive;
     private AdjustmentReason adjustmentReason;
+    private int quantityAllocated;
 
     public AdjustmentsViewModel(Commodity commodity) {
         super(commodity);
@@ -65,4 +66,15 @@ public class AdjustmentsViewModel extends BaseCommodityViewModel {
         this.positive = positive;
     }
 
+    public int getQuantityAllocated() {
+        return quantityAllocated;
+    }
+
+    public void setQuantityAllocated(int quantityAllocated) {
+        this.quantityAllocated = quantityAllocated;
+    }
+
+    public int getAllocatedReceivedDifference() {
+        return getQuantityEntered() - getQuantityAllocated();
+    }
 }
