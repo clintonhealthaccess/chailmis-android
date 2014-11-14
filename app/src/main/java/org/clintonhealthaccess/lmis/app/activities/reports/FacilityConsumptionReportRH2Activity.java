@@ -35,6 +35,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,9 @@ import roboguice.inject.InjectView;
 public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseActivity{
     @Inject
     Context context;
+
+    @InjectView(R.id.listViewDummyHeader)
+    ListView listViewDummyHeader;
 
     @InjectView(R.id.buttonLoadReport)
     Button buttonLoadReport;
@@ -91,6 +95,8 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
 
     @Override
     void afterCreate() {
+        listViewDummyHeader.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
+        listViewDummyHeader.setAdapter(getAdapter());
         buttonLoadReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

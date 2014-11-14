@@ -123,7 +123,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
 
     void setupListViewHeader() {
-        listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
+        //listViewReport.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
     }
 
     abstract String getReportName();
