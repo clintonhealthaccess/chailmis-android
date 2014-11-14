@@ -66,6 +66,7 @@ import java.util.Map;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
+import static android.view.View.INVISIBLE;
 import static android.view.View.OnClickListener;
 import static com.google.common.collect.ImmutableList.of;
 
@@ -99,6 +100,12 @@ public class HomeActivity extends BaseActivity {
 
     @InjectView(R.id.listViewAlerts)
     ListView listViewAlerts;
+
+    @InjectView(R.id.linearLayoutNotificationsContainer)
+    LinearLayout linearLayoutNotificationsContainer;
+
+    @InjectView(R.id.linearLayoutAlertsContainer)
+    LinearLayout linearLayoutAlertsContainer;
 
     @InjectView(R.id.listViewNotifications)
     ListView listViewNotifications;
@@ -202,9 +209,14 @@ public class HomeActivity extends BaseActivity {
 
             @Override
             protected void onPostExecute(List<? extends NotificationMessage> notificationMessages) {
-                NotificationMessageAdapter adapter = new NotificationMessageAdapter(getApplicationContext(), R.layout.notification_message_item, notificationMessages);
-                listViewNotifications.setAdapter(adapter);
-                listViewNotifications.setOnItemClickListener(new NotificationClickListener(adapter, HomeActivity.this));
+                if (notificationMessages == null || notificationMessages.size() == 0) {
+                    linearLayoutNotificationsContainer.setVisibility(INVISIBLE);
+                } else {
+                    linearLayoutNotificationsContainer.setVisibility(View.VISIBLE);
+                    NotificationMessageAdapter adapter = new NotificationMessageAdapter(getApplicationContext(), R.layout.notification_message_item, notificationMessages);
+                    listViewNotifications.setAdapter(adapter);
+                    listViewNotifications.setOnItemClickListener(new NotificationClickListener(adapter, HomeActivity.this));
+                }
             }
         };
     }
@@ -272,6 +284,5 @@ public class HomeActivity extends BaseActivity {
         }
         return biggestValue;
     }
-
 
 }

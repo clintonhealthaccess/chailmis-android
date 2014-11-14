@@ -152,6 +152,7 @@
         android:layout_marginLeft="10dp">
 
         <LinearLayout
+            android:id="@+id/linearLayoutAlertsContainer"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -171,11 +172,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/listViewAlerts">
-
             </ListView>
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayoutNotificationsContainer"
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
