@@ -149,7 +149,8 @@ public class AlertsServiceTest {
     public void shouldGetCommodityViewModelsForEachCommodityForRoutineOrderAlert() throws Exception {
         setupCommodities();
         alertsService.updateLowStockAlerts();
-        List<OrderCommodityViewModel> commodityViewModels = alertsService.getOrderViewModelsForRoutineOrderAlert();
+        List<OrderCommodityViewModel> commodityViewModels =
+                alertsService.getOrderViewModelsForRoutineOrderAlert();
         int numberOfCommodities = 7;
         assertThat(commodityViewModels.size(), is(numberOfCommodities));
         assertThat(commodityViewModels.get(0).getExpectedOrderQuantity(), is(25));
