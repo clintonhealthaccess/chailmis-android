@@ -41,40 +41,45 @@ import android.widget.TextView;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
+import org.clintonhealthaccess.lmis.app.models.reports.RH1HeaderItem;
 
 import java.util.List;
 
-public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
+public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAdapter<RH1HeaderItem> {
     private final int resource;
     public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
 
     private static LinearLayout.LayoutParams getLayoutParams() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        LinearLayout.LayoutParams params
+                = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
         return params;
     }
 
-    public FacilityCommodityConsumptionReportRH1Adapter(Context context, int resource,
-                                                        List<FacilityCommodityConsumptionRH1ReportItem> objects) {
-        super(context, resource, objects);
+    public FacilityCommodityConsumptionReportRH1HeaderAdapter(Context context, int resource, List<RH1HeaderItem> headerItems) {
+        super(context, resource, headerItems);
         this.resource = resource;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = (LinearLayout) inflater.inflate(resource, parent, false);
-        FacilityCommodityConsumptionRH1ReportItem item = getItem(position);
 
         TextView textViewCommodityName = (TextView) linearLayout.findViewById(R.id.textViewCommodityName);
-        textViewCommodityName.setText(item.getCommodity().getName());
+        textViewCommodityName.setText(R.string.commodity);
+        textViewCommodityName.setTypeface(null, Typeface.BOLD);
 
-        for (ConsumptionValue value : item.getValues()) {
-            TextView textView = new TextView(getContext());
-            textView.setLayoutParams(PARAMS);
-            textView.setTextColor(getContext().getResources().getColor(R.color.black));
-            textView.setText(String.valueOf(value.getConsumption()));
-            linearLayout.addView(textView);
+        List<String> days = getItem(position).getDays();
+
+        for (String day : days) {
+            TextView textViewDay = new TextView(getContext());
+            textViewDay.setLayoutParams(PARAMS);
+            textViewDay.setTextColor(getContext().getResources().getColor(R.color.black));
+            textViewDay.setTypeface(null, Typeface.BOLD);
+            textViewDay.setText(day);
+            linearLayout.addView(textViewDay);
         }
 
         return linearLayout;

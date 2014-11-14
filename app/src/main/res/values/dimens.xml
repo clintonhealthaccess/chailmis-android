@@ -39,6 +39,7 @@
     <dimen name="bar_width">70dp</dimen>
     <dimen name="number_text_view_width">100dp</dimen>
     <dimen name="report_row_width">86dp</dimen>
+    <dimen name="rh1_report_row_width">20dp</dimen>
     <dimen name="rh2_report_row_width">120dp</dimen>
     <dimen name="report_row_commodity_name_width">150dp</dimen>
     <dimen name="report_commodity_name_width" >150dp</dimen>

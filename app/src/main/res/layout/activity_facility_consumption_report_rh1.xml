@@ -52,54 +52,59 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/starting_year" />
 
         <Spinner
-            android:layout_width="fill_parent"
+            android:id="@+id/spinnerStartingYear"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerStartingYear"/>
+            android:layout_marginRight="5dp"/>
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/starting_month" />
 
         <Spinner
-            android:layout_width="fill_parent"
+            android:id="@+id/spinnerStartingMonth"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerStartingMonth"/>
+            android:layout_marginRight="5dp"/>
+
 
         <TextView
             android:id="@+id/textViewEndingYear"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/ending_year" />
 
         <Spinner
-            android:layout_width="fill_parent"
+            android:id="@+id/spinnerEndingYear"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerEndingYear"/>
+            android:layout_marginRight="5dp"/>
 
         <TextView
             android:id="@+id/textViewEndingMonth"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/ending_month" />
 
         <Spinner
-            android:layout_width="fill_parent"
+            android:id="@+id/spinnerEndingMonth"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/spinnerEndingMonth"/>
+            android:layout_marginRight="5dp"/>
 
         <Button
             android:id="@+id/buttonLoadReport"
@@ -108,7 +113,7 @@
             android:layout_alignParentRight="true"
             android:text="@string/load_report"
             android:textSize="15dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
 
     </LinearLayout>
@@ -134,14 +139,23 @@
             android:layout_height="wrap_content"
             android:visibility="gone">
 
-            <ListView
-                android:id="@+id/listViewReport"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            </ListView>
+                <ListView
+                    android:id="@+id/listViewDummyHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+                <ListView
+                    android:id="@+id/listViewReport"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" />
+            </LinearLayout>
         </HorizontalScrollView>
 
-        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
