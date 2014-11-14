@@ -101,22 +101,6 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
         listViewDummyHeader.addHeaderView(getLayoutInflater().inflate(getHeaderLayout(), null));
         listViewDummyHeader.setAdapter(getAdapter());
 
-        listViewReport.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem != 0) {
-                    listViewDummyHeader.setVisibility(View.VISIBLE);
-                } else {
-                    listViewDummyHeader.setVisibility(View.GONE);
-                }
-            }
-        });
-
         buttonLoadReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
