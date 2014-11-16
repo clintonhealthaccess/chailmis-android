@@ -69,4 +69,8 @@ public class StockItem implements Serializable {
     public void increaseQuantityBy(int quantityToIncreaseBy) {
         quantity += quantityToIncreaseBy;
     }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
 }

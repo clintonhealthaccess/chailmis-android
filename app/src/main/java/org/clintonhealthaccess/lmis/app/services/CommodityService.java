@@ -155,7 +155,12 @@ public class CommodityService {
 
         for (StockItem item : stockItems) {
             createStock(item);
+            createStockItemSnapshot(item);
         }
+    }
+
+    private void createStockItemSnapshot(StockItem item) {
+        stockItemSnapshotService.createOrUpdate(item.getCommodity(), new Date());
     }
 
     private void fetchAndSaveIntegerConstant(User user, String stockCountSearchKey, String key) {
