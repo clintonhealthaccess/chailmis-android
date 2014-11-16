@@ -74,19 +74,17 @@ public class MonthlyVaccineUtilizationReportAdapter extends ArrayAdapter<Utiliza
 
 
         if (isNamesListView) {
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(100, ViewGroup.LayoutParams.WRAP_CONTENT);
             TextView textView = new TextView(getContext());
-            textView.setLayoutParams(params);
             textView.setText(item.getName());
             textView.setTextColor(getContext().getResources().getColor(R.color.black));
             setBold(position, textView);
-
             linearLayout.addView(textView);
         } else {
             for (UtilizationValue value : item.getUtilizationValues()) {
                 TextView textView = new TextView(getContext());
                 textView.setText(String.valueOf(value.getValue()));
                 textView.setLayoutParams(PARAMS);
+                textView.setGravity(1);
                 textView.setTextColor(getContext().getResources().getColor(R.color.black));
 
                 setBold(position, textView);
