@@ -31,6 +31,8 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,9 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
 
     private static LinearLayout.LayoutParams getLayoutParams() {
         LinearLayout.LayoutParams params
-                = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(3,3,3,3);
+        params.gravity = Gravity.CENTER_HORIZONTAL;
         return params;
     }
 
@@ -72,7 +76,6 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
         textViewCommodityName.setTypeface(null, Typeface.BOLD);
 
         List<String> days = getItem(position).getDays();
-
         for (String day : days) {
             TextView textViewDay = new TextView(getContext());
             textViewDay.setLayoutParams(PARAMS);

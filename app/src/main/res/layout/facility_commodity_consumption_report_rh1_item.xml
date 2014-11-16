@@ -37,9 +37,11 @@
     <TextView
         android:textColor="@color/black"
         android:layout_width="@dimen/report_row_commodity_name_width"
-        android:padding="10dp"
+        android:padding="3dp"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewCommodityName" />
+        android:id="@+id/textViewCommodityName"
+        android:gravity="center_horizontal"
+        android:layout_marginRight="5dp"/>
 
 
 </LinearLayout>

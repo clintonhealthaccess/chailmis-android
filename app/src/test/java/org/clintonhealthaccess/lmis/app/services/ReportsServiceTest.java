@@ -679,4 +679,40 @@ public class ReportsServiceTest {
         assertThat(commodity2BinCard.getMaximumStockLevel(), is(commodity2ExpectedMax));
 
     }
+
+    @Test
+    public void shouldReturnCorrectNumberOfDaysInFebruary2014() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2014, Calendar.FEBRUARY, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+
+        List<Integer> days = reportsService.getDayNumbers(startDate, endDate);
+
+        assertThat(days.size(), is(28));
+        assertThat(days.get(0), is(1));
+        assertThat(days.get(27), is(28));
+
+    }
+
+    @Test
+    public void shouldReturnCorrectNumberOfDaysInOctober() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(2014, Calendar.OCTOBER, 01);
+        Date startDate = calendar.getTime();
+
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
+
+        List<Integer> days = reportsService.getDayNumbers(startDate, endDate);
+
+        assertThat(days.size(), is(31));
+        assertThat(days.get(0), is(1));
+        assertThat(days.get(30), is(31));
+
+    }
 }

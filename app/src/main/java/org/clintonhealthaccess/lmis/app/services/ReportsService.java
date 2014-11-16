@@ -210,6 +210,21 @@ public class ReportsService {
         return days;
     }
 
+    public List<Integer> getDayNumbers(Date startDate, Date endDate) {
+        List<Integer> days = new ArrayList<>();
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+
+        while (calendar.getTime().before(upperLimitDate)) {
+            days.add(DateUtil.dayNumber(calendar.getTime()));
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return days;
+    }
+
+
+
     private ListMultimap<Date, DispensingItem> groupDispensingItems(List<DispensingItem> dispensingItems) {
         return Multimaps.index(dispensingItems, new Function<DispensingItem, Date>() {
             @Override

@@ -78,7 +78,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
     @Override
     String getReportName() {
-        return getString(R.string.rh1_report_header);
+        return getString(R.string.rh1_report_name);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     FacilityCommodityConsumptionReportRH1Adapter getAdapter() {
         return new FacilityCommodityConsumptionReportRH1Adapter(getApplicationContext(),
                 R.layout.facility_commodity_consumption_report_rh1_item,
-                new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
+                new ArrayList<FacilityCommodityConsumptionRH1ReportItem>(), getResources().getColor(R.color.m_grey));
     }
 
     @Override
@@ -149,15 +149,14 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     }
 
     List<RH1HeaderItem> headerItems() throws ParseException {
-
         Date startingDate = reportsService.convertToDate(getStartingYear(), getStartingMonth(), true);
         Date endDate = reportsService.convertToDate(getStartingYear(), getStartingMonth(), false);
-        List<DateTime> days = reportsService.getDays(startingDate, endDate);
+        List<Integer> days = reportsService.getDayNumbers(startingDate, endDate);
 
-        List<String> dayStrings = FluentIterable.from(days).transform(new Function<DateTime, String>() {
+        List<String> dayStrings = FluentIterable.from(days).transform(new Function<Integer, String>() {
             @Override
-            public String apply(DateTime input) {
-                return String.valueOf(input.dayOfMonth());
+            public String apply(Integer input) {
+                return String.valueOf(input);
             }
         }).toList();
 

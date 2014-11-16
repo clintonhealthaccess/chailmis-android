@@ -181,8 +181,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             outerLayout.setOrientation(LinearLayout.HORIZONTAL);
 
             TextView textView = new TextView(context);
-            textView.setWidth(200);
-
+            textView.setWidth(150);
             textView.setText(reportItem.getCommodityName());
             outerLayout.addView(textView);
 

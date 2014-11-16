@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +47,22 @@ import java.util.List;
 
 public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
     private final int resource;
+    private final int color;
+    boolean isGrey = true;
     public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
 
     private static LinearLayout.LayoutParams getLayoutParams() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(3, 3, 3, 3);
+        params.gravity = Gravity.CENTER_HORIZONTAL;
         return params;
     }
 
     public FacilityCommodityConsumptionReportRH1Adapter(Context context, int resource,
-                                                        List<FacilityCommodityConsumptionRH1ReportItem> objects) {
+                                                        List<FacilityCommodityConsumptionRH1ReportItem> objects, int color) {
         super(context, resource, objects);
         this.resource = resource;
+        this.color = color;
     }
 
     @Override
@@ -76,6 +82,11 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
             textView.setText(String.valueOf(value.getConsumption()));
             linearLayout.addView(textView);
         }
+
+        if(isGrey){
+            linearLayout.setBackgroundColor(color);
+        }
+        isGrey = !isGrey;
 
         return linearLayout;
     }
