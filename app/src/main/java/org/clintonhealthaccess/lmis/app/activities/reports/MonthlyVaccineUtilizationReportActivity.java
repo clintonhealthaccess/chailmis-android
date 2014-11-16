@@ -30,11 +30,9 @@
 package org.clintonhealthaccess.lmis.app.activities.reports;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,6 +40,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,12 +54,8 @@ import org.clintonhealthaccess.lmis.app.activities.BaseActivity;
 import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
 import org.clintonhealthaccess.lmis.app.adapters.reports.MonthlyVaccineUtilizationReportAdapter;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.ReportType;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
-import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
-import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
@@ -92,6 +87,15 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     @InjectView(R.id.linearLayoutUtilizationReportItemValues)
     LinearLayout linearLayoutUtilizationReportItemValues;
 
+    @InjectView(R.id.buttonLoadReport)
+    Button buttonLoadReport;
+
+    @InjectView(R.id.textViewBeforeLoad)
+    TextView textViewBeforeLoad;
+
+    @InjectView(R.id.scrollViewReportItems)
+    ScrollView scrollViewReportItems;
+
     private Category category;
     private ReportType reportType;
     public static final int NUMBER_OF_YEARS = 10;
@@ -120,6 +124,15 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         spinnerYear.setAdapter(yearsAdapter);
 
         setupListeners();
+
+        buttonLoadReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewBeforeLoad.setVisibility(View.GONE);
+                scrollViewReportItems.setVisibility(View.VISIBLE);
+                setItems();
+            }
+        });
     }
 
     protected void setupActionBar() {
@@ -134,7 +147,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setItems();
+
             }
 
             @Override
