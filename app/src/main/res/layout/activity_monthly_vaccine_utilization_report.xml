@@ -94,7 +94,7 @@
             android:layout_marginLeft="1450dp"
             android:layout_marginTop="90dp"
             android:textSize="18dp"
-            android:text="@string/before_facility_stock_report_load" />
+            android:text="@string/before_select_year_and_month_report_load" />
 
         <ScrollView
             android:id="@+id/scrollViewReportItems"

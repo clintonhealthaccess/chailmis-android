@@ -333,14 +333,14 @@ public class ReportsService {
             int quantityLost = GenericService.getTotal(date, lossItems);
             int closingBalance = previousDaysClosingStock;
 
-            StockItemSnapshot daystockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
-            if(daystockItemSnapshot!=null){
-                closingBalance = daystockItemSnapshot.getQuantity();
-                if (daystockItemSnapshot.maximumStockLevel() > maximumStock) {
-                    maximumStock = daystockItemSnapshot.maximumStockLevel();
+            StockItemSnapshot dayStockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
+            if(dayStockItemSnapshot!=null){
+                closingBalance = dayStockItemSnapshot.getQuantity();
+                if (dayStockItemSnapshot.maximumStockLevel() > maximumStock) {
+                    maximumStock = dayStockItemSnapshot.maximumStockLevel();
                 }
-                if (daystockItemSnapshot.minimumStockLevel() < minimumStock) {
-                    minimumStock = daystockItemSnapshot.minimumStockLevel();
+                if (dayStockItemSnapshot.minimumStockLevel() < minimumStock) {
+                    minimumStock = dayStockItemSnapshot.minimumStockLevel();
                 }
             }
 

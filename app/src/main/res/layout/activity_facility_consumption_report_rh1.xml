@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/starting_year" />
+            android:text="@string/year" />
 
         <Spinner
             android:id="@+id/spinnerStartingYear"
@@ -68,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/starting_month" />
+            android:text="@string/month" />
 
         <Spinner
             android:id="@+id/spinnerStartingMonth"
@@ -131,7 +131,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginTop="50dp"
             android:textSize="18dp"
-            android:text="@string/before_facility_stock_report_load" />
+            android:text="@string/before_select_year_and_month_report_load" />
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"

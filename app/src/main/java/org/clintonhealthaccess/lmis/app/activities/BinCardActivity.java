@@ -39,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -94,6 +95,15 @@ public class BinCardActivity extends BaseActivity {
     @InjectView(R.id.linearLayoutSearchContainer)
     LinearLayout linearLayoutSearchContainer;
 
+    @InjectView(R.id.buttonLoadBinCard)
+    Button buttonLoadReport;
+
+    @InjectView(R.id.textViewBeforeLoad)
+    TextView textViewBeforeLoad;
+
+    @InjectView(R.id.linearLayoutBinCardItems)
+    LinearLayout linearLayoutBinCardItems;
+
     @Inject
     CommodityService commodityService;
     @Inject
@@ -102,6 +112,7 @@ public class BinCardActivity extends BaseActivity {
     public SearchCommodityAdapter searchCommodityAdapter;
     private List<Commodity> commodities;
     private BinCardAdapter binCardAdapter;
+    int currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +126,15 @@ public class BinCardActivity extends BaseActivity {
         setUpAdapters();
         populateCommoditiesSpinner();
         setUpCommoditySearch();
+
+        buttonLoadReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                textViewBeforeLoad.setVisibility(View.GONE);
+                linearLayoutBinCardItems.setVisibility(View.VISIBLE);
+                populateBinCard((Commodity) spinnerCommodities.getItemAtPosition(currentPosition));
+            }
+        });
     }
 
     private void setUpAdapters() {
@@ -139,7 +159,7 @@ public class BinCardActivity extends BaseActivity {
         spinnerCommodities.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                populateBinCard((Commodity) spinnerCommodities.getItemAtPosition(position));
+                currentPosition = position;
             }
 
             @Override
