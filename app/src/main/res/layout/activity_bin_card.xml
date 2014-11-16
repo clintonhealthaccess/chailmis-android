@@ -32,7 +32,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="15dp"
+    android:paddingTop="5dp"
     tools:context="org.clintonhealthaccess.lmis.app.activities.BinCardActivity">
 
     <LinearLayout
@@ -46,13 +46,13 @@
             android:layout_height="wrap_content"
             android:layout_width="300dp"
             android:hint="Search"
-            android:layout_margin="10dp" />
+            android:layout_margin="5dp" />
 
         <Spinner
             android:id="@+id/spinnerCommodities"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp" />
+            android:layout_margin="5dp" />
 
         <Button
             android:id="@+id/buttonLoadBinCard"
@@ -121,12 +121,12 @@
 
         <ListView
             android:id="@+id/listViewHeaderItems"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <ListView
             android:id="@+id/listViewBinCardItems"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

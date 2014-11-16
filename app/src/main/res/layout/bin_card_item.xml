@@ -36,7 +36,7 @@
 
     <TextView
         android:id="@+id/textViewDate"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
@@ -45,7 +45,7 @@
 
     <TextView
         android:id="@+id/textViewReceivedFromIssuedTo"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
@@ -54,7 +54,7 @@
 
     <TextView
         android:id="@+id/textViewQuantityReceived"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
@@ -63,7 +63,7 @@
 
     <TextView
         android:id="@+id/textViewQuantityDispensed"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
@@ -72,7 +72,7 @@
 
     <TextView
         android:id="@+id/textViewQuantityLost"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
@@ -81,7 +81,7 @@
 
     <TextView
         android:id="@+id/textViewStockBalance"
-        android:layout_width="@dimen/report_row_width"
+        android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:layout_margin="5dp"
