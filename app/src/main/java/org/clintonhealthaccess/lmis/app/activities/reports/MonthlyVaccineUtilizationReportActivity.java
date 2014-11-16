@@ -92,6 +92,9 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     @InjectView(R.id.linearLayoutUtilizationReportItemValues)
     LinearLayout linearLayoutUtilizationReportItemValues;
 
+    @InjectView(R.id.listViewHeaderDays)
+    ListView listViewHeaderDays;
+
     private Category category;
     private ReportType reportType;
     public static final int NUMBER_OF_YEARS = 10;
@@ -120,6 +123,8 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         spinnerYear.setAdapter(yearsAdapter);
 
         setupListeners();
+
+
     }
 
     protected void setupActionBar() {
@@ -188,7 +193,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             ListView listViewItemNames = new ListView(context);
             listViewItemNames.setAdapter(new MonthlyVaccineUtilizationReportAdapter(context,
                     R.layout.monthly_vaccine_utilization_report_item, reportItem.getUtilizationItems(), true));
-            LinearLayout.LayoutParams paramsListView = new LinearLayout.LayoutParams(240, ViewGroup.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams paramsListView = new LinearLayout.LayoutParams(200, ViewGroup.LayoutParams.WRAP_CONTENT);
             listViewItemNames.setLayoutParams(paramsListView);
             outerLayout.addView(listViewItemNames);
 
@@ -196,7 +201,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
 
 
             ListView listViewItemValues = new ListView(context);
-            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 230);
+            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             listViewItemValues.setLayoutParams(paramsListViewValues);
 
             listViewItemValues.setAdapter(new MonthlyVaccineUtilizationReportAdapter(context,

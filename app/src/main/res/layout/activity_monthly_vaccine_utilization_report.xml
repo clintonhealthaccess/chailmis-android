@@ -51,26 +51,35 @@
             android:id="@+id/textViewReportName" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayoutSpinners"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinnerMonth"
-            android:layout_alignParentRight="true"></Spinner>
-
+        android:layout_height="wrap_content">
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinnerYear"
-            android:layout_alignParentRight="true"></Spinner>
-    </LinearLayout>
+            android:layout_alignParentLeft="true"
+            android:layout_margin="10dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinnerMonth"
+            android:layout_toRightOf="@id/spinnerYear"
+            android:layout_margin="10dp" />
+
+        <Button
+            android:id="@+id/buttonLoadReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/load_report"
+            android:textSize="15dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -78,29 +87,66 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutHeader"
+            android:layout_width="match_parent"
             android:orientation="horizontal"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:id="@+id/linearLayoutCommodityNamesAndItemNames"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="@dimen/report_commodity_name_width"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center_horizontal"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:text="@string/commodity"/>
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:text="@string/commodity"/>
+
+            <ListView
+                android:id="@+id/listViewHeaderDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
                 <LinearLayout
-                    android:id="@+id/linearLayoutUtilizationReportItemValues"
+                    android:id="@+id/linearLayoutCommodityNamesAndItemNames"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                </LinearLayout>
-            </HorizontalScrollView>
+                    android:orientation="vertical"/>
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutUtilizationReportItemValues"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
 
         </LinearLayout>
+
+
     </ScrollView>
 
 </LinearLayout>
