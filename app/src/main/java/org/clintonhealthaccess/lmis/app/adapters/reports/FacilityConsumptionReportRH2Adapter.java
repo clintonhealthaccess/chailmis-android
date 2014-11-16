@@ -47,12 +47,10 @@ import java.util.Map;
 public class FacilityConsumptionReportRH2Adapter extends ArrayAdapter<FacilityConsumptionReportRH2Item>{
     private int resource;
     private boolean isGrey = true;
-    private int color;
 
-    public FacilityConsumptionReportRH2Adapter(Context context, int resource, List<FacilityConsumptionReportRH2Item> items, int color) {
+    public FacilityConsumptionReportRH2Adapter(Context context, int resource, List<FacilityConsumptionReportRH2Item> items) {
         super(context, resource, items);
         this.resource = resource;
-        this.color = color;
     }
 
     @Override
@@ -76,7 +74,7 @@ public class FacilityConsumptionReportRH2Adapter extends ArrayAdapter<FacilityCo
             textView.setText(integerStringMap.get(key));
         }
         if(isGrey){
-            view.setBackgroundColor(color);
+            view.setBackgroundColor(getContext().getResources().getColor(R.color.m_grey));
         }
         isGrey = !isGrey;
         return view;

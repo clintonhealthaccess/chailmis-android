@@ -47,7 +47,6 @@ import java.util.List;
 
 public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<FacilityCommodityConsumptionRH1ReportItem> {
     private final int resource;
-    private final int color;
     boolean isGrey = true;
     public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
 
@@ -59,10 +58,9 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
     }
 
     public FacilityCommodityConsumptionReportRH1Adapter(Context context, int resource,
-                                                        List<FacilityCommodityConsumptionRH1ReportItem> objects, int color) {
+                                                        List<FacilityCommodityConsumptionRH1ReportItem> objects) {
         super(context, resource, objects);
         this.resource = resource;
-        this.color = color;
     }
 
     @Override
@@ -84,7 +82,7 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
         }
 
         if(isGrey){
-            linearLayout.setBackgroundColor(color);
+            linearLayout.setBackgroundColor(getContext().getResources().getColor(R.color.m_grey));
         }
         isGrey = !isGrey;
 

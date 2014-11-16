@@ -80,7 +80,7 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
     @Override
     ArrayAdapter getAdapter() {
         return new FacilityConsumptionReportRH2Adapter(context, R.layout.facility_consumption_report_rh2_item,
-                new ArrayList<FacilityConsumptionReportRH2Item>(), getResources().getColor(R.color.m_grey));
+                new ArrayList<FacilityConsumptionReportRH2Item>());
     }
 
     @Override

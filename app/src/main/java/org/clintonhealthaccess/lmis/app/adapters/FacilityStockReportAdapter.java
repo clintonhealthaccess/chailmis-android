@@ -45,13 +45,11 @@ import java.util.Map;
 
 public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReportItem> {
     private final int resource;
-    private final int color;
     boolean isGrey = true;
 
-    public FacilityStockReportAdapter(Context context, int resource, List<FacilityStockReportItem> objects, int color) {
+    public FacilityStockReportAdapter(Context context, int resource, List<FacilityStockReportItem> objects) {
         super(context, resource, objects);
         this.resource = resource;
-        this.color = color;
     }
 
     @Override
@@ -79,7 +77,7 @@ public class FacilityStockReportAdapter extends ArrayAdapter<FacilityStockReport
 
         }
         if(isGrey){
-            view.setBackgroundColor(color);
+            view.setBackgroundColor(getContext().getResources().getColor(R.color.m_grey));
         }
         isGrey = !isGrey;
         return view;

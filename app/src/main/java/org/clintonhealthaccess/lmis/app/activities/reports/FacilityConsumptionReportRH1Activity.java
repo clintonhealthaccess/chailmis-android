@@ -90,7 +90,7 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     FacilityCommodityConsumptionReportRH1Adapter getAdapter() {
         return new FacilityCommodityConsumptionReportRH1Adapter(getApplicationContext(),
                 R.layout.facility_commodity_consumption_report_rh1_item,
-                new ArrayList<FacilityCommodityConsumptionRH1ReportItem>(), getResources().getColor(R.color.m_grey));
+                new ArrayList<FacilityCommodityConsumptionRH1ReportItem>());
     }
 
     @Override
