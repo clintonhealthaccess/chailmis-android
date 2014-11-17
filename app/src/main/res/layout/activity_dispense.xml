@@ -85,12 +85,12 @@
         android:paddingLeft="10dp">
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:background="@color/dispense_theme_color"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/dispense_theme_color">
 
             <TextView
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/black"
@@ -123,7 +123,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingRight="10dp"
             android:paddingTop="10dp">

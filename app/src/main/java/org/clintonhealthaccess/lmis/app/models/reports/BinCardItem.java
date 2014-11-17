@@ -43,15 +43,17 @@ public class BinCardItem {
     int quantityReceived;
     int quantityDispensed;
     int quantityLost;
+    int quantityAdjusted;
     int stockBalance;
 
     public BinCardItem(Date date, String receivedFromIssuedTo, int quantityReceived,
-                       int quantityDispensed, int quantityLost, int stockBalance) {
+                       int quantityDispensed, int quantityLost, int quantityAdjusted, int stockBalance) {
         this.date = date;
         this.receivedFromIssuedTo = receivedFromIssuedTo;
         this.quantityReceived = quantityReceived;
         this.quantityDispensed = quantityDispensed;
         this.quantityLost = quantityLost;
+        this.quantityAdjusted = quantityAdjusted;
         this.stockBalance = stockBalance;
     }
 }

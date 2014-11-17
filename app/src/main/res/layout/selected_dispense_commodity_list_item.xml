@@ -29,39 +29,26 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/card"
     android:padding="10dp">
 
     <TextView
         android:id="@+id/textViewCommodityName"
-        android:layout_width="350dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textSize="16sp" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutStockValues"
+    <ImageButton
+        android:id="@+id/imageButtonCancel"
         android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/textViewCommodityName"
-        android:paddingLeft="20dp">
-
-        <TextView
-            android:id="@+id/textViewCurrentStock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/textViewMonthsOfStock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textStyle="bold"/>
-
-        </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="1dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
     <org.clintonhealthaccess.lmis.app.views.NumberTextView
         android:id="@+id/editTextQuantity"
@@ -72,11 +59,29 @@
         android:hint="Quantity"
         android:textSize="16sp" />
 
-    <ImageButton
-        android:id="@+id/imageButtonCancel"
+    <LinearLayout
+        android:id="@+id/linearLayoutStockValues"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:padding="1dp"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+        android:orientation="vertical"
+        android:layout_toLeftOf="@id/editTextQuantity"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/textViewCurrentStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewMonthsOfStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 </RelativeLayout>

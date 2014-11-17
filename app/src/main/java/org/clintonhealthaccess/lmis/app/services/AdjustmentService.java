@@ -128,8 +128,30 @@ public class AdjustmentService {
         return totalQuantity;
     }
 
+    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, List<AdjustmentReason> adjustmentReasons) {
+        int totalQuantity = 0;
+
+        for (AdjustmentReason reason : adjustmentReasons) {
+            int quantity = totalAdjustment(commodity, adjustments, reason);
+            totalQuantity += quantity;
+        }
+        return totalQuantity;
+    }
+
+    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, AdjustmentReason adjustmentReason) {
+        int totalQuantity = 0;
+
+        for (Adjustment adjustment : adjustments) {
+            if(adjustment.getReason().equals(adjustmentReason)
+                    && adjustment.getCommodity().equals(commodity)) {
+                totalQuantity += adjustment.getQuantity();
+            }
+        }
+        return totalQuantity;
+    }
+
     public List<Adjustment> getAdjustments(final Commodity commodity, final Date startingDate,
-            final Date endDate, final AdjustmentReason adjustmentReason) {
+                                           final Date endDate, final AdjustmentReason adjustmentReason) {
 
         return dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
             @Override
@@ -137,6 +159,20 @@ public class AdjustmentService {
                 QueryBuilder<Adjustment, String> queryBuilder = dao.queryBuilder();
                 queryBuilder.where().between("created", startingDate, endDate).
                         and().eq("commodity_id", commodity.getId()).and().eq("reason", adjustmentReason);
+                return queryBuilder.query();
+            }
+        });
+    }
+
+    public List<Adjustment> getAdjustments(
+            final Commodity commodity, final Date startingDate, final Date endDate) {
+
+        return dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
+            @Override
+            public List<Adjustment> operate(Dao<Adjustment, String> dao) throws SQLException {
+                QueryBuilder<Adjustment, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().between("created", startingDate, endDate).
+                        and().eq("commodity_id", commodity.getId());
                 return queryBuilder.query();
             }
         });

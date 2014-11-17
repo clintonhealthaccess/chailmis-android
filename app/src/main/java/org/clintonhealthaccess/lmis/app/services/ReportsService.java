@@ -40,6 +40,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -224,7 +225,6 @@ public class ReportsService {
     }
 
 
-
     private ListMultimap<Date, DispensingItem> groupDispensingItems(List<DispensingItem> dispensingItems) {
         return Multimaps.index(dispensingItems, new Function<DispensingItem, Date>() {
             @Override
@@ -318,6 +318,7 @@ public class ReportsService {
         List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startDate, today, Dispensing.class, DispensingItem.class, context);
         List<LossItem> lossItems = GenericService.getItems(commodity, startDate, today, Loss.class, LossItem.class, context);
         List<StockItemSnapshot> stockItemSnapshots = stockItemSnapshotService.get(commodity, startDate, today);
+        List<Adjustment> adjustments = adjustmentService.getAdjustments(commodity, startDate, today);
 
         int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
 
@@ -333,8 +334,13 @@ public class ReportsService {
             int quantityLost = GenericService.getTotal(date, lossItems);
             int closingBalance = previousDaysClosingStock;
 
+            int quantitySentToAnotherFacility = adjustmentService.totalAdjustment(commodity, adjustments, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+            int quantityReceivedFromAnotherFacility = adjustmentService.totalAdjustment(commodity, adjustments, AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
+            int quantityAdjusted = adjustmentService.totalAdjustment(commodity, adjustments,
+                    Arrays.asList(AdjustmentReason.PHYSICAL_COUNT, AdjustmentReason.RETURNED_TO_LGA));
+
             StockItemSnapshot dayStockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
-            if(dayStockItemSnapshot!=null){
+            if (dayStockItemSnapshot != null) {
                 closingBalance = dayStockItemSnapshot.getQuantity();
                 if (dayStockItemSnapshot.maximumStockLevel() > maximumStock) {
                     maximumStock = dayStockItemSnapshot.maximumStockLevel();
@@ -344,8 +350,23 @@ public class ReportsService {
                 }
             }
 
-            if (quantityDispensed > 0 || quantityLost > 0 || quantityReceived > 0) {
-                binCardItems.add(new BinCardItem(date, "NOT APPLICABLE", quantityReceived, quantityDispensed, quantityLost, closingBalance));
+            if (quantityReceived > 0) {
+                binCardItems.add(new BinCardItem(date, "State CMS/LGA", quantityReceived, 0, 0, 0, closingBalance));
+            }
+            if (quantityReceivedFromAnotherFacility > 0) {
+                binCardItems.add(new BinCardItem(date, "Received from Facility", 0, 0, 0, quantityReceivedFromAnotherFacility, closingBalance));
+            }
+
+            if (quantitySentToAnotherFacility > 0) {
+                binCardItems.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, closingBalance));
+            }
+
+            if (quantityAdjusted > 0) {
+                binCardItems.add(new BinCardItem(date, "", 0, 0, 0, quantityAdjusted, closingBalance));
+            }
+
+            if (quantityDispensed > 0 || quantityLost > 0) {
+                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed, quantityLost, 0, closingBalance));
             }
             previousDaysClosingStock = closingBalance;
             date = DateUtil.addDayOfMonth(date, 1);

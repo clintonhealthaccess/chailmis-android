@@ -596,7 +596,7 @@ public class ReportsServiceTest {
         int expectedBalance = expectedMin;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
-        assertThat(binCard.getBinCardItems().size(), is(1));
+        assertThat(binCard.getBinCardItems().size(), is(2));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
@@ -630,7 +630,7 @@ public class ReportsServiceTest {
         int expectedBalance8DaysAgo = expectedMin;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
-        assertThat(binCard.getBinCardItems().size(), is(2));
+        assertThat(binCard.getBinCardItems().size(), is(3));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
