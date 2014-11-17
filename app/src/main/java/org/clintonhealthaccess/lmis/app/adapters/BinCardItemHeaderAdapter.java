@@ -46,15 +46,11 @@ import java.util.Map;
 
 public class BinCardItemHeaderAdapter extends ArrayAdapter<BinCardHeader> {
 
-    private final Context context;
     private final int resource;
-    private final List<BinCardHeader> headerValues;
 
     public BinCardItemHeaderAdapter(Context context, int resource, List<BinCardHeader> headerValues) {
         super(context, resource, headerValues);
-        this.context = context;
         this.resource = resource;
-        this.headerValues = headerValues;
     }
 
 
@@ -71,6 +67,7 @@ public class BinCardItemHeaderAdapter extends ArrayAdapter<BinCardHeader> {
         hashMapHeaderIDName.put(R.id.textViewQuantityReceived, binCardHeader.getQuantityReceived());
         hashMapHeaderIDName.put(R.id.textViewQuantityDispensed, binCardHeader.getQuantityDispensed());
         hashMapHeaderIDName.put(R.id.textViewQuantityLost, binCardHeader.getQuantityLost());
+        hashMapHeaderIDName.put(R.id.textViewQuantityAdjusted, binCardHeader.getQuantityAdjusted());
         hashMapHeaderIDName.put(R.id.textViewStockBalance, binCardHeader.getStockBalance());
 
         for (Map.Entry<Integer, String> entry : hashMapHeaderIDName.entrySet()) {

@@ -44,15 +44,11 @@ import java.util.List;
 
 public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
 
-    private final Context context;
     private final int resource;
-    private final List<BinCardItem> binCardItems;
 
     public BinCardAdapter(Context context, int resource, List<BinCardItem> binCardItems) {
         super(context, resource, binCardItems);
-        this.context = context;
         this.resource = resource;
-        this.binCardItems = binCardItems;
     }
 
     @Override
@@ -77,8 +73,10 @@ public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
         TextView textViewQuantityLost = (TextView) rowView.findViewById(R.id.textViewQuantityLost);
         textViewQuantityLost.setText(String.valueOf(binCardItem.getQuantityLost()));
 
+        TextView textViewQuantityAdjusted = (TextView) rowView.findViewById(R.id.textViewQuantityAdjusted);
+        textViewQuantityAdjusted.setText(String.valueOf(binCardItem.getQuantityAdjusted()));
         TextView textViewQuantityStockBalance = (TextView) rowView.findViewById(R.id.textViewStockBalance);
-        textViewQuantityStockBalance.setText(String.valueOf(binCardItem.getQuantityReceived()));
+        textViewQuantityStockBalance.setText(String.valueOf(binCardItem.getStockBalance()));
 
         return rowView;
     }

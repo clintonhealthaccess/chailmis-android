@@ -601,10 +601,11 @@ public class ReportsServiceTest {
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
+        BinCardItem binCardItem2 = binCard.getBinCardItems().get(1);
         assertTrue(DateUtil.equal(binCardItem.getDate(), date20DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
-        assertThat(binCardItem.getQuantityDispensed(), is(30));
-        assertThat(binCardItem.getQuantityLost(), is(20));
+        assertThat(binCardItem2.getQuantityDispensed(), is(30));
+        assertThat(binCardItem2.getQuantityLost(), is(20));
         assertThat(binCardItem.getStockBalance(), is(expectedBalance));
     }
 
@@ -622,11 +623,11 @@ public class ReportsServiceTest {
         int expectedBalance10DaysAgo = expectedMax - 50;
 
         Date date8DaysAgo = DateUtil.addDayOfMonth(new Date(), -8);
-        dispense(commodity, 20, dispensingService, date8DaysAgo);
+        dispense(commodity, 25, dispensingService, date8DaysAgo);
         lose(commodity, 10, lossService, date8DaysAgo);
 
 
-        int expectedMin = expectedMax - 80;
+        int expectedMin = expectedMax - 85;
         int expectedBalance8DaysAgo = expectedMin;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
@@ -637,14 +638,14 @@ public class ReportsServiceTest {
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
         assertTrue(DateUtil.equal(binCardItem.getDate(), date10DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
-        assertThat(binCardItem.getQuantityDispensed(), is(30));
-        assertThat(binCardItem.getQuantityLost(), is(20));
+        assertThat(binCard.getBinCardItems().get(1).getQuantityDispensed(), is(30));
+        assertThat(binCard.getBinCardItems().get(1).getQuantityLost(), is(20));
         assertThat(binCardItem.getStockBalance(), is(expectedBalance10DaysAgo));
 
-        BinCardItem binCardItem2 = binCard.getBinCardItems().get(1);
+        BinCardItem binCardItem2 = binCard.getBinCardItems().get(2);
         assertTrue(DateUtil.equal(binCardItem2.getDate(), date8DaysAgo));
         assertThat(binCardItem2.getQuantityReceived(), is(0));
-        assertThat(binCardItem2.getQuantityDispensed(), is(20));
+        assertThat(binCardItem2.getQuantityDispensed(), is(25));
         assertThat(binCardItem2.getQuantityLost(), is(10));
         assertThat(binCardItem2.getStockBalance(), is(expectedBalance8DaysAgo));
     }

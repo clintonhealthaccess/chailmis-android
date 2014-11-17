@@ -38,15 +38,17 @@ public class BinCardHeader {
     String quantityReceived;
     String quantityDispensed;
     String quantityLost;
+    String quantityAdjusted;
     String stockBalance;
 
     public BinCardHeader(String date, String receivedFromIssuedTo, String quantityReceived, 
-                         String quantityDispensed, String quantityLost, String stockBalance) {
+                         String quantityDispensed, String quantityLost, String quantityAdjusted, String stockBalance) {
         this.date = date;
         this.receivedFromIssuedTo = receivedFromIssuedTo;
         this.quantityReceived = quantityReceived;
         this.quantityDispensed = quantityDispensed;
         this.quantityLost = quantityLost;
+        this.quantityAdjusted = quantityAdjusted;
         this.stockBalance = stockBalance;
     }
 }

@@ -72,6 +72,7 @@
     <string name="go_back">Go Back</string>
     <string name="commodity">Commodity</string>
     <string name="adjusted_quantity">Adjusted Quantity</string>
+    <string name="quantity_adjusted">Quantity Adjusted</string>
     <string name="new_soh">New SOH</string>
     <string name="quantity">Quantity</string>
     <string name="dispense_to_facility_successful">Dispense to Facility Successful</string>

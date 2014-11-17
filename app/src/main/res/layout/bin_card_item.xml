@@ -80,6 +80,15 @@
         android:gravity="center_horizontal"/>
 
     <TextView
+        android:id="@+id/textViewQuantityAdjusted"
+        android:layout_width="@dimen/bin_row_width"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"/>
+
+    <TextView
         android:id="@+id/textViewStockBalance"
         android:layout_width="@dimen/bin_row_width"
         android:layout_height="wrap_content"

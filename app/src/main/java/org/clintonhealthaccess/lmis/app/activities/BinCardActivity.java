@@ -145,7 +145,7 @@ public class BinCardActivity extends BaseActivity {
         BinCardHeader binCardHeader
                 = new BinCardHeader(getString(R.string.date),"Received from/Issued to",
                 getString(R.string.quantity_received), getString(R.string.quantity_dispensed),
-                getString(R.string.quantity_lost), getString(R.string.stock_balance));
+                getString(R.string.quantity_lost), getString(R.string.quantity_adjusted), getString(R.string.stock_balance));
 
         BinCardItemHeaderAdapter headerAdapter
                 = new BinCardItemHeaderAdapter(getApplicationContext(), R.layout.bin_card_item, Arrays.asList(binCardHeader));

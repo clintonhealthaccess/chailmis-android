@@ -330,13 +330,23 @@ public class ReportsService {
         Date date = startDate;
         while (date.before(tomorrow)) {
             int quantityReceived = GenericService.getTotal(date, receiveItems);
+
+            if(quantityReceived>0){
+                System.out.println("hereher");
+            }
             int quantityDispensed = GenericService.getTotal(date, dispensingItems);
             int quantityLost = GenericService.getTotal(date, lossItems);
             int closingBalance = previousDaysClosingStock;
 
-            int quantitySentToAnotherFacility = adjustmentService.totalAdjustment(commodity, adjustments, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
-            int quantityReceivedFromAnotherFacility = adjustmentService.totalAdjustment(commodity, adjustments, AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
-            int quantityAdjusted = adjustmentService.totalAdjustment(commodity, adjustments,
+            int quantitySentToAnotherFacility =
+                    adjustmentService.totalAdjustment(
+                    commodity, adjustments, date, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+            int quantityReceivedFromAnotherFacility =
+                    adjustmentService.totalAdjustment(commodity, adjustments,  date,
+                            AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
+
+            int quantityAdjusted = adjustmentService.totalAdjustment(
+                    commodity, adjustments, date,
                     Arrays.asList(AdjustmentReason.PHYSICAL_COUNT, AdjustmentReason.RETURNED_TO_LGA));
 
             StockItemSnapshot dayStockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
@@ -361,12 +371,9 @@ public class ReportsService {
                 binCardItems.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, closingBalance));
             }
 
-            if (quantityAdjusted > 0) {
-                binCardItems.add(new BinCardItem(date, "", 0, 0, 0, quantityAdjusted, closingBalance));
-            }
-
-            if (quantityDispensed > 0 || quantityLost > 0) {
-                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed, quantityLost, 0, closingBalance));
+            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted != 0) {
+                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed,
+                        quantityLost, quantityAdjusted, closingBalance));
             }
             previousDaysClosingStock = closingBalance;
             date = DateUtil.addDayOfMonth(date, 1);

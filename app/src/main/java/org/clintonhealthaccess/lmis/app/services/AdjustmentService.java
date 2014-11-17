@@ -39,6 +39,7 @@ import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -128,21 +129,22 @@ public class AdjustmentService {
         return totalQuantity;
     }
 
-    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, List<AdjustmentReason> adjustmentReasons) {
+    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, Date date, List<AdjustmentReason> adjustmentReasons) {
         int totalQuantity = 0;
 
         for (AdjustmentReason reason : adjustmentReasons) {
-            int quantity = totalAdjustment(commodity, adjustments, reason);
+            int quantity = totalAdjustment(commodity, adjustments, date, reason);
             totalQuantity += quantity;
         }
         return totalQuantity;
     }
 
-    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, AdjustmentReason adjustmentReason) {
+    public int totalAdjustment(Commodity commodity, List<Adjustment> adjustments, Date date, AdjustmentReason adjustmentReason) {
         int totalQuantity = 0;
 
         for (Adjustment adjustment : adjustments) {
-            if(adjustment.getReason().equals(adjustmentReason)
+            if (DateUtil.equal(adjustment.getCreated(), date) &&
+                    adjustment.getReason().equals(adjustmentReason.getName())
                     && adjustment.getCommodity().equals(commodity)) {
                 totalQuantity += adjustment.getQuantity();
             }
