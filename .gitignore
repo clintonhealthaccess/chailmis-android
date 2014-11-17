@@ -9,6 +9,9 @@ app/src/main/assets/crashlytics-build.properties
 *com_crashlytics_export_strings.xml
 # Created by http://www.gitignore.io
 
+#prod.properties
+dhis2-config-client/src/main/resources/dhis2.prod.properties
+
 ### Android ###
 # Built application files
 *.apk

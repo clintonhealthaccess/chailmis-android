@@ -35,6 +35,32 @@
     android:paddingTop="5dp"
     tools:context="org.clintonhealthaccess.lmis.app.activities.BinCardActivity">
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bin_card_theme_color"
+            android:textColor="@color/black"
+            android:padding="10dp"
+            android:text="@string/commodity_bin_card"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewSRVNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="10dp"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/linearLayoutSearchContainer"
         android:layout_width="wrap_content"

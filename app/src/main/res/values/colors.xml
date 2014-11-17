@@ -42,6 +42,7 @@
     <color name="adjustments_theme_color">#8438FF</color>
     <color name="reports_theme_color">#8FFF87</color>
     <color name="messages_theme_color">#F82C40</color>
+    <color name="bin_card_theme_color">#99CC00</color>
     <color name="losses_background">#474747</color>
     <color name="black">#000</color>
     <color name="receive_background">#FF6421</color>

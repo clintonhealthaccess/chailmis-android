@@ -182,5 +182,6 @@
     <string name="before_start_and_end_date_report_load">Please Select Start Date And End Date.</string>
     <string name="before_select_year_and_month_report_load">Please Select Year And Month.</string>
     <string name="before_select_commodity_bin_load">Please Select The Commodity.</string>
+    <string name="commodity_bin_card">Commodity Bin-Card</string>
 
 </resources>
