@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.util.TimingLogger;
 
 import com.google.common.base.Function;
@@ -122,17 +123,33 @@ public class CommodityService {
         List<Commodity> commodities = all();
         timingLogger.addSplit("all");
 
+        Log.i("Inital sync:", "<========== syncing Commodity Action Values");
         commodityActionService.syncCommodityActionValues(user, commodities);
 
         timingLogger.addSplit("actionValues");
         categoryService.clearCache();
         updateStockValues(all());
+        categoryService.clearCache();
+        createInitialStockItemSnapShots(all());
         timingLogger.addSplit("updateStockValues");
         allocationService.syncAllocations(user);
         timingLogger.addSplit("sync allocations");
         categoryService.clearCache();
         timingLogger.addSplit("clearCache");
         timingLogger.dumpToLog();
+    }
+
+    private void createInitialStockItemSnapShots(final List<Commodity> commodities) {
+        dbUtil.withDaoAsBatch(StockItemSnapshot.class, new Operation<StockItemSnapshot, Void>() {
+            @Override
+            public Void operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
+                for(Commodity commodity : commodities){
+                    StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
+                    dao.createOrUpdate(stockItemSnapshot);
+                }
+                return null;
+            }
+        });
     }
 
     private void syncConstants(User user) {
@@ -155,12 +172,7 @@ public class CommodityService {
 
         for (StockItem item : stockItems) {
             createStock(item);
-            createStockItemSnapshot(item);
         }
-    }
-
-    private void createStockItemSnapshot(StockItem item) {
-        stockItemSnapshotService.createOrUpdate(item.getCommodity(), new Date());
     }
 
     private void fetchAndSaveIntegerConstant(User user, String stockCountSearchKey, String key) {

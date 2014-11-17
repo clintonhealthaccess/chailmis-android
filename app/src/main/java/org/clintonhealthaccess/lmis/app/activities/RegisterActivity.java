@@ -154,8 +154,6 @@ public class RegisterActivity extends RoboActionBarActivity {
                 Log.i("Inital sync:", "<========== syncing Order Types");
                 orderService.syncOrderTypes();
                 smsSyncService.syncGatewayNumber();
-                Log.i("Inital sync:", "<========== syncing Commodity Action Values");
-                commodityActionService.syncCommodityActionValues(user, commodityService.all());
             } catch (Exception e) {
                 this.failureCause = e;
                 Log.e("Registration Error", e.getLocalizedMessage());
