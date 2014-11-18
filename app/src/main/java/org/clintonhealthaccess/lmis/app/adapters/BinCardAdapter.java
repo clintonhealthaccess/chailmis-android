@@ -42,7 +42,7 @@ import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.util.List;
 
-public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
+public class BinCardAdapter extends ArrayAdapter<BinCardItem> {
 
     private final int resource;
 
@@ -65,16 +65,25 @@ public class BinCardAdapter extends ArrayAdapter<BinCardItem>{
         textViewReceivedFromIssuedTo.setText(String.valueOf(binCardItem.getReceivedFromIssuedTo()));
 
         TextView textViewQuantityReceived = (TextView) rowView.findViewById(R.id.textViewQuantityReceived);
-        textViewQuantityReceived.setText(String.valueOf(binCardItem.getQuantityReceived()));
+        if (binCardItem.getQuantityReceived() > 0) {
+            textViewQuantityReceived.setText(String.valueOf(binCardItem.getQuantityReceived()));
+        }
 
         TextView textViewQuantityDispensed = (TextView) rowView.findViewById(R.id.textViewQuantityDispensed);
-        textViewQuantityDispensed.setText(String.valueOf(binCardItem.getQuantityDispensed()));
+        if (binCardItem.getQuantityDispensed() > 0) {
+            textViewQuantityDispensed.setText(String.valueOf(binCardItem.getQuantityDispensed()));
+        }
 
         TextView textViewQuantityLost = (TextView) rowView.findViewById(R.id.textViewQuantityLost);
-        textViewQuantityLost.setText(String.valueOf(binCardItem.getQuantityLost()));
+        if (binCardItem.getQuantityLost() > 0) {
+            textViewQuantityLost.setText(String.valueOf(binCardItem.getQuantityLost()));
+        }
 
         TextView textViewQuantityAdjusted = (TextView) rowView.findViewById(R.id.textViewQuantityAdjusted);
-        textViewQuantityAdjusted.setText(String.valueOf(binCardItem.getQuantityAdjusted()));
+        if(binCardItem.getQuantityAdjusted()!=0){
+            textViewQuantityAdjusted.setText(String.valueOf(binCardItem.getQuantityAdjusted()));
+        }
+
         TextView textViewQuantityStockBalance = (TextView) rowView.findViewById(R.id.textViewStockBalance);
         textViewQuantityStockBalance.setText(String.valueOf(binCardItem.getStockBalance()));
 
