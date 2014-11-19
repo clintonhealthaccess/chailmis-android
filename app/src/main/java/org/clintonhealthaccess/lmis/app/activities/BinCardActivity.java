@@ -213,6 +213,7 @@ public class BinCardActivity extends BaseActivity {
             try {
                 return reportsService.generateBinCard(commodities[0]);
             } catch (Exception e) {
+                e.printStackTrace();
                 return null;
             }
         }

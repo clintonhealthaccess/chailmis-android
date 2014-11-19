@@ -143,8 +143,11 @@ public class CommodityService {
         dbUtil.withDaoAsBatch(StockItemSnapshot.class, new Operation<StockItemSnapshot, Void>() {
             @Override
             public Void operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
+                    Log.i("Bin Card:", "initial snapshots");
                 for(Commodity commodity : commodities){
                     StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
+                    Log.i("Bin Card:", "snapshot; "+stockItemSnapshot);
+
                     dao.createOrUpdate(stockItemSnapshot);
                 }
                 return null;

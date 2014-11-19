@@ -36,8 +36,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
@@ -59,12 +57,10 @@ import org.clintonhealthaccess.lmis.app.models.reports.FacilityConsumptionReport
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
-import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.joda.time.DateTime;
 
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -312,7 +308,7 @@ public class ReportsService {
 
         Date today = new Date();
         Date tomorrow = DateUtil.addDayOfMonth(today, 1);
-        Date startDate = DateUtil.addDayOfMonth(today, -30);
+        Date startDate = DateUtil.addDayOfMonth(today, -31);
 
         List<ReceiveItem> receiveItems = GenericService.getItems(commodity, startDate, today, Receive.class, ReceiveItem.class, context);
         List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startDate, today, Dispensing.class, DispensingItem.class, context);
@@ -331,7 +327,7 @@ public class ReportsService {
         while (date.before(tomorrow)) {
             int quantityReceived = GenericService.getTotal(date, receiveItems);
 
-            if(quantityReceived>0){
+            if (quantityReceived > 0) {
                 System.out.println("hereher");
             }
             int quantityDispensed = GenericService.getTotal(date, dispensingItems);
@@ -340,9 +336,9 @@ public class ReportsService {
 
             int quantitySentToAnotherFacility =
                     adjustmentService.totalAdjustment(
-                    commodity, adjustments, date, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+                            commodity, adjustments, date, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
             int quantityReceivedFromAnotherFacility =
-                    adjustmentService.totalAdjustment(commodity, adjustments,  date,
+                    adjustmentService.totalAdjustment(commodity, adjustments, date,
                             AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
 
             int quantityAdjusted = adjustmentService.totalAdjustment(
@@ -371,9 +367,8 @@ public class ReportsService {
                 binCardItems.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, closingBalance));
             }
 
-            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted != 0) {
-                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed,
-                        quantityLost, quantityAdjusted, closingBalance));
+            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted > 0) {
+                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed, quantityLost, quantityAdjusted, closingBalance));
             }
             previousDaysClosingStock = closingBalance;
             date = DateUtil.addDayOfMonth(date, 1);

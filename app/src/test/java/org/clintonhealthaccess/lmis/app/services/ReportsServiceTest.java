@@ -404,12 +404,10 @@ public class ReportsServiceTest {
         createStockItemSnapshot(commodity, calendar.getTime(), difference);
 
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        int stockOutDay = 10;
-        calendar.add(Calendar.DAY_OF_MONTH, stockOutDay);
         difference = -10;
         createStockItemSnapshot(commodity, calendar.getTime(), difference);
 
-        int numOfStockOutDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - (stockOutDay + 1);
+        int numOfStockOutDays = DateUtil.dayNumber(endDate) - 1;
 
         List<FacilityStockReportItem> facilityStockReportItems =
                 reportsService.getFacilityReportItemsForCategory(category,
@@ -592,10 +590,11 @@ public class ReportsServiceTest {
         lose(commodity, 20, lossService, date20DaysAgo);
 
         int expectedMax = stock + 200;
-        int expectedMin = expectedMax - 50;
-        int expectedBalance = expectedMin;
+        int expectedMin = stock;
+        int expectedBalance = expectedMin + 150;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
+        System.out.println("this bin card::"+binCard.toString());
         assertThat(binCard.getBinCardItems().size(), is(2));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
@@ -606,6 +605,7 @@ public class ReportsServiceTest {
         assertThat(binCardItem.getQuantityReceived(), is(200));
         assertThat(binCardItem2.getQuantityDispensed(), is(30));
         assertThat(binCardItem2.getQuantityLost(), is(20));
+
         assertThat(binCardItem.getStockBalance(), is(expectedBalance));
     }
 
@@ -627,8 +627,8 @@ public class ReportsServiceTest {
         lose(commodity, 10, lossService, date8DaysAgo);
 
 
-        int expectedMin = expectedMax - 85;
-        int expectedBalance8DaysAgo = expectedMin;
+        int expectedMin = 10; //today's
+        int expectedBalance8DaysAgo = expectedMin + 115;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
         assertThat(binCard.getBinCardItems().size(), is(3));
@@ -638,8 +638,11 @@ public class ReportsServiceTest {
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
         assertTrue(DateUtil.equal(binCardItem.getDate(), date10DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
-        assertThat(binCard.getBinCardItems().get(1).getQuantityDispensed(), is(30));
-        assertThat(binCard.getBinCardItems().get(1).getQuantityLost(), is(20));
+
+        BinCardItem binCardItem1 = binCard.getBinCardItems().get(1);
+        assertThat(binCardItem1.getQuantityDispensed(), is(30));
+        assertThat(binCardItem1.getQuantityLost(), is(20));
+
         assertThat(binCardItem.getStockBalance(), is(expectedBalance10DaysAgo));
 
         BinCardItem binCardItem2 = binCard.getBinCardItems().get(2);
@@ -660,7 +663,7 @@ public class ReportsServiceTest {
         dispense(commodity1, 130, dispensingService, date10DaysAgo);
 
         int commodity1ExpectedMax = commodity1Stock + 200;
-        int commodity1ExpectedMin = commodity1ExpectedMax  - 130;
+        int commodity1ExpectedMin = commodity1Stock; // today's initial
 
         BinCard commodity1BinCard = reportsService.generateBinCard(commodity1);
         assertThat(commodity1BinCard.getMinimumStockLevel(), is(commodity1ExpectedMin));
@@ -673,7 +676,7 @@ public class ReportsServiceTest {
         dispense(commodity2, 90, dispensingService, date10DaysAgo);
 
         int commodity2ExpectedMax = commodity2Stock + 100;
-        int commodity2ExpectedMin = commodity2ExpectedMax  - 90;
+        int commodity2ExpectedMin = commodity2Stock;
 
         BinCard commodity2BinCard = reportsService.generateBinCard(commodity2);
         assertThat(commodity2BinCard.getMinimumStockLevel(), is(commodity2ExpectedMin));

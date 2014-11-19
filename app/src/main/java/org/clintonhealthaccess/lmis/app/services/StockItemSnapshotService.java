@@ -89,12 +89,8 @@ public class StockItemSnapshotService {
                         QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
 
                         queryBuilder.where().eq("commodity_id", commodity.getId())
-                                .and().gt("created", startDate).or().eq("created", startDate)
-                                .and().lt("created", endDate).or().eq("created", endDate);
-
-                        PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
-
-                        return dao.query(query);
+                                .and().ge("created", startDate).and().le("created", endDate);
+                        return queryBuilder.query();
                     }
                 }
         );
@@ -133,8 +129,7 @@ public class StockItemSnapshotService {
         }
         Date requiredDate = calendar.getTime();
 
-        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity,
-                requiredDate);
+        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity, requiredDate);
         if (latestStockItemSnapshot != null) {
             return latestStockItemSnapshot.getQuantity();
         }
@@ -189,31 +184,45 @@ public class StockItemSnapshotService {
     }
 
     public int getStockOutDays(Commodity commodity, Date startingDate, Date endDate) throws Exception {
+
         int openingStock = getLatestStock(commodity, startingDate, true);
 
+        int numOfStockOutDays = 0;
+
+        List<StockItemSnapshot> snapshots = get(commodity, startingDate, endDate);
+
+        Date closingDate = DateUtil.addDayOfMonth(endDate);
+
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(endDate);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-
-        int numOfStockOutDays = openingStock == 0 ? 1 : 0;
-        boolean previousDayWasStockOutDay = openingStock == 0 ? true : false;
-
         calendar.setTime(startingDate);
 
-        while (calendar.getTime().before(endDate)) {
+        while (calendar.getTime().before(closingDate)) {
 
-            StockItemSnapshot stockItemSnapshot = get(commodity, calendar.getTime());
+            StockItemSnapshot stockItemSnapshot = getSnapshot(calendar.getTime(), snapshots);
 
-            if ((stockItemSnapshot == null && previousDayWasStockOutDay) ||
-                    (stockItemSnapshot != null && stockItemSnapshot.getQuantity() == 0)) {
+            if (stockItemSnapshot != null && stockItemSnapshot.isStockOut() || stockItemSnapshot == null && openingStock == 0) {
                 numOfStockOutDays++;
-                previousDayWasStockOutDay = true;
-            } else {
-                previousDayWasStockOutDay = false;
+            }
+
+            if(stockItemSnapshot!=null) {
+                openingStock = stockItemSnapshot.getQuantity();
             }
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         return numOfStockOutDays;
     }
 
+    public boolean isStockOutDay(Date date, Commodity commodity) {
+        StockItemSnapshot latestSnapshot = getLatest(commodity, date);
+        if (latestSnapshot != null) {
+            if (DateUtil.equal(latestSnapshot.getCreated(), date)) {
+                return latestSnapshot.isStockOut();
+            } else {
+                if (latestSnapshot.getQuantity() == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

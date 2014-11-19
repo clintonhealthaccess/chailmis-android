@@ -163,14 +163,13 @@ public class LMISTestCase {
         orderService.saveOrder(order);
     }
 
-    public static StockItemSnapshot createStockItemSnapshot(Commodity commodity, Date time, int difference) {
+    public static StockItemSnapshot createStockItemSnapshot(Commodity commodity, Date date, int difference) {
         StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity,
-                time, commodity.getStockOnHand() + difference);
+                date, commodity.getStockOnHand() + difference);
 
-        new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application)
+        return new GenericDao<StockItemSnapshot>(StockItemSnapshot.class, application)
                 .create(stockItemSnapshot);
 
-        return stockItemSnapshot;
     }
 
     public static StockItemSnapshot createStockItemSnapshotValue(Commodity commodity, Date time, int quantity) {

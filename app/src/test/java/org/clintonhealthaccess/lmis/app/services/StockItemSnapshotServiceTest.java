@@ -158,13 +158,14 @@ public class StockItemSnapshotServiceTest {
         Commodity commodity = commodityService.all().get(0);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date snapshotDate = calendar.getTime();
 
         StockItemSnapshot stockItemSnapshot = createStockItemSnapshot(commodity, snapshotDate, 10);
 
-        Date currentDate = new Date();
-        StockItemSnapshot latestSnapshot = stockItemSnapshotService.getLatest(commodity, currentDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date date2DaysAhead = calendar.getTime();
+        StockItemSnapshot latestSnapshot = stockItemSnapshotService.getLatest(commodity, date2DaysAhead);
 
         assertThat(latestSnapshot, is(notNullValue()));
         assertThat(latestSnapshot, is(stockItemSnapshot));
@@ -198,29 +199,23 @@ public class StockItemSnapshotServiceTest {
     @Test
     public void shouldReturnStockOutDays() throws Exception {
         Commodity commodity = commodityService.all().get(0);
+        int initialQuantity = commodity.getStockOnHand();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        Date endDate = calendar.getTime();
-
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
-        int difference = -5;
-        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        Date twoDaysAhead = calendar.getTime();
 
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        int stockOutDay = 8;
-        calendar.add(Calendar.DAY_OF_MONTH, stockOutDay);
-        difference = -10;
-        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+        int difference = -initialQuantity;
+        createStockItemSnapshot(commodity, twoDaysAhead, difference);
 
-        int expectedNumOfStockOutDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH) - (stockOutDay + 1);
+        calendar.add(Calendar.DAY_OF_MONTH, 8);
+        Date tenDaysAhead = calendar.getTime();
 
-        int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, endDate);
+        int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, tenDaysAhead);
 
-        assertThat(numOfStockOutDays, is(expectedNumOfStockOutDays));
+        assertThat(numOfStockOutDays, is(9));
     }
 
     @Test
@@ -241,4 +236,41 @@ public class StockItemSnapshotServiceTest {
         assertThat(stockItemSnapshot.minimumStockLevel(), is(expectedMaxStockLevel - 152));
         assertThat(stockItemSnapshot.maximumStockLevel(), is(expectedMaxStockLevel));
     }
+
+    @Test
+    public void shouldReturnWhetherADayHadAStockOut() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        int initialStock = commodity.getStockOnHand();
+
+        Date today = DateUtil.today();
+        lose(commodity, initialStock, lossService, today);
+        receive(commodity, 145, receiveService, today);
+
+        assertThat(stockItemSnapshotService.isStockOutDay(today, commodity), is(true));
+
+    }
+
+    @Test
+    public void shouldAlsoReturnCorrectNumberOfStockOutDays() throws Exception {
+        Commodity commodity = commodityService.all().get(0);
+        int initialQuantity = commodity.getStockOnHand();
+
+        Calendar calendar = Calendar.getInstance();
+        Date startDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_MONTH, 4);
+        lose(commodity, initialQuantity, lossService, calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
+        receive(commodity, 100, receiveService, calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 3);
+        lose(commodity, 100, lossService, calendar.getTime());
+
+        calendar.add(Calendar.DAY_OF_MONTH, 11);
+        int numOfStockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startDate, calendar.getTime());
+
+        assertThat(numOfStockOutDays, is(14));
+    }
+
 }
