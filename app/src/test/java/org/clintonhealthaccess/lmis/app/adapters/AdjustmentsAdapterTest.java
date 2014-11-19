@@ -117,14 +117,15 @@ public class AdjustmentsAdapterTest {
     public void shouldSetAdjustmentViewModelToPositiveForPhysicalStockCountIfQuantityCountedIsGreaterThanSOH() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
         Commodity commodity = mock(Commodity.class);
-        when(commodity.getStockOnHand()).thenReturn(100);
+        when(commodity.getStockOnHand()).thenReturn(50);
         AdjustmentsViewModel adjustmentsViewModel = new AdjustmentsViewModel(commodity, 12, false);
         adjustmentsViewModel.setAdjustmentReason(AdjustmentReason.PHYSICAL_COUNT);
         commodities.add(adjustmentsViewModel);
         EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities),
                 R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         editText.setText("200");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(200));
+        assertThat(adjustmentsViewModel.getPhysicalStockCountDifference(), is(150));
         assertThat(adjustmentsViewModel.isPositive(), is(true));
     }
 
@@ -139,7 +140,7 @@ public class AdjustmentsAdapterTest {
         EditText editText = (EditText) getViewFromListRow(new AdjustmentsAdapter(activity, R.layout.selected_adjustment_commodity_list_item, commodities),
                 R.layout.selected_adjustment_commodity_list_item, R.id.editTextQuantity);
         editText.setText("50");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(-50));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
     }
 
@@ -156,7 +157,8 @@ public class AdjustmentsAdapterTest {
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("200");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(100));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(200));
+        assertThat(adjustmentsViewModel.getPhysicalStockCountDifference(), is(100));
         assertThat(adjustmentsViewModel.isPositive(), is(true));
         assertThat(spinnerType.getSelectedItem().toString(), is("+"));
     }
@@ -175,7 +177,7 @@ public class AdjustmentsAdapterTest {
         EditText editText = (EditText) row.findViewById(R.id.editTextQuantity);
         Spinner spinnerType = (Spinner) row.findViewById(R.id.spinnerAdjustmentType);
         editText.setText("50");
-        assertThat(adjustmentsViewModel.getQuantityEntered(), is(-50));
+        assertThat(adjustmentsViewModel.getQuantityEntered(), is(50));
         assertThat(adjustmentsViewModel.isPositive(), is(false));
         assertThat(spinnerType.getSelectedItem().toString(), is("-"));
     }

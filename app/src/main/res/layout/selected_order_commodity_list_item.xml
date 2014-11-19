@@ -33,8 +33,18 @@
     android:background="@drawable/card"
     android:padding="10dp">
 
+    <ImageButton
+        android:id="@+id/imageButtonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:clickable="false"
+        android:padding="1dp"
+        android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
     <RelativeLayout
         android:id="@+id/relativeLayoutContainer"
+        android:layout_toLeftOf="@+id/imageButtonCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
@@ -50,11 +60,11 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
-            android:id="@+id/textViewExpectedQuantity"
+            android:id="@+id/textViewSuggestedQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/green_header"
-            android:text="Expected: "
+            android:text="Suggested: "
             android:layout_alignParentRight="true" />
     </RelativeLayout>
 
@@ -128,16 +138,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/imageButtonCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/relativeLayoutContainer"
-        android:clickable="false"
-        android:padding="1dp"
-        android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
 </RelativeLayout>

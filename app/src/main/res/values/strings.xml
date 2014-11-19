@@ -176,7 +176,7 @@
     <string name="quantity_dispensed">Quantity Dispensed</string>
     <string name="stock_balance">Stock Balance</string>
     <string name="date">Date</string>
-    <string name="expected_quantity">(Expected Quantity: %d)</string>
+    <string name="suggested_quantity">(Suggested Quantity: %d)</string>
     <string name="counted">Counted:</string>
     <string name="load_report">Load Report</string>
     <string name="load_bin_card">Load Bin Card</string>
