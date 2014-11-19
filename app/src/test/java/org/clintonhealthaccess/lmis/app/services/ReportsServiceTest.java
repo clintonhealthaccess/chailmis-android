@@ -626,8 +626,7 @@ public class ReportsServiceTest {
         dispense(commodity, 25, dispensingService, date8DaysAgo);
         lose(commodity, 10, lossService, date8DaysAgo);
 
-
-        int expectedMin = 10; //today's
+        int expectedMin = stock;
         int expectedBalance8DaysAgo = expectedMin + 115;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
