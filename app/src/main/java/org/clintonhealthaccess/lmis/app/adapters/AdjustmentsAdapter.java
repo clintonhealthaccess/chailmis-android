@@ -235,13 +235,13 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
             String value = editable.toString();
             int quantity = getIntFromString(value);
             adjustmentsViewModel.setQuantityEntered(quantity);
+
             if (adjustmentsViewModel.getAdjustmentReason().isPhysicalCount()) {
-                int adjustment = quantity - adjustmentsViewModel.getStockOnHand();
-                boolean isPositive = adjustment > 0;
+                boolean isPositive = adjustmentsViewModel.getPhysicalStockCountDifference() > 0;
                 adjustmentsViewModel.setPositive(isPositive);
                 spinnerAdjustmentType.setSelection(isPositive ? types.indexOf("+") : types.indexOf("-"));
-                textViewAdjustment.setText(String.valueOf(adjustment));
-                adjustmentsViewModel.setQuantityEntered(adjustment);
+                textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getPhysicalStockCountDifference()));
+                adjustmentsViewModel.setQuantityEntered(quantity);
             } else if (adjustmentsViewModel.getAdjustmentReason().isReceivedFromAnotherFacility()) {
                 textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getAllocatedReceivedDifference()));
             } else {

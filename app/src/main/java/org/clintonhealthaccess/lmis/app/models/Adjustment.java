@@ -123,6 +123,7 @@ public class Adjustment implements Serializable, Snapshotable {
 
     public int getNewStockOnHand() {
         int stock = commodity.getStockOnHand();
+
         if (positive) {
             return stock + quantity;
         }

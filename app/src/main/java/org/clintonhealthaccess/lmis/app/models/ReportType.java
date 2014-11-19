@@ -29,7 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.app.activities.HomeActivity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH1Activity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityConsumptionReportRH2Activity;
 import org.clintonhealthaccess.lmis.app.activities.reports.FacilityStockReportActivity;
@@ -43,8 +42,8 @@ import java.util.Map;
 public enum ReportType {
 
     FacilityStockReport("Facility Stock Report", FacilityStockReportActivity.class),
-    FacilityRequsitionIssueReportForm("Facility Requsition, Issue and Report Form", FacilityStockReportActivity.class),
-    FacilityConsumptionReportRH1("Facility Consumption Report", FacilityConsumptionReportRH1Activity.class),
+    FacilityRequisitionIssueReportForm("Facility Requisition, Issue and Report Form", FacilityStockReportActivity.class),
+    FacilityConsumptionReportRH1("Facility Consumption Report RH1", FacilityConsumptionReportRH1Activity.class),
     FacilityConsumptionReportRH2("Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class),
     MonthlyHealthFacilityVaccinesUtilizationReport("Monthly Health Facility Vaccines Utilization Report", MonthlyVaccineUtilizationReportActivity.class),
     MonthlyHealthFacilityDevicesUtilizationReport("Monthly Health Facility Devices/ Other Materials Utilization Report", MonthlyVaccineUtilizationReportActivity.class);
@@ -73,7 +72,7 @@ public enum ReportType {
         Map<String, List<ReportType>> stringListHashMap = new HashMap<>();
         stringListHashMap.put(VACCINE, Arrays.asList(MonthlyHealthFacilityDevicesUtilizationReport, MonthlyHealthFacilityVaccinesUtilizationReport));
         stringListHashMap.put(MALARIA, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1));
-        stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
+        stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, ReportType.FacilityRequisitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
 
         for (String key : stringListHashMap.keySet()) {
             if (selectTypes(categoryName, key)) return stringListHashMap.get(key);

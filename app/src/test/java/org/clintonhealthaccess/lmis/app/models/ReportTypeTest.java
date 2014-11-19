@@ -68,7 +68,7 @@ public class ReportTypeTest {
     public void shouldReturnTwoReportsForCategoryFamilyPlaning() throws Exception {
         List<ReportType> reportTypesForCategory = ReportType.getReportTypesForCategory("Family Planning");
         assertThat(reportTypesForCategory.size(), is(4));
-        assertThat(reportTypesForCategory, containsInAnyOrder(ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2, ReportType.FacilityStockReport, ReportType.FacilityConsumptionReportRH1));
+        assertThat(reportTypesForCategory, containsInAnyOrder(ReportType.FacilityRequisitionIssueReportForm, ReportType.FacilityConsumptionReportRH2, ReportType.FacilityStockReport, ReportType.FacilityConsumptionReportRH1));
     }
 
     @Test

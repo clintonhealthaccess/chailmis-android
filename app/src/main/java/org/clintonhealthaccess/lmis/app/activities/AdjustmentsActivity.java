@@ -65,6 +65,7 @@ import roboguice.inject.InjectView;
 
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.StrictMath.abs;
 
 public class AdjustmentsActivity extends CommoditySelectableActivity {
     public static final String ADJUSTMENT_REASON = "adjustment_reason";
@@ -208,7 +209,12 @@ public class AdjustmentsActivity extends CommoditySelectableActivity {
             public Adjustment apply(BaseCommodityViewModel input) {
                 AdjustmentsViewModel model = (AdjustmentsViewModel) input;
 
-                return new Adjustment(model.getCommodity(), model.getQuantityEntered(), model.getQuantityAllocated(),
+                int quantity = abs( model.getAdjustmentReason().
+                        equals(AdjustmentReason.PHYSICAL_COUNT) ?
+                        model.getPhysicalStockCountDifference() :
+                        model.getQuantityEntered());
+
+                return new Adjustment(model.getCommodity(), quantity, model.getQuantityAllocated(),
                         model.isPositive(), model.getAdjustmentReason().getName());
             }
         }).toList();

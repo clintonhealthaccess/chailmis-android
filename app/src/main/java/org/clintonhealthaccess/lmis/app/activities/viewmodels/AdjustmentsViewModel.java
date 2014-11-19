@@ -77,4 +77,8 @@ public class AdjustmentsViewModel extends BaseCommodityViewModel {
     public int getAllocatedReceivedDifference() {
         return getQuantityEntered() - getQuantityAllocated();
     }
+
+    public int getPhysicalStockCountDifference(){
+        return getQuantityEntered() - getStockOnHand();
+    }
 }

@@ -85,7 +85,6 @@ public class AdjustmentsActivityTest extends TestCase {
     private UserService userService;
     private StockService stockService;
 
-
     public static AdjustmentsActivity getAdjustmentsActivity() {
         return setupActivity(AdjustmentsActivity.class);
     }
