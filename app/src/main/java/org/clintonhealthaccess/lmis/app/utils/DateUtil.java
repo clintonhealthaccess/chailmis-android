@@ -92,4 +92,8 @@ public class DateUtil {
     public static Date today() {
        return Calendar.getInstance().getTime();
     }
+
+    public static int numDaysToEndOfMonth() {
+        return maxMonthDate(new Date()) - dayNumber(new Date());
+    }
 }

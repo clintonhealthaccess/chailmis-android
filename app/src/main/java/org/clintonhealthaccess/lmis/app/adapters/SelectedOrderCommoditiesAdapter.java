@@ -51,6 +51,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.events.OrderTypeChanged;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.app.utils.ViewHelpers;
 import org.clintonhealthaccess.lmis.app.views.NumberTextView;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
@@ -103,7 +104,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
 
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
-        textViewCommodityName.setText(orderCommodityViewModel.getName());
+        textViewCommodityName.setText(orderCommodityViewModel.getName() + " [SOH:"+orderCommodityViewModel.getStockOnHand()+"]");
         textViewExpectedQuantity.setText(String.format(context.getString(R.string.suggested_quantity), orderCommodityViewModel.getExpectedOrderQuantity()));
         setupSpinners(orderCommodityViewModel, spinnerUnexpectedReasons, textViewStartDate, textViewEndDate);
         setupQuantity(orderCommodityViewModel, editTextOrderQuantity, spinnerUnexpectedReasons);
@@ -126,8 +127,22 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
     private OrderCommodityViewModel getCommodityViewModel(int position) {
         final OrderCommodityViewModel orderCommodityViewModel = getItem(position);
-        //FIXME when order is pre-populated
-        orderCommodityViewModel.setExpectedOrderQuantity(12);
+        if (orderCommodityViewModel.getExpectedOrderQuantity() == 0) {
+            int suggestedAmount = orderCommodityViewModel.getSuggestedAmount();
+            if (orderType.isRoutine()) {
+                orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount);
+            } else {
+                int numDaysToEndOfMonth = DateUtil.numDaysToEndOfMonth();
+                if (numDaysToEndOfMonth > 15) {
+                    orderCommodityViewModel.setExpectedOrderQuantity(
+                            suggestedAmount * (numDaysToEndOfMonth / 31));
+                } else {
+                    orderCommodityViewModel.setExpectedOrderQuantity(
+                            suggestedAmount + suggestedAmount * (numDaysToEndOfMonth / 31));
+                }
+            }
+        }
+        // orderCommodityViewModel.setExpectedOrderQuantity(12);
         return orderCommodityViewModel;
     }
 

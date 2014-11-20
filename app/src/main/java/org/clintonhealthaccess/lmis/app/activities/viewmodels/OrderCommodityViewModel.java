@@ -138,5 +138,8 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
         return orderCycle;
     }
 
-
+    public int getSuggestedAmount() {
+        int suggestedAmmount = getCommodity().getMaximuThreshold() - getStockOnHand();
+        return suggestedAmmount < 0 ? 0 : suggestedAmmount;
+    }
 }
