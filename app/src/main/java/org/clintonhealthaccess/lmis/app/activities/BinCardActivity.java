@@ -36,6 +36,8 @@ import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -132,9 +134,15 @@ public class BinCardActivity extends BaseActivity {
             public void onClick(View view) {
                 textViewBeforeLoad.setVisibility(View.GONE);
                 linearLayoutBinCardItems.setVisibility(View.VISIBLE);
+                hideKeyboard();
                 populateBinCard((Commodity) spinnerCommodities.getItemAtPosition(currentPosition));
             }
         });
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(buttonLoadReport.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void setUpAdapters() {
