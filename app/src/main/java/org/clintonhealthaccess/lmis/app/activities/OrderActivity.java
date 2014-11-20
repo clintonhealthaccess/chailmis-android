@@ -155,8 +155,6 @@ public class OrderActivity extends CommoditySelectableActivity {
                     FragmentManager fm = getSupportFragmentManager();
                     OrderConfirmationFragment dialog = OrderConfirmationFragment.newInstance(generateOrder());
                     dialog.show(fm, "confirmOrder");
-                } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -244,7 +242,24 @@ public class OrderActivity extends CommoditySelectableActivity {
         for (int i = 0; i < numberOfItems; i++) {
             OrderCommodityViewModel commodityViewModel = (OrderCommodityViewModel) arrayAdapter.getItem(i);
             if (!commodityViewModel.isValidAsOrderItem()) {
+                Toast.makeText(getApplicationContext(), getString(R.string.fillInAllOrderItemValues), Toast.LENGTH_SHORT).show();
                 return false;
+            }
+
+            if (commodityViewModel.getReasonForUnexpectedOrderQuantity() == null) {
+                if (commodityViewModel.quantityIsUnexpected()) {
+                    Toast.makeText(getApplicationContext(),
+                            String.format(getString(R.string.unexpected_order_quantity_error), commodityViewModel.getName(),
+                                    commodityViewModel.getExpectedOrderQuantity()), Toast.LENGTH_SHORT
+                    ).show();
+                    return false;
+                }
+                if (getOrderType().isEmergency()) {
+                    Toast.makeText(getApplicationContext(),
+                            String.format(getString(R.string.emergency_order_reason_error), commodityViewModel.getName()),
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
             }
         }
         return true;

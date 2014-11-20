@@ -54,8 +54,10 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Spy;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
@@ -76,6 +78,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
@@ -116,19 +119,19 @@ public class OrderActivityTest {
 
     }
 
-    @Test
+    @Test    
     public void testBuildActivity() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(orderActivity, not(nullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldPassOrderTypesFromOrderServiceToAdapter() {
         orderActivity = getOrderActivity();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
-    @Test
+    @Test    
     public void shouldToggleVisibilityOfSubmitButton() {
         orderActivity = getOrderActivity();
         List<BaseCommodityViewModel> selectedCommodities = newArrayList();
@@ -141,7 +144,7 @@ public class OrderActivityTest {
         assertThat(orderActivity.buttonSubmitOrder.getVisibility(), is(View.INVISIBLE));
     }
 
-    @Test
+    @Test    
     public void shouldCreateOrderFromSelectedCommodities() {
         orderActivity = getOrderActivity();
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
@@ -166,7 +169,7 @@ public class OrderActivityTest {
         assertThat(actualOrder.getItems().size(), is(expectedOrder.getItems().size()));
     }
 
-    @Test
+    @Test    
     public void shouldDisplaySRVNumber() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(orderActivity.textViewSRVNo, is(notNullValue()));
@@ -176,21 +179,23 @@ public class OrderActivityTest {
     @Test
     public void shouldConfirmOrderAndOrderItemsOnSubmit() {
         orderActivity = getOrderActivity();
-        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
-        commodityViewModel1.setOrderPeriodEndDate(new Date());
-        commodityViewModel1.setOrderPeriodStartDate(new Date());
+        OrderCommodityViewModel viewModel = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        viewModel.setOrderPeriodEndDate(new Date());
+        viewModel.setOrderPeriodStartDate(new Date());
+        viewModel.setExpectedOrderQuantity(10);
 
-        EventBus.getDefault().post(new CommodityToggledEvent(commodityViewModel1));
+        EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
 
         Button buttonSubmitOrder = orderActivity.buttonSubmitOrder;
 
         assertThat(buttonSubmitOrder.getVisibility(), is(View.VISIBLE));
         buttonSubmitOrder.performClick();
+
         Dialog dialog = ShadowDialog.getLatestDialog();
         assertThat(dialog, is(notNullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldShowInvalidFieldsToastGivenSubmitWithEmptyFields() {
         orderActivity = getOrderActivity();
         OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
@@ -202,20 +207,20 @@ public class OrderActivityTest {
         assertThat(ShadowDialog.getLatestDialog(), is(nullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldShowRoutineAsTheDefaultTypeForOrder() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.ROUTINE));
     }
 
-    @Test
+    @Test    
     public void shouldSetTheOrderTypeWhenOrderIsGenerated() throws Exception {
         orderActivity = getOrderActivity();
         Order actualOrder = orderActivity.generateOrder();
         assertThat(actualOrder.getOrderType().getName(), is(OrderType.ROUTINE));
     }
 
-    @Test
+    @Test    
     public void shouldGetCorrectOrderTypeWhenItChanges() throws Exception {
         orderActivity = getOrderActivity();
         orderActivity.spinnerOrderType.setSelection(1);
@@ -223,7 +228,7 @@ public class OrderActivityTest {
         assertThat(actualOrder.getOrderType().getName(), is(OrderType.EMERGENCY));
     }
 
-    @Test
+    @Test    
     public void shouldSetUnexpectedReasonOnOrderItemsWhenCreatingAnOrder() throws Exception {
         orderActivity = getOrderActivity();
         int testQuantity = 10;
@@ -241,7 +246,7 @@ public class OrderActivityTest {
         assertThat(actualOrder.getItems().get(0).getReasonForUnexpectedQuantity().getReason(), is(testReason));
     }
 
-    @Test
+    @Test    
     public void shouldSetQuantityOnOrderItemsWhenCreatingAnOrder() throws Exception {
         orderActivity = getOrderActivity();
         int testQuantity = 10;
@@ -257,7 +262,7 @@ public class OrderActivityTest {
         assertThat(actualOrder.getItems().get(0).getQuantity(), is(testQuantity));
     }
 
-    @Test
+    @Test    
     public void shouldSetTheOrderWhenCreatingAnOrder() throws Exception {
         orderActivity = getOrderActivity();
         int testQuantity = 10;
@@ -273,16 +278,56 @@ public class OrderActivityTest {
         assertThat(actualOrder.getItems().get(0).getOrder().getSrvNumber(), is(TEST_SRV_NUMBER));
     }
 
-    @Test
-    public void shouldSetPresetOrderTypeIfAvailable() throws Exception {
+    @Test    public void shouldShowErrorMessageWhenUnexpectedOrderQuantityIsGiven() throws Exception {
+        orderActivity = getOrderActivity();
+
+        OrderCommodityViewModel viewModel = new OrderCommodityViewModel(new Commodity("id", "Panado"), 20);
+        viewModel.setOrderPeriodEndDate(new Date());
+        viewModel.setOrderPeriodStartDate(new Date());
+        OrderCommodityViewModel spyViewModel = spy(viewModel);
+        when(spyViewModel.getExpectedOrderQuantity()).thenReturn(10);
+
+        EventBus.getDefault().post(new CommodityToggledEvent(spyViewModel));
+
+        orderActivity.spinnerOrderType.setSelection(0);
+        orderActivity.getSubmitButton().performClick();
+
+        assertThat(ShadowToast.getTextOfLatestToast(),
+                is(String.format(application.getString(R.string.unexpected_order_quantity_error),
+                        spyViewModel.getName(), spyViewModel.getExpectedOrderQuantity()))
+        );
+        assertThat(ShadowDialog.getLatestDialog(), is(nullValue()));
+    }
+
+    @Test    public void shouldShowErrorMessageWhenEmergencyReasonIsNull() throws Exception {
+        orderActivity = getOrderActivity();
+
+        OrderCommodityViewModel viewModel = new OrderCommodityViewModel(new Commodity("id", "Panado"), 20);
+        viewModel.setOrderPeriodEndDate(new Date());
+        viewModel.setOrderPeriodStartDate(new Date());
+        OrderCommodityViewModel spyViewModel = spy(viewModel);
+        when(spyViewModel.getExpectedOrderQuantity()).thenReturn(10);
+
+        EventBus.getDefault().post(new CommodityToggledEvent(spyViewModel));
+
+        orderActivity.spinnerOrderType.setSelection(1);
+        orderActivity.getSubmitButton().performClick();
+
+        assertThat(ShadowToast.getTextOfLatestToast(),
+                is(String.format(application.getString(R.string.unexpected_order_quantity_error),
+                        spyViewModel.getName(), spyViewModel.getExpectedOrderQuantity()))
+        );
+        assertThat(ShadowDialog.getLatestDialog(), is(nullValue()));
+    }
+
+    @Test    public void shouldSetPresetOrderTypeIfAvailable() throws Exception {
         Intent intent = new Intent();
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
         orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
         assertThat(((OrderType) orderActivity.spinnerOrderType.getSelectedItem()).getName(), is(OrderType.EMERGENCY));
     }
 
-    @Test
-    public void shouldPrepopulateOrderCommodityViewModelIfOrderTypeIsPreset() throws Exception {
+    @Test    public void shouldPrepopulateOrderCommodityViewModelIfOrderTypeIsPreset() throws Exception {
         Intent intent = new Intent();
         ArrayList<OrderCommodityViewModel> orderCommodityViewModels = new ArrayList<>();
         orderCommodityViewModels.add(new OrderCommodityViewModel(new Commodity("Job")));
@@ -293,7 +338,7 @@ public class OrderActivityTest {
 
     }
 
-    @Test
+    @Test    
     public void shouldShowMessageAboutOutstandingAlertsIfAny() throws Exception {
         Intent intent = new Intent();
         when(alertsService.getNumberOfRoutineOrderAlerts()).thenReturn(2);
@@ -303,7 +348,7 @@ public class OrderActivityTest {
         assertThat(ShadowToast.getTextOfLatestToast(), is(application.getString(R.string.outstanding_routine_order_alerts_message)));
     }
 
-    @Test
+    @Test    
     public void shouldNotShowMessageAboutOutstandingAlertsIfItIsOnlyOne() throws Exception {
         Intent intent = new Intent();
         when(alertsService.getNumberOfRoutineOrderAlerts()).thenReturn(1);
@@ -313,19 +358,19 @@ public class OrderActivityTest {
         assertThat(ShadowToast.getTextOfLatestToast(), is(nullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldHaveAKeyBoardView() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(orderActivity.keyBoardView, not(nullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldHaveAKeyBoard() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(orderActivity.keyBoard, not(nullValue()));
     }
 
-    @Test
+    @Test    
     public void shouldHave12KeysOnTheKeyboard() throws Exception {
         orderActivity = getOrderActivity();
         assertThat(orderActivity.keyBoard.getKeys().size(), is(12));
