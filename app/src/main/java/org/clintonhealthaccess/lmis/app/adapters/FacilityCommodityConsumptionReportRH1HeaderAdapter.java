@@ -53,9 +53,9 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
 
     private static LinearLayout.LayoutParams getLayoutParams() {
         LinearLayout.LayoutParams params
-                = new LinearLayout.LayoutParams(R.dimen.rh1_report_row_width, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(3,3,3,3);
-        params.gravity = Gravity.CENTER_HORIZONTAL;
+                = new LinearLayout.LayoutParams(28, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        params.setMargins(3,3,3,3);
+        params.gravity = Gravity.CENTER;
         return params;
     }
 
@@ -74,6 +74,7 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
         TextView textViewCommodityName = (TextView) linearLayout.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(R.string.commodity);
         textViewCommodityName.setTypeface(null, Typeface.BOLD);
+        textViewCommodityName.setPadding(3, 3, 3, 3);
 
         List<String> days = getItem(position).getDays();
         for (String day : days) {
@@ -82,6 +83,7 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
             textViewDay.setTextColor(getContext().getResources().getColor(R.color.black));
             textViewDay.setTypeface(null, Typeface.BOLD);
             textViewDay.setText(day);
+            textViewDay.setPadding(3, 3, 3, 3);
             linearLayout.addView(textViewDay);
         }
 

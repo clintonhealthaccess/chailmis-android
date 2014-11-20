@@ -562,7 +562,7 @@ public class ReportsServiceTest {
     }
 
     public int daysBetween(Date d1, Date d2) {
-        return Days.daysBetween(new DateTime(d1), new DateTime(d2)).getDays();
+        return Days.daysBetween(new DateTime(d1), new DateTime(DateUtil.addDayOfMonth(d2,1))).getDays();
     }
 
     @Test
@@ -594,7 +594,6 @@ public class ReportsServiceTest {
         int expectedBalance = expectedMin + 150;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
-        System.out.println("this bin card::"+binCard.toString());
         assertThat(binCard.getBinCardItems().size(), is(2));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));

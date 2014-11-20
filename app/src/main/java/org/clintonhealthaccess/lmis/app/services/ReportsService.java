@@ -157,42 +157,18 @@ public class ReportsService {
 
     protected ArrayList<ConsumptionValue> getConsumptionValuesForCommodityBetweenDates(final Commodity commodity, final Date startingDate, final Date endDate) {
         ArrayList<ConsumptionValue> consumptionValues = new ArrayList<>();
-        List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startingDate, endDate,
-                Dispensing.class, DispensingItem.class, context);
-        ListMultimap<Date, DispensingItem> listMultimap = groupDispensingItems(dispensingItems);
-        HashMap<Date, Integer> values = mapDispensingItemsToDates(listMultimap, startingDate, endDate);
-        for (Date date : values.keySet()) {
-            ConsumptionValue consumptionValue = new ConsumptionValue(date, values.get(date));
-            consumptionValues.add(consumptionValue);
-        }
-        sortConsumptionValues(consumptionValues);
+        List<DispensingItem> dispensingItems = GenericService.getItems(commodity, startingDate, endDate, Dispensing.class, DispensingItem.class, context);
+
+        Date stopDate = DateUtil.addDayOfMonth(endDate, 1);
+        Date currentDate = startingDate;
+         while(currentDate.before(stopDate)){
+             int total = GenericService.getTotal(currentDate, dispensingItems);
+             ConsumptionValue consumptionValue = new ConsumptionValue(currentDate, total);
+             consumptionValues.add(consumptionValue);
+             currentDate = DateUtil.addDayOfMonth(currentDate, 1);
+         }
+
         return consumptionValues;
-    }
-
-    private void sortConsumptionValues(ArrayList<ConsumptionValue> consumptionValues) {
-        Collections.sort(consumptionValues, new Comparator<ConsumptionValue>() {
-            @Override
-            public int compare(ConsumptionValue lhs, ConsumptionValue rhs) {
-                return lhs.getDate().compareTo(rhs.getDate());
-            }
-        });
-    }
-
-    private HashMap<Date, Integer> mapDispensingItemsToDates(ListMultimap<Date, DispensingItem> listMultimap, Date start, Date stop) {
-        List<DateTime> days = getDays(start, stop);
-        HashMap<Date, Integer> values = new HashMap<>();
-        for (DateTime time : days) {
-            Integer consumption = 0;
-            if (values.containsKey(time)) {
-                consumption = values.get(time);
-            }
-            for (DispensingItem item : listMultimap.get(time.toDate())) {
-                consumption += item.getQuantity();
-            }
-            values.put(time.toDate(), consumption);
-
-        }
-        return values;
     }
 
     public List<DateTime> getDays(Date start, Date stop) {

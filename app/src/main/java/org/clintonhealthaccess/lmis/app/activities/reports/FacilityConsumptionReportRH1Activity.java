@@ -119,12 +119,6 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
         });
     }
 
-//    @Override
-//    void setupListViewHeader() {
-//        LinearLayout linearLayout = buildHeaderView();
-//        listViewReport.addHeaderView(linearLayout);
-//    }
-
     LinearLayout buildHeaderView() {
         LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(getHeaderLayout(), null);
         try {
