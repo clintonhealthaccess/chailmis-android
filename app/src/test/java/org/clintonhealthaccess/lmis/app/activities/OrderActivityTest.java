@@ -57,6 +57,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
@@ -179,11 +181,17 @@ public class OrderActivityTest {
     @Test
     public void shouldConfirmOrderAndOrderItemsOnSubmit() {
         orderActivity = getOrderActivity();
-        OrderCommodityViewModel viewModel = new OrderCommodityViewModel(new Commodity("id", "Commodity 1"), 10);
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getName()).thenReturn("Commodity 1");
+        when(commodity.getId()).thenReturn("id");
+        when(commodity.getStockOnHand()).thenReturn(10);
+        when(commodity.getMaximuThreshold()).thenReturn(30);
+        OrderCommodityViewModel viewModel = spy(new OrderCommodityViewModel(commodity, 10));
         viewModel.setOrderPeriodEndDate(new Date());
         viewModel.setOrderPeriodStartDate(new Date());
         viewModel.setExpectedOrderQuantity(10);
 
+        when(viewModel.getStockOnHand()).thenReturn(5);
         EventBus.getDefault().post(new CommodityToggledEvent(viewModel));
 
         Button buttonSubmitOrder = orderActivity.buttonSubmitOrder;
@@ -329,8 +337,17 @@ public class OrderActivityTest {
 
     @Test    public void shouldPrepopulateOrderCommodityViewModelIfOrderTypeIsPreset() throws Exception {
         Intent intent = new Intent();
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getName()).thenReturn("Commodity 1");
+        when(commodity.getId()).thenReturn("id");
+        when(commodity.getStockOnHand()).thenReturn(10);
+        when(commodity.getMaximuThreshold()).thenReturn(30);
+        OrderCommodityViewModel viewModel = spy(new OrderCommodityViewModel(commodity, 10));
+
         ArrayList<OrderCommodityViewModel> orderCommodityViewModels = new ArrayList<>();
-        orderCommodityViewModels.add(new OrderCommodityViewModel(new Commodity("Job")));
+        when(viewModel.getCommodity().getStockOnHand()).thenReturn(20);
+        when(viewModel.getCommodity().getMaximuThreshold()).thenReturn(30);
+        orderCommodityViewModels.add(viewModel);
         when(alertsService.getOrderCommodityViewModelsForLowStockAlert()).thenReturn(orderCommodityViewModels);
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);
         orderActivity = Robolectric.buildActivity(OrderActivity.class).withIntent(intent).create().start().resume().visible().get();
