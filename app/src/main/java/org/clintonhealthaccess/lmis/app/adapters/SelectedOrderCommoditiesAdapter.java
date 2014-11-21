@@ -102,12 +102,12 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         final TextView textViewStartDate = (TextView) rowView.findViewById(R.id.textViewStartDate);
         final TextView textViewEndDate = (TextView) rowView.findViewById(R.id.textViewEndDate);
 
-
         activateCancelButton((ImageButton) rowView.findViewById(R.id.imageButtonCancel), orderCommodityViewModel);
-        textViewCommodityName.setText(orderCommodityViewModel.getName() + " [SOH:"+orderCommodityViewModel.getStockOnHand()+"]");
+        textViewCommodityName.setText(orderCommodityViewModel.getName() + " [SOH:" + orderCommodityViewModel.getStockOnHand() + "]");
         textViewExpectedQuantity.setText(String.format(context.getString(R.string.suggested_quantity), orderCommodityViewModel.getExpectedOrderQuantity()));
         setupSpinners(orderCommodityViewModel, spinnerUnexpectedReasons, textViewStartDate, textViewEndDate);
         setupQuantity(orderCommodityViewModel, editTextOrderQuantity, spinnerUnexpectedReasons);
+
         initialiseDates(orderCommodityViewModel, textViewStartDate, textViewEndDate);
         textViewStartDate.addTextChangedListener(new StartDateTextWatcher(orderCommodityViewModel, textViewStartDate, textViewEndDate, spinnerUnexpectedReasons));
         textViewEndDate.addTextChangedListener(new EndDateTextWatcher(orderCommodityViewModel, spinnerUnexpectedReasons));
@@ -142,7 +142,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
                 }
             }
         }
-        // orderCommodityViewModel.setExpectedOrderQuantity(12);
+
         return orderCommodityViewModel;
     }
 

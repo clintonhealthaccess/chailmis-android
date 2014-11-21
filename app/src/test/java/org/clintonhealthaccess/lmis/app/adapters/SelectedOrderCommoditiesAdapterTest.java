@@ -56,6 +56,7 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -77,7 +78,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.setupActivity;
 
@@ -129,10 +132,10 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         orderActivity = getOrderActivity();
 
-
         commodities = new ArrayList<>();
-        commodityViewModel = new OrderCommodityViewModel(commodity, 10);
+        commodityViewModel = new OrderCommodityViewModel(commodity, 2);
         commodityViewModel.setOrderReasonPosition(0);
+        commodityViewModel.setExpectedOrderQuantity(12);
         commodities.add(commodityViewModel);
         orderReasons.add(losses);
         orderReasons.add(highDemand);
@@ -222,12 +225,11 @@ public class SelectedOrderCommoditiesAdapterTest {
         String endDateAsText = SIMPLE_DATE_FORMAT.format(calendarEndDate.getTime());
 
         assertThat(maxStartDateAsText, is(endDateAsText));
-
     }
-
 
     @Test
     public void shouldShowUnExpectedReasonsSpinnerIfQuantityIsUnexpected() throws Exception {
+
         View rowView = getRowView();
 
         EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
@@ -235,6 +237,9 @@ public class SelectedOrderCommoditiesAdapterTest {
 
         assertThat(spinnerUnexpectedQuantityReasons, is(notNullValue()));
 
+        assertThat(commodityViewModel.getExpectedOrderQuantity(), is(12));
+        assertThat(editTextOrderQuantity.getText().toString(), is("2"));
+        assertTrue(orderActivity.getOrderType().isRoutine());
         ANDROID.assertThat(spinnerUnexpectedQuantityReasons).isNotVisible();
 
         editTextOrderQuantity.setText("20");
@@ -321,10 +326,7 @@ public class SelectedOrderCommoditiesAdapterTest {
     public void shouldDefaultToBlankForUnExpectedReasons() throws Exception {
         adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
-
-
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);
-
         assertThat(((OrderReason) spinnerUnexpectedOrderReasons.getSelectedItem()).getReason(), is(Robolectric.application.getString(R.string.select_reason)));
     }
 

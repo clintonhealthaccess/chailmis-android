@@ -109,11 +109,11 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
         return orderPeriodEndDate != null && orderPeriodStartDate != null && quantityEntered > 0;
     }
 
-
     public boolean isUnexpectedReasonsSpinnerVisible(String dateText, Date actualDate, boolean typeIsRoutine) {
         if (!typeIsRoutine) {
             return true;
         }
+
         if (actualDate != null && dateText != null && typeIsRoutine) {
             if (!dateText.equalsIgnoreCase(SelectedOrderCommoditiesAdapter.SIMPLE_DATE_FORMAT.format(actualDate))) {
                 return true;
@@ -139,7 +139,7 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public int getSuggestedAmount() {
-        int suggestedAmmount = getCommodity().getMaximuThreshold() - getStockOnHand();
-        return suggestedAmmount < 0 ? 0 : suggestedAmmount;
+        int suggestedAmount = getCommodity().getMaximuThreshold() - getStockOnHand();
+        return suggestedAmount < 0 ? 0 : suggestedAmount;
     }
 }

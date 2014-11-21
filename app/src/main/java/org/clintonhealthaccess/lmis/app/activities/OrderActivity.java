@@ -128,7 +128,7 @@ public class OrderActivity extends CommoditySelectableActivity {
         };
     }
 
-    private OrderType getOrderType() {
+    public OrderType getOrderType() {
         return (OrderType) spinnerOrderType.getSelectedItem();
     }
 
