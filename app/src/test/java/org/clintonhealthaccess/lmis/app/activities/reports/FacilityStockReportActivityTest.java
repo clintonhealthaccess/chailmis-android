@@ -39,20 +39,23 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -119,16 +122,17 @@ public class FacilityStockReportActivityTest {
 
 
     @Test
-    public void shouldSet12MonthsInTheStartingMonthSpinner() throws Exception {
+    public void shouldSetCorrectMonthsInTheStartingMonthSpinner() throws Exception {
         FacilityStockReportActivity activity = getActivity();
-        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
+        int numberOfMonths = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(numberOfMonths));
     }
 
-
     @Test
-    public void shouldSet12MonthsInTheEndingMonthSpinner() throws Exception {
+    public void shouldSetCorrectMonthsInTheEndingMonthSpinner() throws Exception {
         FacilityStockReportActivity activity = getActivity();
-        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
+        int numberOfMonths = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(numberOfMonths));
     }
 
     @Test
@@ -136,7 +140,6 @@ public class FacilityStockReportActivityTest {
         FacilityStockReportActivity activity = getActivity();
         List<String> months = activity.getMonths();
         assertThat(months.size(), is(NUMBER_OF_MONTHS_IN_YEAR));
-
     }
 
     @Test
@@ -156,8 +159,10 @@ public class FacilityStockReportActivityTest {
     public void shouldNotAllowYouToSetEndingMonthThatsBeforeTheStartMonth() throws Exception {
         FacilityStockReportActivity activity = getActivity();
         activity.spinnerStartingMonth.setSelection(1);
-        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(12));
-        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(11));
+        int numberOfMonths = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(numberOfMonths));
+        int numEndingMonths = numberOfMonths - 1;
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(numEndingMonths));
     }
 
     @Test
@@ -169,7 +174,49 @@ public class FacilityStockReportActivityTest {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
-        assertThat((String)activity.spinnerEndingYear.getAdapter().getItem(3), is(String.valueOf(year-3)));
+        assertThat((String) activity.spinnerEndingYear.getAdapter().getItem(3), is(String.valueOf(year - 3)));
     }
 
+    @Test
+    public void shouldHideMonthsGreaterThanCurrentMonthInStartingMonthWhenStartingYearIsCurrentYear() throws Exception {
+        FacilityStockReportActivity activity = getActivity();
+        activity.spinnerStartingYear.setSelection(0);
+
+        if (DateUtil.monthNumber(new Date()) < 12) {
+            assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), lessThan(12));
+        }
+    }
+
+    @Test
+    public void shouldShowAllMonthsWhenStartingYearIsNotCurrentYear() throws Exception {
+        FacilityStockReportActivity activity = getActivity();
+        activity.spinnerStartingYear.setSelection(2);
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(12));
+
+        if (DateUtil.monthNumber(new Date()) < 12) {
+            int numberOfMonths = DateUtil.monthNumber() + 1;
+            assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(numberOfMonths));
+        }
+    }
+
+    @Test
+    public void shouldShowAllMonthsWhenYearsAreNotCurrentYear() throws Exception {
+        FacilityStockReportActivity activity = getActivity();
+        activity.spinnerStartingYear.setSelection(1);
+        activity.spinnerEndingYear.setSelection(1);
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(12));
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(12));
+    }
+
+
+    @Test
+    public void shouldShowCorrectMonthsWhenEndYearChangesToCurrentYear() throws Exception {
+        FacilityStockReportActivity activity = getActivity();
+        activity.spinnerStartingYear.setSelection(4);
+        activity.spinnerEndingYear.setSelection(1);
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(12));
+        activity.spinnerEndingYear.setSelection(0);
+        int numberOfMonths = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(numberOfMonths));
+    }
 }

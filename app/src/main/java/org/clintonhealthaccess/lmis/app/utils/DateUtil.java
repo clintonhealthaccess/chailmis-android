@@ -96,4 +96,13 @@ public class DateUtil {
     public static int numDaysToEndOfMonth() {
         return maxMonthDate(new Date()) - dayNumber(new Date());
     }
+
+    public static int monthNumber(Date date) {
+        Calendar calendar = calendarDate(date);
+        return calendar.get(Calendar.MONTH);
+    }
+
+    public static int monthNumber() {
+        return monthNumber(new Date());
+    }
 }

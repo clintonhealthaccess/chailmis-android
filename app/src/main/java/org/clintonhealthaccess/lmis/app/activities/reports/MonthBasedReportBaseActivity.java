@@ -48,11 +48,14 @@ import org.clintonhealthaccess.lmis.app.activities.ReportsActivity;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -102,19 +105,25 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         setupListViewHeader();
         listViewReport.setAdapter(adapter);
         afterCreate();
-;    }
+        ;
+    }
 
 
     private void setupSpinners() {
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
-        ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths());
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
+        spinnerStartingYear.setAdapter(yearsAdapter);
+        spinnerStartingYear.setSelection(0);
+        setupEndYearSpinner();
+
+        ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.spinner_item_black, getMonths());
         spinnerStartingMonth.setAdapter(startMonthAdapter);
         spinnerStartingMonth.setSelection(0);
         setupEndMonthSpinner();
-        spinnerStartingYear.setAdapter(yearsAdapter);
-        setupEndYearSpinner();
+
         setupListeners();
-        getStrategy().applyVisibilityStrategy(spinnerStartingMonth, spinnerEndingMonth, spinnerStartingYear, spinnerEndingYear,textViewEndingMonth,textViewEndingYear);
+        getStrategy().applyVisibilityStrategy(spinnerStartingMonth, spinnerEndingMonth, spinnerStartingYear, spinnerEndingYear, textViewEndingMonth, textViewEndingYear);
     }
 
     SpinnerVisibilityStrategy getStrategy() {
@@ -143,7 +152,6 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //setItems();
             }
 
             @Override
@@ -157,8 +165,22 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         spinnerStartingYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("----------------hehehehe we are here----------------------------------");
+                System.out.println(spinnerStartingYear.getSelectedItem().toString());
                 setupEndYearSpinner();
-                //setItems();
+                setupStartingMonthSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerEndingYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setupEndMonthSpinner();
             }
 
             @Override
@@ -170,7 +192,6 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         spinnerStartingMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //setItems();
                 setupEndMonthSpinner();
             }
 
@@ -182,12 +203,14 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
     }
 
     protected List<String> getMonths(int selectedIndex) {
+        return getMonths(selectedIndex, 12);
+    }
 
+    protected List<String> getMonths(int startIndex, int endIndex) {
         List<String> months = getMonths();
-        if (selectedIndex >= 0) {
-            return months.subList(selectedIndex, 12);
-        }
-        return months;
+        startIndex = startIndex < 0 ? 0 : startIndex;
+        return months.subList(startIndex, endIndex);
+
     }
 
     protected String getStartingYear() {
@@ -216,6 +239,21 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         }).toList();
     }
 
+    private boolean startingYearIsCurrent() {
+        SimpleDateFormat dateFormatYYYY = new SimpleDateFormat("yyyy");
+        return spinnerStartingYear.getSelectedItem().toString()
+                .equalsIgnoreCase(dateFormatYYYY.format(new Date()));
+    }
+
+    private boolean endingYearIsCurrent() {
+        SimpleDateFormat dateFormatYYYY = new SimpleDateFormat("yyyy");
+        if(spinnerEndingYear.getSelectedItem()==null) {
+            spinnerStartingYear.setSelection(0);
+        }
+        return spinnerEndingYear.getSelectedItem().toString()
+                .equalsIgnoreCase(dateFormatYYYY.format(new Date()));
+    }
+
     protected ArrayList<String> getLastNYears(int numberOfYears) {
         ArrayList<String> years = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
@@ -228,13 +266,26 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
     protected void setupEndYearSpinner() {
         int selectedIndex = spinnerStartingYear.getSelectedItemPosition();
-        ArrayAdapter<String> endYearAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS).subList(0, selectedIndex + 1));
+        ArrayAdapter<String> endYearAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS).subList(0, selectedIndex + 1));
         spinnerEndingYear.setAdapter(endYearAdapter);
+    }
+
+    protected void setupStartingMonthSpinner() {
+        if (startingYearIsCurrent()) {
+            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                    getMonths(0, DateUtil.monthNumber() + 1));
+            spinnerStartingMonth.setAdapter(startMonthAdapter);
+        }else{
+            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                    getMonths());
+            spinnerStartingMonth.setAdapter(startMonthAdapter);
+        }
     }
 
     protected void setupEndMonthSpinner() {
         int selectedIndex = spinnerStartingMonth.getSelectedItemPosition();
-        ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths(selectedIndex));
+        ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                getMonths(selectedIndex, endingYearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
         spinnerEndingMonth.setAdapter(endMonthAdapter);
     }
 
