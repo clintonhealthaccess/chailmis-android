@@ -42,6 +42,7 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityStockReportItem;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
@@ -118,16 +119,18 @@ public class FacilityConsumptionReportRH1ActivityTest {
 
 
     @Test
-    public void shouldSet12MonthsInTheStartingMonthSpinner() throws Exception {
+    public void shouldSetCorrectNumberOfMonthsInTheStartingMonthSpinner() throws Exception {
         FacilityConsumptionReportRH1Activity activity = getActivity();
-        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
+        int months = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), is(months));
     }
 
 
     @Test
-    public void shouldSet12MonthsInTheEndingMonthSpinner() throws Exception {
+    public void shouldSetCorrectNumberOfMonthsInTheEndingMonthSpinner() throws Exception {
         FacilityConsumptionReportRH1Activity activity = getActivity();
-        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(NUMBER_OF_MONTHS_IN_YEAR));
+        int months = DateUtil.monthNumber() + 1;
+        assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(months));
     }
 
 
