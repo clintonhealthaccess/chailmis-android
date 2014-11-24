@@ -57,12 +57,15 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.ReportType;
 import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilizationReportItem;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
 
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import roboguice.inject.InjectView;
@@ -115,13 +118,9 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         setContentView(R.layout.activity_monthly_vaccine_utilization_report);
         textViewReportName.setText(reportType.getName());
 
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
-        ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getMonths());
-        spinnerMonth.setAdapter(startMonthAdapter);
-
-        Calendar calendar = Calendar.getInstance();
-        spinnerMonth.setSelection(calendar.get(Calendar.MONTH));
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
         spinnerYear.setAdapter(yearsAdapter);
+        setupMonthSpinner();
 
         setupListeners();
 
@@ -133,6 +132,17 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
                 setItems();
             }
         });
+    }
+
+    private void setupMonthSpinner() {
+        ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.spinner_item_black, getMonths(0, yearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
+        spinnerMonth.setAdapter(startMonthAdapter);
+
+        if(yearIsCurrent()) {
+            Calendar calendar = Calendar.getInstance();
+            spinnerMonth.setSelection(calendar.get(Calendar.MONTH));
+        }
     }
 
     protected void setupActionBar() {
@@ -147,7 +157,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+                setupMonthSpinner();
             }
 
             @Override
@@ -156,8 +166,19 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             }
         };
 
-        spinnerMonth.setOnItemSelectedListener(listener);
         spinnerYear.setOnItemSelectedListener(listener);
+    }
+
+    private boolean yearIsCurrent() {
+        SimpleDateFormat dateFormatYYYY = new SimpleDateFormat("yyyy");
+        return spinnerYear.getSelectedItem().toString()
+                .equalsIgnoreCase(dateFormatYYYY.format(new Date()));
+    }
+
+    protected List<String> getMonths(int startIndex, int endIndex) {
+        List<String> months = getMonths();
+        startIndex = startIndex < 0 ? 0 : startIndex;
+        return months.subList(startIndex, endIndex);
     }
 
     public List<String> getMonths() {

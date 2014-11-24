@@ -105,7 +105,6 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         setupListViewHeader();
         listViewReport.setAdapter(adapter);
         afterCreate();
-        ;
     }
 
 
@@ -165,8 +164,6 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         spinnerStartingYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("----------------hehehehe we are here----------------------------------");
-                System.out.println(spinnerStartingYear.getSelectedItem().toString());
                 setupEndYearSpinner();
                 setupStartingMonthSpinner();
             }
@@ -202,15 +199,10 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         });
     }
 
-    protected List<String> getMonths(int selectedIndex) {
-        return getMonths(selectedIndex, 12);
-    }
-
     protected List<String> getMonths(int startIndex, int endIndex) {
         List<String> months = getMonths();
         startIndex = startIndex < 0 ? 0 : startIndex;
         return months.subList(startIndex, endIndex);
-
     }
 
     protected String getStartingYear() {
