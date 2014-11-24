@@ -65,15 +65,6 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
     @InjectView(R.id.listViewDummyHeader)
     ListView listViewDummyHeader;
 
-    @InjectView(R.id.buttonLoadReport)
-    Button buttonLoadReport;
-
-    @InjectView(R.id.textViewBeforeLoad)
-    TextView textViewBeforeLoad;
-
-    @InjectView(R.id.horizontalScrollView)
-    HorizontalScrollView horizontalScrollView;
-
     FacilityCommodityConsumptionReportRH1HeaderAdapter headerAdapter;
 
     @Override

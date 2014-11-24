@@ -56,15 +56,6 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
     @InjectView(R.id.listViewDummyHeader)
     ListView listViewDummyHeader;
 
-    @InjectView(R.id.buttonLoadReport)
-    Button buttonLoadReport;
-
-    @InjectView(R.id.textViewBeforeLoad)
-    TextView textViewBeforeLoad;
-
-    @InjectView(R.id.horizontalScrollView)
-    HorizontalScrollView horizontalScrollView;
-
     private boolean isLoading = false;
 
     @Override

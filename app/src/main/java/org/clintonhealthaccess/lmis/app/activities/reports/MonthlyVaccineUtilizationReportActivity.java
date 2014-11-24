@@ -111,7 +111,6 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
-
         category = (Category) getIntent().getSerializableExtra(ReportsActivity.CATEGORY_BUNDLE_KEY);
         reportType = (ReportType) getIntent().getSerializableExtra(ReportsActivity.REPORT_TYPE_BUNDLE_KEY);
 
@@ -132,6 +131,11 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
                 setItems();
             }
         });
+    }
+
+    public void clearAdapter(){
+        textViewBeforeLoad.setVisibility(View.VISIBLE);
+        scrollViewReportItems.setVisibility(View.GONE);
     }
 
     private void setupMonthSpinner() {
@@ -158,13 +162,24 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupMonthSpinner();
+                clearAdapter();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         };
+
+        spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                clearAdapter();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         spinnerYear.setOnItemSelectedListener(listener);
     }

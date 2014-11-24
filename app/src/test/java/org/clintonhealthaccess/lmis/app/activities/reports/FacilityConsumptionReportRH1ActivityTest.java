@@ -65,7 +65,6 @@ import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class FacilityConsumptionReportRH1ActivityTest {
-    public static final int NUMBER_OF_MONTHS_IN_YEAR = 12;
     private UserService userService;
     private ReportsService reportsService;
 

@@ -49,6 +49,7 @@
             android:textStyle="bold"
             android:gravity="center_horizontal|center_vertical"
             android:id="@+id/textViewReportName" />
+
     </LinearLayout>
 
     <RelativeLayout
@@ -91,8 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_marginLeft="1450dp"
-            android:layout_marginTop="90dp"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="50dp"
             android:textSize="18dp"
             android:text="@string/before_select_year_and_month_report_load" />
 

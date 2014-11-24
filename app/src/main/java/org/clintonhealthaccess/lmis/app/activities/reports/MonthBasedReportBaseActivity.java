@@ -34,6 +34,8 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,13 +63,18 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> extends BaseActivity {
+
     public static final int NUMBER_OF_YEARS = 10;
+
     @InjectView(R.id.spinnerStartingMonth)
     Spinner spinnerStartingMonth;
+
     @InjectView(R.id.spinnerEndingMonth)
     Spinner spinnerEndingMonth;
+
     @InjectView(R.id.spinnerStartingYear)
     Spinner spinnerStartingYear;
+
     @InjectView(R.id.spinnerEndingYear)
     Spinner spinnerEndingYear;
 
@@ -82,6 +89,15 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
     @InjectView(R.id.textViewEndingMonth)
     TextView textViewEndingMonth;
+
+    @InjectView(R.id.buttonLoadReport)
+    Button buttonLoadReport;
+
+    @InjectView(R.id.textViewBeforeLoad)
+    TextView textViewBeforeLoad;
+
+    @InjectView(R.id.horizontalScrollView)
+    HorizontalScrollView horizontalScrollView;
 
     @Inject
     UserService userService;
@@ -151,6 +167,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                clearAdapter();
             }
 
             @Override
@@ -166,6 +183,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupEndYearSpinner();
                 setupStartingMonthSpinner();
+                clearAdapter();
             }
 
             @Override
@@ -178,6 +196,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupEndMonthSpinner();
+                clearAdapter();
             }
 
             @Override
@@ -190,6 +209,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupEndMonthSpinner();
+                clearAdapter();
             }
 
             @Override
@@ -197,6 +217,11 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
             }
         });
+    }
+
+    public void clearAdapter(){
+        textViewBeforeLoad.setVisibility(View.VISIBLE);
+        horizontalScrollView.setVisibility(View.GONE);
     }
 
     protected List<String> getMonths(int startIndex, int endIndex) {
