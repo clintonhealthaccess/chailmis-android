@@ -93,11 +93,11 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     @InjectView(R.id.buttonLoadReport)
     Button buttonLoadReport;
 
-    @InjectView(R.id.textViewBeforeLoad)
-    TextView textViewBeforeLoad;
-
     @InjectView(R.id.scrollViewReportItems)
     ScrollView scrollViewReportItems;
+
+    @InjectView(R.id.textViewReloadReport)
+    TextView textViewReloadReport;
 
     private Category category;
     private ReportType reportType;
@@ -126,7 +126,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         buttonLoadReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textViewBeforeLoad.setVisibility(View.GONE);
+                textViewReloadReport.setVisibility(View.GONE);
                 scrollViewReportItems.setVisibility(View.VISIBLE);
                 setItems();
             }
@@ -134,7 +134,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
     }
 
     public void clearAdapter(){
-        textViewBeforeLoad.setVisibility(View.VISIBLE);
+        textViewReloadReport.setVisibility(View.VISIBLE);
         scrollViewReportItems.setVisibility(View.GONE);
     }
 

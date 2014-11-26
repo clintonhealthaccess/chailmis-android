@@ -92,6 +92,7 @@ public class FacilityConsumptionReportRH2Activity extends MonthBasedReportBaseAc
             @Override
             public void onClick(View view) {
                 textViewBeforeLoad.setVisibility(View.GONE);
+                textViewReloadReport.setVisibility(View.GONE);
                 horizontalScrollView.setVisibility(View.VISIBLE);
                 setItems();
             }

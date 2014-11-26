@@ -88,14 +88,14 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textViewBeforeLoad"
+            android:id="@+id/textViewReloadReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:layout_marginLeft="100dp"
             android:layout_marginTop="50dp"
             android:textSize="18dp"
-            android:text="@string/before_select_year_and_month_report_load" />
+            android:text="@string/reload_report" />
 
         <ScrollView
             android:id="@+id/scrollViewReportItems"

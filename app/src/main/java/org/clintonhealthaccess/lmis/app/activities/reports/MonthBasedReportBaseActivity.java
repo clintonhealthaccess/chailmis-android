@@ -96,6 +96,9 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
     @InjectView(R.id.textViewBeforeLoad)
     TextView textViewBeforeLoad;
 
+    @InjectView(R.id.textViewReloadReport)
+    TextView textViewReloadReport;
+
     @InjectView(R.id.horizontalScrollView)
     HorizontalScrollView horizontalScrollView;
 
@@ -220,7 +223,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
     }
 
     public void clearAdapter(){
-        textViewBeforeLoad.setVisibility(View.VISIBLE);
+        textViewReloadReport.setVisibility(View.VISIBLE);
         horizontalScrollView.setVisibility(View.GONE);
     }
 

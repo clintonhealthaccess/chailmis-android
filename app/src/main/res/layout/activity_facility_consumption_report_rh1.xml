@@ -124,6 +124,16 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/textViewReloadReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="50dp"
+            android:textSize="18dp"
+            android:text="@string/reload_report" />
+
+        <TextView
             android:id="@+id/textViewBeforeLoad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
