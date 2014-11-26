@@ -162,38 +162,38 @@
         <activity
             android:name=".activities.reports.FacilityStockReportActivity"
             android:label="@string/title_activity_facility_stock_report"
-            android:parentActivityName=".activities.ReportsActivity"
+            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ReportsActivity" />
+                android:value=".activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.reports.FacilityConsumptionReportRH1Activity"
             android:label="@string/title_activity_rh1"
-            android:parentActivityName=".activities.ReportsActivity"
+            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ReportsActivity" />
+                android:value=".activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.reports.FacilityConsumptionReportRH2Activity"
             android:label="@string/title_activity_rh2"
-            android:parentActivityName=".activities.ReportsActivity"
+            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ReportsActivity" />
+                android:value=".activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.reports.MonthlyVaccineUtilizationReportActivity"
             android:label="@string/title_activity_rh2"
-            android:parentActivityName=".activities.ReportsActivity"
+            android:parentActivityName=".activities.HomeActivity"
             android:screenOrientation="landscape">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ReportsActivity" />
+                android:value=".activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.BinCardActivity"
