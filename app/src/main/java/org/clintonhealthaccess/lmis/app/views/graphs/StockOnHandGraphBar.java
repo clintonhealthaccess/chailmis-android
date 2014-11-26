@@ -141,6 +141,7 @@ public class StockOnHandGraphBar {
 
         textViewMax.setLayoutParams(maxTextViewParams);
         textViewMax.setText("Max");
+        textViewMax.setTextSize(12);
         textViewMax.setGravity(Gravity.CENTER_HORIZONTAL);
         textViewMax.setTextColor(applicationContext.getResources().getColor(R.color.black));
         textViewMax.setTypeface(null, Typeface.BOLD);
@@ -173,7 +174,7 @@ public class StockOnHandGraphBar {
         textViewName.setId(R.id.textViewCommodityNameInGraphBar);
         textViewName.setGravity(Gravity.CENTER_HORIZONTAL);
         textViewName.setTextColor(applicationContext.getResources().getColor(R.color.black));
-        textViewName.setTextSize(11);
+        textViewName.setTextSize(9);
         textViewName.setTypeface(null, Typeface.BOLD);
         return textViewName;
     }
