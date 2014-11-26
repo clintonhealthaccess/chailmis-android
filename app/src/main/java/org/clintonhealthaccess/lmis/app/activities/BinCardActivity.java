@@ -100,11 +100,11 @@ public class BinCardActivity extends BaseActivity {
     @InjectView(R.id.buttonLoadBinCard)
     Button buttonLoadReport;
 
-    @InjectView(R.id.textViewBeforeLoad)
-    TextView textViewBeforeLoad;
-
     @InjectView(R.id.linearLayoutBinCardItems)
     LinearLayout linearLayoutBinCardItems;
+
+    @InjectView(R.id.textViewReloadBinCard)
+    TextView textViewReloadBinCard;
 
     @Inject
     CommodityService commodityService;
@@ -132,7 +132,7 @@ public class BinCardActivity extends BaseActivity {
         buttonLoadReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                textViewBeforeLoad.setVisibility(View.GONE);
+                textViewReloadBinCard.setVisibility(View.GONE);
                 linearLayoutBinCardItems.setVisibility(View.VISIBLE);
                 hideKeyboard();
                 populateBinCard((Commodity) spinnerCommodities.getItemAtPosition(currentPosition));
@@ -168,6 +168,8 @@ public class BinCardActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentPosition = position;
+                linearLayoutBinCardItems.setVisibility(View.GONE);
+                textViewReloadBinCard.setVisibility(View.VISIBLE);
             }
 
             @Override
