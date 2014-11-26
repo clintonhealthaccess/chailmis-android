@@ -40,7 +40,8 @@
         android:text="Commodity"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -49,7 +50,8 @@
         android:padding="3dp"
         android:gravity="center_horizontal"
         android:textStyle="bold"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -57,7 +59,8 @@
         android:text="Quantities Received"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
 
 
@@ -67,7 +70,8 @@
         android:text="Adjustments"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -75,7 +79,8 @@
         android:text="Losses"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -83,7 +88,8 @@
         android:text="Stock On Hand"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -91,7 +97,8 @@
         android:text="Days out of Stock"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -99,7 +106,8 @@
         android:text="AMC"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -107,7 +115,8 @@
         android:text="Consumption"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -115,7 +124,8 @@
         android:text="Maximum Quantity"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/report_row_width"
@@ -123,5 +133,6 @@
         android:text="Order Quantity"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="@dimen/item_text_size"/>
 </LinearLayout>

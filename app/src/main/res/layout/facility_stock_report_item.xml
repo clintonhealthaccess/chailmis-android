@@ -41,7 +41,8 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:id="@+id/textViewCommodityName"
-        android:gravity="center_horizontal"/>
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -50,7 +51,8 @@
         android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewOpeningBalance"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -58,7 +60,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewQuantityReceived" />
+        android:id="@+id/textViewQuantityReceived"
+        android:textSize="@dimen/item_text_size"/>
 
 
     <TextView
@@ -67,7 +70,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewAdjusments" />
+        android:id="@+id/textViewAdjusments"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -75,7 +79,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewLosses" />
+        android:id="@+id/textViewLosses"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -83,7 +88,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewCommoditySOH" />
+        android:id="@+id/textViewCommoditySOH"
+        android:textSize="10sp"/>
 
     <TextView
         android:textColor="@color/black"
@@ -91,7 +97,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewCommodityDaysOutOfStock" />
+        android:id="@+id/textViewCommodityDaysOutOfStock"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -99,7 +106,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewCommodityAMC" />
+        android:id="@+id/textViewCommodityAMC"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -107,7 +115,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewConsumption" />
+        android:id="@+id/textViewConsumption"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -115,7 +124,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewMaxQuantity" />
+        android:id="@+id/textViewMaxQuantity"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -123,5 +133,6 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center_horizontal"
-        android:id="@+id/textViewOrderQuantity" />
+        android:id="@+id/textViewOrderQuantity"
+        android:textSize="@dimen/item_text_size"/>
 </LinearLayout>

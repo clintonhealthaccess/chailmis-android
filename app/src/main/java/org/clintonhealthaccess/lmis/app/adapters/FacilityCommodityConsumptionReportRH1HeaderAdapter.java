@@ -31,7 +31,6 @@ package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +40,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.reports.ConsumptionValue;
-import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.RH1HeaderItem;
 
 import java.util.List;
@@ -53,8 +50,7 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
 
     private static LinearLayout.LayoutParams getLayoutParams() {
         LinearLayout.LayoutParams params
-                = new LinearLayout.LayoutParams(28, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params.setMargins(3,3,3,3);
+                = new LinearLayout.LayoutParams(32, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.CENTER;
         return params;
     }
@@ -75,6 +71,7 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
         textViewCommodityName.setText(R.string.commodity);
         textViewCommodityName.setTypeface(null, Typeface.BOLD);
         textViewCommodityName.setPadding(3, 3, 3, 3);
+        textViewCommodityName.setTextSize(getContext().getResources().getDimension(R.dimen.day_item_text_size));
 
         List<String> days = getItem(position).getDays();
         for (String day : days) {
@@ -84,6 +81,7 @@ public class FacilityCommodityConsumptionReportRH1HeaderAdapter extends ArrayAda
             textViewDay.setTypeface(null, Typeface.BOLD);
             textViewDay.setText(day);
             textViewDay.setPadding(3, 3, 3, 3);
+            textViewDay.setTextSize(getContext().getResources().getDimension(R.dimen.day_item_text_size));
             linearLayout.addView(textViewDay);
         }
 

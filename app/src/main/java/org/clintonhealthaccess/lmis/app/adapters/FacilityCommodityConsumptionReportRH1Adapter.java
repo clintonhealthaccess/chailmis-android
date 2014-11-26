@@ -30,7 +30,6 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +50,7 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
     public static final LinearLayout.LayoutParams PARAMS = getLayoutParams();
 
     private static LinearLayout.LayoutParams getLayoutParams() {
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(28, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(32, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        params.setP(3, 3, 3, 3);
         params.gravity = Gravity.CENTER;
         return params;
@@ -73,6 +72,7 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
         TextView textViewCommodityName = (TextView) linearLayout.findViewById(R.id.textViewCommodityName);
         textViewCommodityName.setText(item.getCommodity().getName());
         textViewCommodityName.setPadding(3, 3, 3, 3);
+        textViewCommodityName.setTextSize(getContext().getResources().getDimension(R.dimen.day_item_text_size));
 
         for (ConsumptionValue value : item.getValues()) {
             TextView textView = new TextView(getContext());
@@ -80,6 +80,7 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
             textView.setTextColor(getContext().getResources().getColor(R.color.black));
             textView.setText(String.valueOf(value.getConsumption()));
             textView.setPadding(3, 3, 3, 3);
+            textView.setTextSize(getContext().getResources().getDimension(R.dimen.day_item_text_size));
             linearLayout.addView(textView);
         }
 
