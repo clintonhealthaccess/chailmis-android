@@ -39,7 +39,8 @@
         android:layout_width="@dimen/report_row_commodity_name_width"
         android:layout_height="wrap_content"
         android:id="@+id/textViewCommodityName"
-        android:padding="5dp"/>
+        android:padding="5dp"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -48,7 +49,8 @@
         android:padding="3dp"
         android:gravity="center"
         android:id="@+id/textViewOpeningBalance"
-        android:layout_marginLeft="3dp"/>
+        android:layout_marginLeft="3dp"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -56,7 +58,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewQuantityReceived" />
+        android:id="@+id/textViewQuantityReceived"
+        android:textSize="@dimen/item_text_size"/>
 
 
     <TextView
@@ -65,7 +68,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewQuantityDispensedToClients" />
+        android:id="@+id/textViewQuantityDispensedToClients"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -73,7 +77,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewQuantityDispensedToFacilities" />
+        android:id="@+id/textViewQuantityDispensedToFacilities"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -81,7 +86,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewTotalDispensed" />
+        android:id="@+id/textViewTotalDispensed"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -89,7 +95,8 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewQuantityLost" />
+        android:id="@+id/textViewQuantityLost"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:textColor="@color/black"
@@ -97,6 +104,7 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewClosingStock" />
+        android:id="@+id/textViewClosingStock"
+        android:textSize="@dimen/item_text_size"/>
 
 </LinearLayout>

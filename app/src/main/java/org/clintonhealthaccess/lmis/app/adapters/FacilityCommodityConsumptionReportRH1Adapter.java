@@ -51,7 +51,6 @@ public class FacilityCommodityConsumptionReportRH1Adapter extends ArrayAdapter<F
 
     private static LinearLayout.LayoutParams getLayoutParams() {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(32, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params.setP(3, 3, 3, 3);
         params.gravity = Gravity.CENTER;
         return params;
     }

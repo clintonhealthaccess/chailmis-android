@@ -41,7 +41,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -51,7 +52,8 @@
         android:textStyle="bold"
         android:padding="3dp"
         android:gravity="center"
-        android:layout_marginLeft="3dp"/>
+        android:layout_marginLeft="3dp"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -60,7 +62,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -69,7 +72,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -78,7 +82,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -87,7 +92,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -96,7 +102,8 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
@@ -105,6 +112,7 @@
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:textSize="@dimen/item_text_size"/>
 
 </LinearLayout>
