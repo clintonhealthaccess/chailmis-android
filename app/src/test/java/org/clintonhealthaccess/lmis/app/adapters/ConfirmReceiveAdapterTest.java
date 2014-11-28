@@ -53,7 +53,7 @@ public class ConfirmReceiveAdapterTest {
     public static final String PANADOL = "Panadol";
     public static final int QUANTITY_ALLOCATED = 3;
     public static final int QUANTITY_RECEIVED = 2;
-    public static final int DIFFERENCE_QUANTITY = 1;
+    public static final int DIFFERENCE_QUANTITY = -1;
     private Application application;
 
     private ConfirmReceiveAdapter confirmReceiveAdapter;

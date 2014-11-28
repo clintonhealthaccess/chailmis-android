@@ -101,9 +101,12 @@ public class StockItemSnapshotService {
         try {
             StockItemSnapshot stockItemSnapshot = get(commodity, date);
             if (stockItemSnapshot == null) {
+                System.out.println("No Snapshot found--creating");
                 create(commodity, date);
             } else {
+                System.out.println("snapshot found--"+stockItemSnapshot.getQuantity());
                 stockItemSnapshot.setQuantity(commodity.getStockOnHand());
+                System.out.println("changed it to --"+commodity.getStockOnHand());
                 update(stockItemSnapshot);
             }
 

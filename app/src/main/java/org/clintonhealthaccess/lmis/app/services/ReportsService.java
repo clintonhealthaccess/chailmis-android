@@ -90,8 +90,9 @@ public class ReportsService {
     private CommodityService commodityService;
 
 
-    public List<FacilityStockReportItem> getFacilityReportItemsForCategory(Category category, String startingYear,
-                                                                           String startingMonth, String endingYear, String endingMonth) {
+    public List<FacilityStockReportItem> getFacilityReportItemsForCategory(
+            Category category, String startingYear, String startingMonth, String endingYear, String endingMonth) {
+
         ArrayList<FacilityStockReportItem> facilityStockReportItems = new ArrayList<>();
 
         try {
@@ -130,7 +131,7 @@ public class ReportsService {
         } catch (Exception e) {
             Log.e("ReportsService", e.getMessage());
         }
-
+        System.out.println("......................" + facilityStockReportItems);
         return facilityStockReportItems;
     }
 

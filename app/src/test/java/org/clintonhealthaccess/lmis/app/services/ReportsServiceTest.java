@@ -285,17 +285,16 @@ public class ReportsServiceTest {
 
         calendar.add(Calendar.DAY_OF_MONTH, -2);
         int difference = 3;
-        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+        receive(commodity, difference, receiveService, currentDate);
 
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
+        category = categories.get(0);
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
                 dateFormatMonth.format(startDate), dateFormatYear.format(currentDate), dateFormatMonth.format(currentDate));
 
-        int expectedQuantity = commodity.getStockOnHand() + difference;
-        int stockOnHand = facilityStockReportItems.get(0).getStockOnHand();
-        assertThat(stockOnHand, is(expectedQuantity));
+        assertThat(facilityStockReportItems.get(0).getStockOnHand(), is(commodity.getStockOnHand()));
     }
 
     @Test
@@ -562,7 +561,7 @@ public class ReportsServiceTest {
     }
 
     public int daysBetween(Date d1, Date d2) {
-        return Days.daysBetween(new DateTime(d1), new DateTime(DateUtil.addDayOfMonth(d2,1))).getDays();
+        return Days.daysBetween(new DateTime(d1), new DateTime(DateUtil.addDayOfMonth(d2, 1))).getDays();
     }
 
     @Test

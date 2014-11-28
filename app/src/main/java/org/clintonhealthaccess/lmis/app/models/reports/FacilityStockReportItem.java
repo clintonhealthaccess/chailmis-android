@@ -29,6 +29,9 @@
 
 package org.clintonhealthaccess.lmis.app.models.reports;
 
+import lombok.ToString;
+
+@ToString
 public class FacilityStockReportItem {
     private String commodityName;
     private int openingStock, commoditiesReceived, commoditiesAdjusted,

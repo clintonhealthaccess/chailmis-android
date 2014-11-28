@@ -74,7 +74,7 @@ public class CommoditySnapshotService {
     private SmsSyncService smsSyncService;
 
     public void add(final Snapshotable snapshotable) {
-        GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<CommoditySnapshot>(CommoditySnapshot.class, context);
+        GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<>(CommoditySnapshot.class, context);
         snapshotGenericDao.bulkOperation(new DbUtil.Operation<CommoditySnapshot, Object>() {
             @Override
             public Object operate(Dao<CommoditySnapshot, String> dao) throws SQLException {

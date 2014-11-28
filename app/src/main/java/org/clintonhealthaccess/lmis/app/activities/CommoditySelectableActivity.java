@@ -69,6 +69,7 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +81,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
-abstract public class CommoditySelectableActivity extends BaseActivity {
+abstract public class CommoditySelectableActivity extends BaseActivity implements Serializable {
 
     @Inject
     CommodityService commodityService;
@@ -133,6 +134,10 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
     AutoCompleteTextView autoCompleteTextViewCommodities;
 
     public SearchCommodityAdapter searchCommodityAdapter;
+
+    public CommoditySelectableActivity thisActivity = this;
+
+    public boolean dialogIsShowing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,7 +236,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
 
     abstract protected void afterCreate(Bundle savedInstanceState);
 
-    protected void setUpCommoditySearch(){
+    protected void setUpCommoditySearch() {
         //stop search field from getting default focus
         scrollCategoriesContainer.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
         scrollCategoriesContainer.setFocusableInTouchMode(true);
@@ -242,7 +247,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         autoCompleteTextViewCommodities.setOnItemClickListener(getAutoCompleteTextViewCommoditiesAdapterListener());
     }
 
-    protected void beforeSetUpCommoditySearch(){
+    protected void beforeSetUpCommoditySearch() {
 
     }
 
@@ -305,10 +310,18 @@ abstract public class CommoditySelectableActivity extends BaseActivity {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (dialogIsShowing == true) {
+                    return;
+                }
+                dialogIsShowing = true;
+
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                ItemSelectFragment dialog = ItemSelectFragment.newInstance(category, selectedCommodities,
+                ItemSelectFragment dialog = ItemSelectFragment.newInstance(thisActivity, category, selectedCommodities,
                         getCheckBoxVisibilityStrategy(), getViewModelConverter(), getActivityName());
-                dialog.show(fragmentManager, "selectCommodities");
+                if (!dialog.isVisible()) {
+                    dialog.show(fragmentManager, "selectCommodities");
+                }
             }
         });
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);

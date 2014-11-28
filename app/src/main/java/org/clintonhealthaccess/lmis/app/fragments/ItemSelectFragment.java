@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,7 @@ import com.google.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.CommoditySelectableActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.CommoditiesAdapter;
@@ -66,6 +68,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private static final String CATEGORY = "param_category";
     private static final String SELECTED_COMMODITIES = "param_selected_commodities";
     public static final String ACTIVITY_NAME = "activity_name";
+    private static final String ACTIVITY = "parent_activity";
 
     GridView gridViewCommodities;
     @Inject
@@ -79,15 +82,17 @@ public class ItemSelectFragment extends RoboDialogFragment {
     private String activityName;
     private View emptyView;
     private TextView emptyTextView;
+    private CommoditySelectableActivity parentActivity;
 
     public ItemSelectFragment() {
         // Required empty public constructor
     }
 
-    public static ItemSelectFragment newInstance(Category category, ArrayList<?> selectedCommodities,
+    public static ItemSelectFragment newInstance(CommoditySelectableActivity parent, Category category, ArrayList<?> selectedCommodities,
                                                  CommodityDisplayStrategy commodityDisplayStrategy,
                                                  CommoditiesToViewModelsConverter generator, String activityName) {
         Bundle arguments = new Bundle();
+        arguments.putSerializable(ACTIVITY, parent);
         arguments.putSerializable(CATEGORY, category);
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
         arguments.putSerializable(COMMODITY_DISPLAY_STRATEGY, commodityDisplayStrategy);
@@ -103,6 +108,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            parentActivity = (CommoditySelectableActivity)getArguments().getSerializable(ACTIVITY);
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<? extends BaseCommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
             commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(COMMODITY_DISPLAY_STRATEGY);
@@ -173,6 +179,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
         buttonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                parentActivity.dialogIsShowing = false;
                 dismiss();
             }
         });

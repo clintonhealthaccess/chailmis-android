@@ -39,6 +39,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.DispenseActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
@@ -74,6 +75,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
+import static org.robolectric.Robolectric.setupActivity;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -100,9 +102,13 @@ public class ItemSelectFragmentTest {
         commodityService.initialise(new User("test", "pass"));
 
         Category antiMalarialCategory = categoryService.all().get(0);
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarialCategory,
+        itemSelectFragment = ItemSelectFragment.newInstance(getDispenseActivity(), antiMalarialCategory,
                 new ArrayList<BaseCommodityViewModel>(), DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
+    }
+
+    public static DispenseActivity getDispenseActivity() {
+        return setupActivity(DispenseActivity.class);
     }
 
     @Test
@@ -158,7 +164,7 @@ public class ItemSelectFragmentTest {
         ArrayList<BaseCommodityViewModel> commodities = new ArrayList<>();
         Commodity firstCommodity = commodityService.all().get(0);
         commodities.add(new BaseCommodityViewModel(firstCommodity));
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
+        itemSelectFragment = ItemSelectFragment.newInstance(getDispenseActivity(), antiMalarials, commodities, DISALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
@@ -178,7 +184,7 @@ public class ItemSelectFragmentTest {
         ArrayList<BaseCommodityViewModel> currentlySelectedCommodities = new ArrayList<>();
         currentlySelectedCommodities.add(new BaseCommodityViewModel(spyFirstCommodity));
 
-        itemSelectFragment = ItemSelectFragment.newInstance(antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
+        itemSelectFragment = ItemSelectFragment.newInstance(getDispenseActivity(), antiMalarials, currentlySelectedCommodities, ALLOW_CLICK_WHEN_OUT_OF_STOCK, getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);
 
         Dialog dialog = ShadowDialog.getLatestDialog();
@@ -192,7 +198,7 @@ public class ItemSelectFragmentTest {
         Category vaccines = categoryService.all().get(6);
         int commodityCount = vaccines.getCommodities().size();
 
-        itemSelectFragment = ItemSelectFragment.newInstance(vaccines,
+        itemSelectFragment = ItemSelectFragment.newInstance(getDispenseActivity(), vaccines,
                 new ArrayList<BaseCommodityViewModel>(), CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES,
                 getViewModelConverter(), "Activity");
         startFragment(itemSelectFragment);

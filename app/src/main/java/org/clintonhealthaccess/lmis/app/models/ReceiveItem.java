@@ -79,7 +79,7 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
     }
 
     public int getDifference() {
-        return quantityAllocated - quantityReceived;
+        return quantityReceived - quantityAllocated;
     }
 
     @Override

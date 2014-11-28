@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.sms;
 
+import android.util.Log;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
@@ -60,6 +62,9 @@ public class SmsValueSet implements Serializable {
         Multimap<String, DataValue> dataValueGroups = groupByPrefix(dataValueSet.getDataValues());
         List<SmsValueSet> result = newArrayList();
         for (final String smsPrefix : dataValueGroups.keySet()) {
+            if (smsPrefix.isEmpty()) {
+                continue;
+            }
             List<List<DataValue>> dataValueLists = partition(newArrayList(dataValueGroups.get(smsPrefix)), 6);
             ImmutableList<SmsValueSet> smsValueSets = from(dataValueLists).transform(new Function<List<DataValue>, SmsValueSet>() {
                 @Override
@@ -76,8 +81,13 @@ public class SmsValueSet implements Serializable {
         return Multimaps.index(dataValues, new Function<DataValue, String>() {
             @Override
             public String apply(DataValue input) {
-                Date periodDate = input.periodAsDate();
-                return input.getDataSet() + " " + SMS_PERIOD_DATE_FORMAT.format(periodDate);
+                try {
+                    Date periodDate = input.periodAsDate();
+                    return input.getDataSet() + " " + SMS_PERIOD_DATE_FORMAT.format(periodDate);
+                } catch (Exception e) {
+                    Log.e("Blank Date", "Data value with blank date found " + input);
+                    return "";
+                }
             }
         });
     }
