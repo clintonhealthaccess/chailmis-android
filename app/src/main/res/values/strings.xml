@@ -75,7 +75,8 @@
     <string name="quantity_adjusted">Quantity Adjusted</string>
     <string name="new_soh">New SOH</string>
     <string name="quantity">Quantity</string>
-    <string name="dispense_to_facility_successful">Dispense to Facility Successful</string>
+    <string name="dispense_to_facility_successful">Dispense to Facility Successful! \nAlerts shall be updated shortly..</string>
+    <string name="adjustments_successful">"Adjustments Saved Successfully! \nAlerts shall be updated shortly..</string>
     <string name="dispense_to_successful">Dispense Successful</string>
     <string name="confirm_facility">Confirm Adjustment</string>
     <string name="hint_end_date">End Date</string>
@@ -98,7 +99,7 @@
     <string name="fillInSomeLosses">Please enter valid quantities for losses</string>
     <string name="total_losses">Total Losses</string>
     <string name="new_stock_on_hand">New SOH</string>
-    <string name="loss_successful">Saving Losses Successful</string>
+    <string name="loss_successful">Saving Losses Successful! \nAlerts shall be updated shortly..</string>
     <string name="allocation_source">LGA/State(CMS) Pick up</string>
     <string name="allocated">Allocated</string>
     <string name="received">Received</string>
@@ -109,7 +110,7 @@
     <string name="allocation_id">Allocation ID</string>
     <string name="receive_submit_validation_message_allocation_id">Please make sure you have entered a valid Allocation Id</string>
     <string name="receive_quantities_validation_error_message">Please make sure you have entered valid quantities</string>
-    <string name="receive_successful">Saving Receive successful</string>
+    <string name="receive_successful">Saving Receive successful! \nAlerts shall be updated shortly..</string>
     <string name="receive_failed">Saving Receive Failed</string>
     <string name="receive_saving">Saving Receive</string>
     <string name="order_saving">Saving Order</string>

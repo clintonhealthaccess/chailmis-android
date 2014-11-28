@@ -141,7 +141,7 @@ public class ConfirmAdjustmentsFragment extends RoboDialogFragment {
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
             if (result) {
-                Toast.makeText(getActivity().getApplicationContext(), "Adjustments Saved!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.adjustments_successful), Toast.LENGTH_LONG).show();
                 dismiss();
                 FragmentActivity activity = getActivity();
                 if (activity != null) {
