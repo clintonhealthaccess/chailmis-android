@@ -77,7 +77,8 @@ public class StockService {
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
                 dao.update(commodity.getStockItem());
                 stockItemSnapshotService.createOrUpdate(commodity, date);
-                alertService.updateCommodityLowStockAlert(commodity);
+                //FIXME: Disabled the immediate update of lowstocklevel alerts till feedback from CHAI
+                //alertService.updateCommodityLowStockAlert(commodity);
                 return null;
             }
         });

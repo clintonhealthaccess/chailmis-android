@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.models.alerts.RoutineOrderAlert;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -429,6 +430,7 @@ public class AlertsServiceTest {
     }
 
     @Test
+    @Ignore("because immediate update of low stock level alerts is  disabled")
     public void shouldRemoveLowStockAlertImmediatelyWhenStockLevelIncreases() throws Exception {
         setupCommodities();
         alertsService.updateLowStockAlerts();
@@ -447,6 +449,7 @@ public class AlertsServiceTest {
     }
 
     @Test
+    @Ignore("because immediate update of low stock level alerts is disabled")
     public void shouldCreateLowStockAlertImmediatelyWhenStockLevelReduces() throws Exception {
         setupCommodities();
         alertsService.updateLowStockAlerts();
