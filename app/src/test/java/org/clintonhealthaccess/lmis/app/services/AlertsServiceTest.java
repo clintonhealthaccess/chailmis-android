@@ -59,6 +59,7 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.application;
 
@@ -79,11 +80,12 @@ public class AlertsServiceTest {
     @Inject
     SharedPreferences sharedPreferences;
 
+    @Inject
+    private StockService stockService;
 
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
-
     }
 
     @Test
@@ -397,7 +399,7 @@ public class AlertsServiceTest {
 
         List<MonthlyStockCountAlert> enabledMonthlyStockAlerts = alertsService.getEnabledMonthlyStockAlerts();
         assertThat(enabledMonthlyStockAlerts.size(), is(1));
-        createAdjusmentsForEachCommodity(date);
+        createAdjustmentsForEachCommodity(date);
         assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(date), is(true));
         alertsService.disableAllMonthlyStockCountAlerts();
         assertThat(alertsService.getEnabledMonthlyStockAlerts().size(), is(0));
@@ -422,13 +424,50 @@ public class AlertsServiceTest {
         saveAdjusment(adjustment);
 
         assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(new Date()), is(false));
-        createAdjusmentsForEachCommodity(new Date());
+        createAdjustmentsForEachCommodity(new Date());
         assertThat(alertsService.adjustmentsHaveBeenMadeForEachCommodityInMonthOfAlert(new Date()), is(true));
-
-
     }
 
-    private void createAdjusmentsForEachCommodity(Date date) {
+    @Test
+    public void shouldRemoveLowStockAlertImmediatelyWhenStockLevelIncreases() throws Exception {
+        setupCommodities();
+        alertsService.updateLowStockAlerts();
+
+        List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(2));
+        Commodity commodity = alerts.get(0).getCommodity();
+
+        int quantityToIncrease = commodity.getMinimumThreshold() + 500;
+        stockService.increaseStockLevelFor(commodity, quantityToIncrease, new Date());
+
+        alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(1));
+        Commodity commodity2 = alerts.get(0).getCommodity();
+        assertThat(commodity2, is(not(commodity)));
+    }
+
+    @Test
+    public void shouldCreateLowStockAlertImmediatelyWhenStockLevelReduces() throws Exception {
+        setupCommodities();
+        alertsService.updateLowStockAlerts();
+
+        List<LowStockAlert> alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(2));
+        Commodity commodity = alerts.get(0).getCommodity();
+
+        int quantity = commodity.getMinimumThreshold() + 500;
+        stockService.increaseStockLevelFor(commodity, quantity, new Date());
+
+        alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(1));
+
+        stockService.reduceStockLevelFor(commodity, quantity, new Date());
+
+        alerts = alertsService.getLowStockAlerts();
+        assertThat(alerts.size(), is(2));
+    }
+
+    private void createAdjustmentsForEachCommodity(Date date) {
         final List<Adjustment> adjustments = new ArrayList<>();
         for (Commodity commodity : commodityService.all()) {
             final Adjustment adjustment_new = new Adjustment(commodity, 10, true, AdjustmentReason.PHYSICAL_COUNT.getName());
@@ -436,10 +475,10 @@ public class AlertsServiceTest {
             adjustments.add(adjustment_new);
         }
 
-        createAdjusments(adjustments);
+        createAdjustments(adjustments);
     }
 
-    private void createAdjusments(final List<Adjustment> adjustments) {
+    private void createAdjustments(final List<Adjustment> adjustments) {
         dbUtil.withDaoAsBatch(Adjustment.class, new DbUtil.Operation<Adjustment, Object>() {
             @Override
             public Object operate(Dao<Adjustment, String> dao) throws SQLException {

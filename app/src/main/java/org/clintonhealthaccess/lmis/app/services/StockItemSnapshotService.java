@@ -164,9 +164,7 @@ public class StockItemSnapshotService {
                     public StockItemSnapshot operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
                         QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
                         queryBuilder.where().eq("commodity_id", commodity.getId()).and()
-                                .lt("created", currentDate)
-                                .or()
-                                .eq("created", currentDate);
+                                .le("created", currentDate);
                         queryBuilder.orderBy("created", false);
                         PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
 

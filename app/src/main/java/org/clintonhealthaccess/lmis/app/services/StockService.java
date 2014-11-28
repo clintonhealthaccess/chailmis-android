@@ -50,6 +50,9 @@ public class StockService {
     @Inject
     public StockItemSnapshotService stockItemSnapshotService;
 
+   @Inject
+    private AlertsService alertService;
+
     public int getStockLevelFor(Commodity commodity) {
         return commodity.getStockOnHand();
     }
@@ -74,8 +77,10 @@ public class StockService {
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
                 dao.update(commodity.getStockItem());
                 stockItemSnapshotService.createOrUpdate(commodity, date);
+                alertService.updateCommodityLowStockAlert(commodity);
                 return null;
             }
         });
     }
+
 }

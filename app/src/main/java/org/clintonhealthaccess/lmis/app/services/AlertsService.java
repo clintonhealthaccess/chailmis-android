@@ -133,6 +133,28 @@ public class AlertsService {
         updateCache();
     }
 
+    public void updateCommodityLowStockAlert(Commodity commodity) {
+        LowStockAlert alert = queryLowStockAlert(commodity);
+        if (alert == null && commodity.isBelowThreshold()) {
+            createAlert(new LowStockAlert(commodity));
+        } else if (alert != null && !alert.getCommodity().isBelowThreshold()) {
+            deleteLowStockAlert(alert);
+        }
+        updateCache();
+
+    }
+
+    private LowStockAlert queryLowStockAlert(final Commodity commodity) {
+        return dbUtil.withDao(LowStockAlert.class, new DbUtil.Operation<LowStockAlert, LowStockAlert>() {
+            @Override
+            public LowStockAlert operate(Dao<LowStockAlert, String> dao) throws SQLException {
+                QueryBuilder queryBuilder = dao.queryBuilder();
+                queryBuilder.where().eq("commodity_id", commodity.getId());
+                return (LowStockAlert) queryBuilder.queryForFirst();
+            }
+        });
+    }
+
     public void updateCache() {
         List<LowStockAlert> alerts = queryLowStockAlertsFromDB();
         this.lowStockAlerts = null;
@@ -161,8 +183,7 @@ public class AlertsService {
         for (LowStockAlert alert : lowStockAlerts) {
             disableLowStockAlert(alert);
         }
-
-        AlertsService.lowStockAlerts = null;
+        updateCache();
     }
 
     public void disableAllRoutineOrderAlerts() {

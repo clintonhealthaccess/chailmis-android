@@ -279,22 +279,22 @@ public class ReportsServiceTest {
         Commodity commodity = category.getCommodities().get(0);
 
         Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
 
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        calendar.add(Calendar.DAY_OF_MONTH, -2);
+        calendar.add(Calendar.DAY_OF_MONTH, 2);
         int difference = 3;
-        receive(commodity, difference, receiveService, currentDate);
+        createStockItemSnapshot(commodity, calendar.getTime(), difference);
 
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
 
-        category = categories.get(0);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date endDate = calendar.getTime();
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
-                dateFormatMonth.format(startDate), dateFormatYear.format(currentDate), dateFormatMonth.format(currentDate));
+                dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
-        assertThat(facilityStockReportItems.get(0).getStockOnHand(), is(commodity.getStockOnHand()));
+        int expectedQuantity = commodity.getStockOnHand() + difference;
+        int stockOnHand = facilityStockReportItems.get(0).getStockOnHand();
+        assertThat(stockOnHand, is(expectedQuantity));
     }
 
     @Test
