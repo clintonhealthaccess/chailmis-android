@@ -103,7 +103,6 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
             @Override
             public void onClick(View v) {
                 new SaveReceiveTask(ReceiveConfirmFragment.this).execute();
-
             }
         });
 

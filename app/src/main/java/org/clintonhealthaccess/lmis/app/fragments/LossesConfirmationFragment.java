@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.fragments;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -97,19 +99,58 @@ public class LossesConfirmationFragment extends RoboDialogFragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lossService.saveLoss(loss);
-                Toast.makeText(getActivity().getApplicationContext(), getString(R.string.loss_successful), Toast.LENGTH_SHORT).show();
-                dismiss();
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.finish();
-                    startActivity(activity.getIntent());
-                }
+                new SaveLossTask(LossesConfirmationFragment.this).execute();
             }
         });
 
         return view;
     }
 
+    private class SaveLossTask extends AsyncTask<Void, Void, Boolean> {
+        private ProgressDialog dialog;
+        private LossesConfirmationFragment fragment;
 
+        public SaveLossTask(LossesConfirmationFragment fragment) {
+            this.fragment = fragment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.dialog = new ProgressDialog(getActivity());
+            this.dialog.setMessage(getString(R.string.loss_saving));
+            this.dialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                lossService.saveLoss(loss);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if (success) {
+                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.loss_successful), Toast.LENGTH_LONG).show();
+
+                fragment.dismiss();
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                    startActivity(activity.getIntent());
+                }
+            } else {
+                Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_failed), Toast.LENGTH_LONG).show();
+            }
+
+            this.dialog.dismiss();
+
+        }
+    }
 }

@@ -99,7 +99,7 @@
     <string name="fillInSomeLosses">Please enter valid quantities for losses</string>
     <string name="total_losses">Total Losses</string>
     <string name="new_stock_on_hand">New SOH</string>
-    <string name="loss_successful">Saving Losses Successful! \nAlerts shall be updated shortly..</string>
+    <string name="loss_successful">Saving Losses) Successful! \nAlerts shall be updated shortly..</string>
     <string name="allocation_source">LGA/State(CMS) Pick up</string>
     <string name="allocated">Allocated</string>
     <string name="received">Received</string>
@@ -112,8 +112,9 @@
     <string name="receive_quantities_validation_error_message">Please make sure you have entered valid quantities</string>
     <string name="receive_successful">Saving Receive successful! \nAlerts shall be updated shortly..</string>
     <string name="receive_failed">Saving Receive Failed</string>
-    <string name="receive_saving">Saving Receive</string>
-    <string name="order_saving">Saving Order</string>
+    <string name="receive_saving">Saving Receive...</string>
+    <string name="loss_saving">Saving Loss...</string>
+    <string name="order_saving">Saving Order..</string>
     <string name="receive_from_facility">Receive From Facility</string>
     <string name="select_reason">Select Reason ..</string>
     <string name="not_in_stock">Not in Stock</string>
@@ -149,7 +150,7 @@
     <string name="physical_count">Physical Count</string>
     <string name="received_from_another_facility">Received from another facility</string>
     <string name="sent_to_another_facilility">Sent to another facility</string>
-    <string name="saving">Saving</string>
+    <string name="saving_dispense">Saving Dispense...</string>
     <string name="failed_to_save">Failed to Save</string>
     <string name="lga">LGA / State CMS</string>
     <string name="zonal_store">Zonal Cold Chain Store</string>

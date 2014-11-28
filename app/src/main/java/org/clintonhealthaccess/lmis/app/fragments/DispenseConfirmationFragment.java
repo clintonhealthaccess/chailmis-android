@@ -141,7 +141,7 @@ public class DispenseConfirmationFragment extends RoboDialogFragment {
         protected void onPreExecute() {
             super.onPreExecute();
             this.dialog = new ProgressDialog(getActivity());
-            this.dialog.setMessage(getString(R.string.saving));
+            this.dialog.setMessage(getString(R.string.saving_dispense));
             this.dialog.show();
         }
 
