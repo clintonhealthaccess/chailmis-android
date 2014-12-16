@@ -56,6 +56,7 @@ import java.util.List;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -182,9 +183,8 @@ public class FacilityStockReportActivityTest {
         FacilityStockReportActivity activity = getActivity();
         activity.spinnerStartingYear.setSelection(0);
 
-        if (DateUtil.monthNumber(new Date()) < 12) {
-            assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), lessThan(12));
-        }
+        int expectedNumberOfMonths = DateUtil.monthNumber(new Date()) + 1;
+        assertThat(activity.spinnerStartingMonth.getAdapter().getCount(), lessThanOrEqualTo(expectedNumberOfMonths));
     }
 
     @Test
