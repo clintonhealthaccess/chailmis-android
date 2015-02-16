@@ -238,7 +238,7 @@ public class HomeActivity extends BaseActivity {
             int amc = commodity.getAMC();
 
             //FIXME hack to fix 0 AMC error
-            amc = amc == 0 ? commodity.getStockOnHand() : amc;
+            amc = amc == 0 ? commodity.getStockOnHand() == 0? 1:commodity.getStockOnHand() : amc;
 
             int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
 

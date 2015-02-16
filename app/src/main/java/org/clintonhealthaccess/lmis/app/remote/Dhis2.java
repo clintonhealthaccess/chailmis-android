@@ -44,6 +44,7 @@ import com.thoughtworks.dhis.models.DataElementGroupSet;
 import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
+import com.thoughtworks.dhis.models.Option;
 import com.thoughtworks.dhis.models.OptionSet;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
@@ -206,7 +207,13 @@ public class Dhis2 implements LmisServer {
         List<String> optionSets = new ArrayList<>();
         List<OptionSet> optionSetList = optionSetResponse.getOptionSets();
         if (!isEmpty(optionSetList)) {
-            optionSets = optionSetList.get(0).getOptions();
+
+            optionSets = from(optionSetList.get(0).getOptions()).transform(new Function<Option, String>() {
+                @Override
+                public String apply(Option input) {
+                    return input.getName();
+                }
+            }).toList();
         }
         return optionSets;
     }

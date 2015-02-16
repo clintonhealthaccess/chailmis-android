@@ -32,9 +32,28 @@ package com.thoughtworks.dhis.models;
 public class Option {
     private String name;
     private String code;
+    private String id;
 
     public Option(String s) {
         this.name = s;
         this.code = s;
+    }
+    public Option(String name, String id){
+        this.name = name;
+        this.code = name;
+        this.id = id;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getId() {
+        return id;
     }
 }

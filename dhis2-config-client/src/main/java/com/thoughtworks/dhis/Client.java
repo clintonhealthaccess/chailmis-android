@@ -62,6 +62,25 @@ public class Client {
                         } catch (NullPointerException ex) {
 
                         }
+                        System.out.println("Error occurred ");
+                        System.out.println(retrofitError.getMessage());
+                        if (retrofitError.getResponse() != null){
+                            try {
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(retrofitError.getResponse().getBody().in()));
+                                StringBuilder out = new StringBuilder();
+                                String newLine = System.getProperty("line.separator");
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    out.append(line);
+                                    out.append(newLine);
+                                }
+
+                                System.out.println(out);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         return new Exception(retrofitError.getMessage());
                     }
                 })

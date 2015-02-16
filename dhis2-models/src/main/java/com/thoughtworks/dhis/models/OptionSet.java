@@ -39,5 +39,5 @@ import java.util.List;
 public class OptionSet {
     private String name;
     private String id;
-    private List<String> options;
+    private List<Option> options;
 }

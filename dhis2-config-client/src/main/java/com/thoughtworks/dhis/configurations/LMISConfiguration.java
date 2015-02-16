@@ -43,6 +43,7 @@ import com.thoughtworks.dhis.models.ExcelCategory;
 import com.thoughtworks.dhis.models.ExcelCommodity;
 import com.thoughtworks.dhis.models.Indicator;
 import com.thoughtworks.dhis.models.IndicatorType;
+import com.thoughtworks.dhis.models.Option;
 import com.thoughtworks.dhis.models.OptionSet;
 
 import org.apache.commons.codec.binary.Hex;
@@ -85,6 +86,7 @@ public class LMISConfiguration implements IConfiguration {
     private static final String LMIS_COMMODITIES_CALCULATED = LMIS_KEY_WORD + "Commodities Calculated";
     public static final String ATTRIBUTES = "attributes";
     public static final String CONSTANTS = "constants";
+    public static final String OPTIONS = "options";
     private final Attribute lgaAttribute;
     private final Attribute isDeviceAttribute;
     private final Attribute isVaccineAttribute;
@@ -97,6 +99,7 @@ public class LMISConfiguration implements IConfiguration {
     private List<Indicator> indicators;
     private List<OptionSet> optionSets;
     private List<Constant> constants;
+    private List<Option> options;
     private List<String> shortNames;
     private OptionSet orderReasonOptionSet;
     private IndicatorType indicatorType;
@@ -115,15 +118,19 @@ public class LMISConfiguration implements IConfiguration {
         indicators = new ArrayList<Indicator>();
         optionSets = new ArrayList<OptionSet>();
         constants = new ArrayList<Constant>();
+        Option high_demand = new Option("HIGH DEMAND",generateID("HIGH DEMAND_OPTION"));
+        Option los = new Option("LOSSES", generateID("LOSSES_OPTION"));
+        Option expireOptionSet = new Option("EXPIRIES", generateID("EXPIRIES_OPTION"));
+        options = Arrays.asList(high_demand, los, expireOptionSet);
 
-        orderReasonOptionSet = createOptionSet("Reasons For Order", "HIGH DEMAND", "LOSSES", "EXPIRIES");
+        orderReasonOptionSet = createOptionSet("Reasons For Order", high_demand, los, expireOptionSet);
         optionSets.add(orderReasonOptionSet);
 
         indicatorType = IndicatorType.builder().id(generateID(LOSSES_INDICATOR_TYPE)).name(LOSSES_INDICATOR_TYPE).factor(1).number(true).build();
         shortNames = new ArrayList<String>();
     }
 
-    private OptionSet createOptionSet(String optionSetName, String... optionSetValues) {
+    private OptionSet createOptionSet(String optionSetName, Option... optionSetValues) {
         return OptionSet.builder().id(generateID(optionSetName)).name(optionSetName).options(newArrayList(optionSetValues)).build();
     }
 
@@ -160,6 +167,7 @@ public class LMISConfiguration implements IConfiguration {
     private HashMap<String, Object> buildMetaData() {
         HashMap<String, Object> data = new HashMap<String, Object>();
         data.put(DATA_SETS, dataSets);
+        data.put(OPTIONS, options);
         data.put(CONSTANTS, constants);
         data.put(OPTION_SETS, optionSets);
         data.put(INDICATORS, indicators);
