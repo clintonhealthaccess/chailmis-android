@@ -216,7 +216,6 @@ public class CommodityServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         Date date = calendar.getTime();
 
-        System.out.println("Our guys sent in " + DateUtil.dateString(date));
 
         List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(
                 commodity, date);
@@ -278,7 +277,6 @@ public class CommodityServiceTest {
 
         int expectedClosingStock = stockOnHand - 3;
         int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
-        System.out.println(utilizationItems.get(4).getName() + " " + utilizationItems.get(4).getUtilizationValues());
         assertThat(utilizationItems.get(4).getUtilizationValues().get(utilizationValueIndex).getValue(),
                 is(expectedClosingStock));
     }

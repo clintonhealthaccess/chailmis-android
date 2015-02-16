@@ -338,8 +338,6 @@ public class Dhis2 implements LmisServer {
                 CommodityAction commodityAction = actionMap.get(input.getDataElement());
 
                 if (commodityAction == null) {
-                    System.out.println("Data element: " + input.getDataElement());
-                    System.out.println("Data value: " + input.getValue());
                     commodityAction = new CommodityAction(null, input.getDataElement(), DataElementType.ALLOCATION_ID.getActivity(), DataElementType.ALLOCATED.getActivity());
                 }
                 return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());

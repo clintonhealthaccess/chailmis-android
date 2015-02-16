@@ -180,16 +180,12 @@ public class LMISTestCase {
     }
 
     public static void createStockItemSnapshot(Commodity commodity, Date date) {
-        System.out.println("\nIn createStockItemSnapShot for date:" + date);
         try {
-            System.out.println("In createStockItemSnapShot TRY for date....." + date);
 
             StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.get(commodity, date);
-            System.out.println("Found snapshot:" + stockItemSnapshot);
             GenericDao<StockItemSnapshot> stockItemSnapshotGenericDao = new GenericDao<>(StockItemSnapshot.class, application);
             if (stockItemSnapshot == null) {
                 StockItemSnapshot snapshot = new StockItemSnapshot(commodity, date, commodity.getStockOnHand());
-                System.out.println("Saving snapshot" + snapshot);
                 stockItemSnapshotGenericDao
                         .create(snapshot);
             } else {

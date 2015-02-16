@@ -66,10 +66,7 @@ public class App {
     public static void main(String[] args) throws IOException {
         Map<String, Task> commands = setUpTasks();
         if (args.length < 2) {
-            System.out.println("Usage ./configure [dev|staging|prod] task");
-            System.out.println("Available commands :");
             for (String key : commands.keySet()) {
-                System.out.println("\t \t" + key);
             }
 
         } else {
@@ -95,10 +92,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
-            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
 
             DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
-            System.out.println(set.getDataElements().size());
             List<String> periods = previousAndCurrentPeriods();
             final List<String> dataElementTypes = Arrays.asList(DataElementType.MONTHS_OF_STOCK_ON_HAND.toString());
             for (String period : periods) {
@@ -132,7 +127,6 @@ public class App {
 
                 Object data = service.submitValueSet(valueSet);
 
-                System.out.println(data);
 
             }
         }
@@ -176,7 +170,6 @@ public class App {
 
 
     private static ApiService getService(String env) throws IOException {
-        System.out.println(env);
         Properties dhis2Properties = new Properties();
         dhis2Properties.load(App.class.getClassLoader().getResourceAsStream("dhis2." + env + ".properties"));
         String dhis2BaseUrl = dhis2Properties.getProperty("dhis2.base_url");
@@ -184,7 +177,6 @@ public class App {
         String dhis2Password = dhis2Properties.getProperty("dhis2.password");
         String dhis2ApiUrl = dhis2BaseUrl + "/api/";
 
-        System.out.println(format("Accessing API at %s with login - %s/%s", dhis2ApiUrl, dhis2Username, dhis2Password));
         return new Client(dhis2ApiUrl, new User(dhis2Username, dhis2Password)).getService();
     }
 
@@ -221,7 +213,6 @@ public class App {
 
     private static void submitMaxMinValues(ApiService service, String maxType, String minType, int middleValue, int maxValue) {
         UserProfile me = service.getProfile();
-        System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
 
         DataSet set = service.getDataSetWithDetails("a5321843640", "id,name,dataElements[id,name,attributeValues]");
 
@@ -264,9 +255,7 @@ public class App {
             }
             try {
                 Object data = service.submitValueSet(valueSet);
-                System.out.println(data);
             } catch (Exception exception) {
-                System.out.println("Timed out");
             }
 
 
@@ -279,10 +268,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
-            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
 
             DataSet set = service.getDataSet("a5321843640");
-            System.out.println(set.getDataElements().size());
 
             List<String> periods = previousAndCurrentPeriods();
 
@@ -300,7 +287,6 @@ public class App {
                     valueSet.getDataValues().add(value);
 
                     Object data = service.submitValueSet(valueSet);
-                    System.out.println(data);
                 }
 
             }
@@ -312,10 +298,8 @@ public class App {
         @Override
         public void operateOnService(ApiService service) throws IOException {
             UserProfile me = service.getProfile();
-            System.out.println("OrganisationUnit "+ me.getOrganisationUnits().get(0));
 
             DataSet set = service.getDataSet("a1ce7aa8c65");
-            System.out.println(set.getDataElements().size());
 
             DataValueSet valueSet = new DataValueSet();
             valueSet.setDataValues(new ArrayList<DataValue>());
@@ -333,7 +317,6 @@ public class App {
                 valueSet.getDataValues().add(value);
             }
             Object data = service.submitValueSet(valueSet);
-            System.out.println(data);
         }
     };
 

@@ -131,7 +131,6 @@ public class ReportsService {
         } catch (Exception e) {
             Log.e("ReportsService", e.getMessage());
         }
-        System.out.println("......................" + facilityStockReportItems);
         return facilityStockReportItems;
     }
 
@@ -305,7 +304,6 @@ public class ReportsService {
             int quantityReceived = GenericService.getTotal(date, receiveItems);
 
             if (quantityReceived > 0) {
-                System.out.println("hereher");
             }
             int quantityDispensed = GenericService.getTotal(date, dispensingItems);
             int quantityLost = GenericService.getTotal(date, lossItems);

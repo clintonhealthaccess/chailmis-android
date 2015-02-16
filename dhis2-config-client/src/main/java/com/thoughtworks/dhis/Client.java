@@ -62,8 +62,6 @@ public class Client {
                         } catch (NullPointerException ex) {
 
                         }
-                        System.out.println("Error occurred ");
-                        System.out.println(retrofitError.getMessage());
                         if (retrofitError.getResponse() != null){
                             try {
                                 BufferedReader reader = new BufferedReader(new InputStreamReader(retrofitError.getResponse().getBody().in()));
@@ -75,7 +73,6 @@ public class Client {
                                     out.append(newLine);
                                 }
 
-                                System.out.println(out);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
