@@ -86,7 +86,7 @@ public class OrderServiceTest extends LMISTestCase {
     private LmisSqliteOpenHelper openHelper;
     private AndroidConnectionSource connectionSource;
     private String responseBody =
-            "{\"optionSets\":[{\"id\":\"61a2525ca8d\",\"name\":\"Reasons For Order\",\"options\":[\"HIGH DEMAND\",\"LOSSES\",\"EXPIRIES\"]}]}";
+            "{\"optionSets\":[{\"id\":\"61a2525ca8d\",\"name\":\"Reasons For Order\",\"options\":[{\"name\":\"HIGH DEMAND\"},{\"name\":\"LOSSES\"},{\"name\":\"EXPIRIES\"}]}]}";
     private OrderReason highDemand = new OrderReason("HIGH DEMAND");
     private OrderReason losses = new OrderReason("LOSSES");
     private OrderReason expiries = new OrderReason("EXPIRIES");

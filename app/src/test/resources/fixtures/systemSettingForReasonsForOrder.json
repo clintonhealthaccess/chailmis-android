@@ -4,9 +4,9 @@
             "id": "61a2525ca8d",
             "name": "Reasons For Order",
             "options": [
-                "HIGH DEMAND",
-                "LOSSES",
-                "EXPIRIES"
+                {"name": "HIGH DEMAND"},
+                {"name": "LOSSES"},
+                {"name": "EXPIRIES"}
             ]
         }
     ]
