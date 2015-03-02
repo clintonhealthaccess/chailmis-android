@@ -32,7 +32,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -110,7 +110,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -149,7 +149,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -188,7 +188,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -266,7 +266,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -305,7 +305,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -344,7 +344,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -383,7 +383,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -422,7 +422,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -461,7 +461,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -539,7 +539,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -578,7 +578,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -695,7 +695,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -734,7 +734,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -773,7 +773,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -812,7 +812,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -851,7 +851,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -890,7 +890,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -929,7 +929,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -968,7 +968,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -1007,7 +1007,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -1099,7 +1099,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -1177,7 +1177,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -1222,7 +1222,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -1339,7 +1339,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -1378,7 +1378,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -1417,7 +1417,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -1456,7 +1456,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -1495,7 +1495,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -1573,7 +1573,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -1612,7 +1612,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -1651,7 +1651,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -1690,7 +1690,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -1729,7 +1729,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -1768,7 +1768,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -1807,7 +1807,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -1846,7 +1846,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -1885,7 +1885,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -2002,7 +2002,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -2041,7 +2041,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -2119,7 +2119,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -2158,7 +2158,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -2197,7 +2197,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -2236,7 +2236,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -2275,7 +2275,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -2314,7 +2314,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -2353,7 +2353,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -2431,7 +2431,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -2470,7 +2470,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -2548,7 +2548,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -2626,7 +2626,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -2665,7 +2665,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -2704,7 +2704,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -2743,7 +2743,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -2821,7 +2821,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -2860,7 +2860,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -2899,7 +2899,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -2938,7 +2938,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -2977,7 +2977,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -3016,7 +3016,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -3055,7 +3055,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -3094,7 +3094,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -3133,7 +3133,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -3211,7 +3211,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -3289,7 +3289,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -3406,7 +3406,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -3445,7 +3445,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -3523,7 +3523,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -3601,7 +3601,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -3640,7 +3640,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -3679,7 +3679,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -3718,7 +3718,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -3757,7 +3757,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -3835,7 +3835,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -3874,7 +3874,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -3913,7 +3913,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -3991,7 +3991,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -4030,7 +4030,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -4069,7 +4069,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -4108,7 +4108,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -4147,7 +4147,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -4186,7 +4186,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -4225,7 +4225,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -4264,7 +4264,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -4303,7 +4303,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -4342,7 +4342,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -4381,7 +4381,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -4420,7 +4420,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -4498,7 +4498,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -4537,7 +4537,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -4576,7 +4576,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -4615,7 +4615,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -4693,7 +4693,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -4732,7 +4732,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -4771,7 +4771,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -4849,7 +4849,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -4888,7 +4888,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -4927,7 +4927,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -4966,7 +4966,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -5005,7 +5005,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -5044,7 +5044,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -5122,7 +5122,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -5200,7 +5200,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -5239,7 +5239,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -5278,7 +5278,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -5356,7 +5356,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -5395,7 +5395,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -5473,7 +5473,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -5512,7 +5512,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -5590,7 +5590,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -5629,7 +5629,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -5668,7 +5668,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -5707,7 +5707,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -5746,7 +5746,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -5785,7 +5785,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -5824,7 +5824,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -5863,7 +5863,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -5902,7 +5902,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -5980,7 +5980,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -6058,7 +6058,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -6097,7 +6097,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -6136,7 +6136,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -6175,7 +6175,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -6214,7 +6214,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -6253,7 +6253,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -6292,7 +6292,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -6331,7 +6331,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -6370,7 +6370,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -6409,7 +6409,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -6448,7 +6448,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -6487,7 +6487,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -6526,7 +6526,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -6565,7 +6565,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -6604,7 +6604,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -6643,7 +6643,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -6682,7 +6682,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -6721,7 +6721,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -6760,7 +6760,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -6838,7 +6838,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -6877,7 +6877,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -6916,7 +6916,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -6955,7 +6955,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -7033,7 +7033,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -7111,7 +7111,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -7189,7 +7189,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -7228,7 +7228,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -7267,7 +7267,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -7345,7 +7345,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -7384,7 +7384,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -7462,7 +7462,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -7501,7 +7501,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -7540,7 +7540,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -7618,7 +7618,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -7735,7 +7735,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -7774,7 +7774,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -7930,7 +7930,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -7969,7 +7969,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -8008,7 +8008,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -8086,7 +8086,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -8125,7 +8125,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -8203,7 +8203,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -8242,7 +8242,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -8281,7 +8281,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -8398,7 +8398,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -8476,7 +8476,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -8515,7 +8515,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -8554,7 +8554,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -8593,7 +8593,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -8632,7 +8632,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -8671,7 +8671,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -8749,7 +8749,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -8788,7 +8788,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -8827,7 +8827,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -8866,7 +8866,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -8905,7 +8905,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -8944,7 +8944,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -8983,7 +8983,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -9061,7 +9061,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -9139,7 +9139,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -9178,7 +9178,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -9217,7 +9217,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -9256,7 +9256,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -9295,7 +9295,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -9373,7 +9373,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -9418,7 +9418,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -9457,7 +9457,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -9535,7 +9535,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -9613,7 +9613,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -9691,7 +9691,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -9730,7 +9730,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -9769,7 +9769,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -9808,7 +9808,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -9847,7 +9847,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "c840018a5ff",
                             "name": "Zinc_tablet"
@@ -9886,7 +9886,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -9925,7 +9925,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "5534ae9df55",
                             "name": "Zinc+ORS Copack_Satchets"
@@ -10003,7 +10003,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -10042,7 +10042,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7bc197c8b32",
                             "name": "Ampicillin/cloxacillin_suspension"
@@ -10120,7 +10120,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -10159,7 +10159,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -10198,7 +10198,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -10237,7 +10237,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "301bd1a479d",
-                                "name": "Anti-diarrhea"
+                                "name": "EM-Child Health"
                             },
                             "id": "ca1dc845d63",
                             "name": "ORS_Satchets"
@@ -10276,7 +10276,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f831f18345d",
                             "name": "Ampicillin/cloxacillin_capsule"
@@ -10315,7 +10315,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -10432,7 +10432,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "b31d7f1bac6",
                             "name": "Gentamicin _80mg injection"
@@ -10471,7 +10471,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -10510,7 +10510,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "458b59613d9",
                             "name": "Amoxycillin _suspension"
@@ -10627,7 +10627,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"
@@ -10666,7 +10666,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "35cb360e13b",
                             "name": "Folic Acid _tablet"
@@ -10705,7 +10705,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -10744,7 +10744,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -10783,7 +10783,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -10822,7 +10822,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "0dfcac2777d",
                             "name": "Artesunate+Amodiaquine_50mg/135mg tablet"
@@ -10861,7 +10861,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "c3bea7943ff",
                             "name": "Misoprostol_200mcg tablet"
@@ -10900,7 +10900,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "951fb30c3e3",
                             "name": "Artesunate_syrup"
@@ -10953,7 +10953,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -10992,7 +10992,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -11031,7 +11031,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "bf9c80fcae9",
                             "name": "Paracetamol_125g tablet"
@@ -11070,7 +11070,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -11109,7 +11109,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -11148,7 +11148,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "4cd132b257f",
                             "name": "Cotrimoxazole_tablet"
@@ -11187,7 +11187,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "877d0e9f022",
                             "name": "Cotrimoxazole_suspension"
@@ -11226,7 +11226,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "7cdf998d42e",
                             "name": "Paracetamol_injection"
@@ -11265,7 +11265,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "3925520d925",
-                                "name": "Maternal"
+                                "name": "EM-Maternal Health"
                             },
                             "id": "7fdc01730e9",
                             "name": "Ferrous sulfate_tablet"
@@ -11343,7 +11343,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "3acb2ccc0e8",
                             "name": "Paracetamol_drops"
@@ -11421,7 +11421,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "0106ae3ff9d",
-                                "name": "Anelgesics"
+                                "name": "EM-Neonatal Health"
                             },
                             "id": "09828093c3c",
                             "name": "Paracetamol_syrup"
@@ -11460,7 +11460,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "975ffdffd86",
                             "name": "Artemether + Lumefantrine_drops"
@@ -11577,7 +11577,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "5d152b37681",
-                                "name": "Anti-Malaria"
+                                "name": "Malaria"
                             },
                             "id": "2acd23babf2",
                             "name": "Artemether+Lumefantrine_tablet"
@@ -11616,7 +11616,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "7015d4e3097",
                             "name": "Ampicillin/cloxacillin_drops"
@@ -11655,7 +11655,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "445236f3cc0",
-                                "name": "Antibiotics"
+                                "name": "Essential Medicines"
                             },
                             "id": "f7721e8a623",
                             "name": "Amoxycillin _250g capsule"
@@ -11694,7 +11694,7 @@
                             ],
                             "dataElementGroupSet": {
                                 "id": "d3f8ce2efe6",
-                                "name": "Antiseptic"
+                                "name": "Vaccines"
                             },
                             "id": "b0c7862e2a6",
                             "name": "Chlorhexidine gel_Gel"

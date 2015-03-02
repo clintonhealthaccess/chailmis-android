@@ -88,4 +88,25 @@ public class DataElement {
 
     private OptionSet optionSet;
 
+    public String jsonString() {
+        return "\"id\": \'" + id + "\', \"name\": \'" + name + "\'," +
+                "\"attributeValues\": [" + attributeValuesJsonString() + "]";
+    }
+
+    private String attributeValuesJsonString() {
+        String s = "";
+        for(AttributeValue t: attributeValues){
+            if(!s.equalsIgnoreCase("")){
+                s+=",";
+            }
+            s+="{" +t.jsonString()+"}";
+        }
+        return s;
+    }
+
+    @Override
+    public String toString() {
+        return name + "  " + id +"  "+
+                (attributeValues != null ? attributeValues.size() : "NO") + " Attribute Values";
+    }
 }

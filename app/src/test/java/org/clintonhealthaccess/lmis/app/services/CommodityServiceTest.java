@@ -110,7 +110,8 @@ public class CommodityServiceTest {
         mockLmisServer = mock(LmisServer.class);
         commodityActionService = mock(CommodityActionService.class);
         mockStockLevels = testActionValues(application);
-        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
+        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
+        when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
         when(mockLmisServer.fetchIntegerConstant((User) anyObject(), anyString())).thenReturn(MOCK_DAY);
 

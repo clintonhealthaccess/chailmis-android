@@ -85,7 +85,8 @@ public class TestInjectionUtil {
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase, Module anotherMockedModule) throws IOException {
         final LmisServer mockLmisServer = mock(LmisServer.class);
         List<Category> categories = defaultCategories(context);
-        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
+        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
+        when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(categories);
         when(mockLmisServer.fetchCommodityActionValues((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testActionValues(context));
         when(mockLmisServer.pushDataValueSet((DataValueSet) anyObject(), (User) anyObject())).thenReturn(fakePushDataValuesResponse());
         Module mockedModule = new AbstractModule() {

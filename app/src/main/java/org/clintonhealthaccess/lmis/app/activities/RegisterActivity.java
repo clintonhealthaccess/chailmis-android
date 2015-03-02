@@ -156,7 +156,7 @@ public class RegisterActivity extends RoboActionBarActivity {
                 smsSyncService.syncGatewayNumber();
             } catch (Exception e) {
                 this.failureCause = e;
-                Log.e("Registration Error", e.getLocalizedMessage());
+                //Log.e("Registration Error", e.getLocalizedMessage());
                 e.printStackTrace();
                 return false;
             }

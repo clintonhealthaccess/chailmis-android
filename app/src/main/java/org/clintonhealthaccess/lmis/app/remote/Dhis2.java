@@ -62,11 +62,14 @@ import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
+import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
+import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,6 +115,180 @@ public class Dhis2 implements LmisServer {
         return getCategoriesFromDataSets(response.getDataSets());
     }
 
+    public void writeJson(User user) throws JSONException {
+        TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
+        timingLogger.addSplit("fetch data");
+        timingLogger.dumpToLog();
+        List<DataElementGroupSet> dataElementGroupSets = getGroupSets(response.getDataSets());
+
+        String s = "";
+        for (DataElementGroupSet t : dataElementGroupSets) {
+            if (!s.isEmpty()) {
+                s += ",";
+            }
+            s += "{" + t.jsonString() + "}";
+        }
+
+        System.out.println("{ \"dataElementGroupSets\": [ " + s + " ] }");
+    }
+
+    private List<DataElementGroupSet> getGroupSets(List<DataSet> dataSets) {
+        List<DataElementGroupSet> groupSets = new ArrayList<>();
+        for (DataSet ds : dataSets) {
+            for (DataElement de : ds.getDataElements()) {
+                for (DataElementGroup group : de.getDataElementGroups()) {
+                    if (!groupSets.contains(group.getDataElementGroupSet())) {
+                        DataElementGroupSet set = group.getDataElementGroupSet();
+                        set.setDataElementGroups(getGroups(dataSets, set));
+                        groupSets.add(set);
+                    }
+                }
+            }
+        }
+        return groupSets;
+    }
+
+    private List<DataElementGroup> getGroups(List<DataSet> dataSets, DataElementGroupSet groupSet) {
+        List<DataElementGroup> groups = new ArrayList<>();
+        for (DataSet ds : dataSets) {
+            for (DataElement de : ds.getDataElements()) {
+                for (DataElementGroup group : de.getDataElementGroups()) {
+                    if (!groups.contains(group) && group.getDataElementGroupSet().equals(groupSet)) {
+                        group.setDataElements(getElements(dataSets, group));
+                        groups.add(group);
+                    }
+                }
+            }
+        }
+        return groups;
+    }
+
+    private List<DataElement> getElements(List<DataSet> dataSets, DataElementGroup group) {
+        List<DataElement> dataElements = new ArrayList<>();
+        for (DataSet ds : dataSets) {
+            for (DataElement de : ds.getDataElements()) {
+                if (de.getDataElementGroups() != null
+                        && de.getDataElementGroups().size() > 0) {
+                    if (!dataElements.contains(de)
+                            && de.getDataElementGroups().get(0).equals(group)) {
+                        dataElements.add(de);
+                    }
+                }
+            }
+        }
+        return dataElements;
+    }
+
+    @Override
+    public List<Category> fetchCategories(User user) {
+        TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        DataSetSearchResponse datasets = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
+        DataElementGroupSetSearchResponse response = service.getDataElementGroupSets("id,name, dataElementGroups[id,name, dataElements[name,id,attributeValues[value,attribute[id,name]]]");
+        timingLogger.addSplit("fetch data");
+        timingLogger.dumpToLog();
+        return getCategoriesFromDataElementGroupSets(
+                getAndroidDataElementGroupSets(response.getDataElementGroupSets()),
+                datasets.getDataSets());
+    }
+
+    private List<DataElementGroupSet> getAndroidDataElementGroupSets(List<DataElementGroupSet> sets) {
+
+        List<DataElementGroupSet> androidGroupSets = new ArrayList<>();
+
+        try {
+            List<String> categoryNames = Arrays.asList("Essential Medicines",
+                    "EM-Child Health", "EM-Maternal Health", "EM-Neonatal Health",
+                    "Malaria", "Family Planning", "Vaccines");
+            //getCategoryNames(new BufferedReader(new FileReader("commodities.csv")));
+            System.out.println("Category names are " + categoryNames);
+            for (DataElementGroupSet set : sets) {
+                if (categoryNames.contains(set.getName().trim())) {
+                    androidGroupSets.add(set);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error " + e.getMessage());
+            e("Error", e.getMessage());
+        }
+
+        return androidGroupSets;
+    }
+
+    private List<Category> getCategoriesFromDataElementGroupSets(List<DataElementGroupSet> dataElementGroupSets, List<DataSet> dataSets) {
+        List<Category> categories = newArrayList();
+
+        for (DataElementGroupSet groupSet : dataElementGroupSets) {
+            Category category = new Category();
+            category.setName(groupSet.getName());
+            category.setLmisId(groupSet.getId());
+
+            category.setCommodities(new ArrayList<Commodity>());
+
+            for (DataElementGroup group : groupSet.getDataElementGroups()) {
+                Commodity commodity = new Commodity(group.getId(), group.getName());
+
+                commodity.setNonLGA(false);
+                commodity.setIsDevice(false);
+                commodity.setIsVaccine(false);
+
+                if (group.getAttributeValues() != null && group.getAttributeValues().size() > 0) {
+                    for (AttributeValue value : group.getAttributeValues()) {
+
+                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_NON_LGA)) {
+                            commodity.setNonLGA(value.getValue().equalsIgnoreCase("1"));
+                        }
+                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_DEVICE)) {
+                            commodity.setIsDevice(value.getValue().equalsIgnoreCase("1"));
+                        }
+                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_VACCINE)) {
+                            commodity.setIsVaccine(value.getValue().equalsIgnoreCase("1"));
+                        }
+                    }
+                }
+                commodity.setCategory(category);
+
+                for (DataElement element : group.getDataElements()) {
+                    if (element.getAttributeValues().size() > 0) {
+                        AttributeValue attributeValue = element.getAttributeValues().get(0);
+                        String activityName = element.getName().substring(group.getName().length()).trim();
+                        if (!DataElementType.activityExists(activityName)) {
+                            continue;
+                        }
+
+                        CommodityAction commodityAction = new CommodityAction(commodity, element.getId(), element.getName(), attributeValue.getValue());
+
+                        DataSet dataSet = getElementDataSet(dataSets, element.getId());
+                        if (dataSet != null) {
+                            commodityAction.setDataSet(new DataSet(dataSet.toRawDataSet()));
+                            commodity.getCommodityActions().add(commodityAction);
+                        } else {
+                            e("Error Null Dataset", commodity.getName() + " " + commodityAction.getName());
+                        }
+                    }
+                }
+
+                category.addCommodity(commodity);
+            }
+
+            categories.add(category);
+        }
+        return categories;
+    }
+
+    private DataSet getElementDataSet(List<DataSet> dataSets, String elementId) {
+        for (DataSet dataSet : dataSets) {
+            for (DataElement dataElement : dataSet.getDataElements()) {
+                if (dataElement.getId().equalsIgnoreCase(elementId)) {
+                    return dataSet;
+                }
+            }
+        }
+        return null;
+    }
+
     private List<Category> getCategoriesFromDataSets(List<DataSet> dataSets) {
         List<Category> categories = newArrayList();
         List<Commodity> commodities = newArrayList();
@@ -140,6 +317,10 @@ public class Dhis2 implements LmisServer {
         Commodity commodity = new Commodity();
         Commodity actualCommodity;
         if (element.getDataElementGroups().size() > 0) {
+            if (element.getDataElementGroups().size() > 1) {
+                System.out.println("Offending guy caught " + element.getName() + " in "
+                        + element.getDataElementGroups().size() + " groups: " + element.getDataElementGroups());
+            }
             DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
             DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
             if (dataElementGroup.getAttributeValues() != null) {

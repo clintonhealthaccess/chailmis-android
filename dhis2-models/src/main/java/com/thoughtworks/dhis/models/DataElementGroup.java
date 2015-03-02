@@ -85,4 +85,26 @@ public class DataElementGroup {
     public int hashCode() {
         return name.hashCode();
     }
+
+    public String jsonString() {
+        return "\"id\": \'" + id + "\', \"name\": \'" + name + "\', " +
+                "\"dataElements\": [" + dataElementsJsonString() + "]";
+    }
+
+    private String dataElementsJsonString() {
+        String s = "";
+        for(DataElement e: dataElements){
+            if(!s.equalsIgnoreCase("")){
+                s+=",";
+            }
+            s+="{" +e.jsonString()+"}";
+        }
+        return s;
+    }
+
+    @Override
+    public String toString() {
+        return name + "  " + id +"  "+
+                (dataElements != null ? dataElements.size() : "NO") + " Elements";
+    }
 }

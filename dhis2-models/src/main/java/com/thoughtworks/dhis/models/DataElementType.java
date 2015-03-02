@@ -77,4 +77,13 @@ public enum DataElementType {
         this.activity = activity;
         this.type = "int";
     }
+
+    public static boolean activityExists(String activityString) {
+        for (DataElementType type : DataElementType.values()) {
+            if (type.getActivity().equalsIgnoreCase(activityString)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

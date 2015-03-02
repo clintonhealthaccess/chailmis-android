@@ -37,4 +37,14 @@ import lombok.experimental.Builder;
 public class AttributeValue {
     private String value;
     private Attribute attribute;
+
+    public String jsonString() {
+        return "\"value\": \'" + value +"\'," +
+                "\"attribute\": {" + attribute.jsonString() + "}";
+    }
+
+    @Override
+    public String toString() {
+        return value + "  " + attribute.toString();
+    }
 }

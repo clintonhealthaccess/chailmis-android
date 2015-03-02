@@ -112,7 +112,9 @@ public class CommodityService {
 
     public void initialise(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "initialise");
-        List<Category> allCommodities = lmisServer.fetchCommodities(user);
+        // List<Category> allCommodities = lmisServer.fetchCommodities(user);
+        List<Category> allCommodities = lmisServer.fetchCategories(user);
+        System.out.println(allCommodities.size()+" categories found");
         timingLogger.addSplit("fetch all cats");
         saveToDatabase(allCommodities);
         timingLogger.addSplit("save all Cats");

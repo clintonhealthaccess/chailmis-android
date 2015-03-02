@@ -61,4 +61,12 @@ public class Attribute {
 
     private String displayName;
 
+    public String jsonString() {
+        return "\"id\": \'" + id + "\', \"name\": \'" + name + "\'";
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

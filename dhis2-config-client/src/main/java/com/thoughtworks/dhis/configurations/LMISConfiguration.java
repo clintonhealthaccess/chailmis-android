@@ -376,6 +376,16 @@ public class LMISConfiguration implements IConfiguration {
         return categories;
     }
 
+    public static List<String> getCategoryNames(BufferedReader bufferedReader) throws IOException {
+        List<ExcelCategory> categories = getCategories(bufferedReader);
+
+        List<String> names = new ArrayList<>();
+        for(ExcelCategory category: categories){
+            names.add(category.getName().trim());
+        }
+        return names;
+    }
+
     private DataElementGroupSet createDataElementGroupSet(String name) {
         DataElementGroupSet dataElementGroupSet = DataElementGroupSet.builder().name(name).id(generateID(name)).shortName(getShortName(name)).build();
         dataElementGroupSet.setDataElementGroups(new ArrayList<DataElementGroup>());

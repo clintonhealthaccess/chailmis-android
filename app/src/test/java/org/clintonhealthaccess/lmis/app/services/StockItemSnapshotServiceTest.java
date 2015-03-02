@@ -86,7 +86,8 @@ public class StockItemSnapshotServiceTest {
     public void setUp() throws Exception {
         mockLmisServer = mock(LmisServer.class);
         mockStockLevels = testActionValues(application);
-        when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
+        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
+        when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
 
         setUpInjection(this, new AbstractModule() {

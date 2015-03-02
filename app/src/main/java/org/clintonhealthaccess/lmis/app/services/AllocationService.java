@@ -141,10 +141,12 @@ public class AllocationService {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
         boolean changed = false;
-        for (Allocation allocation : allocations) {
-            if (!isExisting(allocation)) {
-                createAllocation(allocation);
-                changed = true;
+        if (allocations != null) {
+            for (Allocation allocation : allocations) {
+                if (!isExisting(allocation)) {
+                    createAllocation(allocation);
+                    changed = true;
+                }
             }
         }
         if (changed) {
@@ -199,6 +201,7 @@ public class AllocationService {
                 return DataElementType.ALLOCATION_ID.getActivity().equals(commodityActionValue.getCommodityAction().getName());
             }
         });
+
         CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
         Allocation allocation = new Allocation(allocationIdValue.getValue(), allocationIdValue.getPeriod());
 

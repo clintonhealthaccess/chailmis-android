@@ -45,6 +45,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -70,12 +71,17 @@ public class Dhis2Test extends LMISTestCase {
     @Inject
     private CategoryService categoryService;
 
-
     @Before
     public void setUp() throws Exception {
         setUpInjection(this);
     }
 
+    @Ignore
+    @Test
+    public void testWriteOutNewJson() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        dhis2.writeJson(new User());
+    }
 
     @Test
     public void testShouldValidateUserLogin() throws Exception {
@@ -90,6 +96,7 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(authorizationHeader.getValue(), equalTo("Basic dGVzdDpwYXNz"));
     }
 
+
     @Test
     public void testShouldFetchReasonsForOrder() throws Exception {
         setUpSuccessHttpGetRequest(200, "systemSettingForReasonsForOrder.json");
@@ -98,12 +105,24 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(reasons, contains(OrderReason.HIGH_DEMAND, OrderReason.LOSSES, OrderReason.EXPIRIES));
     }
 
-
     @Test
     public void testShouldFetchOrderTypes() throws Exception {
         setUpSuccessHttpGetRequest(200, "orderTypes.json");
         List<OrderType> orderTypes = dhis2.fetchOrderTypes(new User("test", "pass"));
         assertThat(orderTypes.size(), is(2));
+    }
+
+    @Test
+    public void shouldFetchCategoriesFromAPIServiceEndPoint() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
+        List<Category> categories = dhis2.fetchCategories(new User());
+        String commodityName = "Cotrimoxazole_suspension";
+        assertThat(categories.size(), is(7));
+        Category category = categories.get(0);
+        assertThat(category.getNotSavedCommodities().size(), is(greaterThan(1)));
+        assertThat(category.getName(), is("Essential Medicines"));
+        assertThat(category.getNotSavedCommodities().get(0).getName(), is(commodityName));
     }
 
     @Test
@@ -114,7 +133,7 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(categories.size(), is(10));
         Category category = categories.get(0);
         assertThat(category.getNotSavedCommodities().size(), is(greaterThan(1)));
-        assertThat(category.getName(), is("Antibiotics"));
+        assertThat(category.getName(), is("Essential Medicines"));
         assertThat(category.getNotSavedCommodities().get(0).getName(), is(commodityName));
     }
 
@@ -147,7 +166,6 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(result.get(0).getPeriod(), is("20131229"));
         assertThat(result.get(0).getCommodityAction().getId(), is("f5edb97ceca"));
     }
-
 
     @Test
     public void shouldSearchConstantsForMonthlyStockCountDay() throws Exception {
