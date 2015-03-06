@@ -87,9 +87,9 @@ public class AdjustmentTest {
         CommodityAction adjustmentAmountAction = new CommodityAction(commodity, "12", "12", DataElementType.ADJUSTMENTS.toString());
         when(commodity.getCommodityAction(DataElementType.ADJUSTMENTS.toString())).thenReturn(adjustmentAmountAction);
         when(commodity.getCommodityAction(DataElementType.ADJUSTMENT_REASON.toString())).thenReturn(adjustmentReasonsAction);
-        Adjustment adjustment = new Adjustment(commodity, 10, true, "Count");
+        Adjustment adjustment = new Adjustment(commodity, 10, false, "Count");
         assertThat(adjustment.getActivitiesValues().size(), is(2));
-        assertThat(adjustment.getActivitiesValues().get(0).getValue(), is("10"));
+        assertThat(adjustment.getActivitiesValues().get(0).getValue(), is("-10"));
         assertThat(adjustment.getActivitiesValues().get(1).getValue(), is("Count"));
         assertThat(adjustment.getActivitiesValues().get(0).getCommodityAction(), is(notNullValue()));
         assertThat(adjustment.getActivitiesValues().get(1).getCommodityAction(), is(notNullValue()));

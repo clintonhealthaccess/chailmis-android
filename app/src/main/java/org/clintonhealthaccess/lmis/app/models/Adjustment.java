@@ -93,7 +93,8 @@ public class Adjustment implements Serializable, Snapshotable {
     @Override
     public List<CommoditySnapshotValue> getActivitiesValues() {
         List<CommoditySnapshotValue> values = new ArrayList<>();
-        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(DataElementType.ADJUSTMENTS.getActivity()), quantity));
+        int adjustmentQuantity = isPositive() ? quantity : quantity * -1;
+        values.add(new CommoditySnapshotValue(commodity.getCommodityAction(DataElementType.ADJUSTMENTS.getActivity()), adjustmentQuantity));
         values.add(new CommoditySnapshotValue(commodity.getCommodityAction(DataElementType.ADJUSTMENT_REASON.getActivity()), reason));
         return values;
     }
