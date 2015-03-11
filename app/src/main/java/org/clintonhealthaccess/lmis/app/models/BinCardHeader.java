@@ -29,14 +29,11 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import lombok.Getter;
-
-@Getter
 public class BinCardHeader {
     String date;
     String receivedFromIssuedTo;
-    String quantityReceived;
-    String quantityDispensed;
+    private String quantityReceived;
+    private String quantityDispensed;
     String quantityLost;
     String quantityAdjusted;
     String stockBalance;
@@ -50,5 +47,33 @@ public class BinCardHeader {
         this.quantityLost = quantityLost;
         this.quantityAdjusted = quantityAdjusted;
         this.stockBalance = stockBalance;
+    }
+
+    public String getReceivedFromIssuedTo(){
+        return receivedFromIssuedTo;
+    }
+
+    public String getDate(){
+        return date;
+    }
+
+    public String getQuantityDispensed() {
+        return quantityDispensed;
+    }
+
+    public String getQuantityReceived() {
+        return quantityReceived;
+    }
+
+    public String getQuantityLost() {
+        return quantityLost;
+    }
+
+    public String getQuantityAdjusted() {
+        return quantityAdjusted;
+    }
+
+    public String getStockBalance() {
+        return stockBalance;
     }
 }

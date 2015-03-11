@@ -52,13 +52,13 @@ public interface LmisServer {
 
     List<OrderType> fetchOrderTypes(User user);
 
-    List<CommodityActionValue> fetchCommodityActionValues(List<Commodity> allCommodities, User user);
+    List<CommodityActionValue> fetchCommodityActionValues(User user);
 
     DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
 
     Integer fetchIntegerConstant(User user, String monthlyStockCountSearchKey1);
 
-    List<CommodityActionValue> fetchAllocations(List<Commodity> commodities, User user);
+    List<CommodityActionValue> fetchAllocations(User user);
 
     String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue);
 }

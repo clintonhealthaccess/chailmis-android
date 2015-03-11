@@ -137,8 +137,7 @@ public class AllocationService {
     }
 
     public void syncAllocations(User user) {
-        List<Commodity> commodities = commodityService.all();
-        List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(commodities, user);
+        List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
         boolean changed = false;
         if (allocations != null) {
@@ -164,18 +163,27 @@ public class AllocationService {
         return existingAllocation != null;
     }
 
-    private void createAllocation(Allocation allocation) {
+    public void createAllocation(Allocation allocation) {
+        Allocation existingAllocation = getAllocationByLmisId(allocation.getAllocationId());
+        if (existingAllocation != null) {
+            existingAllocation.setPeriod(allocation.getPeriod());
+            existingAllocation.setTransientAllocationItems(allocation.getTransientAllocationItems());
+        } else {
+            existingAllocation = allocation;
+        }
+
         GenericDao<Allocation> allocationGenericDao = new GenericDao<>(Allocation.class, context);
-        allocationGenericDao.create(allocation);
+        allocationGenericDao.createOrUpdate(existingAllocation);
 
         GenericDao<AllocationItem> allocationItemGenericDao = new GenericDao<>(AllocationItem.class, context);
-        for (AllocationItem allocationItem : allocation.getTransientAllocationItems()) {
+        for (AllocationItem allocationItem : existingAllocation.getTransientAllocationItems()) {
             allocationItem.setAllocation(allocation);
             allocationItemGenericDao.create(allocationItem);
         }
 
         Log.i("Saved Allocation: ", allocation.getAllocationId() +
                 " with " + allocation.getTransientAllocationItems().size() + " items");
+        //TODO find and update CommodityActionValues - For - This Allocation
     }
 
     private List<Allocation> toAllocations(List<CommodityActionValue> actionValues) {

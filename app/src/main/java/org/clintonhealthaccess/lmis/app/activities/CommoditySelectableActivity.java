@@ -174,7 +174,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
     }
 
     public void onCommodityToggledEventCompleted() {
-        Log.e("Toggled", "toggled");
+        //Log.e("Toggled", "toggled");
         searchCommodityAdapter = new SearchCommodityAdapter(this,
                 R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
         autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);

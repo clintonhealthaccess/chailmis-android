@@ -58,6 +58,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.app.views.graphs.StockOnHandGraphBar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,7 +72,7 @@ import static android.view.View.OnClickListener;
 import static com.google.common.collect.ImmutableList.of;
 
 @ContentView(R.layout.activity_home)
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements Serializable {
 
     @InjectView(R.id.layoutGraph)
     LinearLayout layout;

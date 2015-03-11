@@ -51,6 +51,8 @@ import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
+import java.io.Serializable;
+
 import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
@@ -61,7 +63,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.clintonhealthaccess.lmis.app.R.id;
 import static org.clintonhealthaccess.lmis.app.R.layout;
 
-public class RegisterActivity extends RoboActionBarActivity {
+public class RegisterActivity extends RoboActionBarActivity implements Serializable {
     @Inject
     private UserService userService;
     @Inject
@@ -149,6 +151,7 @@ public class RegisterActivity extends RoboActionBarActivity {
                 user = userService.register(username, password);
                 Log.i("Inital sync:", "initializing");
                 commodityService.initialise(user);
+
                 Log.i("Inital sync:", "<========== syncing Order Reasons");
                 orderService.syncOrderReasons();
                 Log.i("Inital sync:", "<========== syncing Order Types");
@@ -176,7 +179,7 @@ public class RegisterActivity extends RoboActionBarActivity {
 
             String toastMessage = succeeded ? registrationSuccessfulMessage : failureCause.getMessage();
             Toast.makeText(getApplicationContext(), toastMessage, LENGTH_SHORT).show();
-            Log.e("Registration", toastMessage);
+            Log.e("Registration", toastMessage+" ");
         }
     }
 }

@@ -29,39 +29,56 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.dhis.models.DataElement;
 
+import org.clintonhealthaccess.lmis.app.utils.Helpers;
+
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 @DatabaseTable(tableName = "datasets")
 public class DataSet implements Serializable {
+
+    public static final String ALLOCATED = "LMIS Commodities Allocated";
+    public static final String CALCULATED = "LMIS Commodities Calculated";
+    public static final String DEFAULT = "LMIS Commodities Default";
+
+    public static final String NAME = "name";
+
 
     @DatabaseField
     private String description;
 
     @DatabaseField(id = true, uniqueIndex = true)
     private String id;
-    @DatabaseField
+    @DatabaseField(columnName = NAME, uniqueIndex = true)
     private String name;
     @DatabaseField
     private String periodType;
 
     private List<DataElement> dataElements;
 
+    @ForeignCollectionField(eager = false)
+    private ForeignCollection<CommodityActionDataSet> commodityActionDataSets;
+
     public DataSet(String id) {
         this.id = id;
     }
 
+    public DataSet() {
+        //ormLite likes
+    }
+
+    public DataSet(String id, String name, String periodType){
+        this.id = id;
+        this.name = name;
+        this.periodType = periodType;
+    }
     public DataSet(com.thoughtworks.dhis.models.DataSet rawDataSet) {
         id = rawDataSet.getId();
         name = rawDataSet.getName();
@@ -74,5 +91,48 @@ public class DataSet implements Serializable {
         return com.thoughtworks.dhis.models.DataSet.builder()
                 .id(id).name(name).displayName(description).periodType(periodType)
                 .dataElements(dataElements).build();
+    }
+
+    public String getPeriod(Date date) {
+        System.out.println("Period Type is " + getPeriodType());
+        OrderCycle cycle = Helpers.getOrderCycle(getPeriodType());
+        return cycle.getPeriod(date);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DataSet)) return false;
+
+        DataSet dataSet = (DataSet) o;
+
+        if (id != null ? !id.equals(dataSet.id) : dataSet.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<DataElement> getDataElements() {
+        return dataElements;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setPeriodType(String periodType) {
+        this.periodType = periodType;
+    }
+
+    public String getPeriodType() {
+        return periodType;
     }
 }

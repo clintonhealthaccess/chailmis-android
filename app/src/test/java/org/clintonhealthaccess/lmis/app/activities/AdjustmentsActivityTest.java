@@ -127,6 +127,7 @@ public class AdjustmentsActivityTest extends TestCase {
         AdjustmentsActivity adjustmentsActivity = getAdjustmentsActivity();
 
         List<Commodity> commodityList = commodityService.all();
+        
         adjustmentsActivity.onEvent(new CommodityToggledEvent(new AdjustmentsViewModel(commodityList.get(0))));
         adjustmentsActivity.onEvent(new CommodityToggledEvent(new AdjustmentsViewModel(commodityList.get(1))));
 
@@ -174,7 +175,6 @@ public class AdjustmentsActivityTest extends TestCase {
     }
 
     @Ignore("WIP-JOB")
-    @Test
     public void shouldShowErrorToastIfNotAVaccine() throws Exception {
         ArrayList<AdjustmentsViewModel> commodities = new ArrayList<>();
 

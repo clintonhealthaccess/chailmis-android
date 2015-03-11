@@ -30,26 +30,20 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
-import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.support.ConnectionSource;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
-import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.app.utils.Helpers;
 
@@ -61,9 +55,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
-import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
 public class DispensingService {
 
@@ -76,29 +68,22 @@ public class DispensingService {
     @Inject
     private DbUtil dbUtil;
 
-    public void addDispensing(final Dispensing dispensing) {
-        dbUtil.withDaoAsBatch(DispensingItem.class, new DbUtil.Operation<DispensingItem, DispensingItem>() {
-            @Override
-            public DispensingItem operate(Dao<DispensingItem, String> dao) throws SQLException {
-                saveDispensing(dispensing);
-                for (DispensingItem item : dispensing.getDispensingItems()) {
-                    item.setDispensing(dispensing);
-                    dao.create(item);
-                    adjustStockLevel(item);
-                    commoditySnapshotService.add(item);
-                }
-                return null;
-            }
-        });
-    }
-
-
-    private void saveDispensing(final Dispensing dispensing) throws SQLException {
+    public void addDispensing(Dispensing dispensing) {
         GenericDao<Dispensing> dispensingDao = new GenericDao<>(Dispensing.class, context);
         dispensingDao.create(dispensing);
+        saveDispensingItems(dispensing.getDispensingItems());
     }
 
-    private void adjustStockLevel(DispensingItem dispensing) throws SQLException {
+    private void saveDispensingItems(List<DispensingItem> dispensingItems) {
+        GenericDao<DispensingItem> dao = new GenericDao<>(DispensingItem.class, context);
+        for (DispensingItem dispensingItem : dispensingItems) {
+            dao.create(dispensingItem);
+            adjustStockLevel(dispensingItem);
+            commoditySnapshotService.add(dispensingItem);
+        }
+    }
+
+    private void adjustStockLevel(DispensingItem dispensing) {
         stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity(), dispensing.created());
     }
 

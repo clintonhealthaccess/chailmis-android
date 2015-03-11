@@ -52,9 +52,6 @@ import lombok.ToString;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 
-@Getter
-@Setter
-@ToString
 @DatabaseTable(tableName = "commodities")
 public class Commodity implements Serializable {
     @DatabaseField(id = true, uniqueIndex = true)
@@ -91,8 +88,7 @@ public class Commodity implements Serializable {
     }
 
     public Commodity(String name) {
-        this.id = name;
-        this.name = name;
+        this(name, name);
     }
 
     public Commodity(String id, String name) {
@@ -105,6 +101,13 @@ public class Commodity implements Serializable {
         this.category = category;
     }
 
+    public Commodity(String id, String name, Category category, boolean nonLGA, boolean isDevice, boolean isVaccine) {
+        this(id, name);
+        this.category = category;
+        this.nonLGA = nonLGA;
+        this.isDevice = isDevice;
+        this.isVaccine = isVaccine;
+    }
 
     public String getName() {
         return name;
@@ -177,7 +180,7 @@ public class Commodity implements Serializable {
     }
 
     public CommodityAction getCommodityAction(String activityType) {
-        for (CommodityAction commodityAction : new ArrayList<>(getCommodityActionsSaved())) {
+        for (CommodityAction commodityAction : new ArrayList<>(commodityActionsSaved)) {
             if (commodityAction.getActivityType().equalsIgnoreCase(activityType))
                 return commodityAction;
         }
@@ -194,6 +197,16 @@ public class Commodity implements Serializable {
 
     public boolean isBelowThreshold() {
         return getStockOnHand() < getMinimumThreshold();
+    }
+
+    @Override
+    public String toString() {
+        return "Commodity{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", commodityActionsSaved=" + commodityActionsSaved +
+                ", commodityActions=" + commodityActions +
+                '}';
     }
 
     public int calculateEmergencyPrepopulatedQuantity() {
@@ -247,4 +260,48 @@ public class Commodity implements Serializable {
             return 1;
         }
     }
+
+    public List<CommodityAction> getCommodityActionsSaved() {
+        if (commodityActionsSaved == null) {
+            return newArrayList();
+        }
+        return ImmutableList.copyOf(commodityActionsSaved);
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public boolean isDevice() {
+        return isDevice;
+    }
+
+    public boolean isVaccine() {
+        return isVaccine;
+    }
+
+    public boolean isNonLGA() {
+        return nonLGA;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<CommodityAction> getCommodityActions() {
+        return commodityActions;
+    }
+
+    public void setNonLGA(boolean nonLGA) {
+        this.nonLGA = nonLGA;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

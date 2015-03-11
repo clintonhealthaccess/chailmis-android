@@ -32,9 +32,11 @@ package org.clintonhealthaccess.lmis.app.services;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 
+import java.util.Date;
 import java.util.List;
 
 public interface Snapshotable {
     Commodity getCommodity();
-    List<CommoditySnapshotValue> getActivitiesValues();
+    List<CommoditySnapshotValue> getActivitiesValues() throws Exception;
+    Date getDate();
 }

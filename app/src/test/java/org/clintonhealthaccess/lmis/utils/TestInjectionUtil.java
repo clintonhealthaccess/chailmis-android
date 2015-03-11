@@ -87,7 +87,7 @@ public class TestInjectionUtil {
         List<Category> categories = defaultCategories(context);
         //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(categories);
-        when(mockLmisServer.fetchCommodityActionValues((List<Commodity>) anyObject(), (User) anyObject())).thenReturn(testActionValues(context));
+        when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(testActionValues(context));
         when(mockLmisServer.pushDataValueSet((DataValueSet) anyObject(), (User) anyObject())).thenReturn(fakePushDataValuesResponse());
         Module mockedModule = new AbstractModule() {
             @Override

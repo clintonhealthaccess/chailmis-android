@@ -46,6 +46,7 @@ import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -94,6 +95,9 @@ public class CommodityService {
     ReceiveService receiveService;
 
     @Inject
+    DataSetService dataSetService;
+
+    @Inject
     private DbUtil dbUtil;
 
     @Inject
@@ -112,21 +116,21 @@ public class CommodityService {
 
     public void initialise(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "initialise");
-        // List<Category> allCommodities = lmisServer.fetchCommodities(user);
-        List<Category> allCommodities = lmisServer.fetchCategories(user);
-        System.out.println(allCommodities.size()+" categories found");
+        List<Category> categories = lmisServer.fetchCategories(user);
+        System.out.println(categories.size() + " categories found");
         timingLogger.addSplit("fetch all cats");
-        saveToDatabase(allCommodities);
+
+        saveToDatabase(categories);
         timingLogger.addSplit("save all Cats");
+
         categoryService.clearCache();
         syncConstants(user);
         timingLogger.addSplit("sync constants");
 
-        List<Commodity> commodities = all();
         timingLogger.addSplit("all");
 
         Log.i("Inital sync:", "<========== syncing Commodity Action Values");
-        commodityActionService.syncCommodityActionValues(user, commodities);
+        commodityActionService.syncCommodityActionValues(user);
 
         timingLogger.addSplit("actionValues");
         categoryService.clearCache();
@@ -145,10 +149,10 @@ public class CommodityService {
         dbUtil.withDaoAsBatch(StockItemSnapshot.class, new Operation<StockItemSnapshot, Void>() {
             @Override
             public Void operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
-                    Log.i("Bin Card:", "initial snapshots");
-                for(Commodity commodity : commodities){
+                Log.i("Bin Card:", "initial snapshots");
+                for (Commodity commodity : commodities) {
                     StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, new Date(), commodity.getStockOnHand());
-                    Log.i("Bin Card:", "snapshot; "+stockItemSnapshot);
+                    Log.i("Bin Card:", "snapshot; " + stockItemSnapshot);
 
                     dao.createOrUpdate(stockItemSnapshot);
                 }
@@ -207,11 +211,11 @@ public class CommodityService {
         return commodities;
     }
 
-    public void saveToDatabase(final List<Category> allCommodities) {
+    public void saveToDatabase(final List<Category> categories) {
         dbUtil.withDaoAsBatch(Category.class, new Operation<Category, Void>() {
             @Override
             public Void operate(Dao<Category, String> dao) throws SQLException {
-                for (Category category : allCommodities) {
+                for (Category category : categories) {
                     dao.createOrUpdate(category);
                     saveAllCommodities(category);
                 }
@@ -224,24 +228,33 @@ public class CommodityService {
         dbUtil.withDaoAsBatch(Commodity.class, new Operation<Commodity, Void>() {
             @Override
             public Void operate(Dao<Commodity, String> dao) throws SQLException {
-                for (Commodity commodity : category.getNotSavedCommodities()) {
+                boolean dataSetsSaved = false;
+                for (Commodity commodity : category.getTransientCommodities()) {
                     commodity.setCategory(category);
                     dao.createOrUpdate(commodity);
-                    createCommodityAction(commodity);
+                    createCommodityAction(commodity, dataSetsSaved);
+                    dataSetsSaved = true;
                 }
                 return null;
             }
         });
     }
 
-    private void createCommodityAction(Commodity commodity) {
-        GenericDao<CommodityAction> commodityActivityGenericDao = new GenericDao<>(CommodityAction.class, context);
-        GenericDao<DataSet> dataSetGenericDao = new GenericDao<>(DataSet.class, context);
+    private void createCommodityAction(Commodity commodity, boolean datasetsSaved) {
+
+        GenericDao<DataSet> dataSetDao = new GenericDao<>(DataSet.class, context);
+        GenericDao<CommodityAction> commodityActivityDao = new GenericDao<>(CommodityAction.class, context);
+        GenericDao<CommodityActionDataSet> commodityActionDataSetDao = new GenericDao<>(CommodityActionDataSet.class, context);
+
         final List<DataSet> dataSets = new ArrayList<>();
+        final List<CommodityActionDataSet> commodityActionDataSets = new ArrayList<>();
         final List<CommodityAction> actions = new ArrayList<>();
         for (CommodityAction commodityAction : commodity.getCommodityActions()) {
-            if (commodityAction.getDataSet() != null) {
-                dataSets.add(commodityAction.getDataSet());
+
+            if (commodityAction.getTransientCommodityActionDataSets() != null) {
+                commodityActionDataSets.addAll(commodityAction.getTransientCommodityActionDataSets());
+            } else {
+                Log.e("Error", "No dataSets for " + commodityAction.getName());
             }
             if (commodityAction.getCommodity() == null) {
                 commodityAction.setCommodity(commodity);
@@ -249,21 +262,38 @@ public class CommodityService {
             actions.add(commodityAction);
         }
 
-        dataSetGenericDao.bulkOperation(new Operation<DataSet, Object>() {
+        if (!datasetsSaved) {
+            for (CommodityActionDataSet caDataSet : commodityActionDataSets) {
+                if (!dataSets.contains(caDataSet.getDataSet())) {
+                    dataSets.add(caDataSet.getDataSet());
+                }
+            }
+
+            dataSetDao.bulkOperation(new Operation<DataSet, Object>() {
+                @Override
+                public Object operate(Dao<DataSet, String> dao) throws SQLException {
+                    for (DataSet dataSet : dataSets) {
+                        dao.createOrUpdate(dataSet);
+                    }
+                    return null;
+                }
+            });
+        }
+        commodityActivityDao.bulkOperation(new Operation<CommodityAction, Object>() {
             @Override
-            public Object operate(Dao<DataSet, String> dao) throws SQLException {
-                for (DataSet dataSet : dataSets) {
-                    dao.createOrUpdate(dataSet);
+            public Object operate(Dao<CommodityAction, String> dao) throws SQLException {
+                for (CommodityAction action : actions) {
+                    dao.createOrUpdate(action);
                 }
                 return null;
             }
         });
 
-        commodityActivityGenericDao.bulkOperation(new Operation<CommodityAction, Object>() {
+        commodityActionDataSetDao.bulkOperation(new Operation<CommodityActionDataSet, Object>() {
             @Override
-            public Object operate(Dao<CommodityAction, String> dao) throws SQLException {
-                for (CommodityAction action : actions) {
-                    dao.createOrUpdate(action);
+            public Object operate(Dao<CommodityActionDataSet, String> dao) throws SQLException {
+                for (CommodityActionDataSet caDataSet : commodityActionDataSets) {
+                    dao.createOrUpdate(caDataSet);
                 }
                 return null;
             }
@@ -367,7 +397,7 @@ public class CommodityService {
     private int getTotalAdjustments(Date date, List<Adjustment> adjustments) {
         int totalAdjustments = 0;
         for (Adjustment adjustment : adjustments) {
-            if (DateUtil.equal(adjustment.getCreated(), date)){
+            if (DateUtil.equal(adjustment.getCreated(), date)) {
                 totalAdjustments += adjustment.getQuantity();
             }
         }

@@ -51,6 +51,7 @@ import lombok.ToString;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.copyOf;
+import static com.thoughtworks.dhis.models.DataElementType.DISPENSED;
 
 @ToString
 @DatabaseTable(tableName = "dispensingItems")
@@ -86,12 +87,17 @@ public class DispensingItem extends BaseItem implements Serializable, Snapshotab
         Function<CommodityAction, CommoditySnapshotValue> forDispensed = new Function<CommodityAction, CommoditySnapshotValue>() {
             @Override
             public CommoditySnapshotValue apply(CommodityAction input) {
-                return new CommoditySnapshotValue(input, quantity);
+                return new CommoditySnapshotValue(input, quantity, dispensing.getCreated());
             }
         };
 
-        List<CommoditySnapshotValue> dispensedValues = filterCommodityActions(DataElementType.DISPENSED.getActivity()).transform(forDispensed).toList();
-        return  dispensedValues;
+        List<CommoditySnapshotValue> dispensedValues = filterCommodityActions(DISPENSED.getActivity()).transform(forDispensed).toList();
+        return dispensedValues;
+    }
+
+    @Override
+    public Date getDate() {
+        return dispensing.getCreated();
     }
 
     private FluentIterable<CommodityAction> filterCommodityActions(final String type) {

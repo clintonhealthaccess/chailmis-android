@@ -83,8 +83,9 @@ public class ReportsActivityTest {
     @Before
     public void setUp() throws Exception {
         userService = mock(UserService.class);
-        when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
         when(userService.userRegistered()).thenReturn(true);
+        when(userService.getRegisteredUser()).thenReturn(
+                new User("Tw Office", "pass","place", "Tw Kla Office"));
         setUpInjectionWithMockLmisServer(Robolectric.application, this, new AbstractModule() {
             @Override
             protected void configure() {

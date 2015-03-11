@@ -88,7 +88,7 @@ public class StockItemSnapshotServiceTest {
         mockStockLevels = testActionValues(application);
         //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(mockStockLevels);
 
         setUpInjection(this, new AbstractModule() {
             @Override

@@ -35,7 +35,6 @@ import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter
 @ToString
 public class BinCard {
     int minimumStockLevel;
@@ -48,4 +47,15 @@ public class BinCard {
         this.binCardItems = binCardItems;
     }
 
+    public int getMinimumStockLevel() {
+        return minimumStockLevel;
+    }
+
+    public int getMaximumStockLevel() {
+        return maximumStockLevel;
+    }
+
+    public List<BinCardItem> getBinCardItems(){
+        return binCardItems;
+    }
 }

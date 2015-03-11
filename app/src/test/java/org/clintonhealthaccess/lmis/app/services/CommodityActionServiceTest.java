@@ -37,9 +37,9 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,9 +51,7 @@ import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyList;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -73,9 +71,8 @@ public class CommodityActionServiceTest {
     public void setUp() throws Exception {
         mockLmisServer = mock(LmisServer.class);
         mockStockLevels = testActionValues(application);
-        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(mockStockLevels);
 
         setUpInjection(this, new AbstractModule() {
             @Override
@@ -149,7 +146,6 @@ public class CommodityActionServiceTest {
         assertThat(amc, is(79));
     }
 
-
     @Test
     public void shouldReturnMaximumThresholdForAGivenPeriod() throws Exception {
         Commodity commodity = commodityService.all().get(0);
@@ -168,7 +164,6 @@ public class CommodityActionServiceTest {
     @Test
     public void shouldReturnCorrectMaximumThresholdForGivenPeriod() throws Exception {
         Commodity commodity = commodityService.all().get(1);
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(2014, Calendar.APRIL, 01);
         Date startDate = calendar.getTime();
@@ -176,6 +171,7 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
+        System.out.println(DateUtil.dateString(startDate) + "   to    " + DateUtil.dateString(endDate));
         int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
         assertThat(amc, is(47));
 
@@ -197,6 +193,7 @@ public class CommodityActionServiceTest {
 
     }
 
+    
     @Test
     public void shouldReturnCorrectMaximumThresholdForThreePeriods() throws Exception {
         Commodity commodity = commodityService.all().get(0);

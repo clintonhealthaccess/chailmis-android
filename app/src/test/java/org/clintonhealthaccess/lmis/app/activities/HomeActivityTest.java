@@ -69,7 +69,9 @@ public class HomeActivityTest {
         mockUserService = mock(UserService.class);
         categoryService = mock(CategoryService.class);
         final SyncManager mockSyncManager = mock(SyncManager.class);
-        when(mockUserService.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        when(mockUserService.userRegistered()).thenReturn(true);
+        when(mockUserService.getRegisteredUser()).thenReturn(
+                new User("Tw Office", "pass","place", "Tw Kla Office"));
         when(categoryService.all()).thenReturn(new ArrayList<Category>());
         setUpInjection(this, new AbstractModule() {
             @Override

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,30 +30,48 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+@DatabaseTable(tableName = "commodityActionDataSet")
+public class CommodityActionDataSet implements Serializable {
 
-@RunWith(RobolectricGradleTestRunner.class)
-public class CommodityActionTest {
+    @DatabaseField(generatedId = true)
+    private Long id;
 
-    @Test
-    public void shouldSetPeriodFromOrderCycle() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
-        String expectedPeriod = dateFormat.format(new Date());
-        CommodityAction activity = new CommodityAction();
-        DataSet dataSet = mock(DataSet.class);
-        when(dataSet.getPeriodType()).thenReturn("Monthly");
-        activity.setDataSet(dataSet);
-        assertThat(activity.getPeriod(), is(expectedPeriod));
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private CommodityAction commodityAction;
+
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private DataSet dataSet;
+
+    public CommodityActionDataSet() {
+        //orm-lite likes
     }
 
+    public CommodityActionDataSet(CommodityAction commodityAction, DataSet dataSet) {
+        this.commodityAction = commodityAction;
+        this.dataSet = dataSet;
+    }
+
+    public DataSet getDataSet() {
+        return dataSet;
+    }
+
+    public static List<CommodityActionDataSet> generateCommodityActionDataSets(
+            CommodityAction commodityAction, List<DataSet> dataSets) {
+        List<CommodityActionDataSet> commodityActionDataSets = new ArrayList<>();
+        for (DataSet dataSet : dataSets) {
+            commodityActionDataSets.add(new CommodityActionDataSet(commodityAction, dataSet));
+        }
+        return commodityActionDataSets;
+    }
+
+    public CommodityAction getCommodityAction() {
+        return commodityAction;
+    }
 }

@@ -30,7 +30,6 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 
-
 import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
@@ -43,8 +42,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @DatabaseTable
 public class Allocation {
@@ -65,6 +62,8 @@ public class Allocation {
     private ForeignCollection<AllocationItem> allocationItems;
 
     private List<AllocationItem> transientAllocationItems;
+
+    private boolean dummy;
 
     public Allocation(String allocationId, String period) {
         this.allocationId = allocationId;
@@ -94,5 +93,49 @@ public class Allocation {
     @Override
     public int hashCode() {
         return allocationId.hashCode();
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public boolean isReceived() {
+        return received;
+    }
+
+    public void setReceived(boolean received) {
+        this.received = received;
+    }
+
+    public String getAllocationId() {
+        return allocationId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean isDummy() {
+        return dummy;
+    }
+
+    public void setDummy(boolean dummy) {
+        this.dummy = dummy;
+    }
+
+    public List<AllocationItem> getTransientAllocationItems() {
+        return transientAllocationItems;
+    }
+
+    public void setTransientAllocationItems(List<AllocationItem> transientAllocationItems) {
+        this.transientAllocationItems = transientAllocationItems;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
     }
 }

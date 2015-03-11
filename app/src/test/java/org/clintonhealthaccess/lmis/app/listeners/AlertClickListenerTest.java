@@ -71,6 +71,9 @@ public class AlertClickListenerTest {
         User user = mock(User.class);
         mockUserService = mock(UserService.class);
         when(mockUserService.userRegistered()).thenReturn(true);
+        when(mockUserService.getRegisteredUser()).thenReturn(
+                new User("Tw Office", "pass","place", "Tw Kla Office"));
+        when(mockUserService.userRegistered()).thenReturn(true);
         when(mockUserService.getRegisteredUser()).thenReturn(user);
         setUpInjection(this, new AbstractModule() {
             @Override

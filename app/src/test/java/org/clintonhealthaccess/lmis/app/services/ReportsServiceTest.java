@@ -54,7 +54,6 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -129,7 +128,7 @@ public class ReportsServiceTest {
         mockStockLevels = testActionValues(application);
         //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(mockStockLevels);
 
         setUpInjection(this, new AbstractModule() {
             @Override

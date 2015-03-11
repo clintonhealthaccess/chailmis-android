@@ -36,8 +36,6 @@ import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
 
     private boolean quantityAllocatedDisabled = false;
@@ -67,5 +65,25 @@ public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
     public ReceiveItem getReceiveItem() {
         ReceiveItem receiveItem = new ReceiveItem(this.getCommodity(), quantityAllocated, quantityReceived);
         return receiveItem;
+    }
+
+    public boolean isQuantityAllocatedDisabled() {
+        return quantityAllocatedDisabled;
+    }
+
+    public int getQuantityAllocated(){
+        return quantityAllocated;
+    }
+
+    public int getQuantityReceived(){
+        return quantityReceived;
+    }
+
+    public void setQuantityAllocated(int quantityAllocated) {
+        this.quantityAllocated = quantityAllocated;
+    }
+
+    public void setQuantityReceived(int quantityReceived) {
+        this.quantityReceived = quantityReceived;
     }
 }

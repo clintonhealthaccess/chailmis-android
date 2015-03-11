@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.j256.ormlite.android.AndroidConnectionSource;
@@ -56,6 +57,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -67,6 +69,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.addPendingHttpResponse;
 import static org.robolectric.Robolectric.application;
@@ -224,10 +227,11 @@ public class OrderServiceTest extends LMISTestCase {
         commodityDao.create(commodity);
         DataSet dataSet = new DataSet("asdas");
         dataSetDao.create(dataSet);
-        CommodityAction commodityAction = new CommodityAction(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT);
-        commodityAction.setDataSet(dataSet);
-        CommodityAction otherActivity = new CommodityAction(commodity, "23323", "1212", OrderItem.ORDER_REASON);
-        otherActivity.setDataSet(dataSet);
+        CommodityAction commodityAction = spy(new CommodityAction(commodity, "1212312312", "1212", OrderItem.ORDERED_AMOUNT));
+        ArrayList<DataSet> dataSets = Lists.newArrayList(dataSet);
+//        when(commodityAction.getDataSets()).thenReturn(dataSets);
+        CommodityAction otherActivity = spy(new CommodityAction(commodity, "23323", "1212", OrderItem.ORDER_REASON));
+//        when(otherActivity.getDataSets()).thenReturn(dataSets);
 
         commodityActivityDao.create(commodityAction);
         commodityActivityDao.create(otherActivity);

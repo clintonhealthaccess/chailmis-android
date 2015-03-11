@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -44,9 +45,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 @ToString
-@Getter
-@Setter
 @DatabaseTable(tableName = "receives")
 public class Receive implements Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
@@ -56,7 +57,6 @@ public class Receive implements Serializable {
     private ForeignCollection<ReceiveItem> receiveItemsCollection;
 
     private List<ReceiveItem> receiveItems = new ArrayList<>();
-
 
     @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")
     private Date created;
@@ -96,5 +96,37 @@ public class Receive implements Serializable {
 
     public boolean isRecievingFromLGA() {
         return source.contains("LGA");
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public Allocation getAllocation() {
+        return allocation;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public List<ReceiveItem> getReceiveItems() {
+        return receiveItems;
+    }
+
+    public List<ReceiveItem> getReceiveItemsCollection() {
+        if (receiveItemsCollection == null) {
+            return newArrayList();
+        }
+
+        return ImmutableList.copyOf(receiveItemsCollection);
+    }
+
+    public void setAllocation(Allocation allocation) {
+        this.allocation = allocation;
     }
 }

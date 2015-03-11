@@ -49,6 +49,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -61,6 +62,8 @@ import java.util.Arrays;
 
 import de.greenrobot.event.EventBus;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -81,10 +84,12 @@ import static org.robolectric.Robolectric.setupActivity;
 @RunWith(RobolectricGradleTestRunner.class)
 public class ReceiveActivityTest {
 
-
     public static final String PANADOL = "Panadol";
-    public static final String VALID_ALLOCATION_ID = "UG-200";
+
+    public static final String VALID_ALLOCATION_ID = "TW-200";
+
     private UserService userService;
+
     private AllocationService mockAllocationService;
 
     private ReceiveActivity getReceiveActivity() {
@@ -95,7 +100,9 @@ public class ReceiveActivityTest {
     public void setUp() throws Exception {
         userService = mock(UserService.class);
         mockAllocationService = mock(AllocationService.class);
-        when(userService.getRegisteredUser()).thenReturn(new User("", "", "place"));
+        when(userService.userRegistered()).thenReturn(true);
+        when(userService.getRegisteredUser()).thenReturn(
+                new User("Tw Office", "pass", "place", "Tw Kla Office"));
         setUpInjection(this, new AbstractModule() {
             @Override
             protected void configure() {
@@ -111,11 +118,17 @@ public class ReceiveActivityTest {
         assertThat(receiveActivity, not(nullValue()));
     }
 
-
     @Test
     public void shouldHaveAKeyBoardView() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         MatcherAssert.assertThat(receiveActivity.keyBoardView, not(nullValue()));
+    }
+
+    @Test
+    public void shouldHaveCorrect2LetterCodeInFacilityName() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        assertNotNull(receiveActivity.facility2LetterCode);
+        assertEquals(receiveActivity.facility2LetterCode, "TW");
     }
 
     @Test
@@ -126,9 +139,9 @@ public class ReceiveActivityTest {
 
     @Test
     public void availableAllocationIdsShouldBeSelectableFromTheTextViewForAllocationId() throws Exception {
-        String item1 = "UG-0001";
-        String item2 = "UG-0002";
-        when(mockAllocationService.getYetToBeReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
+        String item1 = "TW-0001";
+        String item2 = "TW-0002";
+        when(mockAllocationService.getYetToBeReceivedAllocationIds()).thenReturn(Arrays.asList(item1, item2));
         ReceiveActivity receiveActivity = getReceiveActivity();
         assertThat(receiveActivity.textViewAllocationId.getAdapter().getCount(), is(2));
         assertThat(receiveActivity.textViewAllocationId.getAdapter().getItem(0).toString(), is(item1));
@@ -136,15 +149,17 @@ public class ReceiveActivityTest {
 
     @Test
     public void shouldShowAnErrorMessageForAllocationIdThatHasAlreadyBeenReceived() throws Exception {
-        String item1 = "UG-0001";
-        String item2 = "UG-0002";
+        String item1 = "TW-0001";
+        String item2 = "TW-0002";
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
         ReceiveActivity receiveActivity = getReceiveActivity();
         setSource(receiveActivity, application.getString(R.string.zonal_store));
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
+        receiveActivity.textViewAllocationId.requestFocus();
         receiveActivity.textViewAllocationId.setText(item1);
+        receiveActivity.textViewAllocationId.clearFocus();
         assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_received)));
-        receiveActivity.textViewAllocationId.setText("UG-12032");
+        receiveActivity.textViewAllocationId.setText("TW-12032");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
     }
 
@@ -167,16 +182,21 @@ public class ReceiveActivityTest {
     @Test
     public void shouldShowAnErrorWhenTheAllocationIdIsOfWrongFormat() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.textViewAllocationId.findFocus();
         receiveActivity.textViewAllocationId.setText("aoiiouads");
-        assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
-        receiveActivity.textViewAllocationId.setText("UG-12032");
+        receiveActivity.textViewAllocationId.clearFocus();
+        assertThat(receiveActivity.textViewAllocationId.getError().toString(),
+                is(String.format(application.getString(R.string.error_allocation_id_wrong_format),
+                        receiveActivity.ALLOCATION_ID_FORMAT))
+        );
+        receiveActivity.textViewAllocationId.setText("TW-12032");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
     }
 
     @Test
     public void shouldPresetTheQuantityForSelectedItemIfAllocationIdIsSet() throws Exception {
-        String item1 = "UG-0001";
-        String item2 = "UG-0002";
+        String item1 = "TW-0001";
+        String item2 = "TW-0002";
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
         Allocation allocation = mock(Allocation.class);
         AllocationItem item = new AllocationItem();
@@ -188,7 +208,7 @@ public class ReceiveActivityTest {
         when(allocation.isReceived()).thenReturn(false);
         when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.textViewAllocationId.setText("UG-0002");
+        receiveActivity.textViewAllocationId.setText("TW-0002");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
         assertThat(receiveActivity.arrayAdapter.getCount(), is(1));
     }
@@ -263,7 +283,9 @@ public class ReceiveActivityTest {
         ANDROID.assertThat(receiveActivity.textViewAllocationLabel).isVisible();
         CharSequence error = receiveActivity.textViewAllocationId.getError();
         assertThat(error, notNullValue());
-        assertThat(error.toString(), is(application.getString(R.string.error_allocation_id_wrong_format)));
+        assertThat(error.toString(), is(String.format(
+                application.getString(R.string.error_allocation_id_wrong_format),
+                receiveActivity.ALLOCATION_ID_FORMAT)));
     }
 
     private void setSource(ReceiveActivity receiveActivity, String string) {
@@ -299,7 +321,7 @@ public class ReceiveActivityTest {
 
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
-
+        receiveActivity.setAllocation(VALID_ALLOCATION_ID);
         assertThat(receiveActivity.allocation, is(notNullValue()));
         assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
         receiveActivity.spinnerSource.setSelection(1);
@@ -323,6 +345,7 @@ public class ReceiveActivityTest {
 
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+        receiveActivity.setAllocation(VALID_ALLOCATION_ID);
 
         assertThat(receiveActivity.allocation, is(notNullValue()));
         assertThat(receiveActivity.allocation.getAllocationId(), is(VALID_ALLOCATION_ID));
@@ -344,6 +367,7 @@ public class ReceiveActivityTest {
 
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.textViewAllocationId.setText(VALID_ALLOCATION_ID);
+        receiveActivity.setAllocation(VALID_ALLOCATION_ID);
 
         Receive receive = receiveActivity.generateReceive();
         assertThat(receive.getAllocation().getAllocationId(), is(allocation.getAllocationId()));

@@ -119,6 +119,11 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
         return values;
     }
 
+    @Override
+    public Date getDate() {
+        return loss.getCreated();
+    }
+
     private void selectActivity(List<CommoditySnapshotValue> values, CommodityAction activity) {
         LossItemDetail lossItemDetailForActivityType = getLossItemDetail(LossReason.of(activity));
         values.add(new CommoditySnapshotValue(activity, lossItemDetailForActivityType.getValue()));

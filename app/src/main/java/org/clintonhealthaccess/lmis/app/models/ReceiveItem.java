@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import android.util.Log;
+
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
@@ -38,13 +40,13 @@ import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.services.Snapshotable;
 
+import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import static com.google.common.collect.FluentIterable.from;
@@ -52,11 +54,9 @@ import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 
 @ToString
-@Getter
-@Setter
 @NoArgsConstructor
 @DatabaseTable(tableName = "receive_items")
-public class ReceiveItem extends BaseItem implements Snapshotable {
+public class ReceiveItem extends BaseItem implements Snapshotable, Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
@@ -83,7 +83,12 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
     }
 
     @Override
-    public List<CommoditySnapshotValue> getActivitiesValues() {
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    @Override
+    public List<CommoditySnapshotValue> getActivitiesValues() throws Exception {
         Function<CommodityAction, CommoditySnapshotValue> forReceivedAction = new Function<CommodityAction, CommoditySnapshotValue>() {
             @Override
             public CommoditySnapshotValue apply(CommodityAction input) {
@@ -124,12 +129,21 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
         return result;
     }
 
-    private String getAllocationPeriod() {
-        Allocation allocation = receive.getAllocation();
-        if (allocation != null) {
-            return allocation.getPeriod();
+    @Override
+    public Date getDate() {
+        return receive.getCreated();
+    }
+
+    private Date getAllocationPeriod() {
+        try {
+            Allocation allocation = receive.getAllocation();
+            if (allocation != null) {
+                return OrderCycle.Daily.getDate(allocation.getPeriod());
+            }
+        }catch (ParseException e){
+            Log.e("Error", " Parsing Allocation Period "+ receive.getAllocation().getPeriod());
         }
-        return "";
+        return null;
     }
 
     private FluentIterable<CommodityAction> filterCommodityActions(final String type) {
@@ -154,5 +168,33 @@ public class ReceiveItem extends BaseItem implements Snapshotable {
     @Override
     public Date created() {
         return receive.getCreated();
+    }
+
+    public void setReceive(Receive receive) {
+        this.receive = receive;
+    }
+
+    public int getQuantityAllocated() {
+        return quantityAllocated;
+    }
+
+    public int getQuantityReceived() {
+        return quantityReceived;
+    }
+
+    public Receive getReceive() {
+        return receive;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
+    }
+
+    public void setQuantityAllocated(int quantityAllocated) {
+        this.quantityAllocated = quantityAllocated;
+    }
+
+    public void setQuantityReceived(int quantityReceived) {
+        this.quantityReceived = quantityReceived;
     }
 }

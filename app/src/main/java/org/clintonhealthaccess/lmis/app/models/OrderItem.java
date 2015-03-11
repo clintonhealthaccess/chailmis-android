@@ -120,6 +120,11 @@ public class OrderItem extends BaseItem implements Snapshotable {
         return commoditySnapshotValues;
     }
 
+    @Override
+    public Date getDate() {
+        return order.getCreated();
+    }
+
     private String getReasonOrEmptyString() {
         OrderReason reason = getReasonForUnexpectedQuantity();
         if (reason == null) {

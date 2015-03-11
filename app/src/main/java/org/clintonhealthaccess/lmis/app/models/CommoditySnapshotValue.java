@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,30 +38,33 @@ import lombok.ToString;
 import static java.lang.String.valueOf;
 
 @ToString
-@Getter
-@Setter
 public class CommoditySnapshotValue {
     private CommodityAction commodityAction;
     private String value;
-    private String period;
+    private Date periodDate;
 
     public CommoditySnapshotValue(CommodityAction input, int quantity) {
-        this(input, quantity, null);
+        this(input, quantity, new Date());
     }
 
-    public CommoditySnapshotValue(CommodityAction input, int quantity, String period) {
-        this(input, valueOf(quantity), period);
+    public CommoditySnapshotValue(CommodityAction input, int quantity, Date periodDate) {
+        this(input, valueOf(quantity), periodDate);
     }
 
-    public CommoditySnapshotValue(CommodityAction input, String reasonForUnexpectedQuantity) {
+    public CommoditySnapshotValue(CommodityAction input, String value) {
         this.commodityAction = input;
-        this.value = reasonForUnexpectedQuantity;
+        this.value = value;
+        this.periodDate = new Date();
     }
 
-    public CommoditySnapshotValue(CommodityAction commodityAction, String value, String period) {
+    public CommoditySnapshotValue(CommodityAction commodityAction, String value, Date periodDate) {
         this.commodityAction = commodityAction;
         this.value = value;
-        this.period = period;
+        this.periodDate = periodDate;
+    }
+
+    public Date getPeriodDate() {
+        return periodDate;
     }
 
     @Override
@@ -82,6 +87,12 @@ public class CommoditySnapshotValue {
         return result;
     }
 
+    public CommodityAction getCommodityAction() {
+        return commodityAction;
+    }
 
+    public String getValue() {
+        return value;
+    }
 }
 

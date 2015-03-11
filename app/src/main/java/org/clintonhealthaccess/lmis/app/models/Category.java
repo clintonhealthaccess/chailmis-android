@@ -34,6 +34,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.thoughtworks.dhis.models.DataElementGroup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,9 +44,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static com.google.common.collect.Lists.newArrayList;
-
-@Getter
-@Setter
 
 @DatabaseTable(tableName = "commodity_categories")
 public class Category implements Serializable, Comparable<Category> {
@@ -61,14 +59,18 @@ public class Category implements Serializable, Comparable<Category> {
     @ForeignCollectionField(eager = true, maxEagerLevel = 5)
     private ForeignCollection<Commodity> commoditiesCollection;
 
-    private List<Commodity> commodities = new ArrayList<>();
+    private List<Commodity> transientCommodities = new ArrayList<>();
 
     public Category() {
         // ormlite likes it
     }
 
     public Category(String name) {
-        this.lmisId = name;
+        this(name, name);
+    }
+
+    public Category(String lmisId, String name) {
+        this.lmisId = lmisId;
         this.name = name;
     }
 
@@ -83,8 +85,20 @@ public class Category implements Serializable, Comparable<Category> {
         return ImmutableList.copyOf(commoditiesCollection);
     }
 
-    public List<Commodity> getNotSavedCommodities() {
-        return commodities;
+    public void setCommodities(List<Commodity> commodities) {
+        this.transientCommodities = commodities;
+    }
+
+    public void setLmisId(String lmisId) {
+        this.lmisId = lmisId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Commodity> getTransientCommodities() {
+        return transientCommodities;
     }
 
     @Override
@@ -107,13 +121,17 @@ public class Category implements Serializable, Comparable<Category> {
         return 31 * (name != null ? name.hashCode() : 0);
     }
 
-    public void addCommodity(Commodity commodity) {
-        commodities.add(commodity);
+    public void addTransientCommodity(Commodity commodity) {
+        transientCommodities.add(commodity);
     }
-
 
     @Override
     public int compareTo(Category another) {
         return this.getName().compareToIgnoreCase(another.getName());
+    }
+
+    @Override
+    public String toString() {
+        return "[ " + id + " " + name + " SavedCommodities: " + commoditiesCollection + " UNsaved" + transientCommodities + " ]";
     }
 }

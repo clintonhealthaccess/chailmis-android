@@ -31,13 +31,22 @@ package org.clintonhealthaccess.lmis.app.validators;
 
 import android.widget.AutoCompleteTextView;
 
+import com.google.inject.Inject;
+
+import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.UserService;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AllocationIdValidator implements AutoCompleteTextView.Validator {
+
     @Override
     public boolean isValid(CharSequence text) {
-        String patternString = "^\\w{2}-\\d+$";
+//        String facility2LetterCode = user.getFacilityName().length() > 2 ?
+//                user.getFacilityName().substring(0, 2) : user.getFacilityName();
+//        facility2LetterCode = facility2LetterCode.toUpperCase();
+        String patternString = "AK"+"-\\d+$";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(text);
         return matcher.matches();

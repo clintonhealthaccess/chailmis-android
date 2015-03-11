@@ -60,6 +60,8 @@
             android:id="@+id/autoCompleteTextViewCommodities"
             android:layout_width="match_parent"
             android:hint="Search"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_height="wrap_content" />
 
         <ScrollView

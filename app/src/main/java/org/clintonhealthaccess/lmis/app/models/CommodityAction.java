@@ -29,27 +29,24 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.clintonhealthaccess.lmis.app.utils.Helpers;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import static com.google.common.collect.Lists.newArrayList;
 
-@Getter
-@Setter
 @DatabaseTable
 public class CommodityAction implements Serializable {
+
     @DatabaseField(canBeNull = false, foreign = true)
     private Commodity commodity;
     @DatabaseField(id = true, uniqueIndex = true)
@@ -58,11 +55,14 @@ public class CommodityAction implements Serializable {
     private String name;
     @DatabaseField(canBeNull = false)
     private String activityType;
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
-    private DataSet dataSet;
 
     @ForeignCollectionField(eager = true)
     private ForeignCollection<CommodityActionValue> commodityActionValueCollection;
+
+    @ForeignCollectionField(eager = true, maxEagerLevel = 3)
+    private ForeignCollection<CommodityActionDataSet> commodityActionDataSets;
+
+    private List<CommodityActionDataSet> transientCommodityActionDataSets;
 
     private List<CommodityActionValue> commodityActionValues = new ArrayList<>();
 
@@ -71,8 +71,8 @@ public class CommodityAction implements Serializable {
     }
 
 
-    public CommodityAction(Commodity actualCommodity, String id, String name, String activityType) {
-        this.commodity = actualCommodity;
+    public CommodityAction(Commodity commodity, String id, String name, String activityType) {
+        this.commodity = commodity;
         this.id = id;
         this.name = name;
         this.activityType = activityType;
@@ -81,18 +81,6 @@ public class CommodityAction implements Serializable {
     public CommodityAction(String dataElement) {
         this.id = dataElement;
     }
-
-    public String getPeriod() {
-        String periodType = getDataSet().getPeriodType();
-        OrderCycle cycle = Helpers.getOrderCycle(periodType);
-        return cycle.getPeriod(new Date());
-    }
-
-
-    public List<CommodityActionValue> getNotSavedCommodityActionValues() {
-        return commodityActionValues;
-    }
-
 
     public List<CommodityActionValue> getCommodityActionValueList() {
         return new ArrayList<>(this.commodityActionValueCollection);
@@ -113,11 +101,64 @@ public class CommodityAction implements Serializable {
         return null;
     }
 
+    public List<CommodityActionDataSet> getCommodityActionDataSets() {
+        if (commodityActionDataSets == null) {
+            return newArrayList();
+        }
+        return ImmutableList.copyOf(commodityActionDataSets);
+    }
+
+    public void addTransientCommodityActionDataSets(List<CommodityActionDataSet> commodityActionDataSets) {
+        this.transientCommodityActionDataSets = commodityActionDataSets;
+    }
+
+    public List<CommodityActionDataSet> getTransientCommodityActionDataSets() {
+        return transientCommodityActionDataSets;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommodityAction)) return false;
+
+        CommodityAction that = (CommodityAction) o;
+
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
     @Override
     public String toString() {
         return "CommodityAction{" +
-                "activityType='" + activityType + '\'' +
+                "id='" + id + '\'' + "activityType='" + activityType + '\'' + "name='" + name + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Commodity getCommodity() {
+        return commodity;
+    }
+
+    public void setCommodity(Commodity commodity) {
+        this.commodity = commodity;
+    }
+
 }

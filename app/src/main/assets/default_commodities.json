@@ -1,876 +1,1709 @@
 [
-    {
-        "commodities": [
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "1",
-                            "name": "Coartem",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "1234",
-                        "name": "Coartem_DISPENSING"
-                    },
-                    {
-                        "activityType": "ORDERED_AMOUNT",
-                        "commodity": {
-                            "id": "1",
-                            "name": "Coartem",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "1234589",
-                        "name": "Coartem_ORDERED_AMOUNT"
-                    },
-                    {
-                        "activityType": "REASON_FOR_ORDER",
-                        "commodity": {
-                            "id": "1",
-                            "name": "Coartem",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "cd21875c-d392-487f-aa61-5c4d3d381493",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "123458",
-                        "name": "Coartem_REASON_FOR_ORDER"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "14c64f70-40a3-472e-9709-753648d9d374",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "0efb88db-3387-4846-ba81-274e1fc78b56",
-                        "name": "ad827c84-ebd5-428c-a766-ed58456f5276"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "224478c6-8964-4ccf-891b-dda3d7e4422e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "9be1a0fc-ac65-4192-90a9-f810836afcbd",
-                        "name": "ca78286a-90cd-47cf-8354-699c75b04c7c"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "2c5b0af3-54ff-4852-9537-073727dfd345",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                    },
-                    {
-                        "activityType": "STOCK_ON_HAND",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "id_stock_on_hand_comm_1",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                    },
-                    {
-                        "activityType": "MINIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_minimum_threshold_1",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "MINIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_minimum_threshold_2014_05",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "MAXIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_maximum_threshold_1",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "MAXIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_maximum_threshold_2014May_Coatem",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "PROJECTED_ORDER_AMOUNT",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_PROJECTED_ORDER_AMOUNT_1",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "AMC",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_AMC_1",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "AMC",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_AMC_2_201405",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "cf6eaf9a-6987-43df-b010-2329381727ab",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c2",
-                        "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "7e415e35-dd77-4eee-93b2-df4df667bfd8",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "f5e23dee-865c-4fcf-9fff-05eb201b435-2",
-                        "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "166f3c3b-ed3f-439b-8baa-6677393aacb6",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "751bb111-9692-4621-95f0-17ccdaee6a56",
-                        "name": "7dda0d31-1ed4-4ff2-9a6c-b905b8a8568e"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "93e6b458-ed59-40f4-acc1-db46e77479ea",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "e9e08fd1-ffc7-48fd-a6cb-714908844b4f",
-                        "name": "5da5e75c-5393-4794-8fe1-13be14cdc254"
-                    }
-                ],
-                "id": "1",
-                "name": "Coartem",
-                "orderDuration": 30,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
+  {
+    "lmisId": "1",
+    "name": "Anti Malarials",
+    "transientCommodities": [
+      {
+        "id": "1",
+        "name": "Coartem",
+        "orderDuration": 30,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "1234",
+            "name": "Coartem_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "1",
+              "name": "Coartem",
+              "orderDuration": 30
             },
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "3",
-                            "name": "Choloquine",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "efa02220-4b7f-4c89-8b69-3785fffa49e4",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "12344",
-                        "name": "Choloquine_DISPENSING"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "45ded345-4bb8-4a9d-b817-6ac98b833280",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "74e85a50-d0e4-4e8d-9470-90cfc8423b6c",
-                        "name": "6e8a56c7-c34d-448a-b306-ebc460c6eda2"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "2d1d62c6-8aa3-4b5d-b34a-583ea746c43d",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "6645f087-a617-41fb-abbb-1366eb2f3a63",
-                        "name": "ad415130-e455-4358-b2c5-54817538327f"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "e003847a-8e31-4522-855a-d97006574f14",
-                        "name": "72de09aa-dbb2-40df-bf04-1395ece55516"
-                    },
-                    {
-                        "activityType": "STOCK_ON_HAND",
-                        "dataSet": {
-                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_stock_on_hand_comm_2",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                    },
-                    {
-                        "activityType": "MINIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_minimum_threshold_2",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "MAXIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_maximum_threshold_2",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "PROJECTED_ORDER_AMOUNT",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_PROJECTED_ORDER_AMOUNT_2",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "AMC",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_AMC_2",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "83ec19d1-6739-42d4-be45-a524ff9af8f8",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "0927ed16-d2db-417d-aaba-2a99ebc44edf",
-                        "name": "1242f404-8780-41cd-912e-47ec906eca37"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "90e66210-37f3-4c34-ba02-5c7447ec602a",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "00480295-3e18-40b1-98e8-1b418f55db88",
-                        "name": "46ef1367-a7a9-4b1d-bace-b41af7e1c683"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "b6f9cf9e-8fe3-44e1-83be-5601e509fcb0",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "496a882c-752c-4703-86f2-93ad3c1ee313",
-                        "name": "3f4bd3ca-7213-4e09-ac90-d2de9a5fed9a"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "9d4f6863-d7d7-4252-8857-58734e72cec4",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "6f6043c0-9f69-4dff-818f-4d979dd14f56",
-                        "name": "d8d7207c-a603-4745-a56a-7b9c9389a2d2"
-                    }
-                ],
-                "id": "3",
-                "name": "Choloquine",
-                "orderDuration": 90,
-                 "nonLGA":"false",
-                 "isDevice":"false",
-                 "isVaccine":"false"
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1234",
+                "commodityAction": {
+                  "id": "1234",
+                  "name": "Coartem_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1234589",
+            "name": "Coartem_ORDERED_AMOUNT",
+            "activityType": "ORDERED_AMOUNT",
+            "commodity": {
+              "id": "1",
+              "name": "Coartem",
+              "orderDuration": 30
             },
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "4",
-                            "name": "Quinine",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "02822b7b-38b2-4498-a76d-3e43f3b27201",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "1234as",
-                        "name": "Quinine_DISPENSING"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "34f02ee0-1d81-4e6f-bfa8-9a1b3d76c5ce",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "78ed16ad-ca2c-4cce-9a28-49472843e1cc",
-                        "name": "4cba9355-9063-4900-a4e8-2ba3933f6a0d"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "c7bbcb76-c489-4fb4-bfa8-6b1ba6f601a5",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "c3894b31-52b6-48f4-ada0-70ca23f46cfc",
-                        "name": "e0dbf320-ce76-4ab0-96a6-20ab3df735ca"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "ef052ae4-9cf2-4c43-91a5-2458cdaac79c",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "cc9941f3-9369-46f6-a9d1-ee4c88e7e757",
-                        "name": "e5adfcdd-6a78-43ba-9206-059eaee4bfa1"
-                    },
-                    {
-                        "activityType": "STOCK_ON_HAND",
-                        "dataSet": {
-                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_stock_on_hand_comm_3",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
-                    },
-                    {
-                        "activityType": "MINIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "d3663d52-7bcf-42c6-95f1-f328aa410ddf",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_minimum_threshold_3",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "MAXIMUM_THRESHOLD",
-                        "dataSet": {
-                            "id": "1a4c8ade-32b9-4cf2-9ca3-262b42c0581e",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "id_maximum_threshold_3",
-                        "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "44db9fe4-3a3a-4e89-8f2a-2691a5ca495f",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "592b03e4-af61-474d-bf9a-625fd18783d3",
-                        "name": "2fbf4f1e-43d2-467e-b8a4-ba32806c4066"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "51ef32c1-fd73-447a-81f8-0324bac99e7f",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "b8b4642d-3e4d-4eae-a795-e657c83e5248",
-                        "name": "0b6123b4-b0c6-46bb-9007-737a51a2a807"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "8c01e9c4-6a73-4597-bd37-f1c796ef4e47",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "998dfe33-4ed6-4f14-a617-99988e0f6ce7",
-                        "name": "01f693e5-f963-4363-a761-8fc7e7561672"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "e399c0a8-6342-4d07-93fd-4e5cfa25716a",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "38220714-bcbd-4cc5-a08d-28a45406dfc5",
-                        "name": "00d54c31-50e3-410c-8b59-941933f4e280"
-                    }
-                ],
-                "id": "4",
-                "name": "Quinine",
-                "orderDuration": 180,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1235",
+                "commodityAction": {
+                  "id": "1234589",
+                  "name": "Coartem_ORDERED_AMOUNT"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "123458",
+            "name": "Coartem_REASON_FOR_ORDER",
+            "activityType": "REASON_FOR_ORDER",
+            "commodity": {
+              "id": "1",
+              "name": "Coartem",
+              "orderDuration": 30
             },
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "5",
-                            "name": "Fansida",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "26ef3dd5-bd6a-4855-84ed-521aa83443c0",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "1234222",
-                        "name": "Fansida_DISPENSING"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "2f164be2-15d7-41fd-bf9d-1d0d93d096b2",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "34ddbd6e-031a-435d-b8c0-a8099259e666",
-                        "name": "6d8d3a72-dfa7-40a5-9d6d-5ed07e7dc4a0"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "7388649b-5b48-4e8f-9af9-757f781cb34a",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "068010c6-3089-4609-8c07-f7a9788bd36f",
-                        "name": "d219ff58-b691-43d6-8f46-5e6f29c89634"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "624485e0-0c0a-4be5-b781-f704c1fef968",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "a10e2ee1-b66b-478f-893d-b3b62d19d336",
-                        "name": "1e70dbf7-cacc-44b7-8163-c2d0f500100f"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "13250962-abb7-4961-9966-3a7d86405ac9",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "e8730d66-7df9-483a-aaf1-7d03db5beea5",
-                        "name": "c32c8cf0-9eba-4f4d-90d3-82a31c85248d"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "897dff0c-a945-4579-9768-fcb81f24742f",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "54445829-ba40-4559-9844-54177fd49fe9",
-                        "name": "1d6fbe30-a039-44a0-a0aa-c0b3b0e321ef"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "63db7957-f200-4990-9853-fd9a4bffc451",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "2631c50b-c329-4157-9e9c-79b98b8e00e9",
-                        "name": "433616a7-f462-420d-abae-4f11924ea4d8"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "a6c2b6d2-e17e-48f1-a4a5-e3d06319cd7f",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "cc234e11-3b3b-4e45-883c-4c15dfaa25be",
-                        "name": "74ccd892-9924-411e-acf1-24d74364176f"
-                    }
-                ],
-                "id": "5",
-                "name": "Fansida",
-                "orderDuration": 360,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
-            },
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "6",
-                            "name": "Hedex",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "2f7835f0-d198-4fdf-9f65-3070bcfcac72",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "123294",
-                        "name": "Hedex_DISPENSING"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "5d05818c-f331-4c80-ab6b-fefc9f6d18ae",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "f671abea-6f16-4aa7-ab01-ee7c95cb7e06",
-                        "name": "25830e61-1dc7-4dcb-b65d-487fda5224eb"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "81c25c1a-d2f0-4e5c-a855-04cd0c58ba3d",
-                            "name": "lmis dataset",
-                            "periodType": "BiMonthly"
-                        },
-                        "id": "34b30a79-6c61-4326-b07a-c4a22f9cb263",
-                        "name": "279ffd4f-5e21-4350-8a46-3af54fe67367"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "ea156dcd-7306-4cdb-a2ad-d5b0d7972595",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "fc9bd04f-ec9f-4d3b-8982-712b0446da23",
-                        "name": "a51856c7-289e-49a8-afed-036eb4c36a4b"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "e9a5b47c-6eef-40af-bdd2-68448b1e4807",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "2ed30cb6-9d0b-413d-946d-efb25ba647ef",
-                        "name": "e5688f1f-eb2b-4fad-89ef-e0abd98ac4b3"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "61e22e97-17d4-4fd0-90d2-21558c8624c4",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "d69c946c-8a2d-464a-9cf0-2fa6ce86aafb",
-                        "name": "f7e67142-6da9-4942-8c41-bae47a168655"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "972af6f8-8828-431c-9052-f5448294e69f",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "da54cc89-cfc9-4f44-a192-0c7fa306f604",
-                        "name": "2e87af01-a5c7-4970-bb67-eb82bd37ede1"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "38f0c3e3-4155-48dd-9070-93a3f1daebd7",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "f4bca4d7-5890-40b9-a0ad-097e6895be49",
-                        "name": "1aaac86a-e813-4b91-9d40-8cfd842e3919"
-                    }
-                ],
-                "id": "6",
-                "name": "Hedex",
-                "orderDuration": 60,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
-            },
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "7",
-                            "name": "Septrin",
-                            "orderDuration": 30
-                        },
-                        "dataSet": {
-                            "id": "3daa447d-087a-49e2-9ca8-662b3b27ddce",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "12ee34",
-                        "name": "Septrin_DISPENSING"
-                    },
-                    {
-                        "activityType": "EXPIRED",
-                        "dataSet": {
-                            "id": "a6656f64-492a-4fdf-abee-eb5c2aed4cfb",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "f8add2d1-fa5e-4358-a98d-6cdf2d5f2688",
-                        "name": "2b4068d7-78af-45b2-8d48-faab69de2cf6"
-                    },
-                    {
-                        "activityType": "WASTE",
-                        "dataSet": {
-                            "id": "5397f102-ebc4-4324-812b-e1f87e1bafd1",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "c0338759-cb3d-443e-9340-24e6729b7001",
-                        "name": "88133bd2-40cb-40f0-9cc9-26165c3d3839"
-                    },
-                    {
-                        "activityType": "MISSING",
-                        "dataSet": {
-                            "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "61cb11ad-27ad-4af4-9127-3b2441e35ded",
-                        "name": "c255495f-ac0e-49f2-b396-c0d27ceef519"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "5f845d5f-58c5-4807-8fd4-d6375ad65a1b",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "bd8454b9-b01c-444d-a277-fa70464b61be",
-                        "name": "a2a52f71-6829-4dd4-b0db-1398d3bb453e"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "15a7d59c-eb1b-4b42-b762-a099b7e81c0a",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "29c2c2f6-1439-4471-8d99-260ff8c377c8",
-                        "name": "2079a178-0a92-4899-b07e-a4a6890e1959"
-                    },
-                    {
-                        "activityType": "MINIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "bad1bb52-bd8d-49b4-b3ce-fbc20640855a",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "ddc64927-fc0e-431a-9986-5fbe97bffd07",
-                        "name": "c264c710-3042-48ee-a785-2a080f0577b0"
-                    },
-                    {
-                        "activityType": "MAXIMUM_STOCK_LEVEL",
-                        "dataSet": {
-                            "id": "5e5606b9-6596-47e7-a81f-dc3e8d3651f1",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "102ad4c5-e08a-4ad8-9141-7f4637ed5c44",
-                        "name": "37df4cad-b422-4f0a-a599-18bf5bbd177f"
-                    }
-                ],
-                "id": "7",
-                "name": "Septrin",
-                "orderDuration": 60,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1236",
+                "commodityAction": {
+                  "id": "123458",
+                  "name": "Coartem_REASON_FOR_ORDER"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "0efb88db-3387-4846-ba81-274e1fc78b56",
+            "name": "ad827c84-ebd5-428c-a766-ed58456f5276",
+            "activityType": "EXPIRED",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1237",
+                "commodityAction": {
+                  "id": "0efb88db-3387-4846-ba81-274e1fc78b56",
+                  "name": "ad827c84-ebd5-428c-a766-ed58456f5276"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "9be1a0fc-ac65-4192-90a9-f810836afcbd",
+            "name": "ca78286a-90cd-47cf-8354-699c75b04c7c",
+            "activityType": "WASTE",
+            "dataSet": {
+              "id": "lmis dataset Monthly",
+              "name": "lmis dataset Monthly",
+              "periodType": "Monthly"
             }
+          },
+          {
+            "id": "2c5b0af3-54ff-4852-9537-073727dfd345",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64",
+            "activityType": "MISSING",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1238",
+                "commodityAction": {
+                  "id": "2c5b0af3-54ff-4852-9537-073727dfd345",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_stock_on_hand_comm_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64",
+            "activityType": "STOCK_ON_HAND",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1239",
+                "commodityAction": {
+                  "id": "id_stock_on_hand_comm_1",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_minimum_threshold_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MINIMUM_THRESHOLD",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1240",
+                "commodityAction": {
+                  "id": "id_minimum_threshold_1",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_minimum_threshold_2014_05",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MINIMUM_THRESHOLD",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1241",
+                "commodityAction": {
+                  "id": "id_minimum_threshold_2014_05",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_maximum_threshold_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MAXIMUM_THRESHOLD",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1242",
+                "commodityAction": {
+                  "id": "id_maximum_threshold_1",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_maximum_threshold_2014May_Coatem",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MAXIMUM_THRESHOLD",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1243",
+                "commodityAction": {
+                  "id": "id_maximum_threshold_2014May_Coatem",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_PROJECTED_ORDER_AMOUNT_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "PROJECTED_ORDER_AMOUNT",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1244",
+                "commodityAction": {
+                  "id": "id_PROJECTED_ORDER_AMOUNT_1",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_AMC_1",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "AMC",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1245",
+                "commodityAction": {
+                  "id": "id_AMC_1",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_AMC_2_201405",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "AMC",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1246",
+                "commodityAction": {
+                  "id": "id_AMC_2_201405",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c2",
+            "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad",
+            "activityType": "ADJUSTMENTS",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1247",
+                "commodityAction": {
+                  "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c2",
+                  "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f5e23dee-865c-4fcf-9fff-05eb201b435-2",
+            "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8",
+            "activityType": "ADJUSTMENT_REASON",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1248",
+                "commodityAction": {
+                  "id": "f5e23dee-865c-4fcf-9fff-05eb201b435-2",
+                  "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "751bb111-9692-4621-95f0-17ccdaee6a56",
+            "name": "7dda0d31-1ed4-4ff2-9a6c-b905b8a8568e",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1249",
+                "commodityAction": {
+                  "id": "751bb111-9692-4621-95f0-17ccdaee6a56",
+                  "name": "7dda0d31-1ed4-4ff2-9a6c-b905b8a8568e"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "e9e08fd1-ffc7-48fd-a6cb-714908844b4f",
+            "name": "5da5e75c-5393-4794-8fe1-13be14cdc254",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1250",
+                "commodityAction": {
+                  "id": "e9e08fd1-ffc7-48fd-a6cb-714908844b4f",
+                  "name": "5da5e75c-5393-4794-8fe1-13be14cdc254"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "name": "Choloquine",
+        "orderDuration": 90,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "12344",
+            "name": "Choloquine_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1251",
+                "commodityAction": {
+                  "id": "12344",
+                  "name": "Choloquine_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "74e85a50-d0e4-4e8d-9470-90cfc8423b6c",
+            "name": "6e8a56c7-c34d-448a-b306-ebc460c6eda2",
+            "activityType": "EXPIRED",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1252",
+                "commodityAction": {
+                  "id": "74e85a50-d0e4-4e8d-9470-90cfc8423b6c",
+                  "name": "6e8a56c7-c34d-448a-b306-ebc460c6eda2"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "6645f087-a617-41fb-abbb-1366eb2f3a63",
+            "name": "ad415130-e455-4358-b2c5-54817538327f",
+            "activityType": "WASTE",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1253",
+                "commodityAction": {
+                  "id": "6645f087-a617-41fb-abbb-1366eb2f3a63",
+                  "name": "ad415130-e455-4358-b2c5-54817538327f"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "e003847a-8e31-4522-855a-d97006574f14",
+            "name": "72de09aa-dbb2-40df-bf04-1395ece55516",
+            "activityType": "MISSING",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1254",
+                "commodityAction": {
+                  "id": "e003847a-8e31-4522-855a-d97006574f14",
+                  "name": "72de09aa-dbb2-40df-bf04-1395ece55516"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_stock_on_hand_comm_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64",
+            "activityType": "STOCK_ON_HAND",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1254",
+                "commodityAction": {
+                  "id": "id_stock_on_hand_comm_2",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_minimum_threshold_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MINIMUM_THRESHOLD",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1255",
+                "commodityAction": {
+                  "id": "id_minimum_threshold_2",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_maximum_threshold_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MAXIMUM_THRESHOLD",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1256",
+                "commodityAction": {
+                  "id": "id_maximum_threshold_2",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_PROJECTED_ORDER_AMOUNT_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "PROJECTED_ORDER_AMOUNT",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1257",
+                "commodityAction": {
+                  "id": "id_PROJECTED_ORDER_AMOUNT_2",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_AMC_2",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "AMC",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1258",
+                "commodityAction": {
+                  "id": "id_AMC_2",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "0927ed16-d2db-417d-aaba-2a99ebc44edf",
+            "name": "1242f404-8780-41cd-912e-47ec906eca37",
+            "activityType": "ADJUSTMENTS",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1259",
+                "commodityAction": {
+                  "id": "0927ed16-d2db-417d-aaba-2a99ebc44edf",
+                  "name": "1242f404-8780-41cd-912e-47ec906eca37"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "00480295-3e18-40b1-98e8-1b418f55db88",
+            "name": "46ef1367-a7a9-4b1d-bace-b41af7e1c683",
+            "activityType": "ADJUSTMENT_REASON",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1260",
+                "commodityAction": {
+                  "id": "00480295-3e18-40b1-98e8-1b418f55db88",
+                  "name": "46ef1367-a7a9-4b1d-bace-b41af7e1c683"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "496a882c-752c-4703-86f2-93ad3c1ee313",
+            "name": "3f4bd3ca-7213-4e09-ac90-d2de9a5fed9a",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1261",
+                "commodityAction": {
+                  "id": "496a882c-752c-4703-86f2-93ad3c1ee313",
+                  "name": "3f4bd3ca-7213-4e09-ac90-d2de9a5fed9a"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "6f6043c0-9f69-4dff-818f-4d979dd14f56",
+            "name": "d8d7207c-a603-4745-a56a-7b9c9389a2d2",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "3",
+              "name": "Choloquine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1262",
+                "commodityAction": {
+                  "id": "6f6043c0-9f69-4dff-818f-4d979dd14f56",
+                  "name": "d8d7207c-a603-4745-a56a-7b9c9389a2d2"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "name": "Quinine",
+        "orderDuration": 180,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "1234as",
+            "name": "Quinine_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1263",
+                "commodityAction": {
+                  "id": "1234as",
+                  "name": "Quinine_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "78ed16ad-ca2c-4cce-9a28-49472843e1cc",
+            "name": "4cba9355-9063-4900-a4e8-2ba3933f6a0d",
+            "activityType": "EXPIRED",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1264",
+                "commodityAction": {
+                  "id": "78ed16ad-ca2c-4cce-9a28-49472843e1cc",
+                  "name": "4cba9355-9063-4900-a4e8-2ba3933f6a0d"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "c3894b31-52b6-48f4-ada0-70ca23f46cfc",
+            "name": "e0dbf320-ce76-4ab0-96a6-20ab3df735ca",
+            "activityType": "WASTE",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1265",
+                "commodityAction": {
+                  "id": "c3894b31-52b6-48f4-ada0-70ca23f46cfc",
+                  "name": "e0dbf320-ce76-4ab0-96a6-20ab3df735ca"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "cc9941f3-9369-46f6-a9d1-ee4c88e7e757",
+            "name": "e5adfcdd-6a78-43ba-9206-059eaee4bfa1",
+            "activityType": "MISSING",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1266",
+                "commodityAction": {
+                  "id": "cc9941f3-9369-46f6-a9d1-ee4c88e7e757",
+                  "name": "e5adfcdd-6a78-43ba-9206-059eaee4bfa1"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_stock_on_hand_comm_3",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e64",
+            "activityType": "STOCK_ON_HAND",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1267",
+                "commodityAction": {
+                  "id": "id_stock_on_hand_comm_3",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e64"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_minimum_threshold_3",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MINIMUM_THRESHOLD",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1268",
+                "commodityAction": {
+                  "id": "id_minimum_threshold_3",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "id_maximum_threshold_3",
+            "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
+            "activityType": "MAXIMUM_THRESHOLD",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1269",
+                "commodityAction": {
+                  "id": "id_maximum_threshold_3",
+                  "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "592b03e4-af61-474d-bf9a-625fd18783d3",
+            "name": "2fbf4f1e-43d2-467e-b8a4-ba32806c4066",
+            "activityType": "ADJUSTMENTS",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1270",
+                "commodityAction": {
+                  "id": "592b03e4-af61-474d-bf9a-625fd18783d3",
+                  "name": "2fbf4f1e-43d2-467e-b8a4-ba32806c4066"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "b8b4642d-3e4d-4eae-a795-e657c83e5248",
+            "name": "0b6123b4-b0c6-46bb-9007-737a51a2a807",
+            "activityType": "ADJUSTMENT_REASON",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1271",
+                "commodityAction": {
+                  "id": "b8b4642d-3e4d-4eae-a795-e657c83e5248",
+                  "name": "0b6123b4-b0c6-46bb-9007-737a51a2a807"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "998dfe33-4ed6-4f14-a617-99988e0f6ce7",
+            "name": "01f693e5-f963-4363-a761-8fc7e7561672",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1272",
+                "commodityAction": {
+                  "id": "998dfe33-4ed6-4f14-a617-99988e0f6ce7",
+                  "name": "01f693e5-f963-4363-a761-8fc7e7561672"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "38220714-bcbd-4cc5-a08d-28a45406dfc5",
+            "name": "00d54c31-50e3-410c-8b59-941933f4e280",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "4",
+              "name": "Quinine",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1273",
+                "commodityAction": {
+                  "id": "38220714-bcbd-4cc5-a08d-28a45406dfc5",
+                  "name": "00d54c31-50e3-410c-8b59-941933f4e280"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "name": "Fansida",
+        "orderDuration": 360,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "1234222",
+            "name": "Fansida_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1274",
+                "commodityAction": {
+                  "id": "1234222",
+                  "name": "Fansida_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "34ddbd6e-031a-435d-b8c0-a8099259e666",
+            "name": "6d8d3a72-dfa7-40a5-9d6d-5ed07e7dc4a0",
+            "activityType": "EXPIRED",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1275",
+                "commodityAction": {
+                  "id": "34ddbd6e-031a-435d-b8c0-a8099259e666",
+                  "name": "6d8d3a72-dfa7-40a5-9d6d-5ed07e7dc4a0"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "068010c6-3089-4609-8c07-f7a9788bd36f",
+            "name": "d219ff58-b691-43d6-8f46-5e6f29c89634",
+            "activityType": "WASTE",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1276",
+                "commodityAction": {
+                  "id": "068010c6-3089-4609-8c07-f7a9788bd36f",
+                  "name": "d219ff58-b691-43d6-8f46-5e6f29c89634"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "a10e2ee1-b66b-478f-893d-b3b62d19d336",
+            "name": "1e70dbf7-cacc-44b7-8163-c2d0f500100f",
+            "activityType": "MISSING",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1277",
+                "commodityAction": {
+                  "id": "a10e2ee1-b66b-478f-893d-b3b62d19d336",
+                  "name": "1e70dbf7-cacc-44b7-8163-c2d0f500100f"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "e8730d66-7df9-483a-aaf1-7d03db5beea5",
+            "name": "c32c8cf0-9eba-4f4d-90d3-82a31c85248d",
+            "activityType": "ADJUSTMENTS",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1278",
+                "commodityAction": {
+                  "id": "e8730d66-7df9-483a-aaf1-7d03db5beea5",
+                  "name": "c32c8cf0-9eba-4f4d-90d3-82a31c85248d"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "54445829-ba40-4559-9844-54177fd49fe9",
+            "name": "1d6fbe30-a039-44a0-a0aa-c0b3b0e321ef",
+            "activityType": "ADJUSTMENT_REASON",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1279",
+                "commodityAction": {
+                  "id": "54445829-ba40-4559-9844-54177fd49fe9",
+                  "name": "1d6fbe30-a039-44a0-a0aa-c0b3b0e321ef"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "2631c50b-c329-4157-9e9c-79b98b8e00e9",
+            "name": "433616a7-f462-420d-abae-4f11924ea4d8",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1280",
+                "commodityAction": {
+                  "id": "2631c50b-c329-4157-9e9c-79b98b8e00e9",
+                  "name": "433616a7-f462-420d-abae-4f11924ea4d8"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "cc234e11-3b3b-4e45-883c-4c15dfaa25be",
+            "name": "74ccd892-9924-411e-acf1-24d74364176f",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "5",
+              "name": "Fansida",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1281",
+                "commodityAction": {
+                  "id": "cc234e11-3b3b-4e45-883c-4c15dfaa25be",
+                  "name": "74ccd892-9924-411e-acf1-24d74364176f"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "6",
+        "name": "Hedex",
+        "orderDuration": 60,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "123294",
+            "name": "Hedex_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1282",
+                "commodityAction": {
+                  "id": "123294",
+                  "name": "Hedex_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f671abea-6f16-4aa7-ab01-ee7c95cb7e06",
+            "name": "25830e61-1dc7-4dcb-b65d-487fda5224eb",
+            "activityType": "EXPIRED",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1283",
+                "commodityAction": {
+                  "id": "f671abea-6f16-4aa7-ab01-ee7c95cb7e06",
+                  "name": "25830e61-1dc7-4dcb-b65d-487fda5224eb"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "34b30a79-6c61-4326-b07a-c4a22f9cb263",
+            "name": "279ffd4f-5e21-4350-8a46-3af54fe67367",
+            "activityType": "WASTE",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1284",
+                "commodityAction": {
+                  "id": "34b30a79-6c61-4326-b07a-c4a22f9cb263",
+                  "name": "279ffd4f-5e21-4350-8a46-3af54fe67367"
+                },
+                "dataSet": {
+                  "id": "lmis dataset BiMonthly",
+                  "name": "lmis dataset BiMonthly",
+                  "periodType": "BiMonthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "fc9bd04f-ec9f-4d3b-8982-712b0446da23",
+            "name": "a51856c7-289e-49a8-afed-036eb4c36a4b",
+            "activityType": "MISSING",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1285",
+                "commodityAction": {
+                  "id": "fc9bd04f-ec9f-4d3b-8982-712b0446da23",
+                  "name": "a51856c7-289e-49a8-afed-036eb4c36a4b"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "2ed30cb6-9d0b-413d-946d-efb25ba647ef",
+            "name": "e5688f1f-eb2b-4fad-89ef-e0abd98ac4b3",
+            "activityType": "ADJUSTMENTS",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1286",
+                "commodityAction": {
+                  "id": "2ed30cb6-9d0b-413d-946d-efb25ba647ef",
+                  "name": "e5688f1f-eb2b-4fad-89ef-e0abd98ac4b3"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "d69c946c-8a2d-464a-9cf0-2fa6ce86aafb",
+            "name": "f7e67142-6da9-4942-8c41-bae47a168655",
+            "activityType": "ADJUSTMENT_REASON",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1287",
+                "commodityAction": {
+                  "id": "d69c946c-8a2d-464a-9cf0-2fa6ce86aafb",
+                  "name": "f7e67142-6da9-4942-8c41-bae47a168655"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "da54cc89-cfc9-4f44-a192-0c7fa306f604",
+            "name": "2e87af01-a5c7-4970-bb67-eb82bd37ede1",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1288",
+                "commodityAction": {
+                  "id": "da54cc89-cfc9-4f44-a192-0c7fa306f604",
+                  "name": "2e87af01-a5c7-4970-bb67-eb82bd37ede1"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f4bca4d7-5890-40b9-a0ad-097e6895be49",
+            "name": "1aaac86a-e813-4b91-9d40-8cfd842e3919",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "6",
+              "name": "Hedex",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1289",
+                "commodityAction": {
+                  "id": "f4bca4d7-5890-40b9-a0ad-097e6895be49",
+                  "name": "1aaac86a-e813-4b91-9d40-8cfd842e3919"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "7",
+        "name": "Septrin",
+        "orderDuration": 60,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false",
+        "commodityActions": [
+          {
+            "id": "12ee34",
+            "name": "Septrin_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1290",
+                "commodityAction": {
+                  "id": "12ee34",
+                  "name": "Septrin_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f8add2d1-fa5e-4358-a98d-6cdf2d5f2688",
+            "name": "2b4068d7-78af-45b2-8d48-faab69de2cf6",
+            "activityType": "EXPIRED",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1291",
+                "commodityAction": {
+                  "id": "f8add2d1-fa5e-4358-a98d-6cdf2d5f2688",
+                  "name": "2b4068d7-78af-45b2-8d48-faab69de2cf6"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "c0338759-cb3d-443e-9340-24e6729b7001",
+            "name": "88133bd2-40cb-40f0-9cc9-26165c3d3839",
+            "activityType": "WASTE",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1292",
+                "commodityAction": {
+                  "id": "c0338759-cb3d-443e-9340-24e6729b7001",
+                  "name": "88133bd2-40cb-40f0-9cc9-26165c3d3839"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "61cb11ad-27ad-4af4-9127-3b2441e35ded",
+            "name": "c255495f-ac0e-49f2-b396-c0d27ceef519",
+            "activityType": "MISSING",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1293",
+                "commodityAction": {
+                  "id": "61cb11ad-27ad-4af4-9127-3b2441e35ded",
+                  "name": "c255495f-ac0e-49f2-b396-c0d27ceef519"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "bd8454b9-b01c-444d-a277-fa70464b61be",
+            "name": "a2a52f71-6829-4dd4-b0db-1398d3bb453e",
+            "activityType": "ADJUSTMENTS",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1294",
+                "commodityAction": {
+                  "id": "bd8454b9-b01c-444d-a277-fa70464b61be",
+                  "name": "a2a52f71-6829-4dd4-b0db-1398d3bb453e"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "29c2c2f6-1439-4471-8d99-260ff8c377c8",
+            "name": "2079a178-0a92-4899-b07e-a4a6890e1959",
+            "activityType": "ADJUSTMENT_REASON",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1295",
+                "commodityAction": {
+                  "id": "29c2c2f6-1439-4471-8d99-260ff8c377c8",
+                  "name": "2079a178-0a92-4899-b07e-a4a6890e1959"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "ddc64927-fc0e-431a-9986-5fbe97bffd07",
+            "name": "c264c710-3042-48ee-a785-2a080f0577b0",
+            "activityType": "MINIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1296",
+                "commodityAction": {
+                  "id": "ddc64927-fc0e-431a-9986-5fbe97bffd07",
+                  "name": "c264c710-3042-48ee-a785-2a080f0577b0"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "102ad4c5-e08a-4ad8-9141-7f4637ed5c44",
+            "name": "37df4cad-b422-4f0a-a599-18bf5bbd177f",
+            "activityType": "MAXIMUM_STOCK_LEVEL",
+            "commodity": {
+              "id": "7",
+              "name": "Septrin",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1297",
+                "commodityAction": {
+                  "id": "102ad4c5-e08a-4ad8-9141-7f4637ed5c44",
+                  "name": "37df4cad-b422-4f0a-a599-18bf5bbd177f"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "lmisId": "8",
+    "name": "Antenatal",
+    "transientCommodities": [
+      {
+        "commodityActions": [
+          {
+            "id": "1229234",
+            "name": "Condom_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "9",
+              "name": "Condom",
+              "orderDuration": 30
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1298",
+                "commodityAction": {
+                  "id": "1229234",
+                  "name": "Condom_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          }
         ],
-        "lmisId": "1",
-        "name": "Anti Malarials"
-    },
-    {
-        "commodities": [
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "9",
-                            "name": "Condom",
-                            "orderDuration": 30,
-                            "nonLGA":"false",
-                            "isDevice":"false",
-                            "isVaccine":"false"
-                        },
-                        "dataSet": {
-                            "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "1229234",
-                        "name": "Condom_DISPENSING"
-                    }
-                ],
-                "id": "9",
-                "name": "Condom",
-                "orderDuration": 14,
-                "nonLGA":"false",
-                "isDevice":"false",
-                "isVaccine":"false"
-            }
-        ],
-        "lmisId": "8",
-        "name": "Antenatal"
-    },
-    {
-        "commodities": [],
-        "lmisId": "10",
-        "name": "HIV/AIDS"
-    },
-    {
-        "commodities": [],
-        "lmisId": "11",
-        "name": "Diarrhoea"
-    },
-    {
-        "commodities": [],
-        "lmisId": "12",
-        "name": "Immunization"
-    },
-    {
-        "commodities": [],
-        "lmisId": "13",
-        "name": "Others"
-    },
-    {
-        "commodities": [
-            {
-                "commodityActions": [
-                    {
-                        "activityType": "DISPENSED",
-                        "commodity": {
-                            "id": "109",
-                            "name": "Syringe 1.0",
-                            "orderDuration": 1,
-                            "nonLGA":"true",
-                            "isDevice":"true",
-                            "isVaccine":"true"
-                        },
-                        "dataSet": {
-                            "id": "789fdebb-ce09-46d7-813d-b9ab41897627",
-                            "name": "lmis dataset",
-                            "periodType": "Monthly"
-                        },
-                        "id": "1229234",
-                        "name": "Syringe 1.0_DISPENSING"
-                    },
-                    {
-                        "activityType": "ADJUSTMENTS",
-                        "dataSet": {
-                            "id": "cf6eaf9a-6987-43df-b010-2329381727ab",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c",
-                        "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
-                    },
-                    {
-                        "activityType": "ADJUSTMENT_REASON",
-                        "dataSet": {
-                            "id": "7e415e35-dd77-4eee-93b2-df4df667bfd8",
-                            "name": "lmis dataset",
-                            "periodType": "Daily"
-                        },
-                        "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
-                        "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
-                    }
-                ],
-                "id": "109",
-                "name": "Syringe 1.0",
-                "orderDuration": 1,
-                "nonLGA":"true",
-                "isDevice":"true",
-                "isVaccine":"true"
-            }
-        ],
-        "lmisId": "14",
-        "name": "Vaccines"
-    }
+        "id": "9",
+        "name": "Condom",
+        "orderDuration": 14,
+        "nonLGA": "false",
+        "isDevice": "false",
+        "isVaccine": "false"
+      }
+    ]
+  },
+  {
+    "transientCommodities": [],
+    "lmisId": "10",
+    "name": "HIV/AIDS"
+  },
+  {
+    "transientCommodities": [],
+    "lmisId": "11",
+    "name": "Diarrhoea"
+  },
+  {
+    "transientCommodities": [],
+    "lmisId": "12",
+    "name": "Immunization"
+  },
+  {
+    "transientCommodities": [],
+    "lmisId": "13",
+    "name": "Others"
+  },
+  {
+    "lmisId": "14",
+    "name": "Vaccines",
+    "transientCommodities": [
+      {
+        "id": "109",
+        "name": "Syringe 1.0",
+        "orderDuration": 1,
+        "nonLGA": "true",
+        "isDevice": "true",
+        "isVaccine": "true",
+        "commodityActions": [
+          {
+            "id": "1229234",
+            "name": "Syringe 1.0_DISPENSING",
+            "activityType": "DISPENSED",
+            "commodity": {
+              "id": "109",
+              "name": "Syringe 1.0",
+              "orderDuration": 1,
+              "nonLGA": "true",
+              "isDevice": "true",
+              "isVaccine": "true"
+            },
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1298",
+                "commodityAction": {
+                  "id": "1229234",
+                  "name": "Syringe 1.0_DISPENSING"
+                },
+                "dataSet": {
+                  "id": "lmis dataset Monthly",
+                  "name": "lmis dataset Monthly",
+                  "periodType": "Monthly"
+                }
+              }
+            ]
+          },
+          {
+            "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c",
+            "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad",
+            "activityType": "ADJUSTMENTS",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1298",
+                "commodityAction": {
+                  "id": "119dd6e0-f6cb-4a1e-9ccd-081f2a363a5c",
+                  "name": "c4ec2f78-6998-4635-a69a-aba9f254d6ad"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
+            "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8",
+            "activityType": "ADJUSTMENT_REASON",
+            "transientCommodityActionDataSets": [
+              {
+                "id": "1298",
+                "commodityAction": {
+                  "id": "f5e23dee-865c-4fcf-9fff-05eb201b4353",
+                  "name": "955900fc-2cdb-47b1-880f-5d3e911ae4e8"
+                },
+                "dataSet": {
+                  "id": "lmis_dataset_daily",
+                  "name": "lmis dataset Daily",
+                  "periodType": "Daily"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ]

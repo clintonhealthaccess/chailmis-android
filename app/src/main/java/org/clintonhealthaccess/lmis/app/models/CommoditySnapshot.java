@@ -29,29 +29,29 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
 @DatabaseTable
 public class CommoditySnapshot {
 
-    public static final String PERIOD = "period";
+    public static final String PERIOD_DATE = "period_date";
+
     @DatabaseField(generatedId = true)
     private Long id;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = "commodityActivity_id", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(canBeNull = false, columnName = "commodityActivity_id", foreign = true, foreignAutoRefresh = true)
     private CommodityAction commodityAction;
 
     @DatabaseField(canBeNull = false)
@@ -63,46 +63,38 @@ public class CommoditySnapshot {
     @DatabaseField(defaultValue = "false")
     private boolean smsSent;
 
-    @DatabaseField(canBeNull = false, foreign = true, uniqueCombo = true)
+    @DatabaseField(canBeNull = false, foreign = true)
     private Commodity commodity;
 
-    @DatabaseField(canBeNull = false, uniqueCombo = true, columnName = PERIOD)
-    private String period;
+    @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd", columnName = PERIOD_DATE)
+    private Date periodDate;
 
     @DatabaseField(canBeNull = true)
     private String attributeOptionCombo;
 
     @Override
     public String toString() {
-        return id+" "+value+" "+commodityAction+" "+commodity.getName()+" "+period;
+        return id + " " + value + " " + commodityAction + " Commodity: " + commodity.getName() + " " + periodDate;
     }
 
-    public static DataValueSet toDataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
-        DataValueSet dataValueSet = new DataValueSet();
-        for (CommoditySnapshot snapshot : snapshotsToSync) {
-            dataValueSet.getDataValues().add(snapshot.toDataValue(orgUnit));
-        }
-        return dataValueSet;
-    }
-
-    public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value) {
+    public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction,
+                             String value, Date periodDate) {
         this.commodity = commodity;
         this.commodityAction = commodityAction;
         this.value = value;
         this.synced = false;
-        this.period = commodityAction.getPeriod();
+        this.periodDate = periodDate;
     }
 
     public CommoditySnapshot(CommoditySnapshotValue commoditySnapshotValue) {
-        this(commoditySnapshotValue.getCommodityAction().getCommodity(), commoditySnapshotValue.getCommodityAction(), commoditySnapshotValue.getValue());
-        if (commoditySnapshotValue.getPeriod() != null) {
-            this.period = commoditySnapshotValue.getPeriod();
-        }
-    }
+        this(commoditySnapshotValue.getCommodityAction().getCommodity(),
+                commoditySnapshotValue.getCommodityAction(),
+                commoditySnapshotValue.getValue(), commoditySnapshotValue.getPeriodDate());
 
-    public CommoditySnapshot(Commodity commodity, CommodityAction commodityAction, String value, String attributeOptionComboId) {
-        this(commodity, commodityAction, value);
-        this.attributeOptionCombo = attributeOptionComboId;
+        // this.attributeOptionCombo = attributeOptionComboId;
+    }
+    public CommoditySnapshot() {
+        //ormLite likes
     }
 
     public void incrementValue(String value) {
@@ -116,11 +108,56 @@ public class CommoditySnapshot {
         }
     }
 
-    private DataValue toDataValue(String orgUnit) {
-        return DataValue.builder().value(String.valueOf(getValue())).
-                dataSet(getCommodityAction().getDataSet().getId()).
-                dataElement(getCommodityAction().getId()).
-                period(getPeriod()).orgUnit(orgUnit).
-                attributeOptionCombo(getAttributeOptionCombo()).build();
+    public static DataValueSet toDataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
+        DataValueSet dataValueSet = new DataValueSet();
+        for (CommoditySnapshot snapshot : snapshotsToSync) {
+            dataValueSet.getDataValues().addAll(snapshot.toDataValues(orgUnit));
+        }
+        return dataValueSet;
+    }
+
+    public List<DataValue> toDataValues(String orgUnit) {
+        List<DataValue> dataValues = new ArrayList<>();
+        System.out.println(commodityAction.getName()+" has "+commodityAction.getCommodityActionDataSets().size());
+        for (CommodityActionDataSet commodityActionDataSet : commodityAction.getCommodityActionDataSets()) {
+            dataValues.add(toDataValue(orgUnit, commodityActionDataSet.getDataSet()));
+        }
+        return dataValues;
+    }
+
+    private DataValue toDataValue(String orgUnit, DataSet dataSet) {
+        return DataValue.builder().value(String.valueOf(value)).
+                dataSet(dataSet.getId()).
+                dataElement(commodityAction.getId()).
+                period(dataSet.getPeriod(periodDate)).orgUnit(orgUnit).
+                attributeOptionCombo(attributeOptionCombo).build();
+    }
+
+    public boolean isSmsSent() {
+        return smsSent;
+    }
+
+    public void setSmsSent(boolean smsSent) {
+        this.smsSent = smsSent;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
+    }
+
+    public boolean isSynced() {
+        return synced;
+    }
+
+    public Date getPeriodDate(){
+        return periodDate;
+    }
+
+    public String getValue(){
+        return value;
+    }
+
+    public CommodityAction getCommodityAction() {
+        return commodityAction;
     }
 }

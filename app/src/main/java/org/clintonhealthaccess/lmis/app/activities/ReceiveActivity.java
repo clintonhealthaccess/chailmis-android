@@ -56,21 +56,27 @@ import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
+import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import roboguice.inject.InjectView;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
-public class ReceiveActivity extends CommoditySelectableActivity {
+public class ReceiveActivity extends CommoditySelectableActivity implements Serializable {
     public static final String ALLOCATION_ID = "ALLOCATION_ID";
+    public String ALLOCATION_ID_FORMAT = facility2LetterCode + "-0000";
+
     @InjectView(R.id.buttonSubmitReceive)
     Button buttonSubmitReceive;
 
@@ -279,12 +285,12 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     private boolean allocationIdIsValid() {
-        return !textViewAllocationId.isEnabled() || (textViewAllocationId.getError() == null && !isBlank(textViewAllocationId.getText().toString()));
+        return !textViewAllocationId.isEnabled() ||
+                (textViewAllocationId.getError() == null
+                        && !isBlank(textViewAllocationId.getText().toString()));
     }
 
     private void setupAllocationIdTextView() {
-        textViewAllocationId.setValidator(new AllocationIdValidator());
-
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, allocationService.getYetToBeReceivedAllocationIds());
         textViewAllocationId.setAdapter(adapter);
@@ -293,7 +299,9 @@ public class ReceiveActivity extends CommoditySelectableActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
-                setAllocation(text);
+                if (text.trim().length() > 6) {
+                    setAllocation(text);
+                }
             }
         });
         textViewAllocationId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -305,8 +313,10 @@ public class ReceiveActivity extends CommoditySelectableActivity {
         });
     }
 
-    private void setAllocation(String allocationId) {
-        validateAllocationId(allocationId);
+    public void setAllocation(String allocationId) {
+        if (!allocationId.trim().isEmpty()) {
+            validateAllocationId(allocationId);
+        }
         if (allocationIdIsValid()) {
             allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
             populateWithAllocation(allocation);
@@ -328,15 +338,23 @@ public class ReceiveActivity extends CommoditySelectableActivity {
     }
 
     private void validateAllocationId(String text) {
-        if (!textViewAllocationId.getValidator().isValid(text)) {
-            textViewAllocationId.setError(getString(R.string.error_allocation_id_wrong_format));
-        } else {
+        if (!allocationIdIsValid(text)) {
+            textViewAllocationId.setError(String.format(
+                    getString(R.string.error_allocation_id_wrong_format), ALLOCATION_ID_FORMAT));
+        }else{
             if (completedAllocationIds.contains(text)) {
                 textViewAllocationId.setError(getString(R.string.error_allocation_received));
             } else {
                 textViewAllocationId.setError(null);
             }
         }
+    }
+
+    private boolean allocationIdIsValid(String text) {
+        String patternString = facility2LetterCode.toUpperCase() + "-\\d+$";
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(text);
+        return matcher.matches();
     }
 
 }

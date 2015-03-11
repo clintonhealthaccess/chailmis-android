@@ -99,6 +99,11 @@ public class Adjustment implements Serializable, Snapshotable {
         return values;
     }
 
+    @Override
+    public Date getDate() {
+        return getCreated();
+    }
+
     public int getQuantity() {
         return quantity;
     }

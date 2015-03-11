@@ -46,6 +46,7 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.shadows.ShadowHandler;
@@ -64,7 +65,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.robolectric.Robolectric.buildActivity;
+import static org.robolectric.Robolectric.setupActivity;
 import static org.robolectric.Robolectric.shadowOf;
 import static org.robolectric.shadows.ShadowToast.getTextOfLatestToast;
 
@@ -99,7 +100,7 @@ public class RegisterActivityTest {
             }
         });
 
-        registerActivity = buildActivity(RegisterActivity.class).create().get();
+        registerActivity = setupActivity(RegisterActivity.class);
     }
 
     @Test

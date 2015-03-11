@@ -70,7 +70,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -110,9 +109,8 @@ public class CommodityServiceTest {
         mockLmisServer = mock(LmisServer.class);
         commodityActionService = mock(CommodityActionService.class);
         mockStockLevels = testActionValues(application);
-        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(defaultCategories(application));
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(defaultCategories(application));
-        when(mockLmisServer.fetchCommodityActionValues(anyList(), (User) anyObject())).thenReturn(mockStockLevels);
+        when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(mockStockLevels);
         when(mockLmisServer.fetchIntegerConstant((User) anyObject(), anyString())).thenReturn(MOCK_DAY);
 
         setUpInjection(this, new AbstractModule() {
@@ -164,8 +162,7 @@ public class CommodityServiceTest {
         Commodity testCommodity = commodityService.all().get(0);
         assertThat(testCommodity.getCommodityActionsSaved().size(), is(not(0)));
         CommodityAction actual = (CommodityAction) testCommodity.getCommodityActionsSaved().toArray()[0];
-        assertThat(actual.getDataSet(), is(notNullValue()));
-
+        assertThat(actual.getCommodityActionDataSets(), is(notNullValue()));
     }
 
     @Test
@@ -179,7 +176,7 @@ public class CommodityServiceTest {
         });
         spyedCommodityService = spy(commodityService);
         spyedCommodityService.initialise(new User("user", "user"));
-        verify(commodityActionService).syncCommodityActionValues((User) any(), anyList());
+        verify(commodityActionService).syncCommodityActionValues((User) any());
     }
 
     @Test

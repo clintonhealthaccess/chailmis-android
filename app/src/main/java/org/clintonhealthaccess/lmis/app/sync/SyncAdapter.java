@@ -85,7 +85,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         allocationService.syncAllocations(user);
 
         i("<== Syncing............ACTIONVALUES", account.name);
-        commodityActionService.syncCommodityActionValues(user, commodityService.all());
+        commodityActionService.syncCommodityActionValues(user);
 
     }
 }

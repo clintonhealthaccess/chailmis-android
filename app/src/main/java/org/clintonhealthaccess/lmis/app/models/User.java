@@ -62,9 +62,13 @@ public class User {
     }
 
     public User(String username, String password, String facilityCode) {
-        this.username = username;
-        this.password = password;
+        this(username, password);
         this.facilityCode = facilityCode;
+    }
+
+    public User(String username, String password, String facilityCode, String facilityName) {
+        this(username, password, facilityCode);
+        this.facilityName = facilityName;
     }
 
     public String getUsername() {

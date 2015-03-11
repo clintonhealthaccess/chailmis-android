@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.models;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,6 +56,9 @@ public enum OrderCycle {
         this.dateFormat = new SimpleDateFormat(format);
     }
 
+    public OrderCycle getDefaultCycle() {
+        return Daily;
+    }
 
     public Date startDate(Date now) {
         Calendar calendar = getCalendarFromDate(now);
@@ -83,6 +87,10 @@ public enum OrderCycle {
         }
     }
 
+    public Date getDate(String period) throws ParseException {
+        return this.dateFormat.parse(period);
+    }
+
     private String getBiMonthlyPeriod(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -101,7 +109,6 @@ public enum OrderCycle {
         }
         return new SimpleDateFormat("yyyy").format(calendar.getTime()) + "S" + number;
     }
-
 
     private String getQuarterlyPeriod(Date date) {
         String month = new SimpleDateFormat("MM").format(date);

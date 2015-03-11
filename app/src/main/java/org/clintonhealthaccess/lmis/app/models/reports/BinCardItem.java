@@ -35,7 +35,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.ToString;
 
-@Getter
 @ToString
 public class BinCardItem {
     Date date;
@@ -55,5 +54,33 @@ public class BinCardItem {
         this.quantityLost = quantityLost;
         this.quantityAdjusted = quantityAdjusted;
         this.stockBalance = stockBalance;
+    }
+
+    public int getQuantityReceived(){
+        return quantityReceived;
+    }
+
+    public String getReceivedFromIssuedTo(){
+        return receivedFromIssuedTo;
+    }
+
+    public Date getDate(){
+        return date;
+    }
+
+    public int getQuantityLost() {
+        return quantityLost;
+    }
+
+    public int getQuantityDispensed() {
+        return quantityDispensed;
+    }
+
+    public int getQuantityAdjusted() {
+        return quantityAdjusted;
+    }
+
+    public int getStockBalance() {
+        return stockBalance;
     }
 }

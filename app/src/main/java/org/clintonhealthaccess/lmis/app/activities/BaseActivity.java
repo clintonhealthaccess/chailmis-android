@@ -59,10 +59,12 @@ public class BaseActivity extends RoboActionBarActivity {
     AlertsService alertsService;
 
     TextView textFacilityName;
+
+    public String facility2LetterCode;
+
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
     protected void setFacilityName(String text) {
-
         textFacilityName.setText(text);
     }
 
@@ -78,10 +80,12 @@ public class BaseActivity extends RoboActionBarActivity {
             finish();
         } else {
             User user = userService.getRegisteredUser();
-            setFacilityName(user.getFacilityName());
+            String facilityName = user.getFacilityName() == null ? "" : user.getFacilityName();
+            setFacilityName(facilityName);
+            facility2LetterCode = facilityName.length() > 2 ?
+                    facilityName.substring(0, 2).toUpperCase() :
+                    facilityName.toUpperCase();
         }
-
-
     }
 
     @Override
@@ -120,17 +124,17 @@ public class BaseActivity extends RoboActionBarActivity {
 
     private AsyncTask<Void, Void, Integer> getAlertsCountUpdateTask(final TextView textViewnumberOfAlerts) {
         return new AsyncTask<Void, Void, Integer>() {
-                    @Override
-                    protected Integer doInBackground(Void[] params) {
-                        return alertsService.numberOfAlerts();
-                    }
+            @Override
+            protected Integer doInBackground(Void[] params) {
+                return alertsService.numberOfAlerts();
+            }
 
-                    @Override
-                    protected void onPostExecute(Integer o) {
-                        super.onPostExecute(o);
-                        updateAlertCount(o, textViewnumberOfAlerts);
-                    }
-                };
+            @Override
+            protected void onPostExecute(Integer o) {
+                super.onPostExecute(o);
+                updateAlertCount(o, textViewnumberOfAlerts);
+            }
+        };
     }
 
     @Override

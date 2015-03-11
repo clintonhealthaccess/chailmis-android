@@ -39,8 +39,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
 @ToString
 @DatabaseTable
 public class CommodityActionValue implements Serializable {
@@ -70,5 +68,21 @@ public class CommodityActionValue implements Serializable {
         this.value = value;
         this.period = period;
         this.dateCreated = new Date();
+    }
+
+    public String getValue(){
+        return value;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public CommodityAction getCommodityAction() {
+        return commodityAction;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

@@ -60,10 +60,11 @@ public class Dispensing implements Serializable {
     }
 
     public Dispensing(Date date) {
-        created = date;
+        this.created = date;
     }
 
     public void addItem(DispensingItem dispensingItem) {
+        dispensingItem.setDispensing(this);
         dispensingItems.add(dispensingItem);
     }
 

@@ -38,6 +38,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -53,7 +54,7 @@ import static android.util.Log.e;
 import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
 import static java.lang.String.format;
-import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD;
+import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.PERIOD_DATE;
 import static org.clintonhealthaccess.lmis.app.models.CommoditySnapshot.toDataValueSet;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
@@ -74,51 +75,53 @@ public class CommoditySnapshotService {
     private SmsSyncService smsSyncService;
 
     public void add(final Snapshotable snapshotable) {
-        GenericDao<CommoditySnapshot> snapshotGenericDao = new GenericDao<>(CommoditySnapshot.class, context);
-        snapshotGenericDao.bulkOperation(new DbUtil.Operation<CommoditySnapshot, Object>() {
-            @Override
-            public Object operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
-                List<CommoditySnapshotValue> commoditySnapshotValues = snapshotable.getActivitiesValues();
-                for (CommoditySnapshotValue value : commoditySnapshotValues) {
-                    List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value, dao);
-                    if (commoditySnapshots.isEmpty()) {
-                        createNewSnapshot(value, dao);
-                    } else {
-                        updateSnapshot(value, dao, commoditySnapshots);
-                    }
-                }
-                return null;
+
+        List<CommoditySnapshotValue> commoditySnapshotValues = null;
+        try {
+            commoditySnapshotValues = snapshotable.getActivitiesValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GenericDao<CommoditySnapshot> snapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
+
+        System.out.println(commoditySnapshotValues.size() + " values created - " + commoditySnapshotValues);
+        for (CommoditySnapshotValue value : commoditySnapshotValues) {
+            List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
+            if (commoditySnapshots.isEmpty()) {
+                createNewSnapshot(value, snapshotDao);
+            } else {
+                updateSnapshot(value, snapshotDao, commoditySnapshots);
             }
-        });
-
-
+        }
     }
 
-    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dailyCommoditySnapshotDao, List<CommoditySnapshot> commoditySnapshots) throws SQLException {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao, List<CommoditySnapshot> commoditySnapshots)  {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
         commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
         commoditySnapshot.setSynced(false);
-        dailyCommoditySnapshotDao.update(commoditySnapshot);
+        snapshotDao.update(commoditySnapshot);
     }
 
-    private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dailyCommoditySnapshotDao) throws SQLException {
+    private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao) {
         CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue);
-        dailyCommoditySnapshotDao.create(commoditySnapshot);
+        System.out.println(commoditySnapshot);
+        snapshotDao.create(commoditySnapshot);
     }
 
-    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommoditySnapshotValue commoditySnapshotValue, Dao<CommoditySnapshot, String> dao) throws SQLException {
-        QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
-        queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.
-                getCommodityAction().
-                getCommodity()).and().eq(COMMODITY_ACTIVITY_ID,
-                commoditySnapshotValue.
-                        getCommodityAction()
-        ).and().eq(PERIOD,
-                commoditySnapshotValue.
-                        getCommodityAction().
-                        getPeriod()
-        );
-        return dao.query(queryBuilder.prepare());
+    private List<CommoditySnapshot> getSnapshotsForCommodityPeriod(final CommoditySnapshotValue commoditySnapshotValue) {
+        return dbUtil.withDao(CommoditySnapshot.class, new DbUtil.Operation<CommoditySnapshot, List<CommoditySnapshot>>() {
+            @Override
+            public List<CommoditySnapshot> operate(Dao<CommoditySnapshot, String> dao) throws SQLException {
+                QueryBuilder<CommoditySnapshot, String> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().eq(COMMODITY_ID, commoditySnapshotValue.getCommodityAction().getCommodity())
+                        .and()
+                        .eq(COMMODITY_ACTIVITY_ID, commoditySnapshotValue.getCommodityAction())
+                        .and()
+                        .eq(PERIOD_DATE, commoditySnapshotValue.getPeriodDate());
+                return queryBuilder.query();
+            }
+        });
     }
 
     public List<CommoditySnapshot> getUnSyncedSnapshots() {

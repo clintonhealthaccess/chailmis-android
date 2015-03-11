@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.TimingLogger;
 
 import com.google.common.base.Function;
@@ -52,6 +53,7 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
@@ -65,6 +67,7 @@ import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
+import org.clintonhealthaccess.lmis.app.services.DataSetService;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
@@ -82,6 +85,7 @@ import static android.util.Log.e;
 import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet.generateCommodityActionDataSets;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
 public class Dhis2 implements LmisServer {
@@ -95,6 +99,9 @@ public class Dhis2 implements LmisServer {
 
     @Inject
     Context context;
+
+    @Inject
+    DataSetService dataSetService;
 
     @Inject
     CommodityActionService commodityActionService;
@@ -132,6 +139,8 @@ public class Dhis2 implements LmisServer {
         }
 
         System.out.println("{ \"dataElementGroupSets\": [ " + s + " ] }");
+
+
     }
 
     private List<DataElementGroupSet> getGroupSets(List<DataSet> dataSets) {
@@ -169,8 +178,7 @@ public class Dhis2 implements LmisServer {
         List<DataElement> dataElements = new ArrayList<>();
         for (DataSet ds : dataSets) {
             for (DataElement de : ds.getDataElements()) {
-                if (de.getDataElementGroups() != null
-                        && de.getDataElementGroups().size() > 0) {
+                if (de.getDataElementGroups() != null && de.getDataElementGroups().size() > 0) {
                     if (!dataElements.contains(de)
                             && de.getDataElementGroups().get(0).equals(group)) {
                         dataElements.add(de);
@@ -185,13 +193,18 @@ public class Dhis2 implements LmisServer {
     public List<Category> fetchCategories(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        DataSetSearchResponse datasets = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
         DataElementGroupSetSearchResponse response = service.getDataElementGroupSets("id,name, dataElementGroups[id,name, dataElements[name,id,attributeValues[value,attribute[id,name]]]");
         timingLogger.addSplit("fetch data");
         timingLogger.dumpToLog();
-        return getCategoriesFromDataElementGroupSets(
-                getAndroidDataElementGroupSets(response.getDataElementGroupSets()),
-                datasets.getDataSets());
+        List<DataSet> dataSets = fetchDataSets(user);
+        List<DataElementGroupSet> androidDataElementGroupSets = getAndroidDataElementGroupSets(response.getDataElementGroupSets());
+        return getCategoriesFromDataElementGroupSets(androidDataElementGroupSets, dataSets);
+    }
+
+    public List<DataSet> fetchDataSets(User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        DataSetSearchResponse datasets = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
+        return datasets.getDataSets();
     }
 
     private List<DataElementGroupSet> getAndroidDataElementGroupSets(List<DataElementGroupSet> sets) {
@@ -202,8 +215,6 @@ public class Dhis2 implements LmisServer {
             List<String> categoryNames = Arrays.asList("Essential Medicines",
                     "EM-Child Health", "EM-Maternal Health", "EM-Neonatal Health",
                     "Malaria", "Family Planning", "Vaccines");
-            //getCategoryNames(new BufferedReader(new FileReader("commodities.csv")));
-            System.out.println("Category names are " + categoryNames);
             for (DataElementGroupSet set : sets) {
                 if (categoryNames.contains(set.getName().trim())) {
                     androidGroupSets.add(set);
@@ -218,21 +229,14 @@ public class Dhis2 implements LmisServer {
     }
 
     private List<Category> getCategoriesFromDataElementGroupSets(List<DataElementGroupSet> dataElementGroupSets, List<DataSet> dataSets) {
+
         List<Category> categories = newArrayList();
 
         for (DataElementGroupSet groupSet : dataElementGroupSets) {
-            Category category = new Category();
-            category.setName(groupSet.getName());
-            category.setLmisId(groupSet.getId());
-
-            category.setCommodities(new ArrayList<Commodity>());
+            Category category = new Category(groupSet.getId(), groupSet.getName());
 
             for (DataElementGroup group : groupSet.getDataElementGroups()) {
-                Commodity commodity = new Commodity(group.getId(), group.getName());
-
-                commodity.setNonLGA(false);
-                commodity.setIsDevice(false);
-                commodity.setIsVaccine(false);
+                Commodity commodity = new Commodity(group.getId(), group.getName(), category, false, false, false);
 
                 if (group.getAttributeValues() != null && group.getAttributeValues().size() > 0) {
                     for (AttributeValue value : group.getAttributeValues()) {
@@ -248,21 +252,23 @@ public class Dhis2 implements LmisServer {
                         }
                     }
                 }
-                commodity.setCategory(category);
 
                 for (DataElement element : group.getDataElements()) {
                     if (element.getAttributeValues().size() > 0) {
                         AttributeValue attributeValue = element.getAttributeValues().get(0);
-                        String activityName = element.getName().substring(group.getName().length()).trim();
-                        if (!DataElementType.activityExists(activityName)) {
+
+                        if (!DataElementType.activityExists(attributeValue.getValue())) {
+                            Log.e("Missing Activity Name Error ", attributeValue.getValue());
                             continue;
                         }
 
-                        CommodityAction commodityAction = new CommodityAction(commodity, element.getId(), element.getName(), attributeValue.getValue());
+                        CommodityAction commodityAction = new CommodityAction(commodity,
+                                element.getId(), element.getName(), attributeValue.getValue());
 
-                        DataSet dataSet = getElementDataSet(dataSets, element.getId());
-                        if (dataSet != null) {
-                            commodityAction.setDataSet(new DataSet(dataSet.toRawDataSet()));
+                        List<DataSet> elementDataSets = getElementDataSets(dataSets, element.getId());
+                        if (elementDataSets != null) {
+                            commodityAction.addTransientCommodityActionDataSets(
+                                    generateCommodityActionDataSets(commodityAction, elementDataSets));
                             commodity.getCommodityActions().add(commodityAction);
                         } else {
                             e("Error Null Dataset", commodity.getName() + " " + commodityAction.getName());
@@ -270,23 +276,43 @@ public class Dhis2 implements LmisServer {
                     }
                 }
 
-                category.addCommodity(commodity);
+                category.addTransientCommodity(commodity);
             }
 
             categories.add(category);
         }
-        return categories;
-    }
 
-    private DataSet getElementDataSet(List<DataSet> dataSets, String elementId) {
-        for (DataSet dataSet : dataSets) {
-            for (DataElement dataElement : dataSet.getDataElements()) {
-                if (dataElement.getId().equalsIgnoreCase(elementId)) {
-                    return dataSet;
+        Log.e("CHECK", "Categories are " + categories.size() + " " + categories);
+        for (Category category : categories) {
+            Log.e("CHECK", category.getName() + " has " + category.getTransientCommodities().size() + " not saved commodity actions");
+
+            for (Commodity commodity : category.getTransientCommodities()) {
+                Log.e("CHECK", commodity.getName() + " has " + commodity.getCommodityActions().size() + " not saved commodity actions");
+
+                for (CommodityAction commodityAction : commodity.getCommodityActions()) {
+                    Log.e("CHECK", commodityAction.getName() + " has " + commodityAction.getTransientCommodityActionDataSets().size() + " not saved commodityActionDataSets");
+
+                    for (CommodityActionDataSet caDataSet : commodityAction.getTransientCommodityActionDataSets()) {
+                        if (!dataSets.contains(caDataSet.getDataSet())) {
+                            Log.e("CHECK", "Oooooooooooooops we are here");
+                        }
+                    }
                 }
             }
         }
-        return null;
+        return categories;
+    }
+
+    private List<DataSet> getElementDataSets(List<DataSet> dataSets, String elementId) {
+        List<DataSet> elementDataSets = new ArrayList<>();
+        for (DataSet dataSet : dataSets) {
+            for (DataElement dataElement : dataSet.getDataElements()) {
+                if (dataElement.getId().equalsIgnoreCase(elementId)) {
+                    elementDataSets.add(dataSet);
+                }
+            }
+        }
+        return elementDataSets;
     }
 
     private List<Category> getCategoriesFromDataSets(List<DataSet> dataSets) {
@@ -355,7 +381,7 @@ public class Dhis2 implements LmisServer {
                     category.setName(dataElementGroupSet.getName());
                     category.setLmisId(dataElementGroupSet.getId());
                     if (categories.contains(category)) {
-                        List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getNotSavedCommodities();
+                        List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getTransientCommodities();
                         updatedCommodities.add(commodity);
                         category.setCommodities(updatedCommodities);
                         int location = categories.indexOf(category);
@@ -370,15 +396,22 @@ public class Dhis2 implements LmisServer {
             }
             if (element.getAttributeValues().size() > 0) {
                 AttributeValue attributeValue = element.getAttributeValues().get(0);
-                CommodityAction commodityAction = new CommodityAction(actualCommodity, element.getId(), element.getName(), attributeValue.getValue());
-                if (element.getDataSets() != null && element.getDataSets().size() > 0) {
-                    commodityAction.setDataSet(new DataSet(element.getDataSets().get(0)));
-                }
+                CommodityAction commodityAction = new CommodityAction(actualCommodity,
+                        element.getId(), element.getName(), attributeValue.getValue());
+                //commodityAction.addTransientDataSets(convertDataSetsToLmisDataSets(element.getDataSets()));
+
                 actualCommodity.getCommodityActions().add(commodityAction);
             }
         }
 
+    }
 
+    private List<DataSet> convertDataSetsToLmisDataSets(List<com.thoughtworks.dhis.models.DataSet> dataSets) {
+        List<DataSet> lmisDataSets = new ArrayList<>();
+        for (com.thoughtworks.dhis.models.DataSet d : dataSets) {
+            lmisDataSets.add(new DataSet(d));
+        }
+        return lmisDataSets;
     }
 
     @Override
@@ -409,13 +442,14 @@ public class Dhis2 implements LmisServer {
 
 
     @Override
-    public List<CommodityActionValue> fetchCommodityActionValues(List<Commodity> commodities, User user) {
+    public List<CommodityActionValue> fetchCommodityActionValues(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
-            String dataSet2 = getDataSetId(commodities, DataElementType.AMC.getActivity());
-            String dataSetId = getDataSetId(commodities, DataElementType.STOCK_ON_HAND.getActivity());
-            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today(), dataSet2);
+            String dataSet2 = getDataSetId(DataSet.CALCULATED);
+            String dataSetId = getDataSetId(DataSet.DEFAULT);
+            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(),
+                    threeMonthsAgo(), today(), dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
@@ -423,12 +457,13 @@ public class Dhis2 implements LmisServer {
     }
 
     @Override
-    public List<CommodityActionValue> fetchAllocations(final List<Commodity> commodities, User user) {
+    public List<CommodityActionValue> fetchAllocations(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
-            String dataSetId = getDataSetId(commodities, DataElementType.ALLOCATED.getActivity());
-            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today());
+            String dataSetId = getDataSetId(DataSet.ALLOCATED);
+            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(),
+                    threeMonthsAgo(), today());
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
@@ -442,17 +477,14 @@ public class Dhis2 implements LmisServer {
         }).toList();
     }
 
-    private String getDataSetId(List<Commodity> commodities, String activityType) {
-        CommodityAction commodityAction = getAllocatedCommodityAction(commodities, activityType);
-        if (commodityAction != null) {
-            return commodityAction.getDataSet().getId();
-        } else {
-            return "";
+    private String getDataSetId(String dataSetName) {
+        List<DataSet> dataSets = dataSetService.all();
+        for (DataSet dataSet : dataSets) {
+            if (dataSet.getName().contains(dataSetName)) {
+                return dataSet.getId();
+            }
         }
-    }
-
-    private CommodityAction getAllocatedCommodityAction(List<Commodity> commodities, String activityType) {
-        return commodities.get(0).getCommodityAction(activityType);
+        return "";
     }
 
     private String threeMonthsAgo() {

@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.util.Log;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
@@ -65,22 +67,27 @@ public class UserService {
     public User register(final String username, final String password) {
         UserProfile profile = lmisServer.validateLogin(new User(username, password));
 
-        User user = saveUserToDatabase(username, password);
+        User user = new User(username, password);
         if (profile.getOrganisationUnits().size() > 0) {
             user.setFacilityCode(profile.getOrganisationUnits().get(0).getId());
             user.setFacilityName(profile.getOrganisationUnits().get(0).getName());
-            updateUser(user);
+            //updateUser(user);
+        } else {
+            user.setFacilityCode("BLANK");
+            user.setFacilityName("BLANK");
+            Log.e("Error", "No organisations found for " + username);
         }
+
+        saveUserToDatabase(user);
 
         syncManager.createSyncAccount(user);
         return user;
     }
 
-    public User saveUserToDatabase(final String username, final String password) {
+    public User saveUserToDatabase(final User user) {
         return dbUtil.withDao(User.class, new Operation<User, User>() {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
-                User user = new User(username, password, "KB");
                 dao.create(user);
                 return user;
             }

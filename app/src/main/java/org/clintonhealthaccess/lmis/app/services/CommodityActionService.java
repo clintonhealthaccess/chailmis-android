@@ -94,8 +94,9 @@ public class CommodityActionService {
         }
     }
 
-    public void syncCommodityActionValues(User user, List<Commodity> commodities) {
-        List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(commodities, user);
+    public void syncCommodityActionValues(User user) {
+        List<CommodityActionValue> commodityActionValues = lmisServer.fetchCommodityActionValues(user);
+        System.out.println();
         saveActionValues(commodityActionValues);
     }
 

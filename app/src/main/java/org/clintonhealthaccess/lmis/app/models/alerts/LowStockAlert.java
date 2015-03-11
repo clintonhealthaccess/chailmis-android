@@ -39,8 +39,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 @DatabaseTable
 public class LowStockAlert {
 
@@ -67,5 +65,25 @@ public class LowStockAlert {
 
     public LowStockAlert() {
         //Orm likes this
+    }
+
+    public Commodity getCommodity(){
+        return commodity;
+    }
+
+    public Date getDateCreated(){
+        return dateCreated;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public void setDateDisabled(Date dateDisabled) {
+        this.dateDisabled = dateDisabled;
     }
 }

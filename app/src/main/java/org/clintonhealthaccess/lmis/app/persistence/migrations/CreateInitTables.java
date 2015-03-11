@@ -40,6 +40,7 @@ import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
@@ -98,6 +99,7 @@ public class CreateInitTables implements Migration {
             createTableIfNotExists(connectionSource, Adjustment.class);
             createTableIfNotExists(connectionSource, MonthlyStockCountAlert.class);
             createTableIfNotExists(connectionSource, StockItemSnapshot.class);
+            createTableIfNotExists(connectionSource, CommodityActionDataSet.class);
         } catch (SQLException e) {
             throw new LmisException(e);
         }

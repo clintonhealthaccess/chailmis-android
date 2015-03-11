@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -88,16 +89,25 @@ public class ReceiveService {
     }
 
     public void saveReceive(Receive receive) {
-        GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
-        receiveDao.create(receive);
-        if (receive.getAllocation() != null) {
-            Allocation allocation = receive.getAllocation();
-            allocation.setReceived(true);
-            allocationService.update(allocation);
+        try {
+            GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
+            receiveDao.create(receive);
+            if (receive.getAllocation() != null) {
+                if (!receive.getAllocation().isDummy()) {
+                    Allocation allocation = receive.getAllocation();
+                    allocation.setReceived(true);
+                    allocationService.update(allocation);
 
-            alertsService.deleteAllocationAlert(allocation);
+                    alertsService.deleteAllocationAlert(allocation);
+                } else {
+                    allocationService.createAllocation(receive.getAllocation());
+                }
+            }
+            saveReceiveItems(receive.getReceiveItems());
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
+            e.printStackTrace();
         }
-        saveReceiveItems(receive.getReceiveItems());
     }
 
     private void saveReceiveItems(List<ReceiveItem> receiveItems) {

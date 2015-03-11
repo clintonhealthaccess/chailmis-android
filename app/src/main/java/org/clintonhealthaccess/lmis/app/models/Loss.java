@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
+import com.google.common.collect.ImmutableList;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -45,9 +46,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import static com.google.common.collect.Lists.newArrayList;
+
 @ToString
-@Getter
-@Setter
 @DatabaseTable(tableName = "losses")
 public class Loss implements Serializable {
 
@@ -62,16 +63,31 @@ public class Loss implements Serializable {
 
     private List<LossItem> lossItems = new ArrayList<>();
 
-    public Loss(){
+    public Loss() {
         this(new Date());
     }
 
-    public Loss(Date date){
+    public Loss(Date date) {
         this.created = date;
     }
 
     public void addLossItem(LossItem lossItem) {
         lossItem.setLoss(this);
         lossItems.add(lossItem);
+    }
+
+    public List<LossItem> getLossItems() {
+        return lossItems;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public List<LossItem> getLossItemsCollection() {
+        if (lossItemsCollection == null) {
+            return newArrayList();
+        }
+        return ImmutableList.copyOf(lossItemsCollection);
     }
 }
