@@ -74,10 +74,18 @@ public class DispensingService {
         saveDispensingItems(dispensing.getDispensingItems());
     }
 
-    private void saveDispensingItems(List<DispensingItem> dispensingItems) {
+    private void saveDispensingItems(final List<DispensingItem> dispensingItems) {
         GenericDao<DispensingItem> dao = new GenericDao<>(DispensingItem.class, context);
+        dao.bulkOperation(new DbUtil.Operation<DispensingItem, Object>() {
+            @Override
+            public Object operate(Dao<DispensingItem, String> dao) throws SQLException {
+                for(DispensingItem dispensingItem : dispensingItems){
+                    dao.create(dispensingItem);
+                }
+                return null;
+            }
+        });
         for (DispensingItem dispensingItem : dispensingItems) {
-            dao.create(dispensingItem);
             adjustStockLevel(dispensingItem);
             commoditySnapshotService.add(dispensingItem);
         }
