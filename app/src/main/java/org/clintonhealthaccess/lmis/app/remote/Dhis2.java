@@ -130,6 +130,10 @@ public class Dhis2 implements LmisServer {
         timingLogger.dumpToLog();
         List<DataElementGroupSet> dataElementGroupSets = getGroupSets(response.getDataSets());
 
+        writeDataElementGroupSets(dataElementGroupSets);
+    }
+
+    private void writeDataElementGroupSets(List<DataElementGroupSet> dataElementGroupSets) {
         String s = "";
         for (DataElementGroupSet t : dataElementGroupSets) {
             if (!s.isEmpty()) {
@@ -137,10 +141,7 @@ public class Dhis2 implements LmisServer {
             }
             s += "{" + t.jsonString() + "}";
         }
-
         System.out.println("{ \"dataElementGroupSets\": [ " + s + " ] }");
-
-
     }
 
     private List<DataElementGroupSet> getGroupSets(List<DataSet> dataSets) {
@@ -193,12 +194,15 @@ public class Dhis2 implements LmisServer {
     public List<Category> fetchCategories(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        DataElementGroupSetSearchResponse response = service.getDataElementGroupSets("id,name, dataElementGroups[id,name, dataElements[name,id,attributeValues[value,attribute[id,name]]]");
+        DataElementGroupSetSearchResponse response = service.getDataElementGroupSets("id,name, dataElementGroups[id,name, attributeValues[value,attribute[id,name]], dataElements[name,id,attributeValues[value,attribute[id,name]]]");
         timingLogger.addSplit("fetch data");
         timingLogger.dumpToLog();
         List<DataSet> dataSets = fetchDataSets(user);
         List<DataElementGroupSet> androidDataElementGroupSets = getAndroidDataElementGroupSets(response.getDataElementGroupSets());
-        return getCategoriesFromDataElementGroupSets(androidDataElementGroupSets, dataSets);
+
+        List<Category> categories = getCategoriesFromDataElementGroupSets(androidDataElementGroupSets, dataSets);
+
+        return categories;
     }
 
     public List<DataSet> fetchDataSets(User user) {
@@ -280,25 +284,6 @@ public class Dhis2 implements LmisServer {
             }
 
             categories.add(category);
-        }
-
-        Log.e("CHECK", "Categories are " + categories.size() + " " + categories);
-        for (Category category : categories) {
-            Log.e("CHECK", category.getName() + " has " + category.getTransientCommodities().size() + " not saved commodity actions");
-
-            for (Commodity commodity : category.getTransientCommodities()) {
-                Log.e("CHECK", commodity.getName() + " has " + commodity.getCommodityActions().size() + " not saved commodity actions");
-
-                for (CommodityAction commodityAction : commodity.getCommodityActions()) {
-                    Log.e("CHECK", commodityAction.getName() + " has " + commodityAction.getTransientCommodityActionDataSets().size() + " not saved commodityActionDataSets");
-
-                    for (CommodityActionDataSet caDataSet : commodityAction.getTransientCommodityActionDataSets()) {
-                        if (!dataSets.contains(caDataSet.getDataSet())) {
-                            Log.e("CHECK", "Oooooooooooooops we are here");
-                        }
-                    }
-                }
-            }
         }
         return categories;
     }
@@ -440,7 +425,6 @@ public class Dhis2 implements LmisServer {
         return types;
     }
 
-
     @Override
     public List<CommodityActionValue> fetchCommodityActionValues(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
@@ -448,8 +432,10 @@ public class Dhis2 implements LmisServer {
         try {
             String dataSet2 = getDataSetId(DataSet.CALCULATED);
             String dataSetId = getDataSetId(DataSet.DEFAULT);
-            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(),
-                    threeMonthsAgo(), today(), dataSet2);
+            String threeMonthsAgo = threeMonthsAgo();
+            String today = today();
+            valueSet = service.fetchDataValuesEx("", user.getFacilityCode(),
+                    threeMonthsAgo, today, dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }

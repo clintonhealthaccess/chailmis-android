@@ -54,7 +54,7 @@ public class AllocationAlert implements NotificationMessage {
     @DatabaseField(canBeNull = true, columnName = DATE_CREATED)
     private Date dateCreated;
 
-    @DatabaseField(canBeNull = false, foreignAutoRefresh = true, foreign = true,columnName = ALLOCATION_ID_COLUMN)
+    @DatabaseField(canBeNull = false, foreignAutoRefresh = true, foreign = true, columnName = ALLOCATION_ID_COLUMN)
     private Allocation allocation;
 
     public AllocationAlert() {
@@ -68,20 +68,7 @@ public class AllocationAlert implements NotificationMessage {
 
     @Override
     public String getMessage() {
-        String month = getPeriodAsMonthName();
-        return "New Allocation for " + month;
-    }
-
-    private String getPeriodAsMonthName() {
-        SimpleDateFormat periodDateFormat = new SimpleDateFormat("yyyyMM");
-        SimpleDateFormat monthDateFormat = new SimpleDateFormat("MMMM");
-        String month = "";
-        try {
-            month = monthDateFormat.format(periodDateFormat.parse(allocation.getPeriod()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return month;
+        return "New Allocation " + allocation.getAllocationId() + " created on " + allocation.getPeriod();
     }
 
     @Override

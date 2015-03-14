@@ -139,7 +139,7 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public int getSuggestedAmount() {
-        int suggestedAmount = getCommodity().getMaximuThreshold() - getStockOnHand();
+        int suggestedAmount = getCommodity().getMaximumThreshold() - getStockOnHand();
         return suggestedAmount < 0 ? 0 : suggestedAmount;
     }
 }

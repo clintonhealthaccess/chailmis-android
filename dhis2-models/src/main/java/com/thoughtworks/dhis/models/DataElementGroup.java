@@ -88,23 +88,37 @@ public class DataElementGroup {
 
     public String jsonString() {
         return "\"id\": \'" + id + "\', \"name\": \'" + name + "\', " +
+                "\"attributeValues\": [" + attributeValuesJsonString() + "]," +
                 "\"dataElements\": [" + dataElementsJsonString() + "]";
+    }
+
+    private String attributeValuesJsonString() {
+        String s = "";
+        if (attributeValues != null) {
+            for (AttributeValue t : attributeValues) {
+                if (!s.equalsIgnoreCase("")) {
+                    s += ",";
+                }
+                s += "{" + t.jsonString() + "}";
+            }
+        }
+        return s;
     }
 
     private String dataElementsJsonString() {
         String s = "";
-        for(DataElement e: dataElements){
-            if(!s.equalsIgnoreCase("")){
-                s+=",";
+        for (DataElement e : dataElements) {
+            if (!s.equalsIgnoreCase("")) {
+                s += ",";
             }
-            s+="{" +e.jsonString()+"}";
+            s += "{" + e.jsonString() + "}";
         }
         return s;
     }
 
     @Override
     public String toString() {
-        return name + "  " + id +"  "+
+        return name + "  " + id + "  " +
                 (dataElements != null ? dataElements.size() : "NO") + " Elements";
     }
 }

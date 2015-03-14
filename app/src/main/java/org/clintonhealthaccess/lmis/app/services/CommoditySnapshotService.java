@@ -85,7 +85,6 @@ public class CommoditySnapshotService {
 
         GenericDao<CommoditySnapshot> snapshotDao = new GenericDao<>(CommoditySnapshot.class, context);
 
-        System.out.println(commoditySnapshotValues.size() + " values created - " + commoditySnapshotValues);
         for (CommoditySnapshotValue value : commoditySnapshotValues) {
             List<CommoditySnapshot> commoditySnapshots = getSnapshotsForCommodityPeriod(value);
             if (commoditySnapshots.isEmpty()) {
@@ -105,7 +104,6 @@ public class CommoditySnapshotService {
 
     private void createNewSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao) {
         CommoditySnapshot commoditySnapshot = new CommoditySnapshot(commoditySnapshotValue);
-        System.out.println(commoditySnapshot);
         snapshotDao.create(commoditySnapshot);
     }
 

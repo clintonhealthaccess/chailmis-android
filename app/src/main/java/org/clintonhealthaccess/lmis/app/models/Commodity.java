@@ -45,10 +45,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import static com.google.common.collect.ImmutableList.copyOf;
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -191,7 +187,7 @@ public class Commodity implements Serializable {
         return getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
     }
 
-    public int getMaximuThreshold() {
+    public int getMaximumThreshold() {
         return getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
     }
 
@@ -210,7 +206,7 @@ public class Commodity implements Serializable {
     }
 
     public int calculateEmergencyPrepopulatedQuantity() {
-        int max = getMaximuThreshold();
+        int max = getMaximumThreshold();
         return max - getStockOnHand();
     }
 

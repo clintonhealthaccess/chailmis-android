@@ -54,12 +54,8 @@ import org.clintonhealthaccess.lmis.app.services.UserService;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowDialog;
 import org.robolectric.shadows.ShadowHandler;
@@ -185,7 +181,7 @@ public class OrderActivityTest {
         when(commodity.getName()).thenReturn("Commodity 1");
         when(commodity.getId()).thenReturn("id");
         when(commodity.getStockOnHand()).thenReturn(10);
-        when(commodity.getMaximuThreshold()).thenReturn(30);
+        when(commodity.getMaximumThreshold()).thenReturn(30);
         OrderCommodityViewModel viewModel = spy(new OrderCommodityViewModel(commodity, 10));
         viewModel.setOrderPeriodEndDate(new Date());
         viewModel.setOrderPeriodStartDate(new Date());
@@ -341,12 +337,12 @@ public class OrderActivityTest {
         when(commodity.getName()).thenReturn("Commodity 1");
         when(commodity.getId()).thenReturn("id");
         when(commodity.getStockOnHand()).thenReturn(10);
-        when(commodity.getMaximuThreshold()).thenReturn(30);
+        when(commodity.getMaximumThreshold()).thenReturn(30);
         OrderCommodityViewModel viewModel = spy(new OrderCommodityViewModel(commodity, 10));
 
         ArrayList<OrderCommodityViewModel> orderCommodityViewModels = new ArrayList<>();
         when(viewModel.getCommodity().getStockOnHand()).thenReturn(20);
-        when(viewModel.getCommodity().getMaximuThreshold()).thenReturn(30);
+        when(viewModel.getCommodity().getMaximumThreshold()).thenReturn(30);
         orderCommodityViewModels.add(viewModel);
         when(alertsService.getOrderCommodityViewModelsForLowStockAlert()).thenReturn(orderCommodityViewModels);
         intent.putExtra(AlertClickListener.ORDER_TYPE, OrderType.EMERGENCY);

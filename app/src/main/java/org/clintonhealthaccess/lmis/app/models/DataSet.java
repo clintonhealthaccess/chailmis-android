@@ -74,11 +74,12 @@ public class DataSet implements Serializable {
         //ormLite likes
     }
 
-    public DataSet(String id, String name, String periodType){
+    public DataSet(String id, String name, String periodType) {
         this.id = id;
         this.name = name;
         this.periodType = periodType;
     }
+
     public DataSet(com.thoughtworks.dhis.models.DataSet rawDataSet) {
         id = rawDataSet.getId();
         name = rawDataSet.getName();
@@ -134,5 +135,11 @@ public class DataSet implements Serializable {
 
     public String getPeriodType() {
         return periodType;
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + periodType + " " + id + " " +
+                (dataElements != null ? dataElements.size() : "0") + "dataElements";
     }
 }
