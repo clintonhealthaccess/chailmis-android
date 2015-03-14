@@ -49,7 +49,6 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -187,7 +186,7 @@ public class ReceiveActivityTest {
         receiveActivity.textViewAllocationId.clearFocus();
         assertThat(receiveActivity.textViewAllocationId.getError().toString(),
                 is(String.format(application.getString(R.string.error_allocation_id_wrong_format),
-                        receiveActivity.ALLOCATION_ID_FORMAT))
+                        receiveActivity.getAllocationIdFormat()))
         );
         receiveActivity.textViewAllocationId.setText("TW-12032");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
@@ -285,7 +284,7 @@ public class ReceiveActivityTest {
         assertThat(error, notNullValue());
         assertThat(error.toString(), is(String.format(
                 application.getString(R.string.error_allocation_id_wrong_format),
-                receiveActivity.ALLOCATION_ID_FORMAT)));
+                receiveActivity.getAllocationIdFormat())));
     }
 
     private void setSource(ReceiveActivity receiveActivity, String string) {

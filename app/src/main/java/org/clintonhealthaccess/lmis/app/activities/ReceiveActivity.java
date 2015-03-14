@@ -56,9 +56,7 @@ import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
-import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
-import org.clintonhealthaccess.lmis.app.validators.AllocationIdValidator;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.io.Serializable;
@@ -75,7 +73,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class ReceiveActivity extends CommoditySelectableActivity implements Serializable {
     public static final String ALLOCATION_ID = "ALLOCATION_ID";
-    public String ALLOCATION_ID_FORMAT = facility2LetterCode + "-0000";
 
     @InjectView(R.id.buttonSubmitReceive)
     Button buttonSubmitReceive;
@@ -128,12 +125,12 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
             @Override
             public String getMessage() {
-                return "Can't Be Received from " + spinnerSource.getSelectedItem().toString();
+                return String.format("Can't Be Received from %s", spinnerSource.getSelectedItem().toString());
             }
 
             @Override
             public String getEmptyMessage() {
-                return "Commodities in this category can not be received from " + spinnerSource.getSelectedItem().toString();
+                return String.format("Commodities in this category can not be received from %s", spinnerSource.getSelectedItem().toString());
             }
 
             @Override
@@ -340,7 +337,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     private void validateAllocationId(String text) {
         if (!allocationIdIsValid(text)) {
             textViewAllocationId.setError(String.format(
-                    getString(R.string.error_allocation_id_wrong_format), ALLOCATION_ID_FORMAT));
+                    getString(R.string.error_allocation_id_wrong_format), getAllocationIdFormat()));
         }else{
             if (completedAllocationIds.contains(text)) {
                 textViewAllocationId.setError(getString(R.string.error_allocation_received));
@@ -348,6 +345,10 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                 textViewAllocationId.setError(null);
             }
         }
+    }
+
+    protected String getAllocationIdFormat() {
+        return facility2LetterCode + "-0000";
     }
 
     private boolean allocationIdIsValid(String text) {
