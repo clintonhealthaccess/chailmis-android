@@ -3863,6 +3863,29 @@
         {
           "id": 'b0c7862e2a6',
           "name": 'Chlorhexidine gel_Gel',
+          "attributeValues": [
+            {
+              "value": '1',
+              "attribute": {
+                "id": 'aa',
+                "name": 'Is Vaccine'
+              }
+            },
+            {
+              "value": '1',
+              "attribute": {
+                "id": 'aaa',
+                "name": 'Is Device'
+              }
+            },
+            {
+              "value": '1',
+              "attribute": {
+                "id": 'aaa',
+                "name": 'Non LGA'
+              }
+            }
+          ],
           "dataElements": [
             {
               "id": '5f46fdc2952',

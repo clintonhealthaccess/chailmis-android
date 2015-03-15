@@ -95,7 +95,6 @@ public class DataSet implements Serializable {
     }
 
     public String getPeriod(Date date) {
-        System.out.println("Period Type is " + getPeriodType());
         OrderCycle cycle = Helpers.getOrderCycle(getPeriodType());
         return cycle.getPeriod(date);
     }

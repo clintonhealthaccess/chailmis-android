@@ -39,6 +39,7 @@ import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -85,7 +86,6 @@ public class TestInjectionUtil {
     public static void setUpInjectionWithMockLmisServer(Context context, Object testCase, Module anotherMockedModule) throws IOException {
         final LmisServer mockLmisServer = mock(LmisServer.class);
         List<Category> categories = defaultCategories(context);
-        //when(mockLmisServer.fetchCommodities((User) anyObject())).thenReturn(categories);
         when(mockLmisServer.fetchCategories((User) anyObject())).thenReturn(categories);
         when(mockLmisServer.fetchCommodityActionValues((User) anyObject())).thenReturn(testActionValues(context));
         when(mockLmisServer.pushDataValueSet((DataValueSet) anyObject(), (User) anyObject())).thenReturn(fakePushDataValuesResponse());

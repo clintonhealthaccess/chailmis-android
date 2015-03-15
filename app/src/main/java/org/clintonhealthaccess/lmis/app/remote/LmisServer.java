@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.remote;
 
+import com.thoughtworks.dhis.models.DataElement;
 import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -43,8 +44,6 @@ import java.util.List;
 
 public interface LmisServer {
     UserProfile validateLogin(User user);
-
-    List<Category> fetchCommodities(User user);
 
     List<Category> fetchCategories(User user);
 

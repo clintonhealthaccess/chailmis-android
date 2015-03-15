@@ -1,19 +1,19 @@
 {"dataValues": [
     {
-        "dataElement": "4f240b84059",
-        "period": "201408",
+        "dataElement": "06287561c3d",
+        "period": "20140801",
         "orgUnit": "vedz26dIE5B",
         "categoryOptionCombo": "F002IkfRnHN",
         "attributeOptionCombo": "F002IkfRnHN",
-        "value": "12345",
+        "value": "123",
         "storedBy": "admin",
         "created": "2014-09-23T00:00:00",
         "lastUpdated": "2014-09-23T00:00:00",
         "followUp": false
     },
     {
-        "dataElement": "eed5a76b9ed",
-        "period": "201408",
+        "dataElement": "0160b32c40c",
+        "period": "20140801",
         "orgUnit": "vedz26dIE5B",
         "categoryOptionCombo": "F002IkfRnHN",
         "attributeOptionCombo": "F002IkfRnHN",
@@ -24,18 +24,30 @@
         "followUp": false
     },
     {
-        "dataElement":"3a9687e68db",
-        "period":"201408",
+        "dataElement":"fe8914a6fb0",
+        "period":"20140801",
         "orgUnit":"vedz26dIE5B",
         "categoryOptionCombo":"F002IkfRnHN",
         "attributeOptionCombo":"F002IkfRnHN",
-        "value":"2014-09-25",
+        "value":"20",
         "storedBy":"admin",
         "followUp":false
     },
     {
-        "dataElement": "4f240b84059",
-        "period": "201407",
+        "dataElement": "allocation1",
+        "period": "20140801",
+        "orgUnit": "vedz26dIE5B",
+        "categoryOptionCombo": "F002IkfRnHN",
+        "attributeOptionCombo": "F002IkfRnHN",
+        "value": "TW-0001",
+        "storedBy": "admin",
+        "created": "2014-09-23T00:00:00",
+        "lastUpdated": "2014-09-23T00:00:00",
+        "followUp": false
+    },
+    {
+        "dataElement": "7135c498948",
+        "period": "20140701",
         "orgUnit": "vedz26dIE5B",
         "categoryOptionCombo": "F002IkfRnHN",
         "attributeOptionCombo": "F002IkfRnHN",
@@ -46,12 +58,24 @@
         "followUp": false
     },
     {
-        "dataElement": "eed5a76b9ed",
-        "period": "201407",
+        "dataElement": "524bd05fccc",
+        "period": "20140701",
         "orgUnit": "vedz26dIE5B",
         "categoryOptionCombo": "F002IkfRnHN",
         "attributeOptionCombo": "F002IkfRnHN",
         "value": "44",
+        "storedBy": "admin",
+        "created": "2014-09-23T00:00:00",
+        "lastUpdated": "2014-09-23T00:00:00",
+        "followUp": false
+    },
+    {
+        "dataElement": "allocation1",
+        "period": "20140701",
+        "orgUnit": "vedz26dIE5B",
+        "categoryOptionCombo": "F002IkfRnHN",
+        "attributeOptionCombo": "F002IkfRnHN",
+        "value": "TW-0002",
         "storedBy": "admin",
         "created": "2014-09-23T00:00:00",
         "lastUpdated": "2014-09-23T00:00:00",

@@ -29,8 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
-import android.app.Application;
-
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.thoughtworks.dhis.models.DataElementType;
@@ -38,8 +36,6 @@ import com.thoughtworks.dhis.models.DataElementType;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
@@ -49,7 +45,6 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;

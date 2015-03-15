@@ -63,7 +63,6 @@ public interface Dhis2Endpoint {
     @GET("/api/dataElements/{id}")
     DataElement getDataElement(@Path("id") String id);
 
-
     @GET("/api/dataElementGroupSets/{id}")
     DataElementGroupSet getDataElementGroupSet(@Path("id") String id);
 

@@ -92,6 +92,7 @@ public class CommodityServiceTest {
     private ReceiveService receiveService;
 
     private CommodityService spyedCommodityService;
+
     private CommodityActionService commodityActionService;
     @Inject
     private DbUtil dbUtil;

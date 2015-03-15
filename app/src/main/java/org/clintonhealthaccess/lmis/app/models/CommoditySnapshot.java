@@ -118,7 +118,6 @@ public class CommoditySnapshot {
 
     public List<DataValue> toDataValues(String orgUnit) {
         List<DataValue> dataValues = new ArrayList<>();
-        System.out.println(commodityAction.getName()+" has "+commodityAction.getCommodityActionDataSets().size());
         for (CommodityActionDataSet commodityActionDataSet : commodityAction.getCommodityActionDataSets()) {
             dataValues.add(toDataValue(orgUnit, commodityActionDataSet.getDataSet()));
         }

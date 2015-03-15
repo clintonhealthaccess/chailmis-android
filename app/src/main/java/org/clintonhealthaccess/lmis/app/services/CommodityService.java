@@ -117,13 +117,18 @@ public class CommodityService {
     public void initialise(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "initialise");
         List<Category> categories = lmisServer.fetchCategories(user);
-        System.out.println(categories.size() + " categories found");
         timingLogger.addSplit("fetch all cats");
 
         saveToDatabase(categories);
         timingLogger.addSplit("save all Cats");
 
         categoryService.clearCache();
+        List<CommodityAction> allocationId = commodityActionService.getAllocationId();
+        if (allocationId != null && allocationId.size() > 0) {
+            Log.e("AllocationId Found", allocationId.get(0).toString());
+        } else {
+            Log.e("AllocationId", "Not found");
+        }
         syncConstants(user);
         timingLogger.addSplit("sync constants");
 
@@ -240,7 +245,7 @@ public class CommodityService {
         });
     }
 
-    private void createCommodityAction(Commodity commodity, boolean datasetsSaved) {
+    private void createCommodityAction(Commodity commodity, boolean dataSetsSaved) {
 
         GenericDao<DataSet> dataSetDao = new GenericDao<>(DataSet.class, context);
         GenericDao<CommodityAction> commodityActivityDao = new GenericDao<>(CommodityAction.class, context);
@@ -262,7 +267,7 @@ public class CommodityService {
             actions.add(commodityAction);
         }
 
-        if (!datasetsSaved) {
+        if (!dataSetsSaved) {
             for (CommodityActionDataSet caDataSet : commodityActionDataSets) {
                 if (!dataSets.contains(caDataSet.getDataSet())) {
                     dataSets.add(caDataSet.getDataSet());

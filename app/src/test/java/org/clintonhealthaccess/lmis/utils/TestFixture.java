@@ -34,6 +34,7 @@ import android.content.Context;
 import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 
+import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
@@ -75,4 +76,10 @@ public class TestFixture {
         }
         return defaultCommodities;
     }
+
+//    public static List<Allocation> getDefaultAllocations(Context context) throws IOException {
+//        InputStream src = context.getAssets().open("default_commodities.json");
+//        String defaultCommoditiesAsJson = CharStreams.toString(new InputStreamReader(src));
+//        return asList(new Gson().fromJson(defaultCommoditiesAsJson, Category[].class));
+//    }
 }

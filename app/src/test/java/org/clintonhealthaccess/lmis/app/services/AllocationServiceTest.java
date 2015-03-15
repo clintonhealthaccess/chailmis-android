@@ -31,15 +31,19 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -49,8 +53,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.thoughtworks.dhis.models.DataElementType.ALLOCATION_ID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
@@ -75,7 +81,12 @@ public class AllocationServiceTest extends LMISTestCase {
 
     @Inject
     private AllocationService allocationService;
+    @Inject
+    private CommodityActionService commodityActionService;
+
     private GenericDao<Allocation> allocationDao;
+
+    private GenericDao<CommodityAction> commodityActionDao;
 
     @Before
     public void setUp() throws Exception {
@@ -85,6 +96,7 @@ public class AllocationServiceTest extends LMISTestCase {
             }
         });
         allocationDao = new GenericDao<>(Allocation.class, Robolectric.application);
+        commodityActionDao = new GenericDao<>(CommodityAction.class, Robolectric.application);
         AllocationService.clearCache();
     }
 
@@ -137,12 +149,12 @@ public class AllocationServiceTest extends LMISTestCase {
         assertThat(allocationDao.countOf(), is(2l));
         List<Allocation> allocations = allocationDao.queryForAll();
         Allocation firstAllocation = allocations.get(0);
-        assertThat(firstAllocation.getAllocationId(), is("12345"));
+        assertThat(firstAllocation.getAllocationId(), is("TW-0001"));
 
         List<AllocationItem> allocationItems = firstAllocation.getAllocationItems();
-        assertThat(allocationItems.size(), is(1));
-        assertThat(allocationItems.get(0).getCommodity().getName(), is("Albendazole_200mg tablet "));
-        assertThat(allocationItems.get(0).getQuantity(), is(10));
+        assertThat(allocationItems.size(), is(3));
+        assertThat(allocationItems.get(0).getCommodity().getName(), is("Cotrimoxazole_suspension"));
+        assertThat(allocationItems.get(0).getQuantity(), is(123));
     }
 
     @Test
@@ -172,10 +184,12 @@ public class AllocationServiceTest extends LMISTestCase {
         User user = new User("test", "pass");
         user.setFacilityCode(orgUnit);
 
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
 
-        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        commodityService.saveToDatabase(dhis2.fetchCategories(user));
         categoryService.clearCache();
+
         return user;
     }
 
@@ -189,7 +203,6 @@ public class AllocationServiceTest extends LMISTestCase {
 
         verify(dbUtil, atLeast(1)).withDao(eq(Allocation.class), any(DbUtil.Operation.class));
     }
-
 
     @Test
     public void shouldGetAndCacheAllocationsByRecieved() throws Exception {

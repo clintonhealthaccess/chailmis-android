@@ -53,7 +53,6 @@ import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
-import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
@@ -85,6 +84,8 @@ import static android.util.Log.e;
 import static android.util.Log.i;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
+import static com.thoughtworks.dhis.models.DataElementType.ALLOCATED;
+import static com.thoughtworks.dhis.models.DataElementType.ALLOCATION_ID;
 import static org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet.generateCommodityActionDataSets;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
@@ -110,16 +111,6 @@ public class Dhis2 implements LmisServer {
     public UserProfile validateLogin(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         return service.validateLogin();
-    }
-
-    @Override
-    public List<Category> fetchCommodities(User user) {
-        TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
-        DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
-        timingLogger.addSplit("fetch data");
-        timingLogger.dumpToLog();
-        return getCategoriesFromDataSets(response.getDataSets());
     }
 
     public void writeJson(User user) throws JSONException {
@@ -199,7 +190,7 @@ public class Dhis2 implements LmisServer {
         timingLogger.dumpToLog();
         List<DataSet> dataSets = fetchDataSets(user);
         List<DataElementGroupSet> androidDataElementGroupSets = getAndroidDataElementGroupSets(response.getDataElementGroupSets());
-
+        //fetchAllocationIDDataElement(user);
         List<Category> categories = getCategoriesFromDataElementGroupSets(androidDataElementGroupSets, dataSets);
 
         return categories;
@@ -225,7 +216,6 @@ public class Dhis2 implements LmisServer {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Error " + e.getMessage());
             e("Error", e.getMessage());
         }
 
@@ -300,105 +290,6 @@ public class Dhis2 implements LmisServer {
         return elementDataSets;
     }
 
-    private List<Category> getCategoriesFromDataSets(List<DataSet> dataSets) {
-        List<Category> categories = newArrayList();
-        List<Commodity> commodities = newArrayList();
-        List<DataElement> elements = newArrayList();
-
-        for (DataSet dataSet : dataSets) {
-            i(SYNC, String.format("DataSet: %s", dataSet.getName()));
-            if (dataSet.getDataElements() != null) {
-                for (DataElement elm : dataSet.getDataElements()) {
-                    elm.setDataSets(newArrayList(dataSet.toRawDataSet()));
-                    elements.add(elm);
-                }
-            }
-        }
-
-        for (DataElement element : elements) {
-            i(SYNC, String.format("DatElement: %s", element.getName()));
-            getOrCreateCommodity(element, commodities, categories);
-
-        }
-
-        return categories;
-    }
-
-    private void getOrCreateCommodity(DataElement element, List<Commodity> commodities, List<Category> categories) {
-        Commodity commodity = new Commodity();
-        Commodity actualCommodity;
-        if (element.getDataElementGroups().size() > 0) {
-            if (element.getDataElementGroups().size() > 1) {
-                System.out.println("Offending guy caught " + element.getName() + " in "
-                        + element.getDataElementGroups().size() + " groups: " + element.getDataElementGroups());
-            }
-            DataElementGroup dataElementGroup = element.getDataElementGroups().get(0);
-            DataElementGroupSet dataElementGroupSet = dataElementGroup.getDataElementGroupSet();
-            if (dataElementGroup.getAttributeValues() != null) {
-                if (dataElementGroup.getAttributeValues().size() > 0) {
-                    for (AttributeValue value : dataElementGroup.getAttributeValues()) {
-                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_NON_LGA)) {
-                            commodity.setNonLGA(value.getValue().equalsIgnoreCase("1"));
-                        }
-
-                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_DEVICE)) {
-                            commodity.setIsDevice(value.getValue().equalsIgnoreCase("1"));
-                        }
-
-                        if (value.getAttribute().getName().equalsIgnoreCase(Attribute.LMIS_VACCINE)) {
-                            commodity.setIsVaccine(value.getValue().equalsIgnoreCase("1"));
-                        }
-                    }
-                } else {
-                    commodity.setNonLGA(false);
-                    commodity.setIsDevice(false);
-                    commodity.setIsVaccine(false);
-                }
-            }
-            commodity.setId(dataElementGroup.getId());
-
-            if (commodities.contains(commodity)) {
-                actualCommodity = commodities.get(commodities.indexOf(commodity));
-            } else {
-                commodity.setName(dataElementGroup.getName());
-                Category category = new Category();
-                if (dataElementGroupSet != null) {
-                    category.setName(dataElementGroupSet.getName());
-                    category.setLmisId(dataElementGroupSet.getId());
-                    if (categories.contains(category)) {
-                        List<Commodity> updatedCommodities = categories.get(categories.indexOf(category)).getTransientCommodities();
-                        updatedCommodities.add(commodity);
-                        category.setCommodities(updatedCommodities);
-                        int location = categories.indexOf(category);
-                        categories.set(location, category);
-                    } else {
-                        category.setCommodities(newArrayList(commodity));
-                        categories.add(category);
-                    }
-                }
-                commodities.add(commodity);
-                actualCommodity = commodity;
-            }
-            if (element.getAttributeValues().size() > 0) {
-                AttributeValue attributeValue = element.getAttributeValues().get(0);
-                CommodityAction commodityAction = new CommodityAction(actualCommodity,
-                        element.getId(), element.getName(), attributeValue.getValue());
-                //commodityAction.addTransientDataSets(convertDataSetsToLmisDataSets(element.getDataSets()));
-
-                actualCommodity.getCommodityActions().add(commodityAction);
-            }
-        }
-
-    }
-
-    private List<DataSet> convertDataSetsToLmisDataSets(List<com.thoughtworks.dhis.models.DataSet> dataSets) {
-        List<DataSet> lmisDataSets = new ArrayList<>();
-        for (com.thoughtworks.dhis.models.DataSet d : dataSets) {
-            lmisDataSets.add(new DataSet(d));
-        }
-        return lmisDataSets;
-    }
-
     @Override
     public List<String> fetchOrderReasons(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
@@ -444,12 +335,10 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<CommodityActionValue> fetchAllocations(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         DataValueSet valueSet = new DataValueSet();
         try {
             String dataSetId = getDataSetId(DataSet.ALLOCATED);
-            valueSet = service.fetchDataValues(dataSetId, user.getFacilityCode(),
-                    threeMonthsAgo(), today());
+            valueSet = dhis2EndPointFactory.create(user).fetchDataValues(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today());
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
@@ -458,7 +347,7 @@ public class Dhis2 implements LmisServer {
         return from(commodityActionValues).filter(new Predicate<CommodityActionValue>() {
             @Override
             public boolean apply(CommodityActionValue input) {
-                return input.getCommodityAction().getActivityType().equals(DataElementType.ALLOCATED.getActivity());
+                return input.getCommodityAction().getActivityType().equals(ALLOCATED.getActivity());
             }
         }).toList();
     }
@@ -526,6 +415,7 @@ public class Dhis2 implements LmisServer {
             }
         }).toList();
         List<CommodityAction> actions = commodityActionService.getAllById(ids);
+
         final Map<String, CommodityAction> actionMap = new HashMap<>();
         for (CommodityAction action : actions) {
             actionMap.put(action.getId(), action);
@@ -537,7 +427,8 @@ public class Dhis2 implements LmisServer {
                 CommodityAction commodityAction = actionMap.get(input.getDataElement());
 
                 if (commodityAction == null) {
-                    commodityAction = new CommodityAction(null, input.getDataElement(), DataElementType.ALLOCATION_ID.getActivity(), DataElementType.ALLOCATED.getActivity());
+                    commodityAction = new CommodityAction(null, input.getDataElement(),
+                            ALLOCATION_ID.getActivity(), ALLOCATED.getActivity());
                 }
                 return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
             }

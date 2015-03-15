@@ -171,10 +171,8 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
-        System.out.println(DateUtil.dateString(startDate) + "   to    " + DateUtil.dateString(endDate));
         int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
         assertThat(amc, is(47));
-
     }
 
     @Test

@@ -49,6 +49,7 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -79,6 +80,19 @@ public class CommodityActionService {
         });
     }
 
+    public List<CommodityAction> getAllocationId() {
+        return dbUtil.withDao(CommodityAction.class, new DbUtil.Operation<CommodityAction, List<CommodityAction>>() {
+            @Override
+            public List<CommodityAction> operate(Dao<CommodityAction, String> dao) throws SQLException {
+                return dao.queryBuilder().where().in("name", Arrays.asList(DataElementType.ALLOCATION_ID.getActivity())).query();
+            }
+        });
+    }
+
+    public CommodityAction save(CommodityAction commodityAction){
+        GenericDao<CommodityAction> commodityActivityDao = new GenericDao<>(CommodityAction.class, context);
+        return commodityActivityDao.create(commodityAction);
+    }
     protected void saveActionValues(final List<CommodityActionValue> commodityActionValues) {
         if (commodityActionValues != null) {
             dbUtil.withDaoAsBatch(CommodityActionValue.class, new DbUtil.Operation<CommodityActionValue, Void>() {

@@ -32,13 +32,6 @@ package org.clintonhealthaccess.lmis.app.models;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@NoArgsConstructor
 @DatabaseTable
 public class AllocationItem {
 
@@ -50,4 +43,32 @@ public class AllocationItem {
 
     @DatabaseField(canBeNull = false)
     private int quantity;
+
+    public AllocationItem(){
+        //orm-Lite likes
+    }
+
+    public Allocation getAllocation(){
+        return allocation;
+    }
+
+    public void setAllocation(Allocation allocation){
+        this.allocation = allocation;
+    }
+
+    public Commodity getCommodity(){
+        return commodity;
+    }
+
+    public void setCommodity(Commodity commodity){
+        this.commodity = commodity;
+    }
+
+    public int getQuantity(){
+        return quantity;
+    }
+
+    public void setQuantity(int quantity){
+        this.quantity = quantity;
+    }
 }

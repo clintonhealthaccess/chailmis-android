@@ -75,42 +75,4 @@ public class DataSetService {
             }
         });
     }
-
-    public void save(List<Category> categories) {
-        System.out.println("Categories are " + categories.size());
-        final List<DataSet> dataSets = getTransientDataSets(categories);
-        System.out.println("DataSets are " + dataSets.size() + "         " + dataSets);
-
-        dbUtil.withDaoAsBatch(DataSet.class, new DbUtil.Operation<DataSet, Void>() {
-            @Override
-            public Void operate(Dao<DataSet, String> dao) throws SQLException {
-                for (DataSet dataSet : dataSets) {
-                    dao.createOrUpdate(dataSet);
-                }
-                return null;
-            }
-        });
-    }
-
-    private List<DataSet> getTransientDataSets(List<Category> categories) {
-        List<DataSet> dataSets = new ArrayList<>();
-        for (Category category : categories) {
-            System.out.println(category.getName() + " has " + category.getTransientCommodities().size() + " not saved commodity actions");
-
-            for (Commodity commodity : category.getTransientCommodities()) {
-                System.out.println(commodity.getName() + " has " + commodity.getCommodityActions().size() + " not saved commodity actions");
-
-                for (CommodityAction commodityAction : commodity.getCommodityActions()) {
-                    System.out.println(commodityAction.getName() + " has " + commodityAction.getTransientCommodityActionDataSets().size() + " not saved commodityActionDataSets");
-
-                    for (CommodityActionDataSet caDataSet : commodityAction.getTransientCommodityActionDataSets()) {
-                        if (!dataSets.contains(caDataSet.getDataSet())) {
-                            dataSets.add(caDataSet.getDataSet());
-                        }
-                    }
-                }
-            }
-        }
-        return dataSets;
-    }
 }

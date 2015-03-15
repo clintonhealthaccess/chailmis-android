@@ -47,7 +47,7 @@ import static com.google.common.collect.Lists.newArrayList;
 @DatabaseTable
 public class CommodityAction implements Serializable {
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = true, foreign = true)
     private Commodity commodity;
     @DatabaseField(id = true, uniqueIndex = true)
     private String id;
@@ -72,7 +72,11 @@ public class CommodityAction implements Serializable {
 
 
     public CommodityAction(Commodity commodity, String id, String name, String activityType) {
+        this(id, name, activityType);
         this.commodity = commodity;
+    }
+
+    public CommodityAction(String id, String name, String activityType) {
         this.id = id;
         this.name = name;
         this.activityType = activityType;

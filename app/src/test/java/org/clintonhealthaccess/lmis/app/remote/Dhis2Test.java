@@ -153,10 +153,11 @@ public class Dhis2Test extends LMISTestCase {
 
     @Test
     public void shouldFetchCommoditiesFromAPIServiceEndPoint() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
-        List<Category> categories = dhis2.fetchCommodities(new User());
+        List<Category> categories = dhis2.fetchCategories(new User());
         String commodityName = "Cotrimoxazole_suspension";
-        assertThat(categories.size(), is(10));
+        assertThat(categories.size(), is(7));
         Category category = categories.get(0);
         assertThat(category.getTransientCommodities().size(), is(greaterThan(1)));
         assertThat(category.getName(), is("Essential Medicines"));
@@ -165,12 +166,14 @@ public class Dhis2Test extends LMISTestCase {
 
     @Test
     public void shouldFetchNonLGAInformation() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
-        List<Category> categories = dhis2.fetchCommodities(new User());
-        assertThat(categories.size(), is(10));
+        List<Category> categories = dhis2.fetchCategories(new User());
+        assertThat(categories.size(), is(7));
         Category category = categories.get(0);
         assertThat(category.getTransientCommodities().get(0).isNonLGA(), is(false));
-        assertThat(category.getTransientCommodities().get(1).isNonLGA(), is(true));
+        category = categories.get(6);
+        assertThat(category.getTransientCommodities().get(0).isNonLGA(), is(true));
     }
 
     @Test
@@ -179,10 +182,11 @@ public class Dhis2Test extends LMISTestCase {
         User user = new User();
         user.setFacilityCode(orgUnit);
 
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
         setUpSuccessHttpGetRequest(200, "dataValues.json");
 
-        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        commodityService.saveToDatabase(dhis2.fetchCategories(user));
         categoryService.clearCache();
         List<CommodityActionValue> result = dhis2.fetchCommodityActionValues(user);
         assertThat(result.size(), is(210));
@@ -211,13 +215,14 @@ public class Dhis2Test extends LMISTestCase {
         User user = new User();
         user.setFacilityCode(orgUnit);
 
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
 
-        commodityService.saveToDatabase(dhis2.fetchCommodities(user));
+        commodityService.saveToDatabase(dhis2.fetchCategories(user));
         categoryService.clearCache();
         setUpSuccessHttpGetRequest(200, "allocations.json");
         List<CommodityActionValue> allocationActionValues = dhis2.fetchAllocations(user);
-        assertThat(allocationActionValues.size(), is(4));
+        assertThat(allocationActionValues.size(), is(7));
         for (CommodityActionValue allocationActionValue : allocationActionValues) {
             assertThat(allocationActionValue.getCommodityAction().getActivityType(), is(DataElementType.ALLOCATED.getActivity()));
         }
