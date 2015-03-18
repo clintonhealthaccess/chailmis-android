@@ -43,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
+import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -93,5 +94,7 @@ public interface Dhis2Endpoint {
     @GET("/api/constants")
     ConstantSearchResponse searchConstants(@Query("query") String query, @Query("fields") String fields);
 
+    @GET("/api/indicatorGroups")
+    IndicatorGroupResponse fetchIndicatorGroups(@Query("fields") String fields, @Query("paging") String paging);
 }
   

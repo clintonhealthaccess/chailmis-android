@@ -1,0 +1,286 @@
+{
+  "indicatorGroups": [
+    {
+      "id": "VYnBpONirHy",
+      "name": "BUFFER STOCK",
+      "indicators": [
+        {
+          "id": "bufferStock1",
+          "name": "Cotrimoxazole_suspension  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock2",
+          "name": "Amoxycillin _suspension  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock3",
+          "name": "Amoxycillin _250g capsule  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock4",
+          "name": "Ampicillin/cloxacillin_suspension  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock5",
+          "name": "Ampicillin/cloxacillin_drops  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock6",
+          "name": "Gentamicin _80mg injection  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock7",
+          "name": "Cotrimoxazole_tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock8",
+          "name": "Ampicillin/cloxacillin_capsule  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock9",
+          "name": "Implants - 5 yrs_pieces  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock10",
+          "name": "IUCD_pieces  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock11",
+          "name": "Implants - 3 yrs_pieces  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock12",
+          "name": "Folic Acid _tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock13",
+          "name": "Misoprostol_200mcg tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock14",
+          "name": "Ferrous sulfate_tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock15",
+          "name": "Artesunate+Amodiaquine_50mg/135mg tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock16",
+          "name": "Artemether + Lumefantrine_drops  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock17",
+          "name": "Artemether+Lumefantrine_tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock18",
+          "name": "Artesunate_syrup  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock19",
+          "name": "Zinc+ORS Copack_Satchets  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock20",
+          "name": "ORS_Satchets_BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock21",
+          "name": "Zinc_tablet  BUFFER_STOCK"
+        },
+        {
+          "id": "bufferStock22",
+          "name": "Paracetamol_syrup  BUFFER_STOCK"
+        }
+      ]
+    },
+    {
+      "id": "FhuZbwFiuEB",
+      "name": "MAX_STOCK_QUANTITY",
+      "indicators": [
+        {
+          "id": "maxStockQuantity1",
+          "name": "Cotrimoxazole_suspension  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity2",
+          "name": "Amoxycillin _suspension  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity3",
+          "name": "Amoxycillin _250g capsule  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity4",
+          "name": "Ampicillin/cloxacillin_suspension  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity5",
+          "name": "Ampicillin/cloxacillin_drops  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity6",
+          "name": "Gentamicin _80mg injection  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity7",
+          "name": "Cotrimoxazole_tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity8",
+          "name": "Ampicillin/cloxacillin_capsule  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity9",
+          "name": "Implants - 5 yrs_pieces  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity10",
+          "name": "IUCD_pieces  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity11",
+          "name": "Implants - 3 yrs_pieces  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity12",
+          "name": "Folic Acid _tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity13",
+          "name": "Misoprostol_200mcg tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity14",
+          "name": "Ferrous sulfate_tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity15",
+          "name": "Artesunate+Amodiaquine_50mg/135mg tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity16",
+          "name": "Artemether + Lumefantrine_drops  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity17",
+          "name": "Artemether+Lumefantrine_tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity18",
+          "name": "Artesunate_syrup  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity19",
+          "name": "Zinc+ORS Copack_Satchets  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity20",
+          "name": "ORS_Satchets_MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity21",
+          "name": "Zinc_tablet  MAX_STOCK_QUANTITY"
+        },
+        {
+          "id": "maxStockQuantity22",
+          "name": "Paracetamol_syrup  MAX_STOCK_QUANTITY"
+        }
+      ]
+    },
+    {
+      "id": "v2t0cGTiWBZ",
+      "name": "MIN_STOCK_QUANTITY",
+      "indicators": [
+        {
+          "id": "minStockQuantity1",
+          "name": "Cotrimoxazole_suspension  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity2",
+          "name": "Amoxycillin _suspension  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity3",
+          "name": "Amoxycillin _250g capsule  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity4",
+          "name": "Ampicillin/cloxacillin_suspension  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity5",
+          "name": "Ampicillin/cloxacillin_drops  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity6",
+          "name": "Gentamicin _80mg injection  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity7",
+          "name": "Cotrimoxazole_tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity8",
+          "name": "Ampicillin/cloxacillin_capsule  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity9",
+          "name": "Implants - 5 yrs_pieces  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity10",
+          "name": "IUCD_pieces  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity11",
+          "name": "Implants - 3 yrs_pieces  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity12",
+          "name": "Folic Acid _tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity13",
+          "name": "Misoprostol_200mcg tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity14",
+          "name": "Ferrous sulfate_tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity15",
+          "name": "Artesunate+Amodiaquine_50mg/135mg tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity16",
+          "name": "Artemether + Lumefantrine_drops  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity17",
+          "name": "Artemether+Lumefantrine_tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity18",
+          "name": "Artesunate_syrup  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity19",
+          "name": "Zinc+ORS Copack_Satchets  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity20",
+          "name": "ORS_Satchets_MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity21",
+          "name": "Zinc_tablet  MIN_STOCK_QUANTITY"
+        },
+        {
+          "id": "minStockQuantity22",
+          "name": "Paracetamol_syrup  MIN_STOCK_QUANTITY"
+        }
+      ]
+    }
+  ]
+}

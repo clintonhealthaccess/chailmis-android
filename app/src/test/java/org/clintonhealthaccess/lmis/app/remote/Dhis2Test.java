@@ -31,6 +31,8 @@ package org.clintonhealthaccess.lmis.app.remote;
 
 import com.google.inject.Inject;
 import com.thoughtworks.dhis.models.DataElementType;
+import com.thoughtworks.dhis.models.Indicator;
+import com.thoughtworks.dhis.models.IndicatorGroup;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
@@ -227,4 +229,28 @@ public class Dhis2Test extends LMISTestCase {
             assertThat(allocationActionValue.getCommodityAction().getActivityType(), is(DataElementType.ALLOCATED.getActivity()));
         }
     }
+
+    @Test
+    public void shouldFetchIndicatorGroups() throws Exception {
+        setUpSuccessHttpGetRequest(200, "indicatorGroups.json");
+        List<IndicatorGroup> indicatorGroups = dhis2.fetchIndicatorGroups(new User());
+        assertThat(indicatorGroups.size(), is(3));
+
+        IndicatorGroup indicatorGroup = indicatorGroups.get(0);
+        assertThat(indicatorGroup.getName(), is("BUFFER STOCK"));
+        assertThat(indicatorGroup.getId(), is("VYnBpONirHy"));
+
+        Indicator indicator = indicatorGroup.getIndicators().get(0);
+        assertThat(indicator.getName(), is("Cotrimoxazole_suspension  BUFFER_STOCK"));
+        assertThat(indicator.getId(), is("bufferStock1"));
+
+         indicatorGroup = indicatorGroups.get(2);
+        assertThat(indicatorGroup.getName(), is("MIN_STOCK_QUANTITY"));
+        assertThat(indicatorGroup.getId(), is("v2t0cGTiWBZ"));
+
+         indicator = indicatorGroup.getIndicators().get(0);
+        assertThat(indicator.getId(), is("minStockQuantity1"));
+        assertThat(indicator.getName(), is("Cotrimoxazole_suspension  MIN_STOCK_QUANTITY"));
+    }
+
 }

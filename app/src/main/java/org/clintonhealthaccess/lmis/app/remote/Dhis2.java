@@ -45,6 +45,7 @@ import com.thoughtworks.dhis.models.DataElementGroupSet;
 import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
+import com.thoughtworks.dhis.models.IndicatorGroup;
 import com.thoughtworks.dhis.models.Option;
 import com.thoughtworks.dhis.models.OptionSet;
 
@@ -65,6 +66,7 @@ import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
+import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.DataSetService;
 import org.json.JSONException;
@@ -438,4 +440,10 @@ public class Dhis2 implements LmisServer {
 
     }
 
+    @Override
+    public List<IndicatorGroup> fetchIndicatorGroups(User user) {
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        IndicatorGroupResponse response = service.fetchIndicatorGroups("id,name,indicators[id, name]", "false");
+        return response.getIndicatorGroups();
+    }
 }
