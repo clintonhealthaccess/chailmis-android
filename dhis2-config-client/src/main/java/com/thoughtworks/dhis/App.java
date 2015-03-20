@@ -202,8 +202,8 @@ public class App {
     private static Task submitMaxAndMinThreshold = new Task() {
         @Override
         public void operateOnService(ApiService service) throws IOException {
-            String maxType = DataElementType.MAXIMUM_THRESHOLD.toString();
-            String minType = DataElementType.MINIMUM_THRESHOLD.toString();
+            String maxType = DataElementType.MAX_STOCK_QUANTITY.toString();
+            String minType = DataElementType.MIN_STOCK_QUANTITY.toString();
             int middleValue = 250;
             int maxValue = 500;
             submitMaxMinValues(service, maxType, minType, middleValue, maxValue);

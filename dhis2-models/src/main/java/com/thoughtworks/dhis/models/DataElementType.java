@@ -29,44 +29,58 @@
 
 package com.thoughtworks.dhis.models;
 
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 import lombok.Getter;
+
+import static com.google.common.collect.FluentIterable.from;
 
 @Getter
 public enum DataElementType {
-    ORDER_ID("string", "ORDER_ID"),
-    ALLOCATION_ID("string", "ALLOCATION_ID"),
-    RECEIVED("RECEIVED"),
-    DISPENSED("DISPENSED"),
-    EXPIRED("EXPIRED"),
-    STOCK_ON_HAND("STOCK_ON_HAND"),
-    WASTED("WASTED"),
     ADJUSTMENTS("ADJUSTMENTS"),
     ADJUSTMENT_REASON("ADJUSTMENT_REASON"),
-    MISSING("MISSING"),
-    VVM_CHANGE("VVM_CHANGE"),
+    ALLOCATED("ALLOCATED"),
+    ALLOCATION_ID("string", "ALLOCATION_ID"),
+    AMC("AMC"),
     BREAKAGE("BREAKAGE"),
+    BUFFER_STOCK("BUFFER_STOCK", true),
+    DISPENSED("DISPENSED"),
+    EMERGENCY_ORDERED_AMOUNT("EMERGENCY_ORDERED_AMOUNT"),
+    EMERGENCY_REASON_FOR_ORDER("string", "EMERGENCY_REASON_FOR_ORDER"),
+    EXPIRED("EXPIRED"),
     FROZEN("FROZEN"),
     LABEL_REMOVED("LABEL_REMOVED"),
-    OTHERS("OTHERS"),
-    ALLOCATED("ALLOCATED"),
-    EMERGENCY_ORDERED_AMOUNT("EMERGENCY_ORDERED_AMOUNT"),
-    ORDERED_AMOUNT("ORDERED_AMOUNT"),
-    PROJECTED_ORDER_AMOUNT("PROJECTED_ORDER_AMOUNT"),
-    EMERGENCY_REASON_FOR_ORDER("string", "EMERGENCY_REASON_FOR_ORDER"),
-    REASON_FOR_ORDER("string", "REASON_FOR_ORDER"),
-    MAXIMUM_THRESHOLD("MAXIMUM_THRESHOLD"),
-    MINIMUM_THRESHOLD("MINIMUM_THRESHOLD"),
-    NUMBER_OF_STOCK_OUT_DAYS("NUMBER_OF_STOCK_OUT_DAYS"),
+    MAX_STOCK_QUANTITY("MAX_STOCK_QUANTITY", true),
+    MIN_STOCK_QUANTITY("MIN_STOCK_QUANTITY", true),
+    MISSING("MISSING"),
     MONTHS_OF_STOCK_ON_HAND("MONTHS_OF_STOCK_ON_HAND"),
+    NUMBER_OF_STOCK_OUT_DAYS("NUMBER_OF_STOCK_OUT_DAYS"),
+    ORDERED_AMOUNT("ORDERED_AMOUNT"),
+    ORDER_ID("string", "ORDER_ID"),
+    OTHERS("OTHERS"),
+    PROJECTED_ORDER_AMOUNT("PROJECTED_ORDER_AMOUNT"),
+    REASON_FOR_ORDER("string", "REASON_FOR_ORDER"),
+    RECEIVED("RECEIVED"),
     RECEIVE_DATE("string", "RECEIVE_DATE"),
     RECEIVE_SOURCE("string", "RECEIVE_SOURCE"),
-    AMC("AMC"),
-    TMC("TMC"),
     SAFETY_STOCK("SAFETY_STOCK"),
-    BUFFER_STOCK("BUFFER_STOCK");
+    STOCK_ON_HAND("STOCK_ON_HAND"),
+    TMC("TMC"),
+    VVM_CHANGE("VVM_CHANGE"),
+    WASTED("WASTED");
 
-    private String type;
+    private String type = "int";
     private String activity;
+    private boolean isIndicator = false;
+
+    DataElementType(String activity, boolean isIndicator) {
+        this.activity = activity;
+        this.isIndicator = isIndicator;
+    }
 
     DataElementType(String type, String activity) {
         this.type = type;
@@ -75,7 +89,6 @@ public enum DataElementType {
 
     DataElementType(String activity) {
         this.activity = activity;
-        this.type = "int";
     }
 
     public static boolean activityExists(String activityString) {
@@ -85,5 +98,24 @@ public enum DataElementType {
             }
         }
         return false;
+    }
+
+    public static List<DataElementType> getIndicators() {
+        List<DataElementType> types = Lists.newArrayList(DataElementType.values());
+        return from(types).filter(new Predicate<DataElementType>() {
+            @Override
+            public boolean apply(DataElementType input) {
+                return input.isIndicator();
+            }
+        }).toList();
+    }
+
+    public static List<String> getIndicatorStrings() {
+        return from(getIndicators()).transform(new Function<DataElementType, String>() {
+            @Override
+            public String apply(DataElementType input) {
+                return input.getActivity();
+            }
+        }).toList();
     }
 }

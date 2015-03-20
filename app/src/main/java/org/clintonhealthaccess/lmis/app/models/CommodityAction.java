@@ -70,7 +70,6 @@ public class CommodityAction implements Serializable {
         //Orm Lite likes
     }
 
-
     public CommodityAction(Commodity commodity, String id, String name, String activityType) {
         this(id, name, activityType);
         this.commodity = commodity;

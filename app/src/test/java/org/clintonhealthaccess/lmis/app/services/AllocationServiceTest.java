@@ -186,6 +186,7 @@ public class AllocationServiceTest extends LMISTestCase {
 
         setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "indicatorGroups.json");
 
         commodityService.saveToDatabase(dhis2.fetchCategories(user));
         categoryService.clearCache();

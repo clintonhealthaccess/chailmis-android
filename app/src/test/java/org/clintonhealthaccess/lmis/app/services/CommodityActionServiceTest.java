@@ -37,7 +37,6 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
-import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -157,7 +156,7 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
-        int maxThreshold = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        int maxThreshold = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAX_STOCK_QUANTITY);
         assertThat(maxThreshold, is(40));
     }
 
@@ -171,7 +170,7 @@ public class CommodityActionServiceTest {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAX_STOCK_QUANTITY);
         assertThat(amc, is(47));
     }
 
@@ -186,12 +185,11 @@ public class CommodityActionServiceTest {
         calendar.set(2014, Calendar.MAY, 07);
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAX_STOCK_QUANTITY);
         assertThat(amc, is(50));
 
     }
 
-    
     @Test
     public void shouldReturnCorrectMaximumThresholdForThreePeriods() throws Exception {
         Commodity commodity = commodityService.all().get(0);
@@ -203,7 +201,7 @@ public class CommodityActionServiceTest {
         calendar.set(2014, Calendar.JUNE, 07);
         Date endDate = calendar.getTime();
 
-        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+        int amc = commodityActionService.getMonthlyValue(commodity, startDate, endDate, DataElementType.MAX_STOCK_QUANTITY);
         assertThat(amc, is(33));
     }
 

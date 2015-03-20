@@ -243,10 +243,10 @@ public class HomeActivity extends BaseActivity implements Serializable {
 
             int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
 
-            int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
+            int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
             int minThresholdInMonths = minimumThreshold * factor / amc;
 
-            int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
+            int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
             int maxThresholdInMonths = maxThreshold * factor / amc;
 
             bars.add(new StockOnHandGraphBar(commodity.getName(),

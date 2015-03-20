@@ -45,6 +45,7 @@ import com.thoughtworks.dhis.models.DataElementGroupSet;
 import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.DataValue;
 import com.thoughtworks.dhis.models.DataValueSet;
+import com.thoughtworks.dhis.models.Indicator;
 import com.thoughtworks.dhis.models.IndicatorGroup;
 import com.thoughtworks.dhis.models.Option;
 import com.thoughtworks.dhis.models.OptionSet;
@@ -192,8 +193,34 @@ public class Dhis2 implements LmisServer {
         timingLogger.dumpToLog();
         List<DataSet> dataSets = fetchDataSets(user);
         List<DataElementGroupSet> androidDataElementGroupSets = getAndroidDataElementGroupSets(response.getDataElementGroupSets());
-        //fetchAllocationIDDataElement(user);
         List<Category> categories = getCategoriesFromDataElementGroupSets(androidDataElementGroupSets, dataSets);
+        categories = addIndicatorCommodityActions(categories, user);
+        return categories;
+    }
+
+    private List<Category> addIndicatorCommodityActions(List<Category> categories, User user) {
+        List<Indicator> indicators = fetchClientIndicators(user);
+
+        for (Category category : categories) {
+            for (final Commodity commodity : category.getTransientCommodities()) {
+                List<Indicator> commodityIndicators = from(indicators).filter(new Predicate<Indicator>() {
+                    @Override
+                    public boolean apply(Indicator input) {
+                        return input.getName().contains(commodity.getName());
+                    }
+                }).toList();
+
+                List<CommodityAction> commodityActions = from(commodityIndicators).transform(new Function<Indicator, CommodityAction>() {
+                    @Override
+                    public CommodityAction apply(Indicator input) {
+                        return new CommodityAction(commodity, input.getId(), input.getName(),
+                                input.getIndicatorGroup().getName().trim().replace(" ", "_"));
+                    }
+                }).toList();
+
+                commodity.getCommodityActions().addAll(commodityActions);
+            }
+        }
 
         return categories;
     }
@@ -444,6 +471,35 @@ public class Dhis2 implements LmisServer {
     public List<IndicatorGroup> fetchIndicatorGroups(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         IndicatorGroupResponse response = service.fetchIndicatorGroups("id,name,indicators[id, name]", "false");
+        response.initializeIndicatorGroups();
         return response.getIndicatorGroups();
+    }
+
+    public List<Indicator> fetchClientIndicators(User user) {
+        List<IndicatorGroup> indicatorGroups = fetchIndicatorGroups(user);
+        final List<String> indicatorStrings = DataElementType.getIndicatorStrings();
+        List<IndicatorGroup> clientIndicatorGroups = from(indicatorGroups).filter(new Predicate<IndicatorGroup>() {
+            @Override
+            public boolean apply(IndicatorGroup input) {
+                return indicatorStrings.contains(input.getName().replace(" ", "_"));
+            }
+        }).toList();
+
+        return from(clientIndicatorGroups).transformAndConcat(new Function<IndicatorGroup, List<Indicator>>() {
+            @Override
+            public List<Indicator> apply(IndicatorGroup input) {
+                return from(input.getIndicators()).filter(new Predicate<Indicator>() {
+                    @Override
+                    public boolean apply(Indicator input) {
+                        for (String s : indicatorStrings) {
+                            if (input.getName().contains(s)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                }).toList();
+            }
+        }).toList();
     }
 }

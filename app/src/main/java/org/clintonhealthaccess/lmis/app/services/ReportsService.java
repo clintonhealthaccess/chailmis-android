@@ -66,10 +66,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class ReportsService {
@@ -110,7 +107,7 @@ public class ReportsService {
                 int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
                         Loss.class, LossItem.class, context);
 
-                int minThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MINIMUM_THRESHOLD);
+                int minThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MIN_STOCK_QUANTITY);
 
                 int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
 
@@ -118,7 +115,7 @@ public class ReportsService {
 
                 int amc = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.AMC);
 
-                int maxThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MAXIMUM_THRESHOLD);
+                int maxThreshold = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.MAX_STOCK_QUANTITY);
 
                 int stockOutDays = stockItemSnapshotService.getStockOutDays(commodity, startingDate, endDate);
 

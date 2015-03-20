@@ -31,6 +31,7 @@
 package org.clintonhealthaccess.lmis.app.remote.responses;
 
 
+import com.thoughtworks.dhis.models.Indicator;
 import com.thoughtworks.dhis.models.IndicatorGroup;
 
 import java.util.ArrayList;
@@ -43,4 +44,12 @@ import lombok.Setter;
 @Setter
 public class IndicatorGroupResponse {
     private List<IndicatorGroup> indicatorGroups = new ArrayList<>();
+
+    public void initializeIndicatorGroups() {
+        for (IndicatorGroup t : indicatorGroups) {
+            for (Indicator indicator : t.getIndicators()) {
+                indicator.setIndicatorGroup(t);
+            }
+        }
+    }
 }

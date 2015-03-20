@@ -281,6 +281,100 @@
           "name": "Paracetamol_syrup  MIN_STOCK_QUANTITY"
         }
       ]
+    },
+    {
+      "id": "VYnBpONirHy",
+      "name": "BUFFER STOCK",
+      "indicators": [
+        {
+          "id": "losses1",
+          "name": "Cotrimoxazole_suspension  LOSSES"
+        },
+        {
+          "id": "losses2",
+          "name": "Amoxycillin _suspension  LOSSES"
+        },
+        {
+          "id": "losses3",
+          "name": "Amoxycillin _250g capsule  LOSSES"
+        },
+        {
+          "id": "losses4",
+          "name": "Ampicillin/cloxacillin_suspension  LOSSES"
+        },
+        {
+          "id": "losses5",
+          "name": "Ampicillin/cloxacillin_drops  LOSSES"
+        },
+        {
+          "id": "losses6",
+          "name": "Gentamicin _80mg injection  LOSSES"
+        },
+        {
+          "id": "losses7",
+          "name": "Cotrimoxazole_tablet  LOSSES"
+        },
+        {
+          "id": "losses8",
+          "name": "Ampicillin/cloxacillin_capsule  LOSSES"
+        },
+        {
+          "id": "losses9",
+          "name": "Implants - 5 yrs_pieces  LOSSES"
+        },
+        {
+          "id": "losses10",
+          "name": "IUCD_pieces  LOSSES"
+        },
+        {
+          "id": "losses11",
+          "name": "Implants - 3 yrs_pieces  LOSSES"
+        },
+        {
+          "id": "losses12",
+          "name": "Folic Acid _tablet  LOSSES"
+        },
+        {
+          "id": "losses13",
+          "name": "Misoprostol_200mcg tablet  LOSSES"
+        },
+        {
+          "id": "losses14",
+          "name": "Ferrous sulfate_tablet  LOSSES"
+        },
+        {
+          "id": "losses15",
+          "name": "Artesunate+Amodiaquine_50mg/135mg tablet  LOSSES"
+        },
+        {
+          "id": "losses16",
+          "name": "Artemether + Lumefantrine_drops  LOSSES"
+        },
+        {
+          "id": "losses17",
+          "name": "Artemether+Lumefantrine_tablet  LOSSES"
+        },
+        {
+          "id": "losses18",
+          "name": "Artesunate_syrup  LOSSES"
+        },
+        {
+          "id": "losses19",
+          "name": "Zinc+ORS Copack_Satchets  LOSSES"
+        },
+        {
+          "id": "losses20",
+          "name": "ORS_Satchets_LOSSES"
+        },
+        {
+          "id": "losses21",
+          "name": "Zinc_tablet  LOSSES"
+        },
+        {
+          "id": "losses22",
+          "name": "Paracetamol_syrup  LOSSES"
+        }
+      ]
     }
   ]
 }

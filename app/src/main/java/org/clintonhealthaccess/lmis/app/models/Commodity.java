@@ -184,11 +184,11 @@ public class Commodity implements Serializable {
     }
 
     public int getMinimumThreshold() {
-        return getLatestValueFromCommodityActionByName(DataElementType.MINIMUM_THRESHOLD.toString());
+        return getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
     }
 
     public int getMaximumThreshold() {
-        return getLatestValueFromCommodityActionByName(DataElementType.MAXIMUM_THRESHOLD.toString());
+        return getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
     }
 
     public boolean isBelowThreshold() {

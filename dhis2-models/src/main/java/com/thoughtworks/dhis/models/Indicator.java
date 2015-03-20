@@ -37,4 +37,5 @@ import lombok.experimental.Builder;
 public class Indicator {
     private String id, name, numerator, numeratorDescription, denominator, denominatorDescription,shortName;
     private IndicatorType indicatorType;
+    private IndicatorGroup indicatorGroup;
 }

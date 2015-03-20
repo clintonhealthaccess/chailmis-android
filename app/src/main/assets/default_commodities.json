@@ -151,14 +151,14 @@
             ]
           },
           {
-            "id": "id_minimum_threshold_1",
+            "id": "id_min_stock_quantity_1",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MINIMUM_THRESHOLD",
+            "activityType": "MIN_STOCK_QUANTITY",
             "transientCommodityActionDataSets": [
               {
                 "id": "1240",
                 "commodityAction": {
-                  "id": "id_minimum_threshold_1",
+                  "id": "id_min_stock_quantity_1",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -170,14 +170,14 @@
             ]
           },
           {
-            "id": "id_minimum_threshold_2014_05",
+            "id": "id_min_stock_quantity_2014_05",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MINIMUM_THRESHOLD",
+            "activityType": "MIN_STOCK_QUANTITY",
             "transientCommodityActionDataSets": [
               {
                 "id": "1241",
                 "commodityAction": {
-                  "id": "id_minimum_threshold_2014_05",
+                  "id": "id_min_stock_quantity_2014_05",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -189,14 +189,14 @@
             ]
           },
           {
-            "id": "id_maximum_threshold_1",
+            "id": "id_max_stock_quantity_1",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MAXIMUM_THRESHOLD",
+            "activityType": "MAX_STOCK_QUANTITY",
             "transientCommodityActionDataSets": [
               {
                 "id": "1242",
                 "commodityAction": {
-                  "id": "id_maximum_threshold_1",
+                  "id": "id_max_stock_quantity_1",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -208,14 +208,14 @@
             ]
           },
           {
-            "id": "id_maximum_threshold_2014May_Coatem",
+            "id": "id_max_stock_quantity_2014May_Coatem",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MAXIMUM_THRESHOLD",
+            "activityType": "MAX_STOCK_QUANTITY",
             "transientCommodityActionDataSets": [
               {
                 "id": "1243",
                 "commodityAction": {
-                  "id": "id_maximum_threshold_2014May_Coatem",
+                  "id": "id_max_stock_quantity_2014May_Coatem",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -490,9 +490,9 @@
             ]
           },
           {
-            "id": "id_minimum_threshold_2",
+            "id": "id_min_stock_quantity_2",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MINIMUM_THRESHOLD",
+            "activityType": "MIN_STOCK_QUANTITY",
             "commodity": {
               "id": "3",
               "name": "Choloquine",
@@ -502,7 +502,7 @@
               {
                 "id": "1255",
                 "commodityAction": {
-                  "id": "id_minimum_threshold_2",
+                  "id": "id_min_stock_quantity_2",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -514,9 +514,9 @@
             ]
           },
           {
-            "id": "id_maximum_threshold_2",
+            "id": "id_max_stock_quantity_2",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MAXIMUM_THRESHOLD",
+            "activityType": "MAX_STOCK_QUANTITY",
             "commodity": {
               "id": "3",
               "name": "Choloquine",
@@ -526,7 +526,7 @@
               {
                 "id": "1256",
                 "commodityAction": {
-                  "id": "id_maximum_threshold_2",
+                  "id": "id_max_stock_quantity_2",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -812,9 +812,9 @@
             ]
           },
           {
-            "id": "id_minimum_threshold_3",
+            "id": "id_min_stock_quantity_3",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MINIMUM_THRESHOLD",
+            "activityType": "MIN_STOCK_QUANTITY",
             "commodity": {
               "id": "4",
               "name": "Quinine",
@@ -824,7 +824,7 @@
               {
                 "id": "1268",
                 "commodityAction": {
-                  "id": "id_minimum_threshold_3",
+                  "id": "id_min_stock_quantity_3",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {
@@ -836,9 +836,9 @@
             ]
           },
           {
-            "id": "id_maximum_threshold_3",
+            "id": "id_max_stock_quantity_3",
             "name": "686ee023-384a-43bb-9d40-aa8b1f756e6",
-            "activityType": "MAXIMUM_THRESHOLD",
+            "activityType": "MAX_STOCK_QUANTITY",
             "commodity": {
               "id": "4",
               "name": "Quinine",
@@ -848,7 +848,7 @@
               {
                 "id": "1269",
                 "commodityAction": {
-                  "id": "id_maximum_threshold_3",
+                  "id": "id_max_stock_quantity_3",
                   "name": "686ee023-384a-43bb-9d40-aa8b1f756e6"
                 },
                 "dataSet": {

@@ -201,7 +201,7 @@ public class LMISConfiguration implements IConfiguration {
                 DataElementType.RECEIVE_DATE, DataElementType.RECEIVE_SOURCE));
 
         List<DataElementType> activitiesCalculated = new ArrayList<>(Arrays.asList(
-                DataElementType.MAXIMUM_THRESHOLD, DataElementType.MINIMUM_THRESHOLD,
+                DataElementType.MAX_STOCK_QUANTITY, DataElementType.MIN_STOCK_QUANTITY,
                 DataElementType.AMC, DataElementType.TMC, DataElementType.BUFFER_STOCK,
                 DataElementType.SAFETY_STOCK, DataElementType.NUMBER_OF_STOCK_OUT_DAYS,
                 DataElementType.MONTHS_OF_STOCK_ON_HAND, DataElementType.PROJECTED_ORDER_AMOUNT));
