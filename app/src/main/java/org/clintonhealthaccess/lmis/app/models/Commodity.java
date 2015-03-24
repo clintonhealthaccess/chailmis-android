@@ -215,10 +215,15 @@ public class Commodity implements Serializable {
         int defaultValue = 0;
         if (commodityAction != null) {
             CommodityActionValue actionLatestValue = commodityAction.getActionLatestValue();
-            return (actionLatestValue != null) ? Integer.parseInt(actionLatestValue.getValue()) : defaultValue;
-        } else {
-            return defaultValue;
+
+            if (actionLatestValue != null && actionLatestValue.getValue() != null) {
+                String value = (actionLatestValue.getValue().contains(".")) ? actionLatestValue.getValue()
+                        .substring(0, actionLatestValue.getValue().indexOf(".")) : actionLatestValue.getValue();
+
+                return Integer.parseInt(value);
+            }
         }
+        return defaultValue;
     }
 
     public int calculateRoutinePrePopulatedQuantity() {
