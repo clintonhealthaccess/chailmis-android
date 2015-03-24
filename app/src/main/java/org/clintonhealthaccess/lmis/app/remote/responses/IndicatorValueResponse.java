@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,43 +28,15 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.remote;
-
-import com.thoughtworks.dhis.models.DataElement;
-import com.thoughtworks.dhis.models.DataValueSet;
-import com.thoughtworks.dhis.models.IndicatorGroup;
-
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
-import org.clintonhealthaccess.lmis.app.models.OrderType;
-import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.UserProfile;
-import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
-import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
+package org.clintonhealthaccess.lmis.app.remote.responses;
 
 import java.util.List;
 
-public interface LmisServer {
-    UserProfile validateLogin(User user);
+import lombok.Getter;
+import lombok.Setter;
 
-    List<Category> fetchCategories(User user);
-
-    List<String> fetchOrderReasons(User user);
-
-    List<OrderType> fetchOrderTypes(User user);
-
-    List<CommodityActionValue> fetchCommodityActionValues(User user);
-
-    List<CommodityActionValue> fetchIndicatorValues(User user, List<Commodity> commodities);
-
-    DataValueSetPushResponse pushDataValueSet(DataValueSet valueSet, User user);
-
-    Integer fetchIntegerConstant(User user, String monthlyStockCountSearchKey1);
-
-    List<CommodityActionValue> fetchAllocations(User user);
-
-    String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue);
-
-    List<IndicatorGroup> fetchIndicatorGroups(User user);
+@Getter
+@Setter
+public class IndicatorValueResponse {
+    private List<List<String>> rows;
 }

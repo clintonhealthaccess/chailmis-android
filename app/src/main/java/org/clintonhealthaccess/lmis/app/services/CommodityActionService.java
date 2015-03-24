@@ -113,6 +113,11 @@ public class CommodityActionService {
         saveActionValues(commodityActionValues);
     }
 
+    public void syncIndicatorValues(User user, List<Commodity> commodities) {
+        List<CommodityActionValue> commodityActionValues = lmisServer.fetchIndicatorValues(user, commodities);
+        saveActionValues(commodityActionValues);
+    }
+
     public int getMonthlyValue(Commodity commodity, Date startingDate, Date endDate, DataElementType dataElementType) {
         SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         int commodityActionValueQuantity = 0;

@@ -81,8 +81,7 @@ public class Dhis2Test extends LMISTestCase {
         setUpInjection(this);
     }
 
-    @Ignore
-    @Test
+    @Ignore@Test
     public void testWriteOutNewJson() throws Exception {
         setUpSuccessHttpGetRequest(200, "dataSets.json");
         dhis2.writeJson(new User());
@@ -102,7 +101,7 @@ public class Dhis2Test extends LMISTestCase {
     }
 
 
-    @Ignore@Test
+    @Test
     public void testShouldFetchReasonsForOrder() throws Exception {
         setUpSuccessHttpGetRequest(200, "systemSettingForReasonsForOrder.json");
         List<String> reasons = dhis2.fetchOrderReasons(new User("test", "pass"));
@@ -110,14 +109,14 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(reasons, contains(OrderReason.HIGH_DEMAND, OrderReason.LOSSES, OrderReason.EXPIRIES));
     }
 
-    @Ignore@Test
+    @Test
     public void testShouldFetchOrderTypes() throws Exception {
         setUpSuccessHttpGetRequest(200, "orderTypes.json");
         List<OrderType> orderTypes = dhis2.fetchOrderTypes(new User("test", "pass"));
         assertThat(orderTypes.size(), is(2));
     }
 
-    @Ignore@Test
+    @Test
     public void shouldFetchCategoriesFromAPIServiceEndPoint() throws Exception {
         setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
@@ -132,7 +131,7 @@ public class Dhis2Test extends LMISTestCase {
 
         Commodity commodity = category.getTransientCommodities().get(0);
         assertThat(commodity.getName(), is(commodityName));
-        assertThat(commodity.getCommodityActions().size(), is(10));
+        assertThat(commodity.getCommodityActions().size(), is(13));
 
         CommodityAction commodityAction = commodity.getCommodityActions().get(0);
         assertThat(commodityAction.getCommodity(), is(commodity));
@@ -249,11 +248,11 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(indicator.getName(), is("Cotrimoxazole_suspension  BUFFER_STOCK"));
         assertThat(indicator.getId(), is("bufferStock1"));
 
-         indicatorGroup = indicatorGroups.get(2);
+        indicatorGroup = indicatorGroups.get(2);
         assertThat(indicatorGroup.getName(), is("MIN_STOCK_QUANTITY"));
         assertThat(indicatorGroup.getId(), is("v2t0cGTiWBZ"));
 
-         indicator = indicatorGroup.getIndicators().get(0);
+        indicator = indicatorGroup.getIndicators().get(0);
         assertThat(indicator.getId(), is("minStockQuantity1"));
         assertThat(indicator.getName(), is("Cotrimoxazole_suspension  MIN_STOCK_QUANTITY"));
     }
@@ -265,4 +264,18 @@ public class Dhis2Test extends LMISTestCase {
         assertThat(indicators.size(), is(66));
     }
 
+    @Test
+    public void shouldFetchIndicatorValues() throws Exception {
+        setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
+        setUpSuccessHttpGetRequest(200, "dataSets.json");
+        setUpSuccessHttpGetRequest(200, "indicatorGroups.json");
+        commodityService.saveToDatabase(dhis2.fetchCategories(new User()));
+        categoryService.clearCache();
+
+        setUpSuccessHttpGetRequest(200, "indicatorValues.json");
+        List<Commodity> commodities = commodityService.all();
+        List<CommodityActionValue> commodityActionValues = dhis2.fetchIndicatorValues(new User(), commodities);
+
+        assertThat(commodityActionValues.size(), is(10));
+    }
 }

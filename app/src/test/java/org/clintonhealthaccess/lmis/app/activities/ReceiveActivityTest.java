@@ -49,6 +49,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.fest.assertions.api.ANDROID;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -85,7 +86,7 @@ public class ReceiveActivityTest {
 
     public static final String PANADOL = "Panadol";
 
-    public static final String VALID_ALLOCATION_ID = "TW-200";
+    public static final String VALID_ALLOCATION_ID = "TW200";
 
     private UserService userService;
 
@@ -138,8 +139,8 @@ public class ReceiveActivityTest {
 
     @Test
     public void availableAllocationIdsShouldBeSelectableFromTheTextViewForAllocationId() throws Exception {
-        String item1 = "TW-0001";
-        String item2 = "TW-0002";
+        String item1 = "TW0001";
+        String item2 = "TW0002";
         when(mockAllocationService.getYetToBeReceivedAllocationIds()).thenReturn(Arrays.asList(item1, item2));
         ReceiveActivity receiveActivity = getReceiveActivity();
         assertThat(receiveActivity.textViewAllocationId.getAdapter().getCount(), is(2));
@@ -148,17 +149,19 @@ public class ReceiveActivityTest {
 
     @Test
     public void shouldShowAnErrorMessageForAllocationIdThatHasAlreadyBeenReceived() throws Exception {
-        String item1 = "TW-0001";
-        String item2 = "TW-0002";
+        String item1 = "TW0001";
+        String item2 = "TW0002";
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
         ReceiveActivity receiveActivity = getReceiveActivity();
         setSource(receiveActivity, application.getString(R.string.zonal_store));
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
-        receiveActivity.textViewAllocationId.requestFocus();
+
         receiveActivity.textViewAllocationId.setText(item1);
-        receiveActivity.textViewAllocationId.clearFocus();
+        receiveActivity.validateAllocationId();
         assertThat(receiveActivity.textViewAllocationId.getError().toString(), is(application.getString(R.string.error_allocation_received)));
-        receiveActivity.textViewAllocationId.setText("TW-12032");
+
+        receiveActivity.validateAllocationId();
+        receiveActivity.textViewAllocationId.setText("TW12032");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
     }
 
@@ -188,26 +191,27 @@ public class ReceiveActivityTest {
                 is(String.format(application.getString(R.string.error_allocation_id_wrong_format),
                         receiveActivity.getAllocationIdFormat()))
         );
-        receiveActivity.textViewAllocationId.setText("TW-12032");
+        receiveActivity.textViewAllocationId.setText("TW12032");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
     }
 
     @Test
     public void shouldPresetTheQuantityForSelectedItemIfAllocationIdIsSet() throws Exception {
-        String item1 = "TW-0001";
-        String item2 = "TW-0002";
-        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>(Arrays.asList(item1, item2)));
+        String item1 = "TW0001";
+        String item2 = "TW0002";
+        when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<>(Arrays.asList(item1, item2)));
         Allocation allocation = mock(Allocation.class);
         AllocationItem item = new AllocationItem();
         item.setCommodity(new Commodity("food"));
         item.setQuantity(10);
         item.setAllocation(allocation);
         when(mockAllocationService.getReceivedAllocationIds()).thenReturn(new ArrayList<String>());
-        when(allocation.getAllocationItems()).thenReturn(new ArrayList<AllocationItem>(Arrays.asList(item)));
+        when(allocation.getAllocationItems()).thenReturn(new ArrayList<>(Arrays.asList(item)));
         when(allocation.isReceived()).thenReturn(false);
         when(mockAllocationService.getAllocationByLmisId(anyString())).thenReturn(allocation);
         ReceiveActivity receiveActivity = getReceiveActivity();
-        receiveActivity.textViewAllocationId.setText("TW-0002");
+        receiveActivity.setAllocation(item2);
+        receiveActivity.textViewAllocationId.setText("TW0002");
         assertThat(receiveActivity.textViewAllocationId.getError(), is(nullValue()));
         assertThat(receiveActivity.arrayAdapter.getCount(), is(1));
     }
@@ -276,10 +280,15 @@ public class ReceiveActivityTest {
         receiveActivity.textViewAllocationId.setText("INVALIDALLOCATIONID");
         setSource(receiveActivity, application.getString(R.string.zonal_store));
         assertThat(receiveActivity.textViewAllocationId.getError(), nullValue());
+        ANDROID.assertThat(receiveActivity.textViewAllocationId).isDisabled();
+
+        receiveActivity.setAllocation("INVALIDALLOCATIONID");
+
         setSource(receiveActivity, application.getString(R.string.lga));
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isEnabled();
         ANDROID.assertThat(receiveActivity.textViewAllocationId).isVisible();
         ANDROID.assertThat(receiveActivity.textViewAllocationLabel).isVisible();
+        receiveActivity.validateAllocationId();
         CharSequence error = receiveActivity.textViewAllocationId.getError();
         assertThat(error, notNullValue());
         assertThat(error.toString(), is(String.format(

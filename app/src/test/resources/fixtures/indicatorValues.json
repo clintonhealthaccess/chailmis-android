@@ -1,0 +1,96 @@
+{
+  "width": 4,
+  "height": 10,
+  "headers": [
+    {
+      "name": "dx",
+      "column": "Data",
+      "type": "java.lang.String",
+      "hidden": false,
+      "meta": true
+    },
+    {
+      "name": "pe",
+      "column": "Period",
+      "type": "java.lang.String",
+      "hidden": false,
+      "meta": true
+    },
+    {
+      "name": "ou",
+      "column": "Organisation unit",
+      "type": "java.lang.String",
+      "hidden": false,
+      "meta": true
+    },
+    {
+      "name": "value",
+      "column": "Value",
+      "type": "java.lang.Double",
+      "hidden": false,
+      "meta": false
+    }
+  ],
+  "rows": [
+    [
+      "bufferStock1",
+      "201502",
+      "aSuh3EpaRxB",
+      "37.0"
+    ],
+    [
+      "minStockQuantity1",
+      "201503",
+      "aSuh3EpaRxB",
+      "36.0"
+    ],
+    [
+      "maxStockQuantity1",
+      "201502",
+      "aSuh3EpaRxB",
+      "115.0"
+    ],
+    [
+      "maxStockQuantity2",
+      "201503",
+      "aSuh3EpaRxB",
+      "112.0"
+    ],
+    [
+      "minStockQuantity2",
+      "201502",
+      "aSuh3EpaRxB",
+      "41.0"
+    ],
+    [
+      "bufferStock2",
+      "201503",
+      "aSuh3EpaRxB",
+      "40.0"
+    ],
+    [
+      "bufferStock3",
+      "201502",
+      "aSuh3EpaRxB",
+      "22.0"
+    ],
+    [
+      "bufferStock4",
+      "201503",
+      "aSuh3EpaRxB",
+      "28.0"
+    ],
+    [
+      "bufferStock5",
+      "201502",
+      "aSuh3EpaRxB",
+      "68.0"
+    ],
+    [
+      "maxStockQuantity3",
+      "201503",
+      "aSuh3EpaRxB",
+      "87.0"
+    ]
+  ]
+}

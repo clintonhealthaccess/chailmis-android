@@ -87,5 +87,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         i("<== Syncing............ACTIONVALUES", account.name);
         commodityActionService.syncCommodityActionValues(user);
 
+        i("<== Syncing............INDICATORVALUES", account.name);
+        commodityActionService.syncIndicatorValues(user, commodityService.all());
+
     }
 }

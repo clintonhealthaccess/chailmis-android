@@ -91,30 +91,29 @@ public enum DataElementType {
         this.activity = activity;
     }
 
-    public static boolean activityExists(String activityString) {
-        for (DataElementType type : DataElementType.values()) {
-            if (type.getActivity().equalsIgnoreCase(activityString)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean dataElementActivityExists(String activityString) {
+        return getDataElementStrings(false).contains(activityString.trim());
     }
 
-    public static List<DataElementType> getIndicators() {
-        List<DataElementType> types = Lists.newArrayList(DataElementType.values());
-        return from(types).filter(new Predicate<DataElementType>() {
+    public static boolean indicatorExists(String activityString) {
+        return getDataElementStrings(true).contains(activityString.trim());
+    }
+
+    public static List<String> getDataElementStrings(boolean isIndicator) {
+        return from(getDataElementTypes(isIndicator)).transform(new Function<DataElementType, String>() {
             @Override
-            public boolean apply(DataElementType input) {
-                return input.isIndicator();
+            public String apply(DataElementType input) {
+                return input.getActivity();
             }
         }).toList();
     }
 
-    public static List<String> getIndicatorStrings() {
-        return from(getIndicators()).transform(new Function<DataElementType, String>() {
+    private static List<DataElementType> getDataElementTypes(final boolean isIndicator) {
+        List<DataElementType> types = Lists.newArrayList(DataElementType.values());
+        return from(types).filter(new Predicate<DataElementType>() {
             @Override
-            public String apply(DataElementType input) {
-                return input.getActivity();
+            public boolean apply(DataElementType input) {
+                return input.isIndicator() == isIndicator;
             }
         }).toList();
     }

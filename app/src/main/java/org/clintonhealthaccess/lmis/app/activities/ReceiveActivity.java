@@ -216,8 +216,6 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                         for (CommodityToggledEvent event : events) {
                             onEvent(event);
                         }
-
-
                     }
 
                     @Override
@@ -233,7 +231,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         buttonSubmitReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!allocationIdIsValid()) {
+                if (!allocationIdIsValid(textViewAllocationId.getText().toString())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.receive_submit_validation_message_allocation_id), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -257,7 +255,6 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         return receive;
     }
 
-
     @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {
         return new CommoditiesToViewModelsConverter() {
@@ -279,12 +276,6 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                 return false;
         }
         return true;
-    }
-
-    private boolean allocationIdIsValid() {
-        return !textViewAllocationId.isEnabled() ||
-                (textViewAllocationId.getError() == null
-                        && !isBlank(textViewAllocationId.getText().toString()));
     }
 
     private void setupAllocationIdTextView() {
@@ -314,7 +305,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         if (!allocationId.trim().isEmpty()) {
             validateAllocationId(allocationId);
         }
-        if (allocationIdIsValid()) {
+        if (allocationIdIsValid(allocationId)) {
             allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
             populateWithAllocation(allocation);
         } else {
@@ -323,6 +314,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     private void populateWithAllocation(Allocation allocation) {
+        System.out.println("here we are here "+allocation);
         if (allocation != null) {
             selectedCommodities.clear();
             arrayAdapter.clear();
@@ -334,11 +326,11 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
     }
 
-    private void validateAllocationId(String text) {
+    public void validateAllocationId(String text) {
         if (!allocationIdIsValid(text)) {
             textViewAllocationId.setError(String.format(
                     getString(R.string.error_allocation_id_wrong_format), getAllocationIdFormat()));
-        }else{
+        } else {
             if (completedAllocationIds.contains(text)) {
                 textViewAllocationId.setError(getString(R.string.error_allocation_received));
             } else {
@@ -347,12 +339,20 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         }
     }
 
+    public void validateAllocationId() {
+        validateAllocationId(textViewAllocationId.getText().toString());
+    }
+
     protected String getAllocationIdFormat() {
-        return facility2LetterCode + "-0000";
+        return facility2LetterCode + "0000";
     }
 
     private boolean allocationIdIsValid(String text) {
-        String patternString = facility2LetterCode.toUpperCase() + "-\\d+$";
+        if (!textViewAllocationId.isEnabled()){
+        // allocation != null && text.equals(allocation.getAllocationId()))
+            return true;
+        }
+        String patternString = facility2LetterCode.toUpperCase() + "\\d+$";
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(text);
         return matcher.matches();

@@ -44,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
+import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorValueResponse;
 
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -81,6 +82,9 @@ public interface Dhis2Endpoint {
 
     @GET("/api/dataValueSets")
     DataValueSet fetchDataValuesEx(@Query("dataSet") String dataSet, @Query("orgUnit") String orgUnit, @Query("startDate") String startDate, @Query("endDate") String endDate, @Query("dataSet") String dataSet2);
+
+    @GET("/api/analytics.json")
+    IndicatorValueResponse fetchIndicatorValues(@Query("dimension") String indicators, @Query("dimension") String orgUnit, @Query("dimension") String period, @Query("skipMeta") String skipMeta);
 
     @GET("/api/optionSets")
     OptionSetResponse searchOptionSets(@Query("query") String query, @Query("fields") String fields);

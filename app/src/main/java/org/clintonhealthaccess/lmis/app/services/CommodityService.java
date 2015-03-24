@@ -147,6 +147,10 @@ public class CommodityService {
         timingLogger.addSplit("sync allocations");
         categoryService.clearCache();
         timingLogger.addSplit("clearCache");
+
+        timingLogger.addSplit("sync indicator values");
+        commodityActionService.syncIndicatorValues(user, all());
+
         timingLogger.dumpToLog();
     }
 

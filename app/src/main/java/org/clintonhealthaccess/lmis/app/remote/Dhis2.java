@@ -68,6 +68,7 @@ import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
+import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorValueResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.DataSetService;
 import org.json.JSONException;
@@ -85,6 +86,7 @@ import roboguice.inject.InjectResource;
 
 import static android.util.Log.e;
 import static android.util.Log.i;
+import static android.util.Log.v;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.thoughtworks.dhis.models.DataElementType.ALLOCATED;
@@ -280,7 +282,7 @@ public class Dhis2 implements LmisServer {
                     if (element.getAttributeValues().size() > 0) {
                         AttributeValue attributeValue = element.getAttributeValues().get(0);
 
-                        if (!DataElementType.activityExists(attributeValue.getValue())) {
+                        if (!DataElementType.dataElementActivityExists(attributeValue.getValue())) {
                             Log.e("Missing Activity Name Error ", attributeValue.getValue());
                             continue;
                         }
@@ -354,12 +356,36 @@ public class Dhis2 implements LmisServer {
             String dataSetId = getDataSetId(DataSet.DEFAULT);
             String threeMonthsAgo = threeMonthsAgo();
             String today = today();
-            valueSet = service.fetchDataValuesEx("", user.getFacilityCode(),
-                    threeMonthsAgo, today, dataSet2);
+
+            valueSet = service.fetchDataValuesEx(dataSetId, user.getFacilityCode(), threeMonthsAgo, today, dataSet2);
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
         return convertDataValuesToCommodityActions(valueSet.getDataValues());
+    }
+
+    @Override
+    public List<CommodityActionValue> fetchIndicatorValues(User user, List<Commodity> commodities) {
+        List<CommodityAction> indicatorActions = newArrayList();
+        String indicatorIds = "";
+        for (Commodity commodity : commodities) {
+            for (CommodityAction commodityAction : commodity.getCommodityActionsSaved()) {
+                if (DataElementType.indicatorExists(commodityAction.getActivityType())) {
+                    indicatorActions.add(commodityAction);
+                    indicatorIds += indicatorIds == "" ? commodityAction.getId() : ";" + commodityAction.getId();
+                }
+            }
+        }
+
+        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        IndicatorValueResponse indicatorValueResponse = new IndicatorValueResponse();
+        String period = new SimpleDateFormat("yyyyMM").format(new Date());
+        try {
+            indicatorValueResponse = service.fetchIndicatorValues("dx:" + indicatorIds, "ou:" + user.getFacilityCode(), "pe:" + period, "true");
+        } catch (LmisException exception) {
+            e(SYNC, "error syncing stock levels");
+        }
+        return convertIndicatorValuesToCommodityActions(indicatorValueResponse.getRows(), indicatorActions);
     }
 
     @Override
@@ -467,6 +493,30 @@ public class Dhis2 implements LmisServer {
 
     }
 
+    public List<CommodityActionValue> convertIndicatorValuesToCommodityActions(
+            List<List<String>> values, List<CommodityAction> indicatorActions) {
+        final Map<String, CommodityAction> actionMap = new HashMap<>();
+        for (CommodityAction action : indicatorActions) {
+            actionMap.put(action.getId(), action);
+        }
+        ImmutableList<CommodityActionValue> commodityActionValues = from(values).transform(new Function<List<String>, CommodityActionValue>() {
+            @Override
+            public CommodityActionValue apply(List<String> input) {
+
+                CommodityAction commodityAction = actionMap.get(input.get(0));
+
+                if (commodityAction == null) {
+                    System.out.println("UnKnown Indicator Id: " + input.get(0));
+                    Log.e("UnKnown Indicator Id", input.get(0));
+                    return null;
+                }
+                return new CommodityActionValue(commodityAction, input.get(3), input.get(2));
+            }
+        }).toList();
+
+        return commodityActionValues;
+    }
+
     @Override
     public List<IndicatorGroup> fetchIndicatorGroups(User user) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
@@ -477,7 +527,7 @@ public class Dhis2 implements LmisServer {
 
     public List<Indicator> fetchClientIndicators(User user) {
         List<IndicatorGroup> indicatorGroups = fetchIndicatorGroups(user);
-        final List<String> indicatorStrings = DataElementType.getIndicatorStrings();
+        final List<String> indicatorStrings = DataElementType.getDataElementStrings(true);
         List<IndicatorGroup> clientIndicatorGroups = from(indicatorGroups).filter(new Predicate<IndicatorGroup>() {
             @Override
             public boolean apply(IndicatorGroup input) {
