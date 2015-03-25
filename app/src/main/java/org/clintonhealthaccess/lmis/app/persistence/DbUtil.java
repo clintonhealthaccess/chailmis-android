@@ -63,8 +63,6 @@ public class DbUtil {
             return operation.operate(dao);
         } catch (SQLException e) {
             throw new LmisException(e);
-        } finally {
-            releaseHelper();
         }
     }
 
@@ -84,8 +82,6 @@ public class DbUtil {
         } catch (Exception e) {
             e.printStackTrace();
             throw new LmisException(e);
-        } finally {
-            releaseHelper();
         }
     }
 

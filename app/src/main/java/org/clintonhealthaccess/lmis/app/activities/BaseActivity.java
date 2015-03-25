@@ -47,11 +47,9 @@ import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
-import roboguice.activity.RoboActionBarActivity;
-
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class BaseActivity extends RoboActionBarActivity {
+public class BaseActivity extends OrmLiteActivity {
     @Inject
     UserService userService;
 

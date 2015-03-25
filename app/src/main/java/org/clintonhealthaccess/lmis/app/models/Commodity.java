@@ -65,10 +65,10 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false)
     private boolean nonLGA = false;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = false, maxEagerLevel = 2)
     private ForeignCollection<StockItem> stockItems;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 5)
+    @ForeignCollectionField(eager = false, maxEagerLevel = 5)
     private Collection<CommodityAction> commodityActionsSaved;
 
     @DatabaseField(canBeNull = false)

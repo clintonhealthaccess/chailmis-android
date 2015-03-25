@@ -58,7 +58,7 @@ public class Allocation {
     @DatabaseField(canBeNull = false)
     private boolean received;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 3)
+    @ForeignCollectionField(eager = false, maxEagerLevel = 3)
     private ForeignCollection<AllocationItem> allocationItems;
 
     private List<AllocationItem> transientAllocationItems;

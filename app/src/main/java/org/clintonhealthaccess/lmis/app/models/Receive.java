@@ -53,7 +53,7 @@ public class Receive implements Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField(eager = false, maxEagerLevel = 2)
     private ForeignCollection<ReceiveItem> receiveItemsCollection;
 
     private List<ReceiveItem> receiveItems = new ArrayList<>();
