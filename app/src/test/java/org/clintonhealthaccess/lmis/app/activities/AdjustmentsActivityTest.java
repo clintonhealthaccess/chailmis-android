@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
@@ -66,6 +67,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -103,6 +105,8 @@ public class AdjustmentsActivityTest extends TestCase {
         });
         commodityService.initialise(new User("test", "pass"));
     }
+
+
 
     @Test
     public void testBuildActivity() throws Exception {

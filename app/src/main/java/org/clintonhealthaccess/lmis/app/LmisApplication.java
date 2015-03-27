@@ -43,6 +43,8 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
 import org.clintonhealthaccess.lmis.app.backgroundServices.SmsSyncIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
+import org.clintonhealthaccess.lmis.app.services.AllocationService;
+import org.clintonhealthaccess.lmis.app.services.CategoryService;
 
 import java.util.Calendar;
 
@@ -58,6 +60,11 @@ import static roboguice.RoboGuice.setBaseApplicationInjector;
 
 public class LmisApplication extends Application {
 
+    @Inject
+    private CategoryService categoryService;
+
+    @Inject
+    private AllocationService allocationService;
 
     @Inject
     Context context;
@@ -71,6 +78,8 @@ public class LmisApplication extends Application {
         setBaseApplicationInjector(this, DEFAULT_STAGE, newDefaultRoboModule(this), new GuiceConfigurationModule());
         JodaTimeAndroid.init(this);
         getInjector(this).injectMembersWithoutViews(this);
+        loadAllCommoditiesToCache();
+        loadAllAllocationstoCache();
         setupAlertsService();
         setupSmsSyncingService();
     }
@@ -106,5 +115,11 @@ public class LmisApplication extends Application {
         Log.i("Alert", "Finished");
     }
 
+    private void loadAllCommoditiesToCache() {
+        categoryService.all();
+    }
 
+    private void loadAllAllocationstoCache() {
+        allocationService.all();
+    }
 }

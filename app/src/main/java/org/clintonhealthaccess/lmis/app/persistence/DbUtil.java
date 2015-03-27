@@ -82,7 +82,7 @@ public class DbUtil {
         } catch (Exception e) {
             e.printStackTrace();
             throw new LmisException(e);
-        }
+        } 
     }
 
     public static <T> Dao<T, String> initialiseDao(SQLiteOpenHelper openHelper, Class<T> domainClass) throws SQLException {

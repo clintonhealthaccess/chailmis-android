@@ -55,7 +55,7 @@ public class Loss implements Serializable {
     @DatabaseField(uniqueIndex = true, generatedId = true)
     private long id;
 
-    @ForeignCollectionField(eager = false, maxEagerLevel = 3)
+    @ForeignCollectionField
     private ForeignCollection<LossItem> lossItemsCollection;
 
     @DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING, format = "yyyy-MM-dd")

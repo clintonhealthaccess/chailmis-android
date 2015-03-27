@@ -56,10 +56,10 @@ public class CommodityAction implements Serializable {
     @DatabaseField(canBeNull = false)
     private String activityType;
 
-    @ForeignCollectionField(eager = false)
+    @ForeignCollectionField
     private ForeignCollection<CommodityActionValue> commodityActionValueCollection;
 
-    @ForeignCollectionField(eager = false, maxEagerLevel = 3)
+    @ForeignCollectionField
     private ForeignCollection<CommodityActionDataSet> commodityActionDataSets;
 
     private List<CommodityActionDataSet> transientCommodityActionDataSets;

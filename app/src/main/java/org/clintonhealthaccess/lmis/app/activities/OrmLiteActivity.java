@@ -9,13 +9,12 @@ import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import roboguice.activity.RoboActionBarActivity;
 
-public class OrmLiteActivity extends RoboActionBarActivity implements IHelperProvider {
+public class OrmLiteActivity extends RoboActionBarActivity {
     protected volatile LmisSqliteOpenHelper helper;
     protected volatile boolean created = false;
     private volatile boolean destroyed = false;
 
 
-    @Override
     public LmisSqliteOpenHelper getHelper() {
         if (helper == null) {
             if (!created) {
@@ -50,7 +49,7 @@ public class OrmLiteActivity extends RoboActionBarActivity implements IHelperPro
 
     protected LmisSqliteOpenHelper getHelperInternal(Context context) {
         @SuppressWarnings({"unchecked", "deprecation"})
-        LmisSqliteOpenHelper newHelper = (LmisSqliteOpenHelper) OpenHelperManager.getHelper(context);
+        LmisSqliteOpenHelper newHelper = OpenHelperManager.getHelper(context, LmisSqliteOpenHelper.class);
         return newHelper;
     }
 

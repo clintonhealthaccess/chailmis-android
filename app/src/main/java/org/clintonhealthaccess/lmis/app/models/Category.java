@@ -56,7 +56,7 @@ public class Category implements Serializable, Comparable<Category> {
     @DatabaseField(canBeNull = false)
     private String name;
 
-    @ForeignCollectionField(eager = false, maxEagerLevel = 5)
+    @ForeignCollectionField
     private ForeignCollection<Commodity> commoditiesCollection;
 
     private List<Commodity> transientCommodities = new ArrayList<>();
