@@ -30,7 +30,9 @@
 package org.clintonhealthaccess.lmis.app.fragments;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +62,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import roboguice.fragment.RoboDialogFragment;
 
 public class ItemSelectFragment extends RoboDialogFragment {
@@ -108,7 +111,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            parentActivity = (CommoditySelectableActivity)getArguments().getSerializable(ACTIVITY);
+            parentActivity = (CommoditySelectableActivity) getArguments().getSerializable(ACTIVITY);
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<? extends BaseCommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
             commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(COMMODITY_DISPLAY_STRATEGY);
@@ -205,4 +208,19 @@ public class ItemSelectFragment extends RoboDialogFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                if (KeyEvent.KEYCODE_BACK == keyEvent.getKeyCode()) {
+                    parentActivity.dialogIsShowing = false;
+                    dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 }
