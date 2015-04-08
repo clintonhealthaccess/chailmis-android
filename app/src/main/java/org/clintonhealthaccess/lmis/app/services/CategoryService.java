@@ -57,14 +57,7 @@ public class CategoryService {
 
     public List<Category> all() {
         if (allCategories == null) {
-//            LmisSqliteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
-//            try {
-//                Dao<Category, Integer> dao = createDao(new AndroidConnectionSource(openHelper), Category.class);
-//                allCategories = dao.queryForAll();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-            allCategories = dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
+            allCategories = dbUtil.withDao(context, Category.class, new DbUtil.Operation<Category, List<Category>>() {
                 @Override
                 public List<Category> operate(Dao<Category, String> dao) throws SQLException {
                     return dao.queryForAll();
