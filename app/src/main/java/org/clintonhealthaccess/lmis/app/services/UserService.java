@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.inject.Inject;
@@ -54,6 +55,9 @@ public class UserService {
 
     @Inject
     private SyncManager syncManager;
+
+    @Inject
+    private Context context;
 
     public boolean userRegistered() {
         return dbUtil.withDao(User.class, new Operation<User, Boolean>() {
@@ -85,7 +89,7 @@ public class UserService {
     }
 
     public User saveUserToDatabase(final User user) {
-        return dbUtil.withDao(User.class, new Operation<User, User>() {
+        return dbUtil.withDao(context, User.class, new Operation<User, User>() {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
                 dao.create(user);
@@ -94,18 +98,8 @@ public class UserService {
         });
     }
 
-    public User updateUser(final User user) {
-        return dbUtil.withDao(User.class, new Operation<User, User>() {
-            @Override
-            public User operate(Dao<User, String> dao) throws SQLException {
-                dao.update(user);
-                return user;
-            }
-        });
-    }
-
     public User getRegisteredUser() throws IndexOutOfBoundsException {
-        return dbUtil.withDao(User.class, new Operation<User, User>() {
+        return dbUtil.withDao(context, User.class, new Operation<User, User>() {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
                 List<User> users = dao.queryForAll();

@@ -34,6 +34,7 @@ import android.content.SharedPreferences;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
@@ -65,7 +66,7 @@ import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class AlertsServiceTest {
+public class AlertsServiceTest extends LmisTestClass {
     @Inject
     AlertsService alertsService;
 

@@ -46,14 +46,17 @@ public class GenericDao<Model> {
     DbUtil dbUtil;
     private Class<Model> type;
 
+    private Context context;
+
     // FIXME: is it better to inject context instead of passing it as constructor parameter?
     public GenericDao(Class<Model> type, Context context) {
         this.type = type;
+        this.context = context;
         RoboGuice.getInjector(context).injectMembers(this);
     }
 
     public Model create(final Model object) {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, Model>() {
             @Override
             public Model operate(Dao<Model, String> dao) throws SQLException {
                 dao.create(object);
@@ -63,7 +66,7 @@ public class GenericDao<Model> {
     }
 
     public Model createOrUpdate(final Model object) {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, Model>() {
             @Override
             public Model operate(Dao<Model, String> dao) throws SQLException {
                 dao.createOrUpdate(object);
@@ -73,7 +76,7 @@ public class GenericDao<Model> {
     }
 
     public List<Model> queryForAll() {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, List<Model>>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, List<Model>>() {
             @Override
             public List<Model> operate(Dao<Model, String> dao) throws SQLException {
                 return dao.queryForAll();
@@ -82,7 +85,7 @@ public class GenericDao<Model> {
     }
 
     public Integer update(final Model object) {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, Integer>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, Integer>() {
             @Override
             public Integer operate(Dao<Model, String> dao) throws SQLException {
                 return dao.update(object);
@@ -91,7 +94,7 @@ public class GenericDao<Model> {
     }
 
     public long countOf() {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, Long>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, Long>() {
             @Override
             public Long operate(Dao<Model, String> dao) throws SQLException {
                 return dao.countOf();
@@ -100,7 +103,7 @@ public class GenericDao<Model> {
     }
 
     public Model getById(final String id) {
-        return dbUtil.withDao(type, new DbUtil.Operation<Model, Model>() {
+        return dbUtil.withDao(context, type, new DbUtil.Operation<Model, Model>() {
             @Override
             public Model operate(Dao<Model, String> dao) throws SQLException {
                 return dao.queryForId(id);
@@ -108,7 +111,7 @@ public class GenericDao<Model> {
         });
     }
 
-    public void bulkOperation(DbUtil.Operation<Model, Object> operation){
-        dbUtil.withDaoAsBatch(type, operation);
+    public void bulkOperation(DbUtil.Operation<Model, Object> operation) {
+        dbUtil.withDaoAsBatch(context, type, operation);
     }
 }

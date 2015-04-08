@@ -34,6 +34,7 @@ import android.content.SharedPreferences;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -46,7 +47,6 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -79,7 +79,7 @@ import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class CommodityServiceTest {
+public class CommodityServiceTest extends LmisTestClass {
 
     public static final int MOCK_DAY = 15;
     @Inject
@@ -120,8 +120,6 @@ public class CommodityServiceTest {
                 bind(LmisServer.class).toInstance(mockLmisServer);
             }
         });
-
-
     }
 
     @Test

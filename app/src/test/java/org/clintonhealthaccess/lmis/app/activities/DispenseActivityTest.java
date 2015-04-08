@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.SelectedCommoditiesAdapter;
@@ -84,7 +85,7 @@ import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class DispenseActivityTest {
+public class DispenseActivityTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;

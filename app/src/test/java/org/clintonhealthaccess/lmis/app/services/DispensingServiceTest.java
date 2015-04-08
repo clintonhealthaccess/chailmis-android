@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
@@ -54,7 +55,7 @@ import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class DispensingServiceTest {
+public class DispensingServiceTest extends LmisTestClass {
     @Inject
     private CommodityService commodityService;
     @Inject
@@ -67,11 +68,12 @@ public class DispensingServiceTest {
     @Before
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
-        commodityService.initialise(new User("test", "pass"));
     }
 
     @Test
     public void testSaveDispensingSavesItsDispensingItems() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+
         Commodity commodity = commodityService.all().get(0);
         Dispensing dispensing = new Dispensing();
         DispensingItem newDispensingItem = new DispensingItem(commodity, 1);
@@ -86,12 +88,12 @@ public class DispensingServiceTest {
         });
 
         assertThat(count, is(1L));
-
-
     }
 
     @Test
     public void addDispensingShouldReduceTheStockLevels() {
+        commodityService.initialise(new User("test", "pass"));
+
         Commodity commodity = commodityService.all().get(0);
         int stockLevel = stockService.getStockLevelFor(commodity);
         assertThat(stockLevel, is(10));
@@ -108,6 +110,8 @@ public class DispensingServiceTest {
 
     @Test
     public void shouldGeneratePrescriptionIdForEachDispensingToPatient() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+
         assertThat(dispensingService.getNextPrescriptionId(), is(notNullValue()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
         String currentMonth = simpleDateFormat.format(new Date());

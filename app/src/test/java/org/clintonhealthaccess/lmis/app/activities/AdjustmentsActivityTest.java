@@ -29,7 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
@@ -38,8 +37,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
-import junit.framework.TestCase;
-
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.AdjustmentsAdapter;
@@ -67,7 +65,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -80,7 +77,7 @@ import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class AdjustmentsActivityTest extends TestCase {
+public class AdjustmentsActivityTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;
@@ -105,8 +102,6 @@ public class AdjustmentsActivityTest extends TestCase {
         });
         commodityService.initialise(new User("test", "pass"));
     }
-
-
 
     @Test
     public void testBuildActivity() throws Exception {

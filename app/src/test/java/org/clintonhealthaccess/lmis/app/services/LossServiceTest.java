@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.Loss;
@@ -50,7 +51,7 @@ import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class LossServiceTest {
+public class LossServiceTest extends LmisTestClass {
     @Inject
     private LossService lossService;
 
@@ -88,6 +89,7 @@ public class LossServiceTest {
     public void shouldUpdateCommodityStockOnHandWhenSavingLoss() throws Exception {
         Commodity commodity = commodityService.all().get(0);
         int stockOnHand = commodity.getStockOnHand();
+        System.out.println("Current Stock on Hand  is " + stockOnHand);
         int expectedStockOnHand = stockOnHand - 1;
 
         Loss loss = new Loss();

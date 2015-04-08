@@ -31,13 +31,17 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.TimingLogger;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
+import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
 import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.R;
@@ -55,10 +59,12 @@ import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItemName;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -68,6 +74,9 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 
+import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
+import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
+import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
@@ -210,7 +219,6 @@ public class CommodityService {
         });
     }
 
-
     public List<Commodity> all() {
         List<Category> categories = categoryService.all();
         List<Commodity> commodities = new ArrayList<>();
@@ -221,7 +229,7 @@ public class CommodityService {
     }
 
     public void saveToDatabase(final List<Category> categories) {
-        dbUtil.withDaoAsBatch(Category.class, new Operation<Category, Void>() {
+        dbUtil.withDaoAsBatch(context, Category.class, new Operation<Category, Void>() {
             @Override
             public Void operate(Dao<Category, String> dao) throws SQLException {
                 for (Category category : categories) {
@@ -250,16 +258,13 @@ public class CommodityService {
     }
 
     private void createCommodityAction(Commodity commodity, boolean dataSetsSaved) {
-
         GenericDao<DataSet> dataSetDao = new GenericDao<>(DataSet.class, context);
         GenericDao<CommodityAction> commodityActivityDao = new GenericDao<>(CommodityAction.class, context);
         GenericDao<CommodityActionDataSet> commodityActionDataSetDao = new GenericDao<>(CommodityActionDataSet.class, context);
-
         final List<DataSet> dataSets = new ArrayList<>();
         final List<CommodityActionDataSet> commodityActionDataSets = new ArrayList<>();
         final List<CommodityAction> actions = new ArrayList<>();
         for (CommodityAction commodityAction : commodity.getCommodityActions()) {
-
             if (commodityAction.getTransientCommodityActionDataSets() != null) {
                 commodityActionDataSets.addAll(commodityAction.getTransientCommodityActionDataSets());
             } else {
@@ -270,14 +275,12 @@ public class CommodityService {
             }
             actions.add(commodityAction);
         }
-
         if (!dataSetsSaved) {
             for (CommodityActionDataSet caDataSet : commodityActionDataSets) {
                 if (!dataSets.contains(caDataSet.getDataSet())) {
                     dataSets.add(caDataSet.getDataSet());
                 }
             }
-
             dataSetDao.bulkOperation(new Operation<DataSet, Object>() {
                 @Override
                 public Object operate(Dao<DataSet, String> dao) throws SQLException {
@@ -297,7 +300,6 @@ public class CommodityService {
                 return null;
             }
         });
-
         commodityActionDataSetDao.bulkOperation(new Operation<CommodityActionDataSet, Object>() {
             @Override
             public Object operate(Dao<CommodityActionDataSet, String> dao) throws SQLException {

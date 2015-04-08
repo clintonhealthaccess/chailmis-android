@@ -34,6 +34,7 @@ import android.util.Log;
 import com.google.inject.Inject;
 
 import org.apache.commons.io.IOUtils;
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
@@ -69,7 +70,7 @@ import roboguice.inject.InjectResource;
 
 import static org.robolectric.Robolectric.application;
 
-public class LMISTestCase {
+public class LMISTestCase extends LmisTestClass {
     @Inject
     private static StockItemSnapshotService stockItemSnapshotService;
     @InjectResource(R.string.dhis2_base_url)

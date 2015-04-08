@@ -29,16 +29,22 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.Context;
+
 import com.google.inject.Inject;
+import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.j256.ormlite.dao.DaoManager.createDao;
 
 public class CategoryService {
     private static List<Category> allCategories;
@@ -46,8 +52,18 @@ public class CategoryService {
     @Inject
     private DbUtil dbUtil;
 
+    @Inject
+    private Context context;
+
     public List<Category> all() {
         if (allCategories == null) {
+//            LmisSqliteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
+//            try {
+//                Dao<Category, Integer> dao = createDao(new AndroidConnectionSource(openHelper), Category.class);
+//                allCategories = dao.queryForAll();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
             allCategories = dbUtil.withDao(Category.class, new DbUtil.Operation<Category, List<Category>>() {
                 @Override
                 public List<Category> operate(Dao<Category, String> dao) throws SQLException {

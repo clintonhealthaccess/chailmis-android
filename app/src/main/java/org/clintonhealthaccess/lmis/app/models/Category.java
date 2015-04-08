@@ -34,14 +34,10 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.thoughtworks.dhis.models.DataElementGroup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -56,7 +52,7 @@ public class Category implements Serializable, Comparable<Category> {
     @DatabaseField(canBeNull = false)
     private String name;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(eager = false)
     private ForeignCollection<Commodity> commoditiesCollection;
 
     private List<Commodity> transientCommodities = new ArrayList<>();
@@ -132,6 +128,6 @@ public class Category implements Serializable, Comparable<Category> {
 
     @Override
     public String toString() {
-        return "[ " + id + " " + name + " SavedCommodities: " + commoditiesCollection + " UNsaved" + transientCommodities + " ]";
+        return "[ " + id + " " + lmisId+ " " + name + " SavedCommodities: " + commoditiesCollection + " UNsaved" + transientCommodities + " ]";
     }
 }

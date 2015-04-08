@@ -45,7 +45,6 @@ public class OrderCycleTest {
     @Before
     public void setUp() throws Exception {
         testDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
     }
 
     @Test

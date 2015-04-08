@@ -117,7 +117,7 @@ public class OrderServiceTest extends LMISTestCase {
             }
         });
 
-        openHelper = getHelper(application, LmisSqliteOpenHelper.class);
+        openHelper = LmisSqliteOpenHelper.getInstance(application);// getHelper(application, LmisSqliteOpenHelper.class);
         connectionSource = new AndroidConnectionSource(openHelper);
         reasonDao = createDao(connectionSource, OrderReason.class);
         orderDao = createDao(connectionSource, Order.class);
@@ -128,8 +128,6 @@ public class OrderServiceTest extends LMISTestCase {
         orderTypeDao = createDao(connectionSource, OrderType.class);
         dataSetDao = createDao(connectionSource, DataSet.class);
         snapshotGenericDao = new GenericDao<>(CommoditySnapshot.class, Robolectric.application);
-
-
     }
 
     @Test
@@ -167,7 +165,7 @@ public class OrderServiceTest extends LMISTestCase {
 
         assertThat(orderService.getNextSRVNumber(), is("AU-0001"));
         OrderType type = new OrderType("routine");
-        orderTypeDao.create(type);
+        orderTypeDao.createOrUpdate(type);
         final Order order = new Order("AU-0001");
         order.setOrderType(type);
         dbUtil.withDao(Order.class, new DbUtil.Operation<Order, Order>() {
@@ -180,12 +178,6 @@ public class OrderServiceTest extends LMISTestCase {
         assertThat(orderService.getNextSRVNumber(), is("AU-0002"));
 
     }
-
-    @After
-    public void tearDown() throws Exception {
-        releaseHelper();
-    }
-
 
     @Test
     public void shouldGetAllOrderTypes() throws Exception {

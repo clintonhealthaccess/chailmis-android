@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
@@ -60,7 +61,7 @@ import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class GenericServiceTest {
+public class GenericServiceTest extends LmisTestClass {
 
     @Inject
     ReceiveService receiveService;

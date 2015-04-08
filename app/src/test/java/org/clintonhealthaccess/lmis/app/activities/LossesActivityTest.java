@@ -35,6 +35,7 @@ import android.widget.Button;
 
 import com.google.inject.AbstractModule;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.LossesCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
@@ -65,7 +66,7 @@ import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class LossesActivityTest {
+public class LossesActivityTest extends LmisTestClass {
 
     private UserService userService;
     private LossesActivity lossesActivity;
@@ -81,7 +82,6 @@ public class LossesActivityTest {
                 bind(UserService.class).toInstance(userService);
             }
         });
-
     }
 
     @Test

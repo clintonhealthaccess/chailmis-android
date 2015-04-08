@@ -96,14 +96,14 @@ public class StockItemSnapshotService {
         );
     }
 
-    public void createOrUpdate(Commodity commodity, Date date) {
+    public void createOrUpdate(Commodity commodity, int quantity, Date date) {
 
         try {
             StockItemSnapshot stockItemSnapshot = get(commodity, date);
             if (stockItemSnapshot == null) {
-                create(commodity, date);
+                create(commodity, quantity, date);
             } else {
-                stockItemSnapshot.setQuantity(commodity.getStockOnHand());
+                stockItemSnapshot.setQuantity(quantity);
                 update(stockItemSnapshot);
             }
 
@@ -116,8 +116,8 @@ public class StockItemSnapshotService {
         new GenericDao<>(StockItemSnapshot.class, context).update(stockItemSnapshot);
     }
 
-    private void create(Commodity commodity, Date date) {
-        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, date, commodity.getStockOnHand());
+    private void create(Commodity commodity, int quantity, Date date) {
+        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, date, quantity);
         new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
     }
 

@@ -38,6 +38,7 @@ import android.widget.ListView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.ReportType;
@@ -67,8 +68,7 @@ import static org.robolectric.Robolectric.setupActivity;
 import static org.robolectric.Robolectric.shadowOf;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class ReportsActivityTest {
-
+public class ReportsActivityTest extends LmisTestClass {
 
     private UserService userService;
     @Inject
