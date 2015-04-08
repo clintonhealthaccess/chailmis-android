@@ -108,6 +108,8 @@ public class OrderServiceTest extends LMISTestCase {
 
     @Before
     public void setUp() throws SQLException {
+        LmisSqliteOpenHelper.getInstance(application).close();
+
         mockUserService = mock(UserService.class);
         when(mockUserService.getRegisteredUser()).thenReturn(new User("", "", "AU"));
         setUpInjection(this, new AbstractModule() {
