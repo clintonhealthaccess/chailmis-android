@@ -36,8 +36,11 @@ import com.thoughtworks.dhis.models.DataElementType;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.LmisServer;
+import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +60,7 @@ import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class CommodityActionServiceTest {
+public class CommodityActionServiceTest extends LMISTestCase {
 
     private List<CommodityActionValue> mockStockLevels;
     private LmisServer mockLmisServer;

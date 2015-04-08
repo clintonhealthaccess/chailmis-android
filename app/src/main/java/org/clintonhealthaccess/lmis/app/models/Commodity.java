@@ -65,17 +65,18 @@ public class Commodity implements Serializable {
     @DatabaseField(canBeNull = false)
     private boolean nonLGA = false;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @DatabaseField(canBeNull = false)
+    private boolean isDevice = false;
+
+    @DatabaseField(canBeNull = false)
+    private boolean isVaccine = false;
+
+    @ForeignCollectionField
     private ForeignCollection<StockItem> stockItems;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 5)
+    @ForeignCollectionField
     private Collection<CommodityAction> commodityActionsSaved;
 
-    @DatabaseField(canBeNull = false)
-    private boolean isDevice;
-
-    @DatabaseField(canBeNull = false)
-    private boolean isVaccine;
 
     private List<CommodityAction> commodityActions = newArrayList();
 
@@ -159,12 +160,16 @@ public class Commodity implements Serializable {
         return getStockItem().getQuantity();
     }
 
-    public void reduceStockOnHandBy(int quantity) {
-        getStockItem().reduceQuantityBy(quantity);
+    public StockItem reduceStockOnHandBy(int quantity) {
+        StockItem stockItem = getStockItem();
+        stockItem.reduceQuantityBy(quantity);
+        return stockItem;
     }
 
-    public void increaseStockOnHandBy(int quantity) {
-        getStockItem().increaseQuantityBy(quantity);
+    public StockItem increaseStockOnHandBy(int quantity) {
+        StockItem stockItem = getStockItem();
+        stockItem.increaseQuantityBy(quantity);
+        return stockItem;
     }
 
     public String getOrderFrequency() {

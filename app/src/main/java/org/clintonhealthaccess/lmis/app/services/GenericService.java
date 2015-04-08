@@ -74,7 +74,7 @@ public class GenericService {
     public static <ActionClass, ItemClass extends BaseItem> List<ItemClass> getItems(Commodity commodity, Date startDate,
                                                                          Date endDate, Class<ActionClass> actionClass,
                                                                          Class<ItemClass> itemClass, Context context) {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);//getHelper(context, LmisSqliteOpenHelper.class);
         try {
             Dao<ActionClass, String> actionDao = initialiseDao(openHelper, actionClass);
             Dao<ItemClass, String> itemDao = initialiseDao(openHelper, itemClass);

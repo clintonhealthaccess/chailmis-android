@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.remote;
 
 import com.google.inject.Inject;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.Indicator;
 import com.thoughtworks.dhis.models.IndicatorGroup;
@@ -45,10 +46,12 @@ import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -58,10 +61,12 @@ import java.util.List;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.getSentHttpRequest;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -191,8 +196,17 @@ public class Dhis2Test extends LMISTestCase {
         setUpSuccessHttpGetRequest(200, "indicatorGroups.json");
         setUpSuccessHttpGetRequest(200, "dataValues.json");
 
-        commodityService.saveToDatabase(dhis2.fetchCategories(user));
+        List<Category> categories = dhis2.fetchCategories(user);
+        commodityService.saveToDatabase(categories);
         categoryService.clearCache();
+
+        List<Category> savedCategories = categoryService.all();
+        assertThat(savedCategories, is(notNullValue()));
+        assertThat(savedCategories.size(), is(7));
+        assertThat(savedCategories.get(0).getName(), is("Essential Medicines"));
+        List<Commodity> savedCommodities = savedCategories.get(0).getCommodities();
+        assertThat(savedCommodities.size(), is(8));
+
         List<CommodityActionValue> result = dhis2.fetchCommodityActionValues(user);
         assertThat(result.size(), is(210));
         assertThat(result.get(0).getValue(), is("469"));

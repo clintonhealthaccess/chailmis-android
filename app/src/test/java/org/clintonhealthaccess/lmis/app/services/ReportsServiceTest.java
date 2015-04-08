@@ -33,6 +33,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -77,14 +78,13 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class ReportsServiceTest {
+public class ReportsServiceTest extends LmisTestClass {
 
     @Inject
     CategoryService categoryService;

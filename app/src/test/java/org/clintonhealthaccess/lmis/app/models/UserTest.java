@@ -29,20 +29,17 @@
 
 package org.clintonhealthaccess.lmis.app.models;
 
-import com.j256.ormlite.android.AndroidConnectionSource;
-import com.j256.ormlite.dao.Dao;
-
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.clintonhealthaccess.lmis.app.services.GenericDao;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 
 import java.sql.SQLException;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 import static com.j256.ormlite.table.TableUtils.clearTable;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
@@ -51,24 +48,14 @@ import static org.junit.Assert.assertThat;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class UserTest {
-    private Dao<User, Long> userDao;
-    private AndroidConnectionSource connectionSource;
-    private LmisSqliteOpenHelper openHelper;
+public class UserTest extends LmisTestClass {
+    private GenericDao<User> userDao;
 
     @Before
     public void setUp() throws SQLException {
         setUpInjection(this);
-
-        openHelper = getHelper(application, LmisSqliteOpenHelper.class);
-        connectionSource = new AndroidConnectionSource(openHelper);
-        userDao = createDao(connectionSource, User.class);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        clearTable(connectionSource, User.class);
-        releaseHelper();
+        userDao = new GenericDao<>(User.class, Robolectric.application);
+        LmisSqliteOpenHelper.getInstance(application).close();
     }
 
     @Test
@@ -76,8 +63,8 @@ public class UserTest {
         assertThat(userDao.countOf(), is(0l));
 
         User user = new User("admin", "district");
-        int newUserId = userDao.create(user);
-        assertThat(newUserId, is(1));
+        user = userDao.create(user);
+        assertThat(user.getUsername(), is("admin"));
         assertThat(userDao.countOf(), is(1l));
     }
 

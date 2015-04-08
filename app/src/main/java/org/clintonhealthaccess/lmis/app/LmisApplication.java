@@ -59,17 +59,18 @@ import static roboguice.RoboGuice.newDefaultRoboModule;
 import static roboguice.RoboGuice.setBaseApplicationInjector;
 
 public class LmisApplication extends Application {
+
     @Inject
     private CategoryService categoryService;
+
+    @Inject
+    private AllocationService allocationService;
 
     @Inject
     Context context;
 
     @Inject
     AlarmManager alarmManager;
-
-    @Inject
-    private AllocationService allocationService;
 
     @Override
     public void onCreate() {

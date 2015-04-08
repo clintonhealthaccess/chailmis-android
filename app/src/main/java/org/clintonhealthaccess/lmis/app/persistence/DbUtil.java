@@ -43,7 +43,6 @@ import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static com.j256.ormlite.dao.DaoManager.createDao;
 
 public class DbUtil {
@@ -51,26 +50,36 @@ public class DbUtil {
         ReturnType operate(Dao<DomainType, String> dao) throws SQLException;
     }
 
-
     @Inject
     private Context context;
 
     public <DomainType, ReturnType> ReturnType withDao(
             Class<DomainType> domainClass, Operation<DomainType, ReturnType> operation) {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        //SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
         try {
             Dao<DomainType, String> dao = initialiseDao(openHelper, domainClass);
             return operation.operate(dao);
         } catch (SQLException e) {
             throw new LmisException(e);
-        } finally {
-            releaseHelper();
+        }
+    }
+
+    public <DomainType, ReturnType> ReturnType withDao(
+            Context context, Class<DomainType> domainClass, Operation<DomainType, ReturnType> operation) {
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
+        try {
+            Dao<DomainType, String> dao = initialiseDao(openHelper, domainClass);
+            return operation.operate(dao);
+        } catch (SQLException e) {
+            throw new LmisException(e);
         }
     }
 
     public <DomainType, ReturnType> ReturnType withDaoAsBatch(
-            Class<DomainType> domainClass, final Operation<DomainType, ReturnType> operation) {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+            Context context, Class<DomainType> domainClass, final Operation<DomainType, ReturnType> operation) {
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
+        //SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
             final Dao<DomainType, String> dao = initialiseDao(openHelper, domainClass);
             return dao.callBatchTasks(new Callable<ReturnType>() {
@@ -84,8 +93,25 @@ public class DbUtil {
         } catch (Exception e) {
             e.printStackTrace();
             throw new LmisException(e);
-        } finally {
-            releaseHelper();
+        } 
+    }
+
+    public <DomainType, ReturnType> ReturnType withDaoAsBatch(
+            Class<DomainType> domainClass, final Operation<DomainType, ReturnType> operation) {
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
+        try {
+            final Dao<DomainType, String> dao = initialiseDao(openHelper, domainClass);
+            return dao.callBatchTasks(new Callable<ReturnType>() {
+                @Override
+                public ReturnType call() throws Exception {
+                    return operation.operate(dao);
+                }
+            });
+        } catch (SQLException e) {
+            throw new LmisException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new LmisException(e);
         }
     }
 

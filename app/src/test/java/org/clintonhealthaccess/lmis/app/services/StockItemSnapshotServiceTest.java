@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -40,10 +41,8 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -59,14 +58,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class StockItemSnapshotServiceTest {
+public class StockItemSnapshotServiceTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;

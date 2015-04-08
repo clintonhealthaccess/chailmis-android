@@ -30,14 +30,17 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
+import com.j256.ormlite.android.AndroidConnectionSource;
 import com.j256.ormlite.dao.Dao;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +48,7 @@ import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
+import static com.j256.ormlite.dao.DaoManager.createDao;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -52,13 +56,16 @@ import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class StockServiceTest {
+public class StockServiceTest extends LmisTestClass {
     @Inject
     StockService stockService;
     @Inject
     CommodityService commodityService;
     @Inject
     DbUtil dbUtil;
+
+    private LmisSqliteOpenHelper openHelper;
+    private AndroidConnectionSource connectionSource;
 
     private Dao<Commodity, String> commodityDao;
     private Dao<StockItem, String> stockDao;
@@ -67,21 +74,10 @@ public class StockServiceTest {
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
 
-        dbUtil.withDao(Commodity.class, new DbUtil.Operation<Commodity, Void>() {
-            @Override
-            public Void operate(Dao<Commodity, String> dao) throws SQLException {
-                commodityDao = dao;
-                return null;
-            }
-        });
-
-        dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
-            @Override
-            public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                stockDao = dao;
-                return null;
-            }
-        });
+        openHelper = LmisSqliteOpenHelper.getInstance(application);// getHelper(application, LmisSqliteOpenHelper.class);
+        connectionSource = new AndroidConnectionSource(openHelper);
+        commodityDao = createDao(connectionSource, Commodity.class);
+        stockDao = createDao(connectionSource, StockItem.class);
     }
 
     @Test

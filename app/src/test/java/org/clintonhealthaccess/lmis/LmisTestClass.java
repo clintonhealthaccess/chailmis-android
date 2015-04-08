@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,56 +28,19 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-package org.clintonhealthaccess.lmis.app.services;
+package org.clintonhealthaccess.lmis;
 
-import android.content.Context;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
-import com.google.inject.Inject;
-import com.j256.ormlite.android.AndroidConnectionSource;
-import com.j256.ormlite.dao.Dao;
-
-import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
+import org.junit.After;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public abstract class LmisTestClass {
 
-import static com.j256.ormlite.dao.DaoManager.createDao;
-
-public class CategoryService {
-    private static List<Category> allCategories;
-
-    @Inject
-    private DbUtil dbUtil;
-
-    @Inject
-    private Context context;
-
-    public List<Category> all() {
-        if (allCategories == null) {
-            allCategories = dbUtil.withDao(context, Category.class, new DbUtil.Operation<Category, List<Category>>() {
-                @Override
-                public List<Category> operate(Dao<Category, String> dao) throws SQLException {
-                    return dao.queryForAll();
-                }
-            });
-        }
-        return allCategories;
+    @After
+    public void tearDown() throws Exception{
+        OpenHelperManager.releaseHelper();
+        LmisSqliteOpenHelper.closeHelper();
     }
 
-
-    public List<Category> allSorted() {
-        List<Category> all = all();
-        List<Category> categories = new ArrayList<>();
-        Collections.copy(categories, all);
-        Collections.sort(categories);
-        return categories;
-    }
-
-    public void clearCache() {
-        allCategories = null;
-    }
 }

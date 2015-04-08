@@ -39,9 +39,7 @@ import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.apache.commons.io.IOUtils;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
-import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Category;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;

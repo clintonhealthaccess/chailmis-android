@@ -119,7 +119,7 @@ public class CommodityActionService {
     }
 
     public int getMonthlyValue(Commodity commodity, Date startingDate, Date endDate, DataElementType dataElementType) {
-        SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
         int commodityActionValueQuantity = 0;
         try {
             Dao<CommodityActionValue, String> commodityActionValueDao = DbUtil.initialiseDao(openHelper, CommodityActionValue.class);

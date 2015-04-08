@@ -63,7 +63,7 @@ public class DataSet implements Serializable {
 
     private List<DataElement> dataElements;
 
-    @ForeignCollectionField(eager = false)
+    @ForeignCollectionField
     private ForeignCollection<CommodityActionDataSet> commodityActionDataSets;
 
     public DataSet(String id) {

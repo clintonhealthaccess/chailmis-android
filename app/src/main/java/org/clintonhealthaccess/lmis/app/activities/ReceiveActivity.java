@@ -305,7 +305,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         if (!allocationId.trim().isEmpty()) {
             validateAllocationId(allocationId);
         }
-        if (allocationIdIsValid(allocationId)) {
+        if (allocationIdIsValid(allocationId) || presetAllocationId != null) {
             allocation = allocationService.getAllocationByLmisId(textViewAllocationId.getText().toString());
             populateWithAllocation(allocation);
         } else {

@@ -37,8 +37,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
-import junit.framework.TestCase;
-
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.AdjustmentsAdapter;
@@ -78,7 +77,7 @@ import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class AdjustmentsActivityTest extends TestCase {
+public class AdjustmentsActivityTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;

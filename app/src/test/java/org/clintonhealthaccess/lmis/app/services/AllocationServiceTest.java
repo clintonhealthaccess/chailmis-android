@@ -31,19 +31,18 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
-import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.remote.Dhis2;
 import org.clintonhealthaccess.lmis.utils.LMISTestCase;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -53,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.thoughtworks.dhis.models.DataElementType.ALLOCATION_ID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -67,6 +65,7 @@ import static org.mockito.Mockito.atMost;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class AllocationServiceTest extends LMISTestCase {

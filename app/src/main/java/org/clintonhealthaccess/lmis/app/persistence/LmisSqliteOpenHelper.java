@@ -77,4 +77,23 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
             migration.down(database, connectionSource);
         }
     }
+
+    private static LmisSqliteOpenHelper _helperInstance;
+
+    public static LmisSqliteOpenHelper getInstance(Context context) {
+        if (_helperInstance == null)
+            _helperInstance = new LmisSqliteOpenHelper(context);
+
+        return _helperInstance;
+    }
+
+    public static void closeHelper() {
+        _helperInstance = null;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        _helperInstance = null;
+    }
 }

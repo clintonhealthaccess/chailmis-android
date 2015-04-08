@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.services;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -57,7 +58,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class AdjustmentServiceTest {
+public class AdjustmentServiceTest extends LmisTestClass {
 
     @Inject
     CommodityService commodityService;
@@ -65,13 +66,11 @@ public class AdjustmentServiceTest {
     @Inject
     AdjustmentService adjustmentService;
 
-
     AlertsService alertsService;
 
     CommoditySnapshotService commoditySnapShotService;
 
     StockService stockService;
-
 
     @Before
     public void setUp() throws Exception {

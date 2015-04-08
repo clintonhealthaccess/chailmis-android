@@ -42,7 +42,6 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
@@ -53,7 +52,6 @@ import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import java.io.Serializable;
 
-import roboguice.activity.RoboActionBarActivity;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
@@ -63,7 +61,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.clintonhealthaccess.lmis.app.R.id;
 import static org.clintonhealthaccess.lmis.app.R.layout;
 
-public class RegisterActivity extends RoboActionBarActivity implements Serializable {
+public class RegisterActivity extends OrmLiteActivity implements Serializable {
     @Inject
     private UserService userService;
     @Inject

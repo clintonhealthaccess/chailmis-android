@@ -495,6 +495,7 @@ public class Dhis2 implements LmisServer {
 
     public List<CommodityActionValue> convertIndicatorValuesToCommodityActions(
             List<List<String>> values, List<CommodityAction> indicatorActions) {
+        System.out.println("Indicator Actions " + indicatorActions.size());
         final Map<String, CommodityAction> actionMap = new HashMap<>();
         for (CommodityAction action : indicatorActions) {
             actionMap.put(action.getId(), action);

@@ -38,6 +38,7 @@ import android.widget.TextView;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.DispenseActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
@@ -46,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStra
 import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -79,7 +81,7 @@ import static org.robolectric.Robolectric.setupActivity;
 import static org.robolectric.util.FragmentTestUtil.startFragment;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class ItemSelectFragmentTest {
+public class ItemSelectFragmentTest extends LmisTestClass {
     @Inject
     private CategoryService categoryService;
     @Inject
@@ -90,6 +92,8 @@ public class ItemSelectFragmentTest {
 
     @Before
     public void setUp() throws Exception {
+        LmisSqliteOpenHelper.getInstance(application).close();
+
         mockStockService = mock(StockService.class);
         setUpInjectionWithMockLmisServer(application, this, new AbstractModule() {
             @Override

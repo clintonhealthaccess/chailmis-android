@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
@@ -42,10 +43,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import static org.clintonhealthaccess.lmis.app.services.GenericService.getTotal;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -53,7 +50,7 @@ import static org.hamcrest.core.Is.is;
 import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class ReceiveServiceTest {
+public class ReceiveServiceTest extends LmisTestClass {
     @Inject
     CommodityService commodityService;
 
@@ -69,6 +66,7 @@ public class ReceiveServiceTest {
     public void setUp() throws Exception {
         setUpInjectionWithMockLmisServer(application, this);
         commodityService.initialise(new User("test", "pass"));
+
         receiveDao = new GenericDao<>(Receive.class, Robolectric.application);
         allocationsDao = new GenericDao<>(Allocation.class, Robolectric.application);
     }

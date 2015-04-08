@@ -31,17 +31,13 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.models.reports.BinCard;
-import org.clintonhealthaccess.lmis.app.models.reports.BinCardItem;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.app.services.LossService;
@@ -49,17 +45,10 @@ import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
-import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.shadows.ShadowHandler;
-import org.robolectric.shadows.ShadowToast;
-
-import java.util.Date;
 
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.dispense;
 import static org.clintonhealthaccess.lmis.utils.LMISTestCase.lose;
@@ -72,18 +61,14 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Robolectric.application;
 import static org.robolectric.Robolectric.buildActivity;
-import static org.robolectric.Robolectric.setupActivity;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class BinCardActivityTest{
+public class BinCardActivityTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;

@@ -64,7 +64,7 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Loss loss;
 
-    @ForeignCollectionField(eager = true, maxEagerLevel = 2)
+    @ForeignCollectionField
     private ForeignCollection<LossItemDetail> lossItemDetailCollection;
 
     private List<LossItemDetail> lossItemDetails;

@@ -29,6 +29,8 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.Context;
+
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
@@ -50,33 +52,36 @@ public class StockService {
     @Inject
     public StockItemSnapshotService stockItemSnapshotService;
 
-   @Inject
+    @Inject
     private AlertsService alertService;
+
+    @Inject
+    private Context context;
 
     public int getStockLevelFor(Commodity commodity) {
         return commodity.getStockOnHand();
     }
 
     public void reduceStockLevelFor(final Commodity commodity, int quantity, Date date) {
-        commodity.reduceStockOnHandBy(quantity);
-        saveStockLevel(commodity, date);
+        StockItem stockItem = commodity.reduceStockOnHandBy(quantity);
+        saveStockLevel(commodity, stockItem, date);
         categoryService.clearCache();
     }
 
     public void increaseStockLevelFor(Commodity commodity, int quantity, Date date) {
-        commodity.increaseStockOnHandBy(quantity);
-        saveStockLevel(commodity, date);
+        StockItem stockItem = commodity.increaseStockOnHandBy(quantity);
+        saveStockLevel(commodity, stockItem, date);
         categoryService.clearCache();
     }
 
 
-    private void saveStockLevel(final Commodity commodity, final Date date) {
-        dbUtil.withDao(StockItem.class, new DbUtil.Operation<StockItem, Void>() {
+    private void saveStockLevel(final Commodity commodity, final StockItem stockItem, final Date date) {
+        dbUtil.withDao(context, StockItem.class, new DbUtil.Operation<StockItem, Void>() {
 
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
-                dao.update(commodity.getStockItem());
-                stockItemSnapshotService.createOrUpdate(commodity, date);
+                dao.update(stockItem);
+                stockItemSnapshotService.createOrUpdate(commodity, stockItem.getQuantity(), date);
                 //FIXME: Disabled the immediate update of lowstocklevel alerts till feedback from CHAI
                 //alertService.updateCommodityLowStockAlert(commodity);
                 return null;
