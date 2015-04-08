@@ -168,7 +168,7 @@ public class OrderServiceTest extends LMISTestCase {
         orderTypeDao.createOrUpdate(type);
         final Order order = new Order("AU-0001");
         order.setOrderType(type);
-        dbUtil.withDao(Order.class, new DbUtil.Operation<Order, Order>() {
+        dbUtil.withDao(application, Order.class, new DbUtil.Operation<Order, Order>() {
             @Override
             public Order operate(Dao<Order, String> dao) throws SQLException {
                 dao.create(order);
