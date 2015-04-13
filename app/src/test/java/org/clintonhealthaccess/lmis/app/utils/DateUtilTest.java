@@ -47,4 +47,14 @@ public class DateUtilTest {
         Date expectedDate = new SimpleDateFormat("yyyyMMdd").parse("20150101");
         assertThat(DateUtil.parseString(dateString, format), is(expectedDate));
     }
+
+    @Test
+    public void shouldAddMonth() throws Exception {
+        SimpleDateFormat month = new SimpleDateFormat("MM");
+        Date date = DateUtil.addMonth(new SimpleDateFormat("yyyyMMdd").parse("20150101"), -1);
+        assertThat(month.format(date), is("12"));
+
+        date = DateUtil.addMonth(new SimpleDateFormat("yyyyMMdd").parse("20150101"), 1);
+        assertThat(month.format(date), is("02"));
+    }
 }

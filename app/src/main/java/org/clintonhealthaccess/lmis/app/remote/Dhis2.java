@@ -71,6 +71,7 @@ import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorValueResponse;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.DataSetService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
@@ -376,16 +377,27 @@ public class Dhis2 implements LmisServer {
                 }
             }
         }
+        SimpleDateFormat formater = new SimpleDateFormat("yyyyMM");
+        String period = formater.format(new Date());
 
+        List<List<String>> rows = getIndicatorValies(indicatorIds, user, period, true);
+        if (rows == null || rows.size() == 0) {
+            rows = getIndicatorValies(indicatorIds, user, formater.format(DateUtil.addMonth(new Date(), -1)), true);
+        }
+
+        return convertIndicatorValuesToCommodityActions(rows, indicatorActions);
+    }
+
+    private List<List<String>> getIndicatorValies(String indicatorIds, User user, String period, Boolean skipMeta) {
         Dhis2Endpoint service = dhis2EndPointFactory.create(user);
         IndicatorValueResponse indicatorValueResponse = new IndicatorValueResponse();
-        String period = new SimpleDateFormat("yyyyMM").format(new Date());
+
         try {
-            indicatorValueResponse = service.fetchIndicatorValues("dx:" + indicatorIds, "ou:" + user.getFacilityCode(), "pe:" + period, "true");
+            indicatorValueResponse = service.fetchIndicatorValues("dx:" + indicatorIds, "ou:" + user.getFacilityCode(), "pe:" + period, skipMeta.toString());
         } catch (LmisException exception) {
             e(SYNC, "error syncing stock levels");
         }
-        return convertIndicatorValuesToCommodityActions(indicatorValueResponse.getRows(), indicatorActions);
+        return indicatorValueResponse.getRows();
     }
 
     @Override

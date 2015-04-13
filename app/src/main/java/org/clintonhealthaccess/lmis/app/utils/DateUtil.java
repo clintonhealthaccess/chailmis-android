@@ -71,6 +71,12 @@ public class DateUtil {
         return calendar.getTime();
     }
 
+    public static Date addMonth(Date date, int difference){
+        Calendar calendar = calendarDate(date);
+        calendar.add(Calendar.MONTH, difference);
+        return calendar.getTime();
+    }
+
     public static Calendar calendarDate(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
