@@ -96,29 +96,21 @@ public class StockItemSnapshotService {
         );
     }
 
-    public void createOrUpdate(Commodity commodity, int quantity, Date date) {
+    public StockItemSnapshot createOrUpdate(Commodity commodity, int quantity, Date date) {
 
         try {
             StockItemSnapshot stockItemSnapshot = get(commodity, date);
             if (stockItemSnapshot == null) {
-                create(commodity, quantity, date);
+                stockItemSnapshot = new StockItemSnapshot(commodity, date, quantity);
             } else {
                 stockItemSnapshot.setQuantity(quantity);
-                update(stockItemSnapshot);
             }
+           return new GenericDao<>(StockItemSnapshot.class, context).createOrUpdate(stockItemSnapshot);
 
         } catch (Exception e) {
             Log.e("StockItemSnapshot", e.getMessage());
         }
-    }
-
-    private void update(StockItemSnapshot stockItemSnapshot) {
-        new GenericDao<>(StockItemSnapshot.class, context).update(stockItemSnapshot);
-    }
-
-    private void create(Commodity commodity, int quantity, Date date) {
-        StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, date, quantity);
-        new GenericDao<>(StockItemSnapshot.class, context).create(stockItemSnapshot);
+        return null;
     }
 
     public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
@@ -133,7 +125,6 @@ public class StockItemSnapshotService {
         if (latestStockItemSnapshot != null) {
             return latestStockItemSnapshot.getQuantity();
         }
-
         return 0;
     }
 
@@ -160,8 +151,7 @@ public class StockItemSnapshotService {
                     @Override
                     public StockItemSnapshot operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
                         QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
-                        queryBuilder.where().eq("commodity_id", commodity.getId()).and()
-                                .le("created", currentDate);
+                        queryBuilder.where().eq("commodity_id", commodity.getId()).and().le("created", currentDate);
                         queryBuilder.orderBy("created", false);
                         PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
 
@@ -202,7 +192,7 @@ public class StockItemSnapshotService {
                 numOfStockOutDays++;
             }
 
-            if(stockItemSnapshot!=null) {
+            if (stockItemSnapshot != null) {
                 openingStock = stockItemSnapshot.getQuantity();
             }
             calendar.add(Calendar.DAY_OF_MONTH, 1);

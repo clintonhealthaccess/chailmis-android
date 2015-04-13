@@ -41,6 +41,7 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -160,7 +161,7 @@ public class StockItemSnapshotServiceTest extends LmisTestClass {
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date snapshotDate = calendar.getTime();
 
-        StockItemSnapshot stockItemSnapshot = createStockItemSnapshot(commodity, snapshotDate, 10);
+        StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.createOrUpdate(commodity, 10, snapshotDate);
 
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date date2DaysAhead = calendar.getTime();

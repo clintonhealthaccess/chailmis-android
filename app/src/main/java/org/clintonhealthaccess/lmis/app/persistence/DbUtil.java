@@ -79,7 +79,6 @@ public class DbUtil {
     public <DomainType, ReturnType> ReturnType withDaoAsBatch(
             Context context, Class<DomainType> domainClass, final Operation<DomainType, ReturnType> operation) {
         SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
-        //SQLiteOpenHelper openHelper = getHelper(context, LmisSqliteOpenHelper.class);
         try {
             final Dao<DomainType, String> dao = initialiseDao(openHelper, domainClass);
             return dao.callBatchTasks(new Callable<ReturnType>() {

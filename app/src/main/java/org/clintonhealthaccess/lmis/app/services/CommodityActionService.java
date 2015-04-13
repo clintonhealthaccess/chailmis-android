@@ -54,7 +54,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 
 public class CommodityActionService {

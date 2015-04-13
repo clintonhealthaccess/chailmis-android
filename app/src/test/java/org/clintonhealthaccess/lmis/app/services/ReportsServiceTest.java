@@ -55,6 +55,7 @@ import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -280,9 +281,9 @@ public class ReportsServiceTest extends LmisTestClass {
 
         Calendar calendar = Calendar.getInstance();
 
-        calendar.add(Calendar.DAY_OF_MONTH, 2);
-        int difference = 3;
-        createStockItemSnapshot(commodity, calendar.getTime(), difference);
+        //calendar.add(Calendar.DAY_OF_MONTH, -2);
+        int soh = 13;
+        stockItemSnapshotService.createOrUpdate(commodity, soh, calendar.getTime());
 
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         Date startDate = calendar.getTime();
@@ -292,9 +293,8 @@ public class ReportsServiceTest extends LmisTestClass {
         List<FacilityStockReportItem> facilityStockReportItems = reportsService.getFacilityReportItemsForCategory(category, dateFormatYear.format(startDate),
                 dateFormatMonth.format(startDate), dateFormatYear.format(endDate), dateFormatMonth.format(endDate));
 
-        int expectedQuantity = commodity.getStockOnHand() + difference;
         int stockOnHand = facilityStockReportItems.get(0).getStockOnHand();
-        assertThat(stockOnHand, is(expectedQuantity));
+        assertThat(stockOnHand, is(soh));
     }
 
     @Test
@@ -463,7 +463,8 @@ public class ReportsServiceTest extends LmisTestClass {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         int openingStock = 3;
-        createStockItemSnapshotValue(commodity, calendar.getTime(), openingStock);
+        stockItemSnapshotService.createOrUpdate(commodity, openingStock, calendar.getTime());
+        //createStockItemSnapshotValue(commodity, calendar.getTime(), openingStock);
 
         receive(commodity, 20, receiveService);
         receive(commodity, 30, receiveService);

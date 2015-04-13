@@ -39,10 +39,14 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.clintonhealthaccess.lmis.app.activities.ReceiveActivity;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static org.clintonhealthaccess.lmis.app.utils.DateUtil.formatDate;
+import static org.clintonhealthaccess.lmis.app.utils.DateUtil.parseString;
 
 @DatabaseTable
 public class AllocationAlert implements NotificationMessage {
@@ -68,7 +72,16 @@ public class AllocationAlert implements NotificationMessage {
 
     @Override
     public String getMessage() {
-        return "New Allocation " + allocation.getAllocationId() + " created on " + allocation.getPeriod();
+        return "New Allocation " + allocation.getAllocationId() + " created on " + getDate();
+    }
+
+    private String getDate() {
+        try {
+            return formatDate(parseString(allocation.getPeriod(), "yyyyMMdd"), "dd MMM yyyy");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return allocation.getPeriod();
     }
 
     @Override

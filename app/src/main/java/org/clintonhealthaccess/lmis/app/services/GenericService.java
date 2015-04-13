@@ -34,15 +34,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.BaseItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
-import org.clintonhealthaccess.lmis.app.models.Receive;
-import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
@@ -50,7 +47,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.getHelper;
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
@@ -74,7 +70,7 @@ public class GenericService {
     public static <ActionClass, ItemClass extends BaseItem> List<ItemClass> getItems(Commodity commodity, Date startDate,
                                                                          Date endDate, Class<ActionClass> actionClass,
                                                                          Class<ItemClass> itemClass, Context context) {
-        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);//getHelper(context, LmisSqliteOpenHelper.class);
+        SQLiteOpenHelper openHelper = LmisSqliteOpenHelper.getInstance(context);
         try {
             Dao<ActionClass, String> actionDao = initialiseDao(openHelper, actionClass);
             Dao<ItemClass, String> itemDao = initialiseDao(openHelper, itemClass);

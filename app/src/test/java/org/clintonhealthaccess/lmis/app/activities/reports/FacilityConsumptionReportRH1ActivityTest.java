@@ -132,7 +132,6 @@ public class FacilityConsumptionReportRH1ActivityTest {
         assertThat(activity.spinnerEndingMonth.getAdapter().getCount(), is(months));
     }
 
-
     @Test
     @Ignore
     public void shouldHaveManyTextViewsInSecondRowOfListViewHeader() throws Exception {

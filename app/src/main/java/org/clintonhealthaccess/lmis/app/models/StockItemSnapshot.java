@@ -147,4 +147,8 @@ public class StockItemSnapshot {
     public boolean isStockOut() {
         return stockOut;
     }
+
+    public int getId() {
+        return id;
+    }
 }

@@ -109,7 +109,6 @@ public class Category implements Serializable, Comparable<Category> {
         Category category = (Category) o;
 
         return !(name != null ? !name.equals(category.name) : category.name != null);
-
     }
 
     @Override

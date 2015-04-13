@@ -67,6 +67,15 @@ public class CategoryService {
         return allCategories;
     }
 
+    public Category get(Category category) {
+        for (Category t : all()) {
+            if (t.equals(category)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
 
     public List<Category> allSorted() {
         List<Category> all = all();

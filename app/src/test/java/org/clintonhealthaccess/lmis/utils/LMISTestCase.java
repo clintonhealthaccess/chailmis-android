@@ -174,8 +174,7 @@ public class LMISTestCase extends LmisTestClass {
     public static StockItemSnapshot createStockItemSnapshotValue(Commodity commodity, Date time, int quantity) {
         StockItemSnapshot stockItemSnapshot = new StockItemSnapshot(commodity, time, quantity);
 
-        new GenericDao<>(StockItemSnapshot.class, application)
-                .create(stockItemSnapshot);
+        new GenericDao<>(StockItemSnapshot.class, application).create(stockItemSnapshot);
 
         return stockItemSnapshot;
     }

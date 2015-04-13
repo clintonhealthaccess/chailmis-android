@@ -59,7 +59,7 @@ public class BinCardAdapter extends ArrayAdapter<BinCardItem> {
         BinCardItem binCardItem = getItem(position);
 
         TextView textViewDate = (TextView) rowView.findViewById(R.id.textViewDate);
-        textViewDate.setText(DateUtil.dateString(binCardItem.getDate()));
+        textViewDate.setText(DateUtil.formatDate(binCardItem.getDate()));
 
         TextView textViewReceivedFromIssuedTo = (TextView) rowView.findViewById(R.id.textViewReceivedFromIssuedTo);
         textViewReceivedFromIssuedTo.setText(String.valueOf(binCardItem.getReceivedFromIssuedTo()));

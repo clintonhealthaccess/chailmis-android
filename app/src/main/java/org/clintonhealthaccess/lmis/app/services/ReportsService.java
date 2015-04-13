@@ -86,6 +86,8 @@ public class ReportsService {
     @Inject
     private CommodityService commodityService;
 
+    @Inject
+    private CategoryService categoryService;
 
     public List<FacilityStockReportItem> getFacilityReportItemsForCategory(
             Category category, String startingYear, String startingMonth, String endingYear, String endingMonth) {
@@ -95,6 +97,8 @@ public class ReportsService {
         try {
             Date startingDate = convertToDate(startingYear, startingMonth, true);
             Date endDate = convertToDate(endingYear, endingMonth, false);
+
+            category = categoryService.get(category);
 
             for (Commodity commodity : category.getCommodities()) {
 
@@ -139,6 +143,8 @@ public class ReportsService {
             Date startingDate = convertToDate(startingYear, startingMonth, true);
             Date endDate = convertToDate(endingYear, endingMonth, false);
 
+            category = categoryService.get(category);
+
             for (Commodity commodity : category.getCommodities()) {
                 FacilityCommodityConsumptionRH1ReportItem reportItem = new FacilityCommodityConsumptionRH1ReportItem(commodity);
                 reportItem.setValues(getConsumptionValuesForCommodityBetweenDates(commodity, startingDate, endDate));
@@ -158,12 +164,12 @@ public class ReportsService {
 
         Date stopDate = DateUtil.addDayOfMonth(endDate, 1);
         Date currentDate = startingDate;
-         while(currentDate.before(stopDate)){
-             int total = GenericService.getTotal(currentDate, dispensingItems);
-             ConsumptionValue consumptionValue = new ConsumptionValue(currentDate, total);
-             consumptionValues.add(consumptionValue);
-             currentDate = DateUtil.addDayOfMonth(currentDate, 1);
-         }
+        while (currentDate.before(stopDate)) {
+            int total = GenericService.getTotal(currentDate, dispensingItems);
+            ConsumptionValue consumptionValue = new ConsumptionValue(currentDate, total);
+            consumptionValues.add(consumptionValue);
+            currentDate = DateUtil.addDayOfMonth(currentDate, 1);
+        }
 
         return consumptionValues;
     }
@@ -210,6 +216,7 @@ public class ReportsService {
             Date startingDate = convertToDate(startingYear, startingMonth, true);
             Date endDate = convertToDate(endingYear, endingMonth, false);
 
+            category = categoryService.get(category);
             for (Commodity commodity : category.getCommodities()) {
 
                 int openingStock = stockItemSnapshotService.getLatestStock(commodity, startingDate, true);
@@ -248,7 +255,8 @@ public class ReportsService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(firstDateOfMonth);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-        return calendar.getTime();
+        Date todayWithoutTime = dateFormat.parse(dateFormat.format(new Date()));
+        return calendar.getTime().after(todayWithoutTime) ?  todayWithoutTime : calendar.getTime();
     }
 
 
@@ -261,6 +269,8 @@ public class ReportsService {
             Date date = convertToDate(year, month, true);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
+
+            category = categoryService.get(category);
 
             for (Commodity commodity : category.getCommodities()) {
                 if (isForDevices && !commodity.isDevice() || !isForDevices && commodity.isDevice()) {

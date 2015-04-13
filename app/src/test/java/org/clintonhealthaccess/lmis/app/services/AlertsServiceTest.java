@@ -293,14 +293,16 @@ public class AlertsServiceTest extends LmisTestClass {
 
     @Test
     public void shouldGenerateAllocationAlertsForAllocationsThatHaveNoAlertsAndHaveNotYetBeenReceived() throws Exception {
-        Allocation allocation = new Allocation("job", "now");
+        Allocation allocation = new Allocation("job", "20141201");
         allocation.setReceived(true);
-        Allocation allocation1 = new Allocation("james", "then");
+        Allocation allocation1 = new Allocation("james", "20141206");
         createAllocation(allocation);
         createAllocation(allocation1);
         alertsService.generateAllocationAlerts();
         List<AllocationAlert> allocationAlerts = alertsService.getAllocationAlerts();
         assertThat(allocationAlerts.size(), is(1));
+
+        assertThat(allocationAlerts.get(0).getMessage(), is("New Allocation james created on 06 Dec 2014"));
     }
 
     @Test

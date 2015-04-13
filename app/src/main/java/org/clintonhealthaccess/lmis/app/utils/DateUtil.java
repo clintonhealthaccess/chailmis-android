@@ -29,6 +29,7 @@
 
 package org.clintonhealthaccess.lmis.app.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -80,17 +81,25 @@ public class DateUtil {
         return dateFormater.format(date1).equals(dateFormater.format(date2));
     }
 
-    public static int dayNumber(Date date){
+    public static int dayNumber(Date date) {
         Calendar calender = calendarDate(date);
         return calender.get(Calendar.DAY_OF_MONTH);
     }
 
-    public static String dateString(Date date) {
+    public static String formatDate(Date date) {
         return dateFormater.format(date);
     }
 
+    public static String formatDate(Date date, String format) {
+        return new SimpleDateFormat(format).format(date);
+    }
+
+    public static Date parseString(String string, String format) throws ParseException {
+        return new SimpleDateFormat(format).parse(string);
+    }
+
     public static Date today() {
-       return Calendar.getInstance().getTime();
+        return Calendar.getInstance().getTime();
     }
 
     public static int numDaysToEndOfMonth() {

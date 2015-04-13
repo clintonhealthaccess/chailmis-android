@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2014, Thoughtworks Inc
+ * Copyright (c) 2014, ThoughtWorks
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,73 +30,56 @@
 
 package org.clintonhealthaccess.lmis.app.services;
 
+import android.content.SharedPreferences;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 
-import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.LmisTestClass;
+import org.clintonhealthaccess.lmis.app.models.Category;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.sync.SyncManager;
-import org.clintonhealthaccess.lmis.utils.LMISTestCase;
+import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.sql.SQLException;
+import java.util.List;
 
+import static org.clintonhealthaccess.lmis.utils.TestFixture.defaultCategories;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
+import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.testActionValues;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.robolectric.Robolectric.addPendingHttpResponse;
+import static org.mockito.Mockito.when;
+import static org.robolectric.Robolectric.application;
 
 @RunWith(RobolectricGradleTestRunner.class)
-public class UserServiceTest extends LMISTestCase {
+public class CategoryServiceTest extends LmisTestClass{
+
+    public static final int MOCK_DAY = 15;
     @Inject
-    private UserService userService;
+    private CategoryService categoryService;
+
+    @Inject
+    private CommodityService commodityService;
 
     @Before
-    public void setUp() throws SQLException {
-        final SyncManager mockSyncManager = mock(SyncManager.class);
-        AbstractModule moduleForMockSyncManager = new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(SyncManager.class).toInstance(mockSyncManager);
-            }
-        };
-        setUpInjection(this, moduleForMockSyncManager);
+    public void setUp() throws Exception {
+        setUpInjectionWithMockLmisServer(application, this);
+        commodityService.initialise(new User("test", "pass"));
     }
 
     @Test
-    public void testShouldKnowIfThereIsUserRegistered() throws Exception {
-        assertThat(userService.userRegistered(), is(false));
-        setUpSuccessHttpGetRequest(200,"userResponse.json");
-
-        User newUser = userService.register("admin", "district");
-
-        assertThat(newUser, not(nullValue()));
-        assertThat(userService.userRegistered(), is(true));
-    }
-
-    @Test
-    public void shouldSaveTheOrgUnitIfAvailable() throws Exception {
-        setUpSuccessHttpGetRequest(200,"userResponse.json");
-
-        User newUser = userService.register("admin", "district");
-
-        assertThat(newUser.getFacilityName(), is("tw office"));
-        assertThat(newUser.getFacilityCode(), is("hOw1BJrojgE"));
-    }
-
-
-    @Test(expected = LmisException.class)
-    public void testShouldDisallowRegisteringWithInvalidDHISCredentials() throws Exception {
-        assertThat(userService.userRegistered(), is(false));
-
-        addPendingHttpResponse(403, "Rejected");
-
-        userService.register("admin", "district");
+    public void shouldGetCategory() throws Exception {
+        List<Category> categories = categoryService.all();
+        Category category = categoryService.get(categories.get(0));
+        assertThat(category, is(categories.get(0)));
     }
 }
