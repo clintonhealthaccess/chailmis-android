@@ -80,18 +80,20 @@ public class ReceiveService {
         try {
             GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
             receiveDao.create(receive);
-            if (receive.getAllocation() != null) {
-                if (!receive.getAllocation().isDummy()) {
-                    Allocation allocation = receive.getAllocation();
-                    allocation.setReceived(true);
-                    allocationService.update(allocation);
+            saveReceiveItems(receive.getReceiveItems());
 
+            //deactivate receive
+            if (receive.getAllocation() != null) {
+                Allocation allocation = receive.getAllocation();
+                allocation.setReceived(true);
+                if (!receive.getAllocation().isDummy()) {
+                    allocationService.update(allocation);
                     alertsService.deleteAllocationAlert(allocation);
                 } else {
                     allocationService.createAllocation(receive.getAllocation());
                 }
             }
-            saveReceiveItems(receive.getReceiveItems());
+
         } catch (Exception e) {
             Log.e("Exception", e.getMessage());
             e.printStackTrace();
