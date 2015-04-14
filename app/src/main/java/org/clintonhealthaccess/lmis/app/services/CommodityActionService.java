@@ -32,12 +32,18 @@ package org.clintonhealthaccess.lmis.app.services;
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.thoughtworks.dhis.models.DataElementType;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
+import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
@@ -55,6 +61,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
+import static java.lang.StrictMath.abs;
 
 public class CommodityActionService {
 
@@ -88,10 +95,11 @@ public class CommodityActionService {
         });
     }
 
-    public CommodityAction save(CommodityAction commodityAction){
+    public CommodityAction save(CommodityAction commodityAction) {
         GenericDao<CommodityAction> commodityActivityDao = new GenericDao<>(CommodityAction.class, context);
         return commodityActivityDao.create(commodityAction);
     }
+
     protected void saveActionValues(final List<CommodityActionValue> commodityActionValues) {
         if (commodityActionValues != null) {
             dbUtil.withDaoAsBatch(CommodityActionValue.class, new DbUtil.Operation<CommodityActionValue, Void>() {

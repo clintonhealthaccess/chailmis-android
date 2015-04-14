@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
+import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -60,6 +61,7 @@ import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -73,6 +75,9 @@ import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 public class CommodityService {
     public static final String MONTHLY_STOCK_COUNT_DAY = "MONTHLY_STOCK_COUNT_DAY";
     public static final String ROUTINE_ORDER_ALERT_DAY = "ROUTINE_ORDER_ALERT_DAY";
+
+    private static List<Commodity> mostConsumedCommodities;
+
     @Inject
     private LmisServer lmisServer;
 
@@ -305,18 +310,29 @@ public class CommodityService {
 
     public List<Commodity> getMost5HighlyConsumedCommodities() {
 
-        List<Commodity> commodities = all();
-        Collections.sort(commodities, new Comparator<Commodity>() {
-            @Override
-            public int compare(Commodity lhs, Commodity rhs) {
-                return rhs.getAMC().compareTo(lhs.getAMC());
+        System.out.println("We are here, mostConsumed is " + mostConsumedCommodities);
+        if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
+            System.out.println("entered if");
+            List<Commodity> commodities = all();
+            Collections.sort(commodities, new Comparator<Commodity>() {
+                @Override
+                public int compare(Commodity lhs, Commodity rhs) {
+                    return rhs.getAMC().compareTo(lhs.getAMC());
+                }
+            });
+
+            mostConsumedCommodities = commodities != null && commodities.size() > 5 ? commodities.subList(0, 5) : commodities;
+
+            //initialize soh, Min and Max stock quantity for these commodities
+            for(Commodity t:mostConsumedCommodities){
+                t.getStockOnHand();
+                t.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
+                t.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
             }
-        });
-        if (commodities.size() > 5) {
-            return commodities.subList(0, 5);
-        } else {
-            return commodities;
+
+            System.out.println("inside loop " + mostConsumedCommodities);
         }
+        return mostConsumedCommodities;
     }
 
     public List<UtilizationItem> getMonthlyUtilizationItems(Commodity commodity, Date date) throws Exception {
