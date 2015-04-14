@@ -35,7 +35,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.inject.Inject;
@@ -58,11 +57,9 @@ import java.util.List;
 import roboguice.inject.InjectView;
 
 import static android.view.View.OnClickListener;
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.ImmutableList.of;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy.DISALLOW_CLICK_WHEN_OUT_OF_STOCK;
-import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromString;
 
 
 public class DispenseActivity extends CommoditySelectableActivity {
@@ -163,16 +160,12 @@ public class DispenseActivity extends CommoditySelectableActivity {
         final Dispensing dispensing = new Dispensing();
         dispensing.setPrescriptionId(textViewPrescriptionId.getText().toString());
 
-        onEachSelectedCommodity(new SelectedCommodityHandler() {
-            @Override
-            public void operate(View view, BaseCommodityViewModel commodityViewModel) {
-                EditText editTextQuantity = (EditText) view.findViewById(R.id.editTextQuantity);
-                int quantity = getIntFromString(editTextQuantity.getText().toString());
-                dispensing.addItem(new DispensingItem(commodityViewModel.getCommodity(), quantity));
-            }
-        });
+        for(int i=0; i< arrayAdapter.getCount(); i++ ){
+            BaseCommodityViewModel commodityViewMode = (BaseCommodityViewModel)arrayAdapter.getItem(i);
+            dispensing.addItem(new DispensingItem(commodityViewMode.getCommodity(), commodityViewMode.getQuantityEntered()));
+        }
+
         return dispensing;
     }
-
 
 }

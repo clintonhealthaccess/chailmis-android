@@ -180,14 +180,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
         autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
     }
 
-    protected void onEachSelectedCommodity(SelectedCommodityHandler handler) {
-        for (int i = 0; i < gridViewSelectedCommodities.getChildCount(); i++) {
-            View view = gridViewSelectedCommodities.getChildAt(i);
-            BaseCommodityViewModel commodityViewModel = (BaseCommodityViewModel) gridViewSelectedCommodities.getAdapter().getItem(i);
-            handler.operate(view, commodityViewModel);
-        }
-    }
-
     protected void onCommoditySelectionChanged(List<BaseCommodityViewModel> selectedCommodities) {
         Button submitButton = getSubmitButton();
         if (selectedCommodities.size() > 0) {
@@ -327,10 +319,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         button.setWidth(200);
         return button;
-    }
-
-    protected interface SelectedCommodityHandler {
-        void operate(View view, BaseCommodityViewModel commodityViewModel);
     }
 
     public class ViewValidator<T extends View> {

@@ -67,7 +67,6 @@ import de.greenrobot.event.EventBus;
 
 import static android.view.View.VISIBLE;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static org.clintonhealthaccess.lmis.utils.ListTestUtils.getViewFromListRow;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -221,29 +220,12 @@ public class DispenseActivityTest extends LmisTestClass {
 
         DispenseActivity dispenseActivity = getDispenseActivity();
 
-        GridView mockGridView = mock(GridView.class);
-        View mockListItemView = mock(View.class);
-        EditText mockEditText = new EditText(application);
-
-        SelectedCommoditiesAdapter mockSelectedCommoditiesAdapter = mock(SelectedCommoditiesAdapter.class);
-
-        mockEditText.setText("12");
-
-        Commodity commodity = new Commodity(commodityName);
-        when(mockSelectedCommoditiesAdapter.getItem(anyInt())).thenReturn(new BaseCommodityViewModel(commodity));
-        when(mockSelectedCommoditiesAdapter.getCount()).thenReturn(1);
-        when(mockSelectedCommoditiesAdapter.getView(anyInt(), org.mockito.Matchers.any(View.class), org.mockito.Matchers.any(ViewGroup.class))).thenReturn(mockListItemView);
-
-        when(mockListItemView.findViewById(R.id.editTextQuantity)).thenReturn(mockEditText);
-        when(mockGridView.getChildAt(anyInt())).thenReturn(mockListItemView);
-        when(mockGridView.getChildCount()).thenReturn(1);
-        when(mockGridView.getAdapter()).thenReturn(mockSelectedCommoditiesAdapter);
-
-        dispenseActivity.gridViewSelectedCommodities = mockGridView;
-
+        BaseCommodityViewModel commodityViewModel = new BaseCommodityViewModel(new Commodity(commodityName));
+        commodityViewModel.setQuantityEntered(12);
+        CommodityToggledEvent commodityToggledEvent = new CommodityToggledEvent(commodityViewModel);
+        EventBus.getDefault().post(commodityToggledEvent);
 
         Dispensing dispensing = dispenseActivity.getDispensing();
-
         assertThat(dispensing.getDispensingItems().size(), is(1));
 
         assertThat(dispensing.getDispensingItems().get(0).getQuantity(), is(12));
