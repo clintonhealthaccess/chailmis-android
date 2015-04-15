@@ -156,7 +156,9 @@
     <string name="zonal_store">Zonal Cold Chain Store</string>
     <string name="others">Others</string>
     <string name="rh2_report_name">Family Planning Commodity Facility Consumption Report 2</string>
-    <string name="rh1_report_name">Facility Consumption Report</string>
+    <string name="rh1_report_name">Daily Facility Consumption Report</string>
+    <string name="rh1_family_planning_report_name">Daily Facility Consumption Report RH1</string>
+    <string name="monthly_facility_stock_report_name">"Monthly Facility Stock Report for %s"</string>
     <string name="quantity_received">Quantity Received</string>
     <string name="opening_balance">Opening Balance</string>
     <string name="quantity_dispensed_to_clients">Quantity Dispensed to Clients</string>

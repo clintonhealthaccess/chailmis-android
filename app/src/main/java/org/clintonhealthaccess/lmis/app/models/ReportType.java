@@ -39,18 +39,48 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum ReportType {
+public enum ReportType implements ReportTitle {
 
-    FacilityStockReport("Facility Stock Report", FacilityStockReportActivity.class),
-    FacilityRequisitionIssueReportForm("Facility Requisition, Issue and Report Form", FacilityStockReportActivity.class),
-    FacilityConsumptionReportRH1("Facility Consumption Report RH1", FacilityConsumptionReportRH1Activity.class),
-    FacilityConsumptionReportRH2("Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class),
-    MonthlyHealthFacilityVaccinesUtilizationReport("Monthly Health Facility Vaccines Utilization Report", MonthlyVaccineUtilizationReportActivity.class),
-    MonthlyHealthFacilityDevicesUtilizationReport("Monthly Health Facility Devices/ Other Materials Utilization Report", MonthlyVaccineUtilizationReportActivity.class);
+    FacilityStockReport("Monthly Facility Stock Report", FacilityStockReportActivity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return this.getName();
+        }
+    },
+    FacilityRequisitionIssueReportForm("Facility Requisition, Issue and Report Form", FacilityStockReportActivity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return this.getName();
+        }
+    },
+    FacilityConsumptionReportRH1("Daily Facility Consumption Report", FacilityConsumptionReportRH1Activity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return category.getName().toLowerCase().contains(FAMILY) ? this.getName() + " RH1" : this.getName();
+        }
+    },
+    FacilityConsumptionReportRH2("Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return this.getName();
+        }
+    },
+    MonthlyHealthFacilityVaccinesUtilizationReport("Monthly Health Facility Vaccines Utilization Report", MonthlyVaccineUtilizationReportActivity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return this.getName();
+        }
+    },
+    MonthlyHealthFacilityDevicesUtilizationReport("Monthly Health Facility Devices/ Other Materials Utilization Report", MonthlyVaccineUtilizationReportActivity.class) {
+        @Override
+        public String getTitle(Category category) {
+            return this.getName();
+        }
+    };
+
     public static final String VACCINE = "vaccine";
     public static final String MALARIA = "malaria";
     public static final String FAMILY = "family";
-
 
     ReportType(String name, Class reportActivity) {
         this.name = name;
@@ -73,7 +103,7 @@ public enum ReportType {
         stringListHashMap.put(VACCINE, Arrays.asList(MonthlyHealthFacilityDevicesUtilizationReport, MonthlyHealthFacilityVaccinesUtilizationReport));
         stringListHashMap.put(MALARIA, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1));
 
-        stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, ReportType.FacilityConsumptionReportRH2)); //ReportType.FacilityRequsitionIssueReportForm, ReportType.FacilityConsumptionReportRH2));
+        stringListHashMap.put(FAMILY, Arrays.asList(FacilityStockReport, FacilityConsumptionReportRH1, FacilityConsumptionReportRH2));
 
         for (String key : stringListHashMap.keySet()) {
             if (selectTypes(categoryName, key)) return stringListHashMap.get(key);

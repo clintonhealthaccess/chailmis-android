@@ -46,6 +46,7 @@ import com.google.common.collect.FluentIterable;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityCommodityConsumptionReportRH1Adapter;
 import org.clintonhealthaccess.lmis.app.adapters.FacilityCommodityConsumptionReportRH1HeaderAdapter;
+import org.clintonhealthaccess.lmis.app.models.ReportType;
 import org.clintonhealthaccess.lmis.app.models.reports.FacilityCommodityConsumptionRH1ReportItem;
 import org.clintonhealthaccess.lmis.app.models.reports.RH1HeaderItem;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
@@ -69,7 +70,8 @@ public class FacilityConsumptionReportRH1Activity extends MonthBasedReportBaseAc
 
     @Override
     String getReportName() {
-        return getString(R.string.rh1_report_name);
+        return category.getName().toLowerCase().contains(ReportType.FAMILY) ?
+                getString(R.string.rh1_family_planning_report_name) : getString(R.string.rh1_report_name) + " for " + category.getName();
     }
 
     @Override

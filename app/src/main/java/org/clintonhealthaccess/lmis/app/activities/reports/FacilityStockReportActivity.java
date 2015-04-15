@@ -60,7 +60,7 @@ public class FacilityStockReportActivity extends MonthBasedReportBaseActivity<Fa
 
     @Override
     String getReportName() {
-        return String.format("Facility Stock Report for %s", category.getName());
+        return String.format(getString(R.string.monthly_facility_stock_report_name), category.getName());
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ReportTypeAdapter extends ArrayAdapter<ReportType> {
         Button view = (Button) inflater.inflate(resource, parent, false);
 
         final ReportType reportType = getItem(position);
-        view.setText(reportType.getName());
+        view.setText(reportType.getTitle(category));
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

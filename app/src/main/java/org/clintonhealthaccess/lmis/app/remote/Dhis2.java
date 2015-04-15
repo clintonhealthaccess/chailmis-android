@@ -284,7 +284,7 @@ public class Dhis2 implements LmisServer {
                         AttributeValue attributeValue = element.getAttributeValues().get(0);
 
                         if (!DataElementType.dataElementActivityExists(attributeValue.getValue())) {
-                            Log.e("Missing Activity Name Error ", attributeValue.getValue());
+                            // Log.e("Missing Activity Name Error ", attributeValue.getValue());
                             continue;
                         }
 
@@ -296,9 +296,10 @@ public class Dhis2 implements LmisServer {
                             commodityAction.addTransientCommodityActionDataSets(
                                     generateCommodityActionDataSets(commodityAction, elementDataSets));
                             commodity.getCommodityActions().add(commodityAction);
-                        } else {
-                            e("Error Null Dataset", commodity.getName() + " " + commodityAction.getName());
                         }
+                        // else {
+                        //    e("Error Null Dataset", commodity.getName() + " " + commodityAction.getName());
+                        // }
                     }
                 }
 
