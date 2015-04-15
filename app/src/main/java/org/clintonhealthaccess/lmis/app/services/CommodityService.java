@@ -128,12 +128,7 @@ public class CommodityService {
         timingLogger.addSplit("save all Cats");
 
         categoryService.clearCache();
-        List<CommodityAction> allocationId = commodityActionService.getAllocationId();
-        if (allocationId != null && allocationId.size() > 0) {
-            Log.e("AllocationId Found", allocationId.get(0).toString());
-        } else {
-            Log.e("AllocationId", "Not found");
-        }
+
         syncConstants(user);
         timingLogger.addSplit("sync constants");
 
@@ -148,8 +143,16 @@ public class CommodityService {
         categoryService.clearCache();
         createInitialStockItemSnapShots(all());
         timingLogger.addSplit("updateStockValues");
-        allocationService.syncAllocations(user);
-        timingLogger.addSplit("sync allocations");
+
+        List<CommodityAction> allocationId = commodityActionService.getAllocationId();
+        if (allocationId != null && allocationId.size() > 0) {
+            Log.e("AllocationId Found", allocationId.get(0).toString());
+            timingLogger.addSplit("sync allocations");
+            allocationService.syncAllocations(user);
+        } else {
+            Log.e("AllocationId", "Not found");
+        }
+
         categoryService.clearCache();
         timingLogger.addSplit("clearCache");
 

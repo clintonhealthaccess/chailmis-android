@@ -166,7 +166,6 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         if (presetAllocationId != null) {
             textViewAllocationId.setText(presetAllocationId);
         }
-
     }
 
     public List<String> getReceiveSources() {
@@ -176,7 +175,12 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     @Override
     protected void beforeSetUpCommoditySearch() {
         Intent intent = getIntent();
-        presetAllocationId = intent.getStringExtra(ALLOCATION_ID);
+        String allocationId = intent.getStringExtra(ALLOCATION_ID);
+
+        Allocation allocationWithId = allocationService.getAllocationByLmisId(presetAllocationId);
+        if (allocationWithId != null && !allocationWithId.isReceived()) {
+            presetAllocationId = allocationId;
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getReceiveSources());
         spinnerSource.setAdapter(adapter);
@@ -314,7 +318,6 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     private void populateWithAllocation(Allocation allocation) {
-        System.out.println("here we are here "+allocation);
         if (allocation != null) {
             selectedCommodities.clear();
             arrayAdapter.clear();
@@ -348,8 +351,8 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     private boolean allocationIdIsValid(String text) {
-        if (!textViewAllocationId.isEnabled()){
-        // allocation != null && text.equals(allocation.getAllocationId()))
+        if (!textViewAllocationId.isEnabled()) {
+            // allocation != null && text.equals(allocation.getAllocationId()))
             return true;
         }
         String patternString = facility2LetterCode.toUpperCase() + "\\d+$";
