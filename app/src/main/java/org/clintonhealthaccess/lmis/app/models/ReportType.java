@@ -44,7 +44,7 @@ public enum ReportType implements ReportTitle {
     FacilityStockReport("Monthly Facility Stock Report", FacilityStockReportActivity.class) {
         @Override
         public String getTitle(Category category) {
-            return this.getName();
+            return category.getName().toLowerCase().contains(FAMILY) ? "RH RIRF" : this.getName();
         }
     },
     FacilityRequisitionIssueReportForm("Facility Requisition, Issue and Report Form", FacilityStockReportActivity.class) {
@@ -59,7 +59,7 @@ public enum ReportType implements ReportTitle {
             return category.getName().toLowerCase().contains(FAMILY) ? this.getName() + " RH1" : this.getName();
         }
     },
-    FacilityConsumptionReportRH2("Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class) {
+    FacilityConsumptionReportRH2("Monthly Facility Consumption Report RH2", FacilityConsumptionReportRH2Activity.class) {
         @Override
         public String getTitle(Category category) {
             return this.getName();

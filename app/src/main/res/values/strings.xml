@@ -155,7 +155,7 @@
     <string name="lga">LGA / State CMS</string>
     <string name="zonal_store">Zonal Cold Chain Store</string>
     <string name="others">Others</string>
-    <string name="rh2_report_name">Family Planning Commodity Facility Consumption Report 2</string>
+    <string name="rh2_report_name">Monthly Facility Consumption Report RH2</string>
     <string name="rh1_report_name">Daily Facility Consumption Report</string>
     <string name="rh1_family_planning_report_name">Daily Facility Consumption Report RH1</string>
     <string name="monthly_facility_stock_report_name">"Monthly Facility Stock Report for %s"</string>

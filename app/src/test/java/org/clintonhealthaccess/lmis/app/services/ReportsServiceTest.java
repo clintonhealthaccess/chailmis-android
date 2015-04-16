@@ -281,7 +281,6 @@ public class ReportsServiceTest extends LmisTestClass {
 
         Calendar calendar = Calendar.getInstance();
 
-        //calendar.add(Calendar.DAY_OF_MONTH, -2);
         int soh = 13;
         stockItemSnapshotService.createOrUpdate(commodity, soh, calendar.getTime());
 
@@ -464,7 +463,6 @@ public class ReportsServiceTest extends LmisTestClass {
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         int openingStock = 3;
         stockItemSnapshotService.createOrUpdate(commodity, openingStock, calendar.getTime());
-        //createStockItemSnapshotValue(commodity, calendar.getTime(), openingStock);
 
         receive(commodity, 20, receiveService);
         receive(commodity, 30, receiveService);
@@ -638,8 +636,6 @@ public class ReportsServiceTest extends LmisTestClass {
         assertThat(binCardItem.getQuantityReceived(), is(200));
         assertThat(binCardItem.getQuantityDispensed(), is(30));
         assertThat(binCardItem.getQuantityLost(), is(20));
-
-       // BinCardItem binCardItem1 = binCard.getBinCardItems().get(1);
 
         assertThat(binCardItem.getStockBalance(), is(expectedBalance10DaysAgo));
 
