@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant::Config.run do |config|
+  config.vm.box = "Ubuntu precise 64"
+  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.network :"hostonly", "192.168.0.10"
+  config.vm.forward_port 80, 8888
+  # config.vm.forward_port 9200, 9200
+
+  config.vm.provision :puppet do |puppet|
+    puppet.manifests_path = "puppet"
+    puppet.manifest_file = "server.pp"
+    puppet.module_path = "puppet/modules"
+  end
+end
