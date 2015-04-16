@@ -589,21 +589,21 @@ public class ReportsServiceTest extends LmisTestClass {
         dispense(commodity, 30, dispensingService, date20DaysAgo);
         lose(commodity, 20, lossService, date20DaysAgo);
 
-        int expectedMax = stock + 200;
-        int expectedMin = stock;
-        int expectedBalance = expectedMin + 150;
+        int expectedMax = commodity.getMaximumThreshold();
+        int expectedMin = commodity.getMinimumThreshold();
+        int expectedBalance = stock + 150;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
-        assertThat(binCard.getBinCardItems().size(), is(2));
+        assertThat(binCard.getBinCardItems().size(), is(1));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
-        BinCardItem binCardItem2 = binCard.getBinCardItems().get(1);
+        System.out.println("Bin card item is " + binCardItem);
         assertTrue(DateUtil.equal(binCardItem.getDate(), date20DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
-        assertThat(binCardItem2.getQuantityDispensed(), is(30));
-        assertThat(binCardItem2.getQuantityLost(), is(20));
+        assertThat(binCardItem.getQuantityDispensed(), is(30));
+        assertThat(binCardItem.getQuantityLost(), is(20));
 
         assertThat(binCardItem.getStockBalance(), is(expectedBalance));
     }
@@ -618,32 +618,32 @@ public class ReportsServiceTest extends LmisTestClass {
         dispense(commodity, 30, dispensingService, date10DaysAgo);
         lose(commodity, 20, lossService, date10DaysAgo);
 
-        int expectedMax = stock + 200;
-        int expectedBalance10DaysAgo = expectedMax - 50;
+        int expectedBalance10DaysAgo = (stock + 200) - 50;
 
         Date date8DaysAgo = DateUtil.addDayOfMonth(new Date(), -8);
         dispense(commodity, 25, dispensingService, date8DaysAgo);
         lose(commodity, 10, lossService, date8DaysAgo);
 
-        int expectedMin = stock;
-        int expectedBalance8DaysAgo = expectedMin + 115;
+        int expectedMax = commodity.getMaximumThreshold(); // stock + 200;
+        int expectedMin = commodity.getMinimumThreshold();
+        int expectedBalance8DaysAgo = stock + 115;
 
         BinCard binCard = reportsService.generateBinCard(commodity);
-        assertThat(binCard.getBinCardItems().size(), is(3));
+        assertThat(binCard.getBinCardItems().size(), is(2));
         assertThat(binCard.getMaximumStockLevel(), is(expectedMax));
         assertThat(binCard.getMinimumStockLevel(), is(expectedMin));
 
         BinCardItem binCardItem = binCard.getBinCardItems().get(0);
         assertTrue(DateUtil.equal(binCardItem.getDate(), date10DaysAgo));
         assertThat(binCardItem.getQuantityReceived(), is(200));
+        assertThat(binCardItem.getQuantityDispensed(), is(30));
+        assertThat(binCardItem.getQuantityLost(), is(20));
 
-        BinCardItem binCardItem1 = binCard.getBinCardItems().get(1);
-        assertThat(binCardItem1.getQuantityDispensed(), is(30));
-        assertThat(binCardItem1.getQuantityLost(), is(20));
+       // BinCardItem binCardItem1 = binCard.getBinCardItems().get(1);
 
         assertThat(binCardItem.getStockBalance(), is(expectedBalance10DaysAgo));
 
-        BinCardItem binCardItem2 = binCard.getBinCardItems().get(2);
+        BinCardItem binCardItem2 = binCard.getBinCardItems().get(1);
         assertTrue(DateUtil.equal(binCardItem2.getDate(), date8DaysAgo));
         assertThat(binCardItem2.getQuantityReceived(), is(0));
         assertThat(binCardItem2.getQuantityDispensed(), is(25));
@@ -654,27 +654,25 @@ public class ReportsServiceTest extends LmisTestClass {
     @Test
     public void shouldReturnBinCardWithCorrectBinCardItemsForCorrectMinimumAndMaximum() throws Exception {
         Commodity commodity1 = categories.get(0).getCommodities().get(0);
-        int commodity1Stock = commodity1.getStockOnHand();
 
         Date date10DaysAgo = DateUtil.addDayOfMonth(new Date(), -10);
         receive(commodity1, 200, receiveService, date10DaysAgo);
         dispense(commodity1, 130, dispensingService, date10DaysAgo);
 
-        int commodity1ExpectedMax = commodity1Stock + 200;
-        int commodity1ExpectedMin = commodity1Stock; // today's initial
+        int commodity1ExpectedMax = commodity1.getMaximumThreshold();
+        int commodity1ExpectedMin = commodity1.getMinimumThreshold();
 
         BinCard commodity1BinCard = reportsService.generateBinCard(commodity1);
         assertThat(commodity1BinCard.getMinimumStockLevel(), is(commodity1ExpectedMin));
         assertThat(commodity1BinCard.getMaximumStockLevel(), is(commodity1ExpectedMax));
 
         Commodity commodity2 = categories.get(0).getCommodities().get(1);
-        int commodity2Stock = commodity2.getStockOnHand();
 
         receive(commodity2, 100, receiveService, date10DaysAgo);
         dispense(commodity2, 90, dispensingService, date10DaysAgo);
 
-        int commodity2ExpectedMax = commodity2Stock + 100;
-        int commodity2ExpectedMin = commodity2Stock;
+        int commodity2ExpectedMax = commodity2.getMaximumThreshold();
+        int commodity2ExpectedMin = commodity2.getMinimumThreshold();
 
         BinCard commodity2BinCard = reportsService.generateBinCard(commodity2);
         assertThat(commodity2BinCard.getMinimumStockLevel(), is(commodity2ExpectedMin));

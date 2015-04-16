@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewModelsConverter;
@@ -177,9 +178,11 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         Intent intent = getIntent();
         String allocationId = intent.getStringExtra(ALLOCATION_ID);
 
-        Allocation allocationWithId = allocationService.getAllocationByLmisId(presetAllocationId);
-        if (allocationWithId != null && !allocationWithId.isReceived()) {
-            presetAllocationId = allocationId;
+        if(StringUtils.isNotBlank(allocationId)) {
+            Allocation allocationWithId = allocationService.getAllocationByLmisId(presetAllocationId);
+            if (allocationWithId != null && !allocationWithId.isReceived()) {
+                presetAllocationId = allocationId;
+            }
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item_black, getReceiveSources());

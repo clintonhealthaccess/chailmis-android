@@ -33,11 +33,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.google.inject.Inject;
 import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -68,6 +71,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static org.clintonhealthaccess.lmis.app.services.GenericService.getItemsByDate;
 
 public class ReportsService {
 
@@ -256,7 +261,7 @@ public class ReportsService {
         calendar.setTime(firstDateOfMonth);
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date todayWithoutTime = dateFormat.parse(dateFormat.format(new Date()));
-        return calendar.getTime().after(todayWithoutTime) ?  todayWithoutTime : calendar.getTime();
+        return calendar.getTime().after(todayWithoutTime) ? todayWithoutTime : calendar.getTime();
     }
 
 
@@ -289,6 +294,9 @@ public class ReportsService {
 
     public BinCard generateBinCard(Commodity commodity) throws Exception {
 
+        List<String> receiveSources = Arrays.asList(context.getString(R.string.lga),
+                context.getString(R.string.zonal_store), context.getString(R.string.others));
+
         Date today = new Date();
         Date tomorrow = DateUtil.addDayOfMonth(today, 1);
         Date startDate = DateUtil.addDayOfMonth(today, -31);
@@ -301,24 +309,40 @@ public class ReportsService {
 
         int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
 
-        int firstQuantity = stockItemSnapshots.size() > 0 ? stockItemSnapshots.get(0).getQuantity() : 0;
-        int minimumStock = firstQuantity;
-        int maximumStock = firstQuantity;
-
         List<BinCardItem> binCardItems = new ArrayList<>();
         Date date = startDate;
         while (date.before(tomorrow)) {
-            int quantityReceived = GenericService.getTotal(date, receiveItems);
 
-            if (quantityReceived > 0) {
-            }
             int quantityDispensed = GenericService.getTotal(date, dispensingItems);
             int quantityLost = GenericService.getTotal(date, lossItems);
             int closingBalance = previousDaysClosingStock;
 
+            List<ReceivedBySource> receivedBySources = new ArrayList<>();
+            for (final String source : receiveSources) {
+                List<ReceiveItem> receiveItemsForDate = getItemsByDate(date, receiveItems);
+                List<ReceiveItem> sourceReceiveItems = FluentIterable.from(receiveItemsForDate).filter(new Predicate<ReceiveItem>() {
+                    @Override
+                    public boolean apply(ReceiveItem input) {
+                        return input.getReceive().getSource().equalsIgnoreCase(source);
+                    }
+                }).toList();
+
+                int quantityReceived = 0;
+                if (sourceReceiveItems != null) {
+                    for (ReceiveItem item : sourceReceiveItems) {
+                        quantityReceived += item.getQuantity();
+                    }
+                }
+
+                if (quantityReceived > 0) {
+                    receivedBySources.add(new ReceivedBySource(quantityReceived, source));
+                }
+            }
+
             int quantitySentToAnotherFacility =
                     adjustmentService.totalAdjustment(
                             commodity, adjustments, date, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+
             int quantityReceivedFromAnotherFacility =
                     adjustmentService.totalAdjustment(commodity, adjustments, date,
                             AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
@@ -330,17 +354,8 @@ public class ReportsService {
             StockItemSnapshot dayStockItemSnapshot = stockItemSnapshotService.getSnapshot(date, stockItemSnapshots);
             if (dayStockItemSnapshot != null) {
                 closingBalance = dayStockItemSnapshot.getQuantity();
-                if (dayStockItemSnapshot.maximumStockLevel() > maximumStock) {
-                    maximumStock = dayStockItemSnapshot.maximumStockLevel();
-                }
-                if (dayStockItemSnapshot.minimumStockLevel() < minimumStock) {
-                    minimumStock = dayStockItemSnapshot.minimumStockLevel();
-                }
             }
 
-            if (quantityReceived > 0) {
-                binCardItems.add(new BinCardItem(date, "State CMS/LGA", quantityReceived, 0, 0, 0, closingBalance));
-            }
             if (quantityReceivedFromAnotherFacility > 0) {
                 binCardItems.add(new BinCardItem(date, "Received from Facility", 0, 0, 0, quantityReceivedFromAnotherFacility, closingBalance));
             }
@@ -349,13 +364,41 @@ public class ReportsService {
                 binCardItems.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, closingBalance));
             }
 
-            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted > 0) {
-                binCardItems.add(new BinCardItem(date, "", 0, quantityDispensed, quantityLost, quantityAdjusted, closingBalance));
+            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted > 0 || receivedBySources.size() > 0) {
+                binCardItems.add(new BinCardItem(date,
+                        (receivedBySources.size() > 0 ? receivedBySources.get(0).getSource() : ""),
+                        (receivedBySources.size() > 0 ? receivedBySources.get(0).getQuantityReceived() : 0),
+                        quantityDispensed, quantityLost, quantityAdjusted, closingBalance));
             }
+
+            if(receivedBySources.size()>1){
+                for(int i=1; i<receivedBySources.size();i++){
+                    binCardItems.add(new BinCardItem(date, receivedBySources.get(i).getSource(), receivedBySources.get(i).getQuantityReceived(), 0, 0, 0, closingBalance));
+                }
+            }
+
             previousDaysClosingStock = closingBalance;
             date = DateUtil.addDayOfMonth(date, 1);
         }
-        return new BinCard(minimumStock, maximumStock, binCardItems);
 
+        return new BinCard(commodity.getMinimumThreshold(), commodity.getMaximumThreshold(), binCardItems);
+    }
+
+    private class ReceivedBySource {
+        private int quantityReceived;
+        private String source;
+
+        public ReceivedBySource(int quantityReceived, String source) {
+            this.quantityReceived = quantityReceived;
+            this.source = source;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public int getQuantityReceived() {
+            return quantityReceived;
+        }
     }
 }

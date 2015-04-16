@@ -92,18 +92,22 @@ public class GenericService {
     }
 
     public static <ItemClass extends BaseItem> int getTotal(final Date date, List<ItemClass> items) {
-        List<ItemClass> dayItems = FluentIterable.from(items).filter(new Predicate<ItemClass>() {
-            @Override
-            public boolean apply(ItemClass input) {
-                return DateUtil.equal(input.created(), date);
-            }
-        }).toList();
+        List<ItemClass> dayItems = getItemsByDate(date, items);
 
         int total = 0;
         for (ItemClass item : dayItems) {
             total += item.getQuantity();
         }
         return total;
+    }
+
+    public static <ItemClass extends BaseItem> List<ItemClass> getItemsByDate(final Date date, List<ItemClass> items) {
+        return FluentIterable.from(items).filter(new Predicate<ItemClass>() {
+                @Override
+                public boolean apply(ItemClass input) {
+                    return DateUtil.equal(input.created(), date);
+                }
+            }).toList();
     }
 
 

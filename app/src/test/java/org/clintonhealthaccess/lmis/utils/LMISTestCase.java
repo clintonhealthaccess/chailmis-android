@@ -115,7 +115,7 @@ public class LMISTestCase extends LmisTestClass {
 
 
     public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService, Date date) {
-        Receive receive = new Receive("LGA", date);
+        Receive receive = new Receive("LGA / State CMS", date);
 
         ReceiveItem receiveItem = new ReceiveItem();
         receiveItem.setCommodity(commodity);
