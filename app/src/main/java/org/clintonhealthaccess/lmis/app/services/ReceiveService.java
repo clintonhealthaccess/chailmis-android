@@ -36,6 +36,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.events.AllocationCreateEvent;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
@@ -43,6 +44,7 @@ import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
+import de.greenrobot.event.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +93,7 @@ public class ReceiveService {
                     alertsService.deleteAllocationAlert(allocation);
                 } else {
                     allocationService.createAllocation(receive.getAllocation());
+                    EventBus.getDefault().post(new AllocationCreateEvent(receive.getAllocation()));
                 }
             }
 

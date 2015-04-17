@@ -371,4 +371,15 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
         event.view.setInputType(inType);
     }
 
+    public void clearAllSelectedItems(){
+        ArrayList<CommodityToggledEvent> events = new ArrayList<>();
+
+        for (BaseCommodityViewModel model : selectedCommodities) {
+            events.add(new CommodityToggledEvent(model));
+        }
+
+        for(CommodityToggledEvent event : events){
+            onEvent(event);
+        }
+    }
 }
