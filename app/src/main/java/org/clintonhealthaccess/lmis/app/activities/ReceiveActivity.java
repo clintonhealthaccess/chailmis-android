@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,6 +51,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.CommoditiesToViewM
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityViewModel;
 import org.clintonhealthaccess.lmis.app.adapters.ReceiveCommoditiesAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.strategies.CommodityDisplayStrategy;
+import org.clintonhealthaccess.lmis.app.events.AllocationCreateEvent;
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.fragments.ReceiveConfirmFragment;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
@@ -61,8 +63,10 @@ import org.clintonhealthaccess.lmis.app.services.AllocationService;
 import org.clintonhealthaccess.lmis.app.watchers.LmisTextWatcher;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -160,7 +164,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        completedAllocationIds = allocationService.getReceivedAllocationIds();
+        completedAllocationIds = new ArrayList<>(allocationService.getReceivedAllocationIds());
         setupAllocationIdTextView();
         setupReceiveButton();
 
@@ -246,6 +250,13 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                     Toast.makeText(getApplicationContext(), getString(R.string.receive_quantities_validation_error_message), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if (completedAllocationIds.contains(textViewAllocationId.getText().toString())){
+                    Toast.makeText(getApplicationContext(), getString(R.string.error_allocation_received), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(generateReceive());
                 receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
@@ -253,6 +264,12 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     public Receive generateReceive() {
+        //user input a allocation id, create a dummy one
+        if ((allocation == null && spinnerSource.getSelectedItem().toString().contains(getString(R.string.lga)))
+                || (allocation != null && allocation.isDummy())) {
+            generateDummyAllocation(textViewAllocationId.getText().toString().trim());
+        }
+
         Receive receive = new Receive(spinnerSource.getSelectedItem().toString(), allocation);
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
@@ -261,6 +278,16 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         }
         return receive;
     }
+
+    private void generateDummyAllocation(String allocationId) {
+        String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        allocation = new Allocation(allocationId, today);
+        allocation.setDummy(true);
+        allocation.setReceived(true);
+        allocation.setTransientAllocationItems(new ArrayList<AllocationItem>());
+        Log.i("ReceiveActivity", "Create a Dummy allocation ....");
+    }
+
 
     @Override
     protected CommoditiesToViewModelsConverter getViewModelConverter() {
@@ -294,7 +321,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
             @Override
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
-                if (text.trim().length() > 6) {
+                if (text.trim().length() >= 6) {
                     setAllocation(text);
                 }
             }
@@ -364,4 +391,15 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         return matcher.matches();
     }
 
+    public void onEvent(AllocationCreateEvent event){
+        completedAllocationIds.add(event.allocation.getAllocationId());
+        Log.i("ReceiveActivity", "completedIds: " + completedAllocationIds.size());
+    }
+
+    public void clearInput() {
+        clearAllSelectedItems();
+        if (textViewAllocationId != null && textViewAllocationId.isEnabled()) {
+            textViewAllocationId.setText("");
+        }
+    }
 }

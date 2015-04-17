@@ -33,6 +33,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
+import org.clintonhealthaccess.lmis.app.models.AllocationItem;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
@@ -42,6 +43,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+
+import java.util.ArrayList;
 
 import static org.clintonhealthaccess.lmis.app.services.GenericService.getTotal;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
@@ -56,6 +59,9 @@ public class ReceiveServiceTest extends LmisTestClass {
 
     @Inject
     ReceiveService receiveService;
+
+    @Inject
+    AllocationService allocationService;
 
     public static final int QUANTITY_ALLOCATED = 4;
     public static final int QUANTITY_RECEIVED = 3;
@@ -119,4 +125,48 @@ public class ReceiveServiceTest extends LmisTestClass {
         assertThat(receiveDao.queryForAll().get(0).getReceiveItemsCollection().size(), is(1));
         assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
     }
+
+    @Test
+    public void shouldMergeAllocationWhenSyncIfHasDummyAllocation() throws Exception {
+        String allocationId = "UG-002";
+        GenericDao<AllocationItem> allocationItemsDao = new GenericDao<>(AllocationItem.class, Robolectric.application);
+
+        Commodity commodity = commodityService.all().get(0);
+        ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
+        Receive receive = new Receive("LGA");
+
+        Allocation allocation = new Allocation(allocationId, "20150415");
+        allocation.setDummy(true);
+        allocation.setTransientAllocationItems(new ArrayList<AllocationItem>());
+        receive.setAllocation(allocation);
+        receive.addReceiveItem(receiveItem);
+
+        receiveService.saveReceive(receive);
+
+        assertThat(receiveDao.queryForAll().size(), is(1));
+        assertThat(receiveDao.queryForAll().get(0).getReceiveItemsCollection().size(), is(1));
+        assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
+        assertThat(allocationItemsDao.queryForAll().size(), is(0));
+
+        Allocation syncAllocation = new Allocation(allocationId, "20150416");
+        syncAllocation.setDummy(false);
+        ArrayList<AllocationItem> allocationItems = new ArrayList<>();
+
+        AllocationItem allocationItem = new AllocationItem();
+        allocationItem.setAllocation(syncAllocation);
+        allocationItem.setQuantity(20);
+        allocationItem.setCommodity(commodity);
+        allocationItems.add(allocationItem);
+
+        syncAllocation.setTransientAllocationItems(allocationItems);
+        allocationService.createAllocation(syncAllocation);
+
+
+
+        assertThat(allocationsDao.queryForAll().size(), is(1));
+        assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).isReceived(), is(true));
+        assertThat(allocationsDao.getById(String.valueOf(allocation.getId())).getPeriod(), is("20150416"));
+        assertThat(allocationItemsDao.queryForAll().size(), is(1));
+    }
+
 }

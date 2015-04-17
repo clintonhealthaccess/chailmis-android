@@ -42,10 +42,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.CommoditySelectableActivity;
+import org.clintonhealthaccess.lmis.app.activities.ReceiveActivity;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmReceiveAdapter;
+import org.clintonhealthaccess.lmis.app.events.AllocationCreateEvent;
+import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 
@@ -144,10 +149,11 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
 
                 fragment.dismiss();
                 FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.finish();
-                    startActivity(activity.getIntent());
+                if(activity instanceof ReceiveActivity){
+                    ReceiveActivity receiveActivity = (ReceiveActivity) activity;
+                    receiveActivity.clearInput();
                 }
+
             } else {
                 Toast.makeText(fragment.getActivity().getApplicationContext(), getString(R.string.receive_failed), Toast.LENGTH_LONG).show();
             }
