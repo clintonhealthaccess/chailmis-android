@@ -33,7 +33,6 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,15 +41,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
-import org.clintonhealthaccess.lmis.app.activities.CommoditySelectableActivity;
 import org.clintonhealthaccess.lmis.app.activities.ReceiveActivity;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmReceiveAdapter;
-import org.clintonhealthaccess.lmis.app.events.AllocationCreateEvent;
-import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.services.ReceiveService;
 

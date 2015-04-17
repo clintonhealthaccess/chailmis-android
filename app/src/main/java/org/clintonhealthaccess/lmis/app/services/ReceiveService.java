@@ -89,14 +89,13 @@ public class ReceiveService {
 
 
             if (receive.getAllocation() != null) {
-                if (!receive.getAllocation().isDummy()) {
-                    Allocation allocation = receive.getAllocation();
-                    allocation.setReceived(true);
+                Allocation allocation = receive.getAllocation();
+                allocation.setReceived(true);
+                if (!allocation.isDummy()) {
                     allocationService.update(allocation);
-
                     alertsService.deleteAllocationAlert(allocation);
                 } else {
-                    allocationService.createAllocation(receive.getAllocation());
+                    allocationService.createAllocation(allocation);
                     EventBus.getDefault().post(new AllocationCreateEvent(receive.getAllocation()));
                 }
             }
