@@ -43,6 +43,7 @@ import org.clintonhealthaccess.lmis.app.LmisException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableList.copyOf;
@@ -129,6 +130,12 @@ public class Commodity implements Serializable {
         return id.hashCode();
     }
 
+    public static Comparator<Commodity> AMC_COMPARATOR= new Comparator<Commodity>() {
+        @Override
+        public int compare(Commodity lhs, Commodity rhs) {
+            return rhs.getAMC().compareTo(lhs.getAMC());
+        }
+    };
     public void setCategory(Category category) {
         this.category = category;
     }

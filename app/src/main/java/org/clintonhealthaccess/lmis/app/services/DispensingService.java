@@ -41,7 +41,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
@@ -63,6 +62,10 @@ public class DispensingService {
     StockService stockService;
     @Inject
     CommoditySnapshotService commoditySnapshotService;
+
+    @Inject
+    CommodityService commodityService;
+
     @Inject
     Context context;
     @Inject
@@ -89,6 +92,7 @@ public class DispensingService {
             adjustStockLevel(dispensingItem);
             commoditySnapshotService.add(dispensingItem);
         }
+        commodityService.reloadMostConsumedCommoditiesCache();
     }
 
     private void adjustStockLevel(DispensingItem dispensing) {

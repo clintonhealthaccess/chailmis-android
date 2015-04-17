@@ -68,6 +68,9 @@ public class ReceiveService {
     CommoditySnapshotService commoditySnapshotService;
 
     @Inject
+    CommodityService commodityService;
+
+    @Inject
     DbUtil dbUtil;
 
     public List<String> getReadyAllocationIds() {
@@ -84,12 +87,13 @@ public class ReceiveService {
             receiveDao.create(receive);
             saveReceiveItems(receive.getReceiveItems());
 
-            //deactivate receive
+
             if (receive.getAllocation() != null) {
-                Allocation allocation = receive.getAllocation();
-                allocation.setReceived(true);
                 if (!receive.getAllocation().isDummy()) {
+                    Allocation allocation = receive.getAllocation();
+                    allocation.setReceived(true);
                     allocationService.update(allocation);
+
                     alertsService.deleteAllocationAlert(allocation);
                 } else {
                     allocationService.createAllocation(receive.getAllocation());
@@ -110,6 +114,7 @@ public class ReceiveService {
             stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived(), receiveItem.created());
             commoditySnapshotService.add(receiveItem);
         }
+        commodityService.reloadMostConsumedCommoditiesCache();
     }
 
     public List<UtilizationValue> getReceivedValues(Commodity commodity, Date startDate, Date endDate) {

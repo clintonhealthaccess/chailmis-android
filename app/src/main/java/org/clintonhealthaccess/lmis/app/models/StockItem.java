@@ -63,7 +63,7 @@ public class StockItem implements Serializable {
     }
 
     public boolean isFinished() {
-        return quantity == 0;
+        return quantity <= 0;
     }
 
     public void increaseQuantityBy(int quantityToIncreaseBy) {

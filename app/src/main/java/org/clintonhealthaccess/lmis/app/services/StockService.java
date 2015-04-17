@@ -50,6 +50,9 @@ public class StockService {
     private CategoryService categoryService;
 
     @Inject
+    private CommodityService commodityService;
+
+    @Inject
     public StockItemSnapshotService stockItemSnapshotService;
 
     @Inject
@@ -73,7 +76,6 @@ public class StockService {
         saveStockLevel(commodity, stockItem, date);
         categoryService.clearCache();
     }
-
 
     private void saveStockLevel(final Commodity commodity, final StockItem stockItem, final Date date) {
         dbUtil.withDao(context, StockItem.class, new DbUtil.Operation<StockItem, Void>() {

@@ -59,6 +59,8 @@ public class AdjustmentService {
     @Inject
     StockService stockService;
 
+    @Inject
+    CommodityService commodityService;
 
     @Inject
     CategoryService categoryService;
@@ -92,6 +94,7 @@ public class AdjustmentService {
             }
         });
         categoryService.clearCache();
+        commodityService.reloadMostConsumedCommoditiesCache();
         alertsService.disableAllMonthlyStockCountAlerts();
     }
 

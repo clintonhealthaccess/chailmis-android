@@ -47,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -343,5 +344,20 @@ public class CommodityServiceTest extends LmisTestClass {
 
         assertThat(utilizationItems.get(5).getUtilizationValues().get(utilizationValueIndex).getValue(),
                 is(expectedValue));
+    }
+
+    @Test
+    public void shouldReloadMostConsumedCommodities() throws Exception {
+        commodityService.initialise(new User("test", "pass"));
+        categoryService.clearCache();
+
+        List<Commodity> mostConsumed = commodityService.getMost5HighlyConsumedCommodities();
+        Commodity commodity = mostConsumed.get(0);
+        int expectedStock = commodity.getStockOnHand() - 2;
+
+        adjust(commodity, 2, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+
+        commodity = commodityService.getMost5HighlyConsumedCommodities().get(0);
+        assertThat(commodity.getStockOnHand(), is(expectedStock));
     }
 }

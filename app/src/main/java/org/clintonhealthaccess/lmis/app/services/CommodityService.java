@@ -313,29 +313,40 @@ public class CommodityService {
 
     public List<Commodity> getMost5HighlyConsumedCommodities() {
 
-        System.out.println("We are here, mostConsumed is " + mostConsumedCommodities);
         if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
-            System.out.println("entered if");
             List<Commodity> commodities = all();
-            Collections.sort(commodities, new Comparator<Commodity>() {
-                @Override
-                public int compare(Commodity lhs, Commodity rhs) {
-                    return rhs.getAMC().compareTo(lhs.getAMC());
-                }
-            });
+            Collections.sort(commodities, Commodity.AMC_COMPARATOR);
 
             mostConsumedCommodities = commodities != null && commodities.size() > 5 ? commodities.subList(0, 5) : commodities;
 
             //initialize soh, Min and Max stock quantity for these commodities
-            for(Commodity t:mostConsumedCommodities){
+            for (Commodity t : mostConsumedCommodities) {
                 t.getStockOnHand();
                 t.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
                 t.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
             }
-
-            System.out.println("inside loop " + mostConsumedCommodities);
         }
         return mostConsumedCommodities;
+    }
+
+    // used when AMC's are updated
+    public void clearMostConsumedCommoditiesCache() {
+        mostConsumedCommodities = null;
+    }
+
+    public void reloadMostConsumedCommoditiesCache() {
+        if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
+            getMost5HighlyConsumedCommodities();
+        } else {
+            for (Commodity commodity : all()) {
+                System.out.println("Here with " + commodity.getName() + " most consumed are " + (mostConsumedCommodities == null ? "NULL" : mostConsumedCommodities.size()));
+                if (mostConsumedCommodities.contains(commodity)) {
+                    mostConsumedCommodities.remove(commodity);
+                    mostConsumedCommodities.add(commodity);
+                }
+            }
+            Collections.sort(mostConsumedCommodities, Commodity.AMC_COMPARATOR);
+        }
     }
 
     public List<UtilizationItem> getMonthlyUtilizationItems(Commodity commodity, Date date) throws Exception {

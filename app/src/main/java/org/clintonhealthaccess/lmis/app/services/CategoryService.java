@@ -76,15 +76,6 @@ public class CategoryService {
         return null;
     }
 
-
-    public List<Category> allSorted() {
-        List<Category> all = all();
-        List<Category> categories = new ArrayList<>();
-        Collections.copy(categories, all);
-        Collections.sort(categories);
-        return categories;
-    }
-
     public void clearCache() {
         allCategories = null;
     }
