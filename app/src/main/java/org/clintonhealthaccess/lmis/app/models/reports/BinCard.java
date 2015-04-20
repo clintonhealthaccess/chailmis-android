@@ -30,6 +30,8 @@
 
 package org.clintonhealthaccess.lmis.app.models.reports;
 
+import org.clintonhealthaccess.lmis.app.models.Commodity;
+
 import java.util.List;
 
 import lombok.Getter;
@@ -37,14 +39,16 @@ import lombok.ToString;
 
 @ToString
 public class BinCard {
+    Commodity commodity;
     int minimumStockLevel;
     int maximumStockLevel;
     List<BinCardItem> binCardItems;
 
-    public BinCard(int minimumStockLevel, int maximumStockLevel, List<BinCardItem> binCardItems) {
+    public BinCard(int minimumStockLevel, int maximumStockLevel, List<BinCardItem> binCardItems, Commodity commodity) {
         this.minimumStockLevel = minimumStockLevel;
         this.maximumStockLevel = maximumStockLevel;
         this.binCardItems = binCardItems;
+        this.commodity = commodity;
     }
 
     public int getMinimumStockLevel() {
@@ -55,7 +59,11 @@ public class BinCard {
         return maximumStockLevel;
     }
 
-    public List<BinCardItem> getBinCardItems(){
+    public List<BinCardItem> getBinCardItems() {
         return binCardItems;
+    }
+
+    public int getSoh() {
+        return commodity.getStockOnHand();
     }
 }

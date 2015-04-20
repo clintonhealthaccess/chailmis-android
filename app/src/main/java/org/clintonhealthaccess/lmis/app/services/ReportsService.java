@@ -381,7 +381,7 @@ public class ReportsService {
             date = DateUtil.addDayOfMonth(date, 1);
         }
 
-        return new BinCard(commodity.getMinimumThreshold(), commodity.getMaximumThreshold(), binCardItems);
+        return new BinCard(commodity.getMinimumThreshold(), commodity.getMaximumThreshold(), binCardItems, commodity);
     }
 
     private class ReceivedBySource {

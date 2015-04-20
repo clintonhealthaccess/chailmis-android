@@ -88,6 +88,9 @@ public class BinCardActivity extends BaseActivity {
     @InjectView(R.id.textViewMaximumStock)
     TextView textViewMaximumStock;
 
+    @InjectView(R.id.textViewStockOnHand)
+    TextView textViewStockOnHand;
+
     @InjectView(R.id.listViewBinCardItems)
     ListView listViewBinCarditems;
 
@@ -168,7 +171,12 @@ public class BinCardActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 currentPosition = position;
+
                 linearLayoutBinCardItems.setVisibility(View.GONE);
+                textViewStockOnHand.setText("");
+                textViewMinimumStock.setText("");
+                textViewMaximumStock.setText("");
+
                 textViewReloadBinCard.setVisibility(View.VISIBLE);
             }
 
@@ -203,6 +211,7 @@ public class BinCardActivity extends BaseActivity {
     public void handleBinCard(BinCard binCard){
         this.textViewMinimumStock.setText(String.valueOf(binCard.getMinimumStockLevel()));
         this.textViewMaximumStock.setText(String.valueOf(binCard.getMaximumStockLevel()));
+        this.textViewStockOnHand.setText(String.valueOf(binCard.getSoh()));
         this.binCardAdapter.clear();
         this.binCardAdapter.addAll(binCard.getBinCardItems());
         this.binCardAdapter.notifyDataSetChanged();

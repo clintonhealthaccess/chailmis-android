@@ -604,6 +604,7 @@ public class ReportsServiceTest extends LmisTestClass {
         assertThat(binCardItem.getQuantityLost(), is(20));
 
         assertThat(binCardItem.getStockBalance(), is(expectedBalance));
+        assertThat(binCard.getSoh(), is(expectedBalance));
     }
 
     @Test
