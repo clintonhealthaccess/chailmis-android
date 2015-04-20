@@ -513,6 +513,9 @@ public class Dhis2 implements LmisServer {
         for (CommodityAction action : indicatorActions) {
             actionMap.put(action.getId(), action);
         }
+        if (values == null || values.size() == 0) {
+            return new ArrayList<>();
+        }
         ImmutableList<CommodityActionValue> commodityActionValues = from(values).transform(new Function<List<String>, CommodityActionValue>() {
             @Override
             public CommodityActionValue apply(List<String> input) {

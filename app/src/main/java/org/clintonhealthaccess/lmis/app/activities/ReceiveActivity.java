@@ -183,7 +183,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         String allocationId = intent.getStringExtra(ALLOCATION_ID);
 
         if(StringUtils.isNotBlank(allocationId)) {
-            Allocation allocationWithId = allocationService.getAllocationByLmisId(presetAllocationId);
+            Allocation allocationWithId = allocationService.getAllocationByLmisId(allocationId);
             if (allocationWithId != null && !allocationWithId.isReceived()) {
                 presetAllocationId = allocationId;
             }
