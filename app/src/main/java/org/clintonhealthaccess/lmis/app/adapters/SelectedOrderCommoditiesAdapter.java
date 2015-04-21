@@ -127,22 +127,20 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
     private OrderCommodityViewModel getCommodityViewModel(int position) {
         final OrderCommodityViewModel orderCommodityViewModel = getItem(position);
-        if (orderCommodityViewModel.getExpectedOrderQuantity() == 0) {
-            int suggestedAmount = orderCommodityViewModel.getSuggestedAmount();
-            if (orderType.isRoutine()) {
-                orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount);
+        //if (orderCommodityViewModel.getExpectedOrderQuantity() == 0) {
+        int suggestedAmount = orderCommodityViewModel.getSuggestedAmount();
+        if (orderType.isRoutine()) {
+            orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount);
+        } else {
+            int numDaysToEndOfMonth = DateUtil.numDaysToEndOfMonth();
+            int emergencyQuantity = (int) (suggestedAmount * ((float) numDaysToEndOfMonth / 31));
+            if (numDaysToEndOfMonth > 15) {
+                orderCommodityViewModel.setExpectedOrderQuantity(emergencyQuantity);
             } else {
-                int numDaysToEndOfMonth = DateUtil.numDaysToEndOfMonth();
-                if (numDaysToEndOfMonth > 15) {
-                    orderCommodityViewModel.setExpectedOrderQuantity(
-                            suggestedAmount * (numDaysToEndOfMonth / 31));
-                } else {
-                    orderCommodityViewModel.setExpectedOrderQuantity(
-                            suggestedAmount + suggestedAmount * (numDaysToEndOfMonth / 31));
-                }
+                orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount + emergencyQuantity);
             }
         }
-
+        //}
         return orderCommodityViewModel;
     }
 

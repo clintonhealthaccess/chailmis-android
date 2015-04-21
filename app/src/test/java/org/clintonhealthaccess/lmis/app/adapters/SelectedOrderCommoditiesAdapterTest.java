@@ -133,9 +133,12 @@ public class SelectedOrderCommoditiesAdapterTest {
         orderActivity = getOrderActivity();
 
         commodities = new ArrayList<>();
-        commodityViewModel = new OrderCommodityViewModel(commodity, 2);
-        commodityViewModel.setOrderReasonPosition(0);
-        commodityViewModel.setExpectedOrderQuantity(12);
+        OrderCommodityViewModel commodityViewModel1 = new OrderCommodityViewModel(commodity, 2);
+        commodityViewModel1.setOrderReasonPosition(0);
+        commodityViewModel1.setExpectedOrderQuantity(12);
+
+        commodityViewModel = spy(commodityViewModel1);
+
         commodities.add(commodityViewModel);
         orderReasons.add(losses);
         orderReasons.add(highDemand);
@@ -230,6 +233,8 @@ public class SelectedOrderCommoditiesAdapterTest {
     @Test
     public void shouldShowUnExpectedReasonsSpinnerIfQuantityIsUnexpected() throws Exception {
 
+        when(commodityViewModel.getExpectedOrderQuantity()).thenReturn(12);
+
         View rowView = getRowView();
 
         EditText editTextOrderQuantity = (EditText) rowView.findViewById(R.id.editTextOrderQuantity);
@@ -315,7 +320,7 @@ public class SelectedOrderCommoditiesAdapterTest {
 
     @Test
     public void shouldHideSpinnerForUnExpectedOrderReasonsIfOrderTypeIsRoutine() throws Exception {
-        commodityViewModel.setExpectedOrderQuantity(10);
+        when(commodityViewModel.getExpectedOrderQuantity()).thenReturn(10);
         adapter = new SelectedOrderCommoditiesAdapter(orderActivity, list_item_layout, commodities, orderReasons, routine);
         View rowView = getRowView();
         Spinner spinnerUnexpectedOrderReasons = (Spinner) rowView.findViewById(R.id.spinnerUnexpectedQuantityReasons);

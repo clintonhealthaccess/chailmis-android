@@ -57,7 +57,7 @@ public class OrderCommodityViewModel extends BaseCommodityViewModel {
     }
 
     public boolean quantityIsUnexpected() {
-        return (quantityEntered > (1.1 * this.expectedOrderQuantity));
+        return (quantityEntered > (1.1 * getExpectedOrderQuantity()));
     }
 
     public void setExpectedOrderQuantity(int expectedOrderQuantity) {
