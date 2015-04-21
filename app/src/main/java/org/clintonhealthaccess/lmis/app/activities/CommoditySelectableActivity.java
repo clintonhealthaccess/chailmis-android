@@ -163,20 +163,18 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
         if (selectedCommodities.contains(commodity)) {
             selectedCommodities.remove(commodity);
             arrayAdapter.remove(commodity);
+            searchCommodityAdapter.getItemsAll().add(0, commodity.getCommodity());
         } else {
             arrayAdapter.add(commodity);
             selectedCommodities.add(commodity);
+            searchCommodityAdapter.getItemsAll().remove(commodity.getCommodity());
         }
         onCommoditySelectionChanged(selectedCommodities);
-
         onCommodityToggledEventCompleted();
     }
 
     public void onCommodityToggledEventCompleted() {
-        //Log.e("Toggled", "toggled");
-        searchCommodityAdapter = new SearchCommodityAdapter(this,
-                R.layout.search_commodity_item, newArrayList(getCommoditiesThatCanBeSelected()));
-        autoCompleteTextViewCommodities.setAdapter(searchCommodityAdapter);
+        searchCommodityAdapter.notifyDataSetChanged();
     }
 
     protected void onCommoditySelectionChanged(List<BaseCommodityViewModel> selectedCommodities) {

@@ -68,6 +68,10 @@ public class SearchCommodityAdapter extends ArrayAdapter<Commodity> {
         return rowView;
     }
 
+    public List<Commodity> getItemsAll(){
+        return  itemsAll;
+    }
+
     @Override
     public Filter getFilter() {
         return nameFilter;
