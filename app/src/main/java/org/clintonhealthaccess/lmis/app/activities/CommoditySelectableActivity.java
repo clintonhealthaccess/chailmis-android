@@ -37,7 +37,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -246,7 +245,7 @@ abstract public class CommoditySelectableActivity extends BaseActivity implement
     abstract protected AdapterView.OnItemClickListener getAutoCompleteTextViewCommoditiesAdapterListener();
 
     private List<Commodity> getCommoditiesThatCanBeSelected() {
-        return from(commodityService.all()).filter(new Predicate<Commodity>() {
+        return from(commodityService.sortedAll()).filter(new Predicate<Commodity>() {
             @Override
             public boolean apply(Commodity input) {
                 return !commodityHasBeenSelected(input) && getCheckBoxVisibilityStrategy()

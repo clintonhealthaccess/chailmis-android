@@ -63,7 +63,7 @@ public class FacilityConsumptionReportRH2Adapter extends ArrayAdapter<FacilityCo
         integerStringMap.put(R.id.textViewCommodityName, item.getCommodityName());
         integerStringMap.put(R.id.textViewOpeningBalance, String.valueOf(item.getOpeningStock()));
         integerStringMap.put(R.id.textViewQuantityReceived, String.valueOf(item.getCommoditiesReceived()));
-        integerStringMap.put(R.id.textViewQuantityDispensedToClients, String.valueOf(item.getCommoditiesDispensedToClients()));
+        integerStringMap.put(R.id.textViewQuantityAdjusted, String.valueOf(item.getCommoditiesAdjusted()));
         integerStringMap.put(R.id.textViewQuantityDispensedToFacilities, String.valueOf(item.getCommoditiesDispensedToFacilities()));
         integerStringMap.put(R.id.textViewTotalDispensed, String.valueOf(item.totalDispensed()));
         integerStringMap.put(R.id.textViewQuantityLost, String.valueOf(item.getCommoditiesLost()));

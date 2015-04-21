@@ -68,7 +68,7 @@
     <TextView
         android:layout_width="@dimen/rh2_report_row_width"
         android:layout_height="wrap_content"
-        android:text="@string/quantity_dispensed_to_clients"
+        android:text="@string/quantity_adjusted"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="3dp"

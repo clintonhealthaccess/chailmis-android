@@ -119,7 +119,7 @@ public class BinCardActivityTest extends LmisTestClass {
     public void shouldEnsureFirstCommodityNameInSpinnerIsCoartem() throws Exception {
         BinCardActivity binCardActivity = getBinCardActivity();
         Commodity commodity = (Commodity)binCardActivity.spinnerCommodities.getSelectedItem();
-        assertThat(commodity.getName(), is(commodityService.all().get(0).getName()));
+        assertThat(commodity.getName(), is(commodityService.sortedAll().get(0).getName()));
     }
 
     @Test
@@ -139,7 +139,7 @@ public class BinCardActivityTest extends LmisTestClass {
     public void shouldSetAutoCompleteCommodityInTheSpinner() throws Exception {
         BinCardActivity binCardActivity = getBinCardActivity();
         AutoCompleteTextView autoCompleteTextView = binCardActivity.autoCompleteTextViewCommodities;
-        autoCompleteTextView.setText("co");
+        autoCompleteTextView.setText("al");
         autoCompleteTextView.setSelection(0);
         Commodity selectedCommodity = (Commodity) autoCompleteTextView.getAdapter().getItem(0);
         assertThat((Commodity)binCardActivity.spinnerCommodities.getSelectedItem(), is(selectedCommodity));
