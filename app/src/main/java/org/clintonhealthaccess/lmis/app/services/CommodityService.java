@@ -47,7 +47,6 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
-import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
@@ -61,12 +60,13 @@ import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import static com.google.common.collect.FluentIterable.from;
 
 import roboguice.inject.InjectResource;
 
@@ -224,8 +224,20 @@ public class CommodityService {
         for (Category category : categories) {
             commodities.addAll(category.getCommodities());
         }
+
+
         return commodities;
     }
+
+    public List<Commodity> sortedAll(){
+        return from(all()).toSortedList(new Comparator<Commodity>() {
+            @Override
+            public int compare(Commodity commodity, Commodity commodity2) {
+                return commodity.getName().compareTo(commodity2.getName());
+            }
+        });
+    }
+
 
     public void saveToDatabase(final List<Category> categories) {
         dbUtil.withDaoAsBatch(context, Category.class, new Operation<Category, Void>() {

@@ -127,7 +127,7 @@ public class BinCardActivity extends BaseActivity {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.transparent);
 
-        commodities = commodityService.all();
+        commodities = commodityService.sortedAll();
         setUpAdapters();
         populateCommoditiesSpinner();
         setUpCommoditySearch();
