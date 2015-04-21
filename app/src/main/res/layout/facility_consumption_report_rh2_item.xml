@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:padding="3dp"
         android:gravity="center"
-        android:id="@+id/textViewQuantityDispensedToClients"
+        android:id="@+id/textViewQuantityAdjusted"
         android:textSize="@dimen/item_text_size"/>
 
     <TextView

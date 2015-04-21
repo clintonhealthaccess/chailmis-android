@@ -38,16 +38,18 @@ public class FacilityConsumptionReportRH2Item {
     private int commoditiesReceived;
     private int commoditiesDispensedToClients;
     private int commoditiesDispensedToFacilities;
+    private int commoditiesAdjusted;
     private int commoditiesLost;
     private int closingStock;
 
     public FacilityConsumptionReportRH2Item(String commodityName, int openingStock, int commoditiesReceived,
-                                   int commoditiesDispensedToClients, int commoditiesDispensedToFacilities,
+                                   int commoditiesDispensedToClients, int commoditiesAdjusted, int commoditiesDispensedToFacilities,
                                    int commoditiesLost, int closingStock) {
         this.commodityName = commodityName;
         this.openingStock = openingStock;
         this.commoditiesReceived = commoditiesReceived;
         this.commoditiesDispensedToClients = commoditiesDispensedToClients;
+        this.commoditiesAdjusted = commoditiesAdjusted;
         this.commoditiesDispensedToFacilities = commoditiesDispensedToFacilities;
         this.commoditiesLost = commoditiesLost;
         this.closingStock = closingStock;
@@ -79,6 +81,10 @@ public class FacilityConsumptionReportRH2Item {
 
     public int getCommoditiesDispensedToClients() {
         return commoditiesDispensedToClients;
+    }
+
+    public int getCommoditiesAdjusted(){
+        return commoditiesAdjusted;
     }
 
     public int totalDispensed() {

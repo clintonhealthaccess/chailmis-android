@@ -228,8 +228,11 @@ public class ReportsService {
 
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
+
                 int quantityDispensedToClients = GenericService.getTotal(commodity, startingDate, endDate,
                         Dispensing.class, DispensingItem.class, context);
+                int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
+
                 int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
                         Loss.class, LossItem.class, context);
 
@@ -238,7 +241,7 @@ public class ReportsService {
                 int closingStock = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
 
                 FacilityConsumptionReportRH2Item item = new FacilityConsumptionReportRH2Item(commodity.getName(),
-                        openingStock, quantityReceived, quantityDispensedToClients,
+                        openingStock, quantityReceived, quantityDispensedToClients, quantityAdjusted,
                         commoditiesDispensedToFacilities, quantityLost, closingStock);
 
                 facilityConsumptionReportRH2Items.add(item);
@@ -371,8 +374,8 @@ public class ReportsService {
                         quantityDispensed, quantityLost, quantityAdjusted, closingBalance));
             }
 
-            if(receivedBySources.size()>1){
-                for(int i=1; i<receivedBySources.size();i++){
+            if (receivedBySources.size() > 1) {
+                for (int i = 1; i < receivedBySources.size(); i++) {
                     binCardItems.add(new BinCardItem(date, receivedBySources.get(i).getSource(), receivedBySources.get(i).getQuantityReceived(), 0, 0, 0, closingBalance));
                 }
             }
