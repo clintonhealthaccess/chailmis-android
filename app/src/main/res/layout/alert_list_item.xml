@@ -39,20 +39,23 @@
         android:id="@+id/textViewCommodityName"
         android:layout_weight="1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/chart4"/>
 
     <TextView
         android:id="@+id/textViewQuantity"
         android:layout_weight="1"
         android:layout_width="fill_parent"
         android:gravity="center_horizontal"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/chart4"/>
 
     <TextView
         android:id="@+id/textViewAlertDate"
         android:layout_weight="1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/chart4"/>
 
     <ImageView
         android:layout_width="25dp"

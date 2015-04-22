@@ -127,7 +127,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
 
     private OrderCommodityViewModel getCommodityViewModel(int position) {
         final OrderCommodityViewModel orderCommodityViewModel = getItem(position);
-        //if (orderCommodityViewModel.getExpectedOrderQuantity() == 0) {
         int suggestedAmount = orderCommodityViewModel.getSuggestedAmount();
         if (orderType.isRoutine()) {
             orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount);
@@ -140,7 +139,6 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
                 orderCommodityViewModel.setExpectedOrderQuantity(suggestedAmount + emergencyQuantity);
             }
         }
-        //}
         return orderCommodityViewModel;
     }
 
