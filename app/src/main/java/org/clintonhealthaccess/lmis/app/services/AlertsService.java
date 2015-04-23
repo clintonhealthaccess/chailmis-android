@@ -42,6 +42,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.OrderCommodityViewModel;
+import org.clintonhealthaccess.lmis.app.events.AlertChangeEvent;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -61,6 +62,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
@@ -131,6 +134,7 @@ public class AlertsService {
         checkIfExistingLowStockAlertsAreStillValid();
         checkForNewLowStockAlerts();
         updateCache();
+        EventBus.getDefault().post(new AlertChangeEvent());
     }
 
     public void updateCommodityLowStockAlert(Commodity commodity) {

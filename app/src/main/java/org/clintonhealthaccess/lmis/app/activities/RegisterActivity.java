@@ -43,6 +43,7 @@ import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.OrderService;
@@ -74,6 +75,9 @@ public class RegisterActivity extends OrmLiteActivity implements Serializable {
     private SmsSyncService smsSyncService;
     @Inject
     private CommodityActionService commodityActionService;
+
+    @Inject
+    private AlertsService alertsService;
 
     @InjectView(id.textUsername)
     private TextView textUsername;
@@ -155,6 +159,8 @@ public class RegisterActivity extends OrmLiteActivity implements Serializable {
                 Log.i("Inital sync:", "<========== syncing Order Types");
                 orderService.syncOrderTypes();
                 smsSyncService.syncGatewayNumber();
+
+                alertsService.updateLowStockAlerts();
             } catch (Exception e) {
                 this.failureCause = e;
                 //Log.e("Registration Error", e.getLocalizedMessage());

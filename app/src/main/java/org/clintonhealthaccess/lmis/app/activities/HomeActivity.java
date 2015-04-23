@@ -40,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
@@ -48,6 +49,7 @@ import com.thoughtworks.dhis.models.DataElementType;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
+import org.clintonhealthaccess.lmis.app.events.AlertChangeEvent;
 import org.clintonhealthaccess.lmis.app.listeners.AlertClickListener;
 import org.clintonhealthaccess.lmis.app.listeners.NotificationClickListener;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -64,6 +66,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 
@@ -123,6 +126,12 @@ public class HomeActivity extends BaseActivity implements Serializable {
     @Inject
     CommodityService commodityService;
 
+    @InjectView(R.id.barChart)
+    LinearLayout barChartLayout;
+    int graphHeight;
+    Map<Integer, Integer> colors = new HashMap<>();
+
+
     private SparseArray<Class<? extends BaseActivity>> navigationRoutes =
             new SparseArray<Class<? extends BaseActivity>>() {
                 {
@@ -145,14 +154,28 @@ public class HomeActivity extends BaseActivity implements Serializable {
         setupGraph();
 
         setupAutoSync();
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setupAlerts();
-
+        updateGraph();
     }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+
+    public void onEvent(AlertChangeEvent event){
+        setupAlerts();
+    }
+
 
     private void setupAutoSync() {
         syncManager.kickOff();
@@ -222,10 +245,66 @@ public class HomeActivity extends BaseActivity implements Serializable {
         };
     }
 
-    private void setupGraph() {
-        List<StockOnHandGraphBar> bars = new ArrayList<>();
+    private AsyncTask<Void, Void, List<StockOnHandGraphBar>> getUpdateGraphTask() {
 
-        Map<Integer, Integer> colors = new HashMap<>();
+        return new AsyncTask<Void, Void, List<StockOnHandGraphBar>>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                barChartLayout.removeAllViews();
+
+                TextView loadingLabel = new TextView(getApplicationContext());
+                loadingLabel.setText("Loading Graph...");
+                loadingLabel.setTextColor(R.color.black);
+                loadingLabel.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                barChartLayout.addView(loadingLabel);
+
+            }
+
+            @Override
+            protected List<StockOnHandGraphBar> doInBackground(Void... params) {
+                List<StockOnHandGraphBar> bars = new ArrayList<>();
+                int count = 0;
+                for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
+                    int factor = 100;
+                    int amc = commodity.getAMC();
+
+                    //FIXME hack to fix 0 AMC error
+                    amc = amc == 0 ? commodity.getStockOnHand() == 0 ? 1 : commodity.getStockOnHand() : amc;
+
+                    int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
+
+                    int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
+                    int minThresholdInMonths = minimumThreshold * factor / amc;
+
+                    int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
+                    int maxThresholdInMonths = maxThreshold * factor / amc;
+
+                    bars.add(new StockOnHandGraphBar(commodity.getName(),
+                            minThresholdInMonths, maxThresholdInMonths, monthsOfStock,
+                            colors.get(count), commodity.getStockOnHand()));
+                    count++;
+                }
+                return bars;
+            }
+
+            @Override
+            protected void onPostExecute(List<StockOnHandGraphBar> bars) {
+                barChartLayout.removeAllViews();
+                int biggestValue = getBiggestValue(bars);
+                for (StockOnHandGraphBar bar : bars) {
+                    barChartLayout.addView(bar.getView(getApplicationContext(), biggestValue, graphHeight));
+                }
+            }
+        };
+    }
+
+    private void updateGraph() {
+        getUpdateGraphTask().execute();
+    }
+
+    private void setupGraph() {
         colors.put(0, getResources().getColor(R.color.chart0));
         colors.put(1, getResources().getColor(R.color.chart1));
         colors.put(2, getResources().getColor(R.color.chart2));
@@ -233,40 +312,13 @@ public class HomeActivity extends BaseActivity implements Serializable {
         colors.put(4, getResources().getColor(R.color.chart4));
         colors.put(5, getResources().getColor(R.color.chart5));
 
-        int count = 0;
-        for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-            int factor = 100;
-            int amc = commodity.getAMC();
-
-            //FIXME hack to fix 0 AMC error
-            amc = amc == 0 ? commodity.getStockOnHand() == 0? 1:commodity.getStockOnHand() : amc;
-
-            int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
-
-            int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
-            int minThresholdInMonths = minimumThreshold * factor / amc;
-
-            int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
-            int maxThresholdInMonths = maxThreshold * factor / amc;
-
-            bars.add(new StockOnHandGraphBar(commodity.getName(),
-                    minThresholdInMonths, maxThresholdInMonths, monthsOfStock,
-                    colors.get(count), commodity.getStockOnHand()));
-            count++;
-        }
-        LinearLayout barChartLayout = (LinearLayout) findViewById(R.id.barChart);
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-        int graphHeight = 2 * height / 3;
+        graphHeight = 2 * height / 3;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, graphHeight);
         barChartLayout.setLayoutParams(params);
-        int biggestValue = getBiggestValue(bars);
-
-        for (StockOnHandGraphBar bar : bars) {
-            barChartLayout.addView(bar.getView(getApplicationContext(), biggestValue, graphHeight));
-        }
     }
 
     private int getBiggestValue(List<StockOnHandGraphBar> bars) {

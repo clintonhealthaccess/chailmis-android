@@ -114,6 +114,7 @@ public class ReceiveService {
             commoditySnapshotService.add(receiveItem);
         }
         commodityService.reloadMostConsumedCommoditiesCache();
+        alertsService.updateLowStockAlerts();
     }
 
     public List<UtilizationValue> getReceivedValues(Commodity commodity, Date startDate, Date endDate) {
