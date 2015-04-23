@@ -199,6 +199,19 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 setupEndMonthSpinner();
+                // if end year is later than the start year , reset the end month
+                if (getStartingYear().compareTo(getEndingYear()) < 0) {
+                    ArrayAdapter<String> startMonthAdapter;
+                    if (endingYearIsCurrent()) {
+                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                                getMonths(0, DateUtil.monthNumber() + 1));
+                    } else {
+                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                                getMonths());
+                    }
+                    spinnerEndingMonth.setAdapter(startMonthAdapter);
+                }
+
                 clearAdapter();
             }
 
@@ -303,6 +316,9 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
     }
 
     protected void setupEndMonthSpinner() {
+        if (getStartingYear().compareTo(getEndingYear()) < 0){
+            return;
+        }
         int selectedIndex = spinnerStartingMonth.getSelectedItemPosition();
         ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
                 getMonths(selectedIndex, endingYearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
