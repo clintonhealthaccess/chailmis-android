@@ -231,7 +231,9 @@ public class ReportsService {
 
                 int quantityDispensedToClients = GenericService.getTotal(commodity, startingDate, endDate,
                         Dispensing.class, DispensingItem.class, context);
-                int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
+
+                //should calculate all the adjustment ignore the sign.
+                int quantityAdjusted = adjustmentService.totalAdjustmentNumber(commodity, startingDate, endDate);
 
                 int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
                         Loss.class, LossItem.class, context);

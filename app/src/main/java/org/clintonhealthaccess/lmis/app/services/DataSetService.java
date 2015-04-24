@@ -54,7 +54,7 @@ public class DataSetService {
     private DbUtil dbUtil;
 
     public List<DataSet> all() {
-        if (allDataSets == null) {
+        if (allDataSets == null || allDataSets.size() == 0) {
             allDataSets = dbUtil.withDao(DataSet.class, new DbUtil.Operation<DataSet, List<DataSet>>() {
                 @Override
                 public List<DataSet> operate(Dao<DataSet, String> dao) throws SQLException {

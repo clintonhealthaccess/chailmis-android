@@ -119,6 +119,28 @@ public class AdjustmentService {
         return totalQuantity;
     }
 
+    public int totalAdjustmentNumber(final Commodity commodity, final Date startingDate, final Date endDate) {
+        int totalQuantity = 0;
+
+        List<Adjustment> adjustments =
+                dbutil.withDao(Adjustment.class, new DbUtil.Operation<Adjustment, List<Adjustment>>() {
+                    @Override
+                    public List<Adjustment> operate(Dao<Adjustment, String> dao) throws SQLException {
+                        QueryBuilder<Adjustment, String> queryBuilder = dao.queryBuilder();
+                        queryBuilder.where().between("created", startingDate, endDate).
+                                and().eq("commodity_id", commodity.getId());
+                        return queryBuilder.query();
+                    }
+                });
+
+        for (Adjustment adjustment : adjustments) {
+            int quantity = adjustment.getQuantity();
+            totalQuantity += quantity;
+        }
+        return totalQuantity;
+    }
+
+
     public int totalAdjustment(Commodity commodity, Date startingDate, Date endDate, AdjustmentReason adjustmentReason) {
 
         List<Adjustment> adjustments = getAdjustments(commodity, startingDate, endDate, adjustmentReason);

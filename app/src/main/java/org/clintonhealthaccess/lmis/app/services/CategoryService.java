@@ -56,7 +56,7 @@ public class CategoryService {
     private Context context;
 
     public List<Category> all() {
-        if (allCategories == null) {
+        if (allCategories == null || allCategories.size() == 0) {
             allCategories = dbUtil.withDao(context, Category.class, new DbUtil.Operation<Category, List<Category>>() {
                 @Override
                 public List<Category> operate(Dao<Category, String> dao) throws SQLException {
