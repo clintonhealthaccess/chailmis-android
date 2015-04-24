@@ -80,12 +80,19 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private static LmisSqliteOpenHelper _helperInstance;
 
+
     public static LmisSqliteOpenHelper getInstance(Context context) {
         if (_helperInstance == null)
-            _helperInstance = new LmisSqliteOpenHelper(context);
-
+            syncInit(context);
         return _helperInstance;
     }
+
+    // add multiple thread singleton support
+    private static  synchronized void syncInit(Context context){
+        if (_helperInstance == null)
+            _helperInstance = new LmisSqliteOpenHelper(context);
+    }
+
 
     public static void closeHelper() {
         _helperInstance = null;
