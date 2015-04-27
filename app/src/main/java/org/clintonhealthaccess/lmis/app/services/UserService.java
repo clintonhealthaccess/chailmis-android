@@ -103,7 +103,10 @@ public class UserService {
             @Override
             public User operate(Dao<User, String> dao) throws SQLException {
                 List<User> users = dao.queryForAll();
-                return users.get(0);
+                if(users!=null && users.size() >0){
+                    return users.get(0);
+                }
+                return null;
             }
         });
     }

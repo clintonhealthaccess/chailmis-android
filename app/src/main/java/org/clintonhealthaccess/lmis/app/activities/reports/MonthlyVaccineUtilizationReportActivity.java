@@ -117,7 +117,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
         setContentView(R.layout.activity_monthly_vaccine_utilization_report);
         textViewReportName.setText(reportType.getName());
 
-        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
+        ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large, getLastNYears(NUMBER_OF_YEARS));
         spinnerYear.setAdapter(yearsAdapter);
         setupMonthSpinner();
 
@@ -140,7 +140,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
 
     private void setupMonthSpinner() {
         ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.spinner_item_black, getMonths(0, yearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
+                R.layout.spinner_item_large, getMonths(0, yearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
         spinnerMonth.setAdapter(startMonthAdapter);
 
         if(yearIsCurrent()) {
