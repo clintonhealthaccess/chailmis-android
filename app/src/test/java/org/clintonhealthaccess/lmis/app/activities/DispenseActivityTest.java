@@ -50,6 +50,7 @@ import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.DispensingService;
 import org.clintonhealthaccess.lmis.app.services.StockService;
@@ -99,6 +100,7 @@ public class DispenseActivityTest extends LmisTestClass {
 
     @Before
     public void setUp() throws Exception {
+        LmisSqliteOpenHelper.closeHelper();
         stockService = mock(StockService.class);
         dispenseService = mock(DispensingService.class);
         userService = mock(UserService.class);
