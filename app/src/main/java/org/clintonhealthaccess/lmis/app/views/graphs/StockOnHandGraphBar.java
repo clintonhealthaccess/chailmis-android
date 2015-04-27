@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.views.graphs;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 
 import lombok.Getter;
 
@@ -91,6 +93,10 @@ public class StockOnHandGraphBar {
             ImageView imageViewSpaceBorderLeft = getImageViewForSpace(applicationContext, barWidth);
             relativeLayout.addView(imageViewSpaceBorderLeft);
             relativeLayout.addView(getMaxTextView(applicationContext, barWidth));
+
+            if(actualStockOnHand < minimumThreshold){
+                relativeLayout.addView(getMinimumOrdersTextView(applicationContext, barWidth, minimumThreshold - actualStockOnHand));
+            }
         }
 
         return relativeLayout;
@@ -147,6 +153,22 @@ public class StockOnHandGraphBar {
         textViewMax.setTypeface(null, Typeface.BOLD);
         return textViewMax;
     }
+
+
+    private TextView getMinimumOrdersTextView(Context applicationContext, int barWidth, int minimunOrders){
+        TextView textViewOrders = new TextView(applicationContext);
+        RelativeLayout.LayoutParams ordersViewParams = new RelativeLayout.LayoutParams(barWidth, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        ordersViewParams.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.imageViewSpaceBorderLeft);
+
+        textViewOrders.setLayoutParams(ordersViewParams);
+        textViewOrders.setText(Html.fromHtml("Minimum Order: </br> " + minimunOrders));
+        textViewOrders.setTextSize(12);
+        textViewOrders.setGravity(Gravity.CENTER_HORIZONTAL);
+        textViewOrders.setTextColor(applicationContext.getResources().getColor(R.color.black));
+        textViewOrders.setTypeface(null, Typeface.BOLD);
+        return textViewOrders;
+    }
+
 
 
     private View getColorViewHolder(Context applicationContext, int biggestValue,
