@@ -78,7 +78,7 @@ public class ReceiveServiceTest extends LmisTestClass {
     }
 
     @Test
-    public void shouldSaveReceiveAndReceiveItems() {
+    public void shouldSaveReceiveAndReceiveItems() throws  Exception{
         Commodity commodity = commodityService.all().get(0);
         ReceiveItem receiveItem = new ReceiveItem(commodity, QUANTITY_ALLOCATED, QUANTITY_RECEIVED);
         Receive receive = new Receive("LGA");

@@ -35,6 +35,7 @@ import android.util.Log;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
+import com.j256.ormlite.misc.TransactionManager;
 
 import org.clintonhealthaccess.lmis.app.events.AllocationCreateEvent;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
@@ -43,14 +44,17 @@ import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.ReceiveItem;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
+import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import de.greenrobot.event.EventBus;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class ReceiveService {
 
@@ -81,29 +85,29 @@ public class ReceiveService {
         return new ArrayList<>();
     }
 
-    public void saveReceive(Receive receive) {
-        try {
-            GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
-            receiveDao.create(receive);
-            saveReceiveItems(receive.getReceiveItems());
+    public void saveReceive(final Receive receive) throws Exception{
+            TransactionManager.callInTransaction(LmisSqliteOpenHelper.getInstance(context).getConnectionSource(), new
+                    Callable<Object>() {
+                        @Override
+                        public Object call() throws Exception {
+                            GenericDao<Receive> receiveDao = new GenericDao<>(Receive.class, context);
+                            receiveDao.create(receive);
+                            saveReceiveItems(receive.getReceiveItems());
 
-
-            if (receive.getAllocation() != null) {
-                Allocation allocation = receive.getAllocation();
-                allocation.setReceived(true);
-                if (!allocation.isDummy()) {
-                    allocationService.update(allocation);
-                    alertsService.deleteAllocationAlert(allocation);
-                } else {
-                    allocationService.createAllocation(allocation);
-                    EventBus.getDefault().post(new AllocationCreateEvent(receive.getAllocation()));
-                }
-            }
-
-        } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
-            e.printStackTrace();
-        }
+                            if (receive.getAllocation() != null) {
+                                Allocation allocation = receive.getAllocation();
+                                allocation.setReceived(true);
+                                if (!allocation.isDummy()) {
+                                    allocationService.update(allocation);
+                                    alertsService.deleteAllocationAlert(allocation);
+                                } else {
+                                    allocationService.createAllocation(allocation);
+                                    EventBus.getDefault().post(new AllocationCreateEvent(receive.getAllocation()));
+                                }
+                            }
+                            return null;
+                        }
+                    });
     }
 
     private void saveReceiveItems(List<ReceiveItem> receiveItems) {
