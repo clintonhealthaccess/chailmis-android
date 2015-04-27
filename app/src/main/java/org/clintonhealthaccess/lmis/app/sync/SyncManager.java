@@ -87,7 +87,7 @@ public class SyncManager {
         setIsSyncable(account, syncContentAuthority, 1);
         setSyncAutomatically(account, syncContentAuthority, true);
         addPeriodicSync(account, syncContentAuthority, periodicSyncParams(), syncInterval);
-        i("==> auto sync enabled to : ", account.name);
+        i("==> auto sync enabled to: ", account.name + " every " + syncInterval + "seconds");
     }
 
     private Bundle periodicSyncParams() {

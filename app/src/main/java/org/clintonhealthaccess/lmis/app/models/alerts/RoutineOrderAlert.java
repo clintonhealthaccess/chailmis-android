@@ -57,7 +57,7 @@ public class RoutineOrderAlert implements NotificationMessage {
     private boolean disabled;
 
     public RoutineOrderAlert() {
-        //ormLite likes
+        // ormLite likes
     }
 
     public RoutineOrderAlert(Date date) {

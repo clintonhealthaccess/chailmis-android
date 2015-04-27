@@ -88,7 +88,6 @@ public class OrderActivity extends CommoditySelectableActivity {
     @InjectView(R.id.spinnerOrderType)
     Spinner spinnerOrderType;
 
-
     private String prepopulatedOrderType;
 
     private int getSelectedCommoditiesAdapterId() {

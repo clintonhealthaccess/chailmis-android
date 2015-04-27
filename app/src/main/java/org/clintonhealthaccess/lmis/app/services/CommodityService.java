@@ -351,7 +351,6 @@ public class CommodityService {
             getMost5HighlyConsumedCommodities();
         } else {
             for (Commodity commodity : all()) {
-                System.out.println("Here with " + commodity.getName() + " most consumed are " + (mostConsumedCommodities == null ? "NULL" : mostConsumedCommodities.size()));
                 if (mostConsumedCommodities.contains(commodity)) {
                     mostConsumedCommodities.remove(commodity);
                     mostConsumedCommodities.add(commodity);

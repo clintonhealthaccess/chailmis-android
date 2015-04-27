@@ -203,7 +203,7 @@ public class HomeActivity extends BaseActivity implements Serializable {
     private void setupAlerts() {
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = createAlertsTask();
         getAlerts.execute();
-        AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = createNotifcationsMessageTask();
+        AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = createNotificationsMessageTask();
         getNotificationsMessageTask.execute();
     }
 
@@ -224,7 +224,7 @@ public class HomeActivity extends BaseActivity implements Serializable {
         };
     }
 
-    private AsyncTask<Void, Void, List<? extends NotificationMessage>> createNotifcationsMessageTask() {
+    private AsyncTask<Void, Void, List<? extends NotificationMessage>> createNotificationsMessageTask() {
         return new AsyncTask<Void, Void, List<? extends NotificationMessage>>() {
             @Override
             protected List<? extends NotificationMessage> doInBackground(Void... params) {

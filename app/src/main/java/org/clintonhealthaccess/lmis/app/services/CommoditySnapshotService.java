@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
@@ -95,7 +96,7 @@ public class CommoditySnapshotService {
         }
     }
 
-    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao, List<CommoditySnapshot> commoditySnapshots)  {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao, List<CommoditySnapshot> commoditySnapshots) {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
         commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
         commoditySnapshot.setSynced(false);
