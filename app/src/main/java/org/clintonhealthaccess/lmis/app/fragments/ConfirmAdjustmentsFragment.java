@@ -31,6 +31,8 @@ package org.clintonhealthaccess.lmis.app.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -45,8 +47,10 @@ import android.widget.Toast;
 import com.google.inject.Inject;
 
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.activities.HomeActivity;
 import org.clintonhealthaccess.lmis.app.adapters.ConfirmAdjustmentsAdapter;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.services.AdjustmentService;
 
 import java.util.ArrayList;
@@ -62,6 +66,8 @@ public class ConfirmAdjustmentsFragment extends RoboDialogFragment {
     @Inject
     AdjustmentService adjustmentService;
 
+    @Inject
+    Context context;
 
     public static ConfirmAdjustmentsFragment newInstance(ArrayList<Adjustment> adjustments) {
         ConfirmAdjustmentsFragment fragment = new ConfirmAdjustmentsFragment();
@@ -137,6 +143,10 @@ public class ConfirmAdjustmentsFragment extends RoboDialogFragment {
             }
         }
 
+        private boolean adjustmentReasonIsPhysicalCount() {
+            return adjustments.get(0).getReason().equalsIgnoreCase(AdjustmentReason.PHYSICAL_COUNT.getName());
+        }
+
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
@@ -146,7 +156,8 @@ public class ConfirmAdjustmentsFragment extends RoboDialogFragment {
                 FragmentActivity activity = getActivity();
                 if (activity != null) {
                     activity.finish();
-                    startActivity(activity.getIntent());
+
+                    startActivity(adjustmentReasonIsPhysicalCount() ? new Intent(context, HomeActivity.class) : activity.getIntent());
                 }
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "Failed to save Adjustments", Toast.LENGTH_LONG).show();
