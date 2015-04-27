@@ -109,12 +109,12 @@ public class LMISTestCase extends LmisTestClass {
         adjustmentService.save(Arrays.asList(adjustment));
     }
 
-    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService) {
+    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService) throws Exception{
         receive(commodity, quantityReceived, receiveService, new Date());
     }
 
 
-    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService, Date date) {
+    public static void receive(Commodity commodity, int quantityReceived, ReceiveService receiveService, Date date) throws Exception{
         Receive receive = new Receive("LGA / State CMS", date);
 
         ReceiveItem receiveItem = new ReceiveItem();

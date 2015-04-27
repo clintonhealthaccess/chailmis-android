@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (c) 2014, Thoughtworks Inc
   ~ All rights reserved.
@@ -27,13 +28,11 @@
   ~ of the authors and should not be interpreted as representing official policies,
   ~ either expressed or implied, of the FreeBSD Project.
   -->
+
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    style="?android:attr/spinnerItemStyle"
-    android:singleLine="true"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:textSize="18sp"
-    android:ellipsize="marquee"
-    android:textAlignment="inherit"/>
+    android:padding="15dp"
+    android:gravity="center"
+    android:textColor="@color/black"
+    android:textSize="16sp" />

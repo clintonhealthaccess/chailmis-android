@@ -129,13 +129,13 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
     private void setupSpinners() {
         ArrayAdapter<String> yearsAdapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS));
+                R.layout.spinner_item_large, getLastNYears(NUMBER_OF_YEARS));
         spinnerStartingYear.setAdapter(yearsAdapter);
         spinnerStartingYear.setSelection(0);
         setupEndYearSpinner();
 
         ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.spinner_item_black, getMonths());
+                R.layout.spinner_item_large, getMonths());
         spinnerStartingMonth.setAdapter(startMonthAdapter);
         spinnerStartingMonth.setSelection(0);
         setupEndMonthSpinner();
@@ -203,10 +203,10 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
                 if (getStartingYear().compareTo(getEndingYear()) < 0) {
                     ArrayAdapter<String> startMonthAdapter;
                     if (endingYearIsCurrent()) {
-                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large,
                                 getMonths(0, DateUtil.monthNumber() + 1));
                     } else {
-                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+                        startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large,
                                 getMonths());
                     }
                     spinnerEndingMonth.setAdapter(startMonthAdapter);
@@ -299,17 +299,17 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
 
     protected void setupEndYearSpinner() {
         int selectedIndex = spinnerStartingYear.getSelectedItemPosition();
-        ArrayAdapter<String> endYearAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black, getLastNYears(NUMBER_OF_YEARS).subList(0, selectedIndex + 1));
+        ArrayAdapter<String> endYearAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large, getLastNYears(NUMBER_OF_YEARS).subList(0, selectedIndex + 1));
         spinnerEndingYear.setAdapter(endYearAdapter);
     }
 
     protected void setupStartingMonthSpinner() {
         if (startingYearIsCurrent()) {
-            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large,
                     getMonths(0, DateUtil.monthNumber() + 1));
             spinnerStartingMonth.setAdapter(startMonthAdapter);
         }else{
-            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+            ArrayAdapter<String> startMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large,
                     getMonths());
             spinnerStartingMonth.setAdapter(startMonthAdapter);
         }
@@ -320,7 +320,7 @@ public abstract class MonthBasedReportBaseActivity<T extends ArrayAdapter> exten
             return;
         }
         int selectedIndex = spinnerStartingMonth.getSelectedItemPosition();
-        ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_black,
+        ArrayAdapter<String> endMonthAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item_large,
                 getMonths(selectedIndex, endingYearIsCurrent() ? DateUtil.monthNumber() + 1 : 12));
         spinnerEndingMonth.setAdapter(endMonthAdapter);
     }

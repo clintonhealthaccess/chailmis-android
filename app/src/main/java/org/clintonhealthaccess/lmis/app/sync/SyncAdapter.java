@@ -78,6 +78,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         User user = userService.getRegisteredUser();
+        if(user == null ){
+            return;
+        }
+
         i("==> Syncing...........SNAPSHOTS", account.name);
         commoditySnapshotService.syncWithServer(user);
 

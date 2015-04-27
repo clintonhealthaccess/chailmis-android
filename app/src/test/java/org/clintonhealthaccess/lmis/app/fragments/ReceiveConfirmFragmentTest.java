@@ -85,7 +85,7 @@ public class ReceiveConfirmFragmentTest {
     }
 
     @Test
-    public void shouldSaveReceiveWhenConfirmButtonIsClicked() {
+    public void shouldSaveReceiveWhenConfirmButtonIsClicked() throws  Exception{
         Dialog dialog = ShadowDialog.getLatestDialog();
         Button confirmButton = (Button) dialog.findViewById(R.id.button_receive_confirm);
         confirmButton.performClick();
