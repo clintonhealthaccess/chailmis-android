@@ -42,14 +42,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
+
+    private static int instanceCount = 0;
+
     private static final List<Migration> MIGRATIONS = new ArrayList<Migration>() {
         {
             add(new CreateInitTables());
         }
     };
 
-    public LmisSqliteOpenHelper(Context context) {
+    private LmisSqliteOpenHelper(Context context) {
         super(context, "lmis_test_db", null, MIGRATIONS.size());
+        ++ instanceCount;
+        Log.d("LmisSqliteOpenHelper", "Instance Created : total count : " + instanceCount);
     }
 
     @Override
@@ -80,27 +85,22 @@ public class LmisSqliteOpenHelper extends OrmLiteSqliteOpenHelper {
 
     private static LmisSqliteOpenHelper _helperInstance;
 
-
-    public static LmisSqliteOpenHelper getInstance(Context context) {
-        if (_helperInstance == null)
-            syncInit(context);
+    public static synchronized LmisSqliteOpenHelper getInstance(Context context) {
+        if (_helperInstance == null){
+            _helperInstance = new LmisSqliteOpenHelper(context);
+        }
         return _helperInstance;
     }
 
-    // add multiple thread singleton support
-    private static  synchronized void syncInit(Context context){
-        if (_helperInstance == null)
-            _helperInstance = new LmisSqliteOpenHelper(context);
-    }
-
-
     public static void closeHelper() {
         _helperInstance = null;
+        -- instanceCount;
+        Log.d("LmisSqliteOpenHelper", "Instance Destroyed : total count : " + instanceCount);
     }
 
     @Override
     public void close() {
         super.close();
-        _helperInstance = null;
+        closeHelper();
     }
 }

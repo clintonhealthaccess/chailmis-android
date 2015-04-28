@@ -35,6 +35,7 @@ import android.util.Log;
 import com.google.inject.Inject;
 import com.j256.ormlite.dao.Dao;
 
+import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.UserProfile;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -59,13 +60,19 @@ public class UserService {
     @Inject
     private Context context;
 
+    private User currentUser;
+
     public boolean userRegistered() {
-        return dbUtil.withDao(User.class, new Operation<User, Boolean>() {
-            @Override
-            public Boolean operate(Dao<User, String> dao) throws SQLException {
-                return dao.countOf() > 0;
-            }
-        });
+        if(currentUser != null && StringUtils.isNotEmpty(currentUser.getUsername())){
+            return  true;
+        }else{
+            return dbUtil.withDao(User.class, new Operation<User, Boolean>() {
+                @Override
+                public Boolean operate(Dao<User, String> dao) throws SQLException {
+                    return dao.countOf() > 0;
+                }
+            });
+        }
     }
 
     public User register(final String username, final String password) {
@@ -99,15 +106,19 @@ public class UserService {
     }
 
     public User getRegisteredUser() throws IndexOutOfBoundsException {
-        return dbUtil.withDao(context, User.class, new Operation<User, User>() {
-            @Override
-            public User operate(Dao<User, String> dao) throws SQLException {
-                List<User> users = dao.queryForAll();
-                if(users!=null && users.size() >0){
-                    return users.get(0);
+        if(currentUser == null || StringUtils.isEmpty(currentUser.getUsername())){
+            currentUser = dbUtil.withDao(context, User.class, new Operation<User, User>() {
+                @Override
+                public User operate(Dao<User, String> dao) throws SQLException {
+                    List<User> users = dao.queryForAll();
+                    if(users!=null && users.size() >0){
+                        return users.get(0);
+                    }
+                    return null;
                 }
-                return null;
-            }
-        });
+            });
+        }
+
+        return currentUser;
     }
 }

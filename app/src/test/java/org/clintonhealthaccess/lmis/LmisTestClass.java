@@ -39,7 +39,6 @@ public abstract class LmisTestClass {
 
     @After
     public void tearDown() throws Exception{
-        OpenHelperManager.releaseHelper();
         LmisSqliteOpenHelper.closeHelper();
     }
 

@@ -47,7 +47,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.initialiseDao;
 
 public class GenericService {
@@ -87,7 +86,6 @@ public class GenericService {
         } catch (SQLException e) {
             throw new LmisException(e);
         } finally {
-            releaseHelper();
         }
     }
 
