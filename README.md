@@ -17,21 +17,24 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 ## Developer info
 
 ### Build status, repositories
+
 * [![Build Status](http://104.131.225.22:8080/job/android-unit-test/badge/icon)](http://104.131.225.22:8080/job/android-unit-test/)
 * [Github Repository](https://github.com/chailmis/chailmis-android)
 * [Jenkins CI](http://104.131.225.22:8080/)
+* [CrashLytics repository](https://crashlytics.com/twkla/android/apps/org.clintonhealthaccess.lmis.app/)
+* [App store instructions](https://github.com/chailmis/chailmis-android/blob/master/appstore/README.md)
 
 ### Tech stack
-* Target OS: Android 4.0
+
+* Target OS: Android 4.2
 * [Build tool : gradle](https://gradle.org/)
 * [IDE: Android Studio 0.8.1](http://tools.android.com/download/studio/canary/0-8-1)
 * [Emulation: Genymotion](http://www.genymotion.com/)
 * [Local DHIS2 install](https://github.com/chailmis/dhis2-dev)
 
-
 ## ThoughtWorks internal links
+
 * [Google drive](https://drive.google.com/a/thoughtworks.com/#folders/0Bx_qXlwQO9lRb3lnMjgwZllPcDA)
-* [Google drive 2](https://drive.google.com/drive/u/1/#folders/0B3rgvld64BaocnpMTWZ6YlBCdTA)
 * [My Thoughtworks group](https://my.thoughtworks.com/groups/chailmis)
 
 
