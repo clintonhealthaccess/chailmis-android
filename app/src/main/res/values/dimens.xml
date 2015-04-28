@@ -41,7 +41,7 @@
     <dimen name="report_row_width">87dp</dimen>
     <dimen name="bin_row_width">130dp</dimen>
     <dimen name="rh1_report_row_width">40dp</dimen>
-    <dimen name="rh2_report_row_width">120dp</dimen>
+    <dimen name="rh2_report_row_width">160dp</dimen>
     <dimen name="report_row_commodity_name_width">150dp</dimen>
     <dimen name="report_commodity_name_width" >150dp</dimen>
     <dimen name="item_text_size" >12sp</dimen>
