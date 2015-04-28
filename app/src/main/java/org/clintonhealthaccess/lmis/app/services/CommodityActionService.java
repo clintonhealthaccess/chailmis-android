@@ -60,7 +60,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.j256.ormlite.android.apptools.OpenHelperManager.releaseHelper;
 import static java.lang.StrictMath.abs;
 
 public class CommodityActionService {
@@ -149,7 +148,6 @@ public class CommodityActionService {
         } catch (SQLException e) {
             throw new LmisException(e);
         } finally {
-            releaseHelper();
             return commodityActionValueQuantity;
         }
     }
