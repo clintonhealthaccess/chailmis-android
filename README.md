@@ -32,10 +32,18 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 * [Emulation: Genymotion](http://www.genymotion.com/)
 * [Local DHIS2 install](https://github.com/chailmis/dhis2-dev)
 
+### Hardware specs
+
+* RAM: 1GB DDR3
+* Chipset: [MT8382](http://www.mediatek.com/en/products/mobile-communications/tablet/mt8382/) ARM Cortex-A7 quad-core processor
+* Screen: 9" screen
+* Resolution: 1024X600
+* Android: 4.2.2
+
 ## ThoughtWorks internal links
 
 * [Google drive](https://drive.google.com/a/thoughtworks.com/#folders/0Bx_qXlwQO9lRb3lnMjgwZllPcDA)
-* [My Thoughtworks group](https://my.thoughtworks.com/groups/chailmis)
+* [MyThoughtworks group](https://my.thoughtworks.com/groups/chailmis)
 
 
 
