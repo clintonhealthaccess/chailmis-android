@@ -62,6 +62,8 @@ public class BaseActivity extends OrmLiteActivity {
 
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
+    protected View menuAlertItem;
+
     protected void setFacilityName(String text) {
         textFacilityName.setText(text);
     }
@@ -93,8 +95,9 @@ public class BaseActivity extends OrmLiteActivity {
             super.onCreateOptionsMenu(menu);
             menuInflater.inflate(R.menu.home, menu);
             final View alert_menu_item = menu.findItem(R.id.action_alert).getActionView();
+            this.menuAlertItem = alert_menu_item;
             setupAlertButton(alert_menu_item);
-            setupAlertCount(alert_menu_item);
+            updateAlertCount();
             menu.add(getDate()).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         } catch (Exception e) {
@@ -102,6 +105,13 @@ public class BaseActivity extends OrmLiteActivity {
         }
         return true;
     }
+
+    public void updateAlertCount(){
+        if (this.menuAlertItem !=null ){
+            setupAlertCount(this.menuAlertItem);
+        }
+    }
+
 
     private void setupAlertButton(View menu_hotlist) {
         menu_hotlist.setOnClickListener(new View.OnClickListener() {

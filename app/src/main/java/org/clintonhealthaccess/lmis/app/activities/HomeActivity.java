@@ -152,7 +152,6 @@ public class HomeActivity extends BaseActivity implements Serializable {
         Crashlytics.start(this);
         setupButtonEvents();
         setupGraph();
-
         setupAutoSync();
 
         EventBus.getDefault().register(this);
@@ -174,6 +173,7 @@ public class HomeActivity extends BaseActivity implements Serializable {
 
     public void onEvent(AlertChangeEvent event){
         setupAlerts();
+        updateAlertCount();
     }
 
 

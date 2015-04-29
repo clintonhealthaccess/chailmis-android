@@ -61,12 +61,18 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
     @Inject
     private ReceiveService receiveService;
 
+    private boolean quantityAllocatedDisplay;
+
     public static ReceiveConfirmFragment newInstance(Receive receive) {
         ReceiveConfirmFragment receiveConfirmFragment = new ReceiveConfirmFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(RECEIVE, receive);
         receiveConfirmFragment.setArguments(bundle);
         return receiveConfirmFragment;
+    }
+
+    public void setQuantityAllocatedDisplay(boolean quantityAllocatedDisplay){
+        this.quantityAllocatedDisplay = quantityAllocatedDisplay;
     }
 
     @Override
@@ -89,7 +95,12 @@ public class ReceiveConfirmFragment extends RoboDialogFragment {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         ConfirmReceiveAdapter confirmReceiveAdapter = new ConfirmReceiveAdapter(getActivity().getApplicationContext(), R.layout.receive_confirm_list_item, receive.getReceiveItems());
-        listViewReceiveItems.addHeaderView(inflater.inflate(R.layout.confirm_receive_header, container));
+        if(quantityAllocatedDisplay){
+            listViewReceiveItems.addHeaderView(inflater.inflate(R.layout.confirm_receive_header, container));
+        }else{
+            confirmReceiveAdapter.setQuantityAllocatedDisplay(false);
+            listViewReceiveItems.addHeaderView(inflater.inflate(R.layout.confirm_receive_header_other, container));
+        }
         listViewReceiveItems.setAdapter(confirmReceiveAdapter);
 
         backButton.setOnClickListener(new View.OnClickListener() {
