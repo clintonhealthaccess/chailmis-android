@@ -192,6 +192,8 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
                 orderCommodityViewModel.setUnexpectedReasonPosition(position);
                 if (position != 0) {
                     orderCommodityViewModel.setReasonForUnexpectedOrderQuantity((OrderReason) spinnerUnexpectedReasons.getAdapter().getItem(position));
+                }else{
+                    orderCommodityViewModel.setReasonForUnexpectedOrderQuantity(null);
                 }
             }
         });
@@ -358,7 +360,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         public void afterTextChanged(final Editable editable) {
             int quantityInt = ViewHelpers.getIntFromString(editable.toString());
             orderCommodityViewModel.setQuantityEntered(quantityInt);
-            if (orderCommodityViewModel.quantityIsUnexpected()) {
+            if (orderCommodityViewModel.quantityIsUnexpected() && spinnerUnexpectedReasons.getSelectedItemPosition() == 0) {
                 String commodityName = orderCommodityViewModel.getName();
                 String message = getErrorMessage(commodityName);
                 Toast.makeText(adapter.getContext(), message, Toast.LENGTH_SHORT).show();
