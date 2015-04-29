@@ -70,9 +70,14 @@ public class Dhis2EndPointFactory {
     @Inject
     private Context context;
 
+    private Dhis2Endpoint dhis2Endpoint;
+
     public Dhis2Endpoint create(User user) {
-        RestAdapter restAdapter = makeRestAdapter(user);
-        return restAdapter.create(Dhis2Endpoint.class);
+        if (dhis2Endpoint == null) {
+            RestAdapter restAdapter = makeRestAdapter(user);
+            dhis2Endpoint = restAdapter.create(Dhis2Endpoint.class);
+        }
+        return dhis2Endpoint;
     }
 
     private RestAdapter makeRestAdapter(User user) {
