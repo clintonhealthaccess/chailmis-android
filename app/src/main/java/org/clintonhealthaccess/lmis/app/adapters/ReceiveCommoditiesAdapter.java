@@ -30,6 +30,8 @@
 package org.clintonhealthaccess.lmis.app.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,7 +94,12 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
         }
 
         holder.textViewDifferenceQuantity.setText(String.valueOf(viewModel.getDifference()));
-        holder.editTextAllocatedQuantity.setEnabled(!viewModel.isQuantityAllocatedDisabled());
+
+        if(viewModel.isQuantityAllocatedDisabled()){
+            holder.editTextAllocatedQuantity.setTextColor(Color.BLACK);
+            holder.editTextAllocatedQuantity.setTypeface(null, Typeface.BOLD);
+            holder.editTextAllocatedQuantity.setEnabled(false);
+        }
     }
 
     private void setupTextWatchers(final ViewHolder viewHolder, final ReceiveCommodityViewModel receiveCommodityViewModel) {
