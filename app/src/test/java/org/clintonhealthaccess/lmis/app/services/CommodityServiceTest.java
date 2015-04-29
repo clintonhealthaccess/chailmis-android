@@ -210,21 +210,19 @@ public class CommodityServiceTest extends LmisTestClass {
         Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, Calendar.APRIL);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date date = calendar.getTime();
+        Integer expectedItems = DateUtil.dayNumber(calendar.getTime());
 
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
+        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(expectedItems));
 
-        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(
-                commodity, date);
-        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(30));
+        calendar.add(Calendar.MONTH, 1);
+        utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
+        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(0));
 
-        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date date2 = calendar.getTime();
-
-        List<UtilizationItem> decemberUtilizationItems = commodityService.getMonthlyUtilizationItems(commodity, date2);
-        assertThat(decemberUtilizationItems.get(0).getUtilizationValues().size(), is(31));
+        calendar.add(Calendar.MONTH, -1);
+        expectedItems = DateUtil.maxMonthDate(calendar.getTime());
+        utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
+        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(expectedItems));
     }
 
     @Test
