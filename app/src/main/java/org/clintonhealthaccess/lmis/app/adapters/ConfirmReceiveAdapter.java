@@ -46,6 +46,7 @@ import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 public class ConfirmReceiveAdapter extends ArrayAdapter<ReceiveItem> {
 
     private int resource;
+    private boolean quantityAllocatedDisplay = true;
 
     public ConfirmReceiveAdapter(Context context, int resource, List<ReceiveItem> objects) {
         super(context, resource, objects);
@@ -69,7 +70,16 @@ public class ConfirmReceiveAdapter extends ArrayAdapter<ReceiveItem> {
         holder.textViewQuantityReceived.setText(String.valueOf(getItem(position).getQuantityReceived()));
         holder.textViewQuantityDifference.setText(String.valueOf(getItem(position).getDifference()));
 
+        if(!quantityAllocatedDisplay){
+            holder.textViewQuantityAllocated.setVisibility(View.GONE);
+            holder.textViewQuantityDifference.setVisibility(View.GONE);
+        }
+
         return convertView;
+    }
+
+    public  void setQuantityAllocatedDisplay(boolean quantityAllocatedDisplay){
+        this.quantityAllocatedDisplay = quantityAllocatedDisplay;
     }
 
     static class ViewHolder {

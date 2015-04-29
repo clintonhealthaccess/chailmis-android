@@ -227,6 +227,9 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                         for (CommodityToggledEvent event : events) {
                             onEvent(event);
                         }
+
+                        ((ReceiveCommoditiesAdapter)arrayAdapter).setQuantityAllocatedDisplay(!selected.contains(getString(R.string.others)));
+                        arrayAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -258,6 +261,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
 
                 ReceiveConfirmFragment receiveConfirmFragment = ReceiveConfirmFragment.newInstance(generateReceive());
+                receiveConfirmFragment.setQuantityAllocatedDisplay(((ReceiveCommoditiesAdapter)arrayAdapter).isQuantityAllocatedDisplay());
                 receiveConfirmFragment.show(getSupportFragmentManager(), "receiveDialog");
             }
         });

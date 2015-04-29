@@ -56,10 +56,19 @@ import static org.clintonhealthaccess.lmis.app.utils.ViewHelpers.getIntFromStrin
 public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityViewModel> {
 
     private int resource;
+    private boolean quantityAllocatedDisplay = true;
 
     public ReceiveCommoditiesAdapter(Context context, int resource, List<ReceiveCommodityViewModel> objects) {
         super(context, resource, objects);
         this.resource = resource;
+    }
+
+    public void setQuantityAllocatedDisplay(boolean quantityAllocatedDisplay){
+        this.quantityAllocatedDisplay = quantityAllocatedDisplay;
+    }
+
+    public boolean isQuantityAllocatedDisplay(){
+        return  quantityAllocatedDisplay;
     }
 
     @Override
@@ -73,6 +82,8 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
         holder.editTextAllocatedQuantity = (NumberTextView) convertView.findViewById(R.id.editTextAllocatedQuantity);
         holder.editTextReceivedQuantity = (NumberTextView) convertView.findViewById(R.id.editTextReceivedQuantity);
         holder.textViewDifferenceQuantity = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantity);
+        holder.textViewAllocatedQuantityLabel = (TextView) convertView.findViewById(R.id.textViewAllocationLabel);
+        holder.textViewDifferenceQuantityLabel = (TextView) convertView.findViewById(R.id.textViewDifferenceQuantityLabel);
 
 
         ReceiveCommodityViewModel viewModel = getItem(position);
@@ -99,6 +110,13 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
             holder.editTextAllocatedQuantity.setTextColor(Color.BLACK);
             holder.editTextAllocatedQuantity.setTypeface(null, Typeface.BOLD);
             holder.editTextAllocatedQuantity.setEnabled(false);
+        }
+
+        if (!quantityAllocatedDisplay){
+            holder.textViewAllocatedQuantityLabel.setVisibility(View.GONE);
+            holder.editTextAllocatedQuantity.setVisibility(View.GONE);
+            holder.textViewDifferenceQuantityLabel.setVisibility(View.GONE);
+            holder.textViewDifferenceQuantity.setVisibility(View.GONE);
         }
     }
 
@@ -128,6 +146,8 @@ public class ReceiveCommoditiesAdapter extends ArrayAdapter<ReceiveCommodityView
         EditText editTextAllocatedQuantity;
         EditText editTextReceivedQuantity;
         TextView textViewDifferenceQuantity;
+        TextView textViewAllocatedQuantityLabel;
+        TextView textViewDifferenceQuantityLabel;
     }
 
     private void activateCancelButton(ImageButton imageButtonCancel, final ReceiveCommodityViewModel viewModel) {
