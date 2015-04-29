@@ -57,7 +57,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 3
-        versionName "1.12"
+        versionName "1.2"
     }
 
     packagingOptions {
