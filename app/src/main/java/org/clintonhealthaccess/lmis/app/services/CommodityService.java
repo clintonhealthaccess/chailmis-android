@@ -229,7 +229,7 @@ public class CommodityService {
         return commodities;
     }
 
-    public List<Commodity> sortedAll(){
+    public List<Commodity> sortedAll() {
         return from(all()).toSortedList(new Comparator<Commodity>() {
             @Override
             public int compare(Commodity commodity, Commodity commodity2) {
@@ -362,6 +362,9 @@ public class CommodityService {
 
     public List<UtilizationItem> getMonthlyUtilizationItems(Commodity commodity, Date date) throws Exception {
         Date monthEndDate = DateUtil.getMonthEndDate(date);
+        if (monthEndDate.after(new Date())) {
+            monthEndDate = new Date();
+        }
         Date monthStartDate = DateUtil.getMonthStartDate(date);
 
         List<UtilizationItem> utilizationItems = new ArrayList<>();
