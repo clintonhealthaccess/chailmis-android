@@ -92,7 +92,7 @@ public class SyncManagerTest {
         syncManager.kickOff();
 
         assertThat(getPeriodicSyncs(user).size(), is(1));
-        assertThat(getPeriodicSyncs(user).get(0).period, is(60l));
+        assertThat(getPeriodicSyncs(user).get(0).period, is(3600l));
     }
 
     private List<PeriodicSync> getPeriodicSyncs(User user) {

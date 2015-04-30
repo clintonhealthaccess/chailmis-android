@@ -268,7 +268,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     public Receive generateReceive() {
-        //user input a allocation id, create a dummy one
+        //user input a allocation id, getEndPoint a dummy one
         if ((allocation == null && spinnerSource.getSelectedItem().toString().contains(getString(R.string.lga)))
                 || (allocation != null && allocation.isDummy())) {
             generateDummyAllocation(textViewAllocationId.getText().toString().trim());
@@ -386,7 +386,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
     private boolean allocationIdIsValid(String text) {
         if (!textViewAllocationId.isEnabled()) {
-            // allocation != null && text.equals(allocation.getAllocationId()))
+            // allocation != null && text.equals(allocation.getAllocationIds()))
             return true;
         }
         String patternString = facility2LetterCode.toUpperCase() + "\\d+$";

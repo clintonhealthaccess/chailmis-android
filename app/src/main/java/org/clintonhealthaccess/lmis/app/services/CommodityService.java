@@ -144,7 +144,7 @@ public class CommodityService {
         createInitialStockItemSnapShots(all());
         timingLogger.addSplit("updateStockValues");
 
-        List<CommodityAction> allocationId = commodityActionService.getAllocationId();
+        List<CommodityAction> allocationId = commodityActionService.getAllocationIds();
         if (allocationId != null && allocationId.size() > 0) {
             Log.e("AllocationId Found", allocationId.get(0).toString());
             timingLogger.addSplit("sync allocations");
@@ -362,12 +362,18 @@ public class CommodityService {
 
     public List<UtilizationItem> getMonthlyUtilizationItems(Commodity commodity, Date date) throws Exception {
         Date monthEndDate = DateUtil.getMonthEndDate(date);
-        if (monthEndDate.after(new Date())) {
-            monthEndDate = new Date();
-        }
         Date monthStartDate = DateUtil.getMonthStartDate(date);
 
         List<UtilizationItem> utilizationItems = new ArrayList<>();
+
+        if (monthStartDate.after(new Date())) {
+            return utilizationItems;
+        }
+
+        if (monthEndDate.after(new Date())) {
+            monthEndDate = new Date();
+        }
+
         for (UtilizationItemName utilizationItemName : UtilizationItemName.values()) {
 
             if (utilizationItemName.equals(UtilizationItemName.DAY_OF_MONTH)) {

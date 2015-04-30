@@ -115,13 +115,14 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public UserProfile validateLogin(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.createNewEndPoint(user);
         return service.validateLogin();
     }
 
+
     public void writeJson(User user) throws JSONException {
         TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         DataSetSearchResponse response = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
         timingLogger.addSplit("fetch data");
         timingLogger.dumpToLog();
@@ -190,7 +191,7 @@ public class Dhis2 implements LmisServer {
     @Override
     public List<Category> fetchCategories(User user) {
         TimingLogger timingLogger = new TimingLogger("TIMER", "fetchCommodities");
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         DataElementGroupSetSearchResponse response = service.getDataElementGroupSets("id,name, dataElementGroups[id,name, attributeValues[value,attribute[id,name]], dataElements[name,id,attributeValues[value,attribute[id,name]]]");
         timingLogger.addSplit("fetch data");
         timingLogger.dumpToLog();
@@ -229,7 +230,7 @@ public class Dhis2 implements LmisServer {
     }
 
     public List<DataSet> fetchDataSets(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         DataSetSearchResponse datasets = service.searchDataSets("LMIS", "id,name,periodType,description,dataElements[name,id,attributeValues[value,attribute[id,name]],dataElementGroups[id,name,dataElementGroupSet[id,name],attributeValues[value,attribute[id,name]]");
         return datasets.getDataSets();
     }
@@ -325,7 +326,7 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<String> fetchOrderReasons(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         OptionSetResponse optionSetResponse = service.searchOptionSets("order", "name,id,options");
         List<String> optionSets = new ArrayList<>();
         List<OptionSet> optionSetList = optionSetResponse.getOptionSets();
@@ -351,7 +352,7 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<CommodityActionValue> fetchCommodityActionValues(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         DataValueSet valueSet = new DataValueSet();
         try {
             String dataSet2 = getDataSetId(DataSet.CALCULATED);
@@ -390,7 +391,7 @@ public class Dhis2 implements LmisServer {
     }
 
     private List<List<String>> getIndicatorValies(String indicatorIds, User user, String period, Boolean skipMeta) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         IndicatorValueResponse indicatorValueResponse = new IndicatorValueResponse();
 
         try {
@@ -406,7 +407,7 @@ public class Dhis2 implements LmisServer {
         DataValueSet valueSet = new DataValueSet();
         try {
             String dataSetId = getDataSetId(DataSet.ALLOCATED);
-            valueSet = dhis2EndPointFactory.create(user).fetchDataValues(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today());
+            valueSet = dhis2EndPointFactory.getEndPoint(user).fetchDataValues(dataSetId, user.getFacilityCode(), threeMonthsAgo(), today());
         } catch (LmisException exception) {
             e(SYNC, "error syncing allocations");
         }
@@ -449,13 +450,13 @@ public class Dhis2 implements LmisServer {
             i("DataValue", dataValue.getDataElement() + " : " + dataValue.getValue());
             i("more info", "org unit: " + dataValue.getOrgUnit() + ", " + "period: " + dataValue.getPeriod());
         }
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         return service.pushDataValueSet(valueSet);
     }
 
     @Override
     public Integer fetchIntegerConstant(User user, String constantKey) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         ConstantSearchResponse response = service.searchConstants(constantKey, "id,name,value");
         if (!response.getConstants().isEmpty()) {
             return response.getConstants().get(0).getValue().intValue();
@@ -466,7 +467,7 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         ConstantSearchResponse response = service.searchConstants(constantKey, "id,name,value");
         if (!response.getConstants().isEmpty()) {
             return "+" + String.valueOf(response.getConstants().get(0).getValue().longValue());
@@ -536,7 +537,7 @@ public class Dhis2 implements LmisServer {
 
     @Override
     public List<IndicatorGroup> fetchIndicatorGroups(User user) {
-        Dhis2Endpoint service = dhis2EndPointFactory.create(user);
+        Dhis2Endpoint service = dhis2EndPointFactory.getEndPoint(user);
         IndicatorGroupResponse response = service.fetchIndicatorGroups("id,name,indicators[id, name]", "false");
         response.initializeIndicatorGroups();
         return response.getIndicatorGroups();

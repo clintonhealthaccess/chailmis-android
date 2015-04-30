@@ -85,7 +85,7 @@ public class CommodityActionService {
         });
     }
 
-    public List<CommodityAction> getAllocationId() {
+    public List<CommodityAction> getAllocationIds() {
         return dbUtil.withDao(CommodityAction.class, new DbUtil.Operation<CommodityAction, List<CommodityAction>>() {
             @Override
             public List<CommodityAction> operate(Dao<CommodityAction, String> dao) throws SQLException {
@@ -105,6 +105,9 @@ public class CommodityActionService {
                         @Override
                         public Void operate(Dao<CommodityActionValue, String> dao) throws SQLException {
                             for (CommodityActionValue actionValue : commodityActionValues) {
+                                if(actionValue.getCommodityAction().getName().equals(DataElementType.ALLOCATION_ID)){
+                                    save(actionValue.getCommodityAction());
+                                }
                                 dao.createOrUpdate(actionValue);
                             }
                             return null;

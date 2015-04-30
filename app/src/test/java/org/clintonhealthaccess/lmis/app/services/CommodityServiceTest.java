@@ -215,10 +215,11 @@ public class CommodityServiceTest extends LmisTestClass {
         List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
         assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(expectedItems));
 
-        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.MONTH, 2);
         utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
-        assertThat(utilizationItems.get(0).getUtilizationValues().size(), is(0));
+        assertThat(utilizationItems.size(), is(0));
 
+        calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
         expectedItems = DateUtil.maxMonthDate(calendar.getTime());
         utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, calendar.getTime());
@@ -233,27 +234,17 @@ public class CommodityServiceTest extends LmisTestClass {
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-
+        Date yesterday = DateUtil.addDayOfMonth(today, -1);
         int stockOnHand = commodity.getStockOnHand();
-        dispense(commodity, 3, dispensingService);
+        dispense(commodity, 3, dispensingService, yesterday);
 
-        Date tomorrow = DateUtil.addDayOfMonth(today, 1);
-
-        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, tomorrow);
+        List<UtilizationItem> utilizationItems = commodityService.getMonthlyUtilizationItems(commodity, today);
 
         int expectedOpeningStock = stockOnHand - 3;
-        int utilizationValueIndex = DateUtil.dayNumber(tomorrow) - 1;
+        int utilizationValueIndex = DateUtil.dayNumber(today) - 1;
 
         assertThat(utilizationItems.get(1).getUtilizationValues().get(utilizationValueIndex).getValue(),
                 is(expectedOpeningStock));
-
-        Date furtherDate = DateUtil.addDayOfMonth(tomorrow, 1);
-        if (furtherDate.before(DateUtil.addDayOfMonth(DateUtil.getMonthEndDate(tomorrow)))) {
-            utilizationValueIndex = DateUtil.dayNumber(furtherDate) - 1;
-
-            assertThat(utilizationItems.get(1).getUtilizationValues().get(utilizationValueIndex).getValue(),
-                    is(expectedOpeningStock));
-        }
     }
 
 
