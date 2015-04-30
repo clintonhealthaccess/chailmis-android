@@ -1,6 +1,24 @@
 Setup Your Own FDroid Repository
 ================================
 
+To setup a device
+-------
+* First install F-Droid from https://f-droid.org/
+* Once in the F-Droid app, click on the menu to navigate to the "Repositories" section
+* In the "Repositories" section, click the + sign to add a new repository
+* There are two repositories that can be added:  
+** For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo. NOTE: this is http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
+** For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
+* Once the repository is added, navigate back to your available apps to install DHIS2 LMIS.
+* Install and Update LMIS app
+
+
+
+---------
+Repositories are curently stored on the CI server, at the following URL: [http://lmisapp.dhis2nigeria.org.ng](http://lmisapp.dhis2nigeria.org.ng).
+
+---------
+
 - `vagrant up`
 - `vagrant ssh`
 - Now Nginx should be running. Check [http://localhost:8888](http://localhost:8888) to see Nginx welcome page.
@@ -28,18 +46,7 @@ Setup Your Own FDroid Repository
     - Remove existing repository, and add your own repository URL (such as: http://10.111.125.58:8888/fdroid/repo)
     - Now refresh, you should be able to see CHAI LMIS application.
 
-To setup a device
--------
-* First install F-Droid from https://f-droid.org/
-* Then add a repo pointing to development or production repo URL
-* Install and Update LMIS app
 
-
-There are two repositories that can be added:  
----------
-Repositories are curently stored on the CI server, at the following URL: [http://lmisapp.dhis2nigeria.org.ng](http://lmisapp.dhis2nigeria.org.ng).
-
-[Development](http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo) and [Production](http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo), stored in `/var/www/html/fdroid/development` and `/var/www/html/fdroid/production` respectively. 
 
 To publish a development package
 ------
