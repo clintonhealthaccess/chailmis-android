@@ -14,6 +14,7 @@ To setup a device
 * Once the repository is added, navigate back to your available apps to install DHIS2 LMIS.
 * Install and Update LMIS app
 
+If you are trying to install the app, and the install button does not appear, then you are likely trying to install it on an incompatible OS version. In order to install the app anyway you must enable Preferences | Application Compatibility | Incompatible Version via the F-Droid app preferences.  
 
 
 ---------
