@@ -7,8 +7,8 @@ To setup a device
 * Once in the F-Droid app, click on the menu to navigate to the "Repositories" section
 * In the "Repositories" section, click the + sign to add a new repository
 * There are two repositories that can be added:  
-** For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo. NOTE: this is http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
-** For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
+*   For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo. NOTE: this is http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
+*   For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
 * Once the repository is added, navigate back to your available apps to install DHIS2 LMIS.
 * Install and Update LMIS app
 
