@@ -83,4 +83,8 @@ public class BinCardItem {
     public int getStockBalance() {
         return stockBalance;
     }
+
+    public void setStockBalance(int stockBalance) {
+        this.stockBalance = stockBalance;
+    }
 }

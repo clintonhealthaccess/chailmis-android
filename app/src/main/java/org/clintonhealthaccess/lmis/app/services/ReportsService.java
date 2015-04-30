@@ -318,6 +318,8 @@ public class ReportsService {
         Date date = startDate;
         while (date.before(tomorrow)) {
 
+            List<BinCardItem> binCardItemsForDate = new ArrayList<>();
+
             int quantityDispensed = GenericService.getTotal(date, dispensingItems);
             int quantityLost = GenericService.getTotal(date, lossItems);
             int closingBalance = previousDaysClosingStock;
@@ -361,27 +363,36 @@ public class ReportsService {
                 closingBalance = dayStockItemSnapshot.getQuantity();
             }
 
+            // date, source, received, dispensed, lost, adjusted, stockBalance
+            if (quantityDispensed > 0) {
+                binCardItemsForDate.add(new BinCardItem(date, "", 0, quantityDispensed, 0, 0, -1));
+            }
+
+            if (quantityLost > 0) {
+                binCardItemsForDate.add(new BinCardItem(date, "", 0, 0, quantityLost, 0, -1));
+            }
+
+            if (quantityAdjusted > 0) {
+                binCardItemsForDate.add(new BinCardItem(date, "", 0, 0, 0, quantityAdjusted, -1));
+            }
+
             if (quantityReceivedFromAnotherFacility > 0) {
-                binCardItems.add(new BinCardItem(date, "Received from Facility", 0, 0, 0, quantityReceivedFromAnotherFacility, closingBalance));
+                binCardItemsForDate.add(new BinCardItem(date, "Received from Facility", 0, 0, 0, quantityReceivedFromAnotherFacility, -1));
             }
 
             if (quantitySentToAnotherFacility > 0) {
-                binCardItems.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, closingBalance));
+                binCardItemsForDate.add(new BinCardItem(date, "Sent to Facility", 0, 0, 0, quantitySentToAnotherFacility, -1));
             }
 
-            if (quantityDispensed > 0 || quantityLost > 0 || quantityAdjusted > 0 || receivedBySources.size() > 0) {
-                binCardItems.add(new BinCardItem(date,
-                        (receivedBySources.size() > 0 ? receivedBySources.get(0).getSource() : ""),
-                        (receivedBySources.size() > 0 ? receivedBySources.get(0).getQuantityReceived() : 0),
-                        quantityDispensed, quantityLost, quantityAdjusted, closingBalance));
+            for (ReceivedBySource source : receivedBySources) {
+                binCardItemsForDate.add(new BinCardItem(date, source.getSource(), source.getQuantityReceived(), 0, 0, 0, -1));
             }
 
-            if (receivedBySources.size() > 1) {
-                for (int i = 1; i < receivedBySources.size(); i++) {
-                    binCardItems.add(new BinCardItem(date, receivedBySources.get(i).getSource(), receivedBySources.get(i).getQuantityReceived(), 0, 0, 0, closingBalance));
-                }
+            if(binCardItemsForDate.size()>0){
+                binCardItemsForDate.get(binCardItemsForDate.size()-1).setStockBalance(closingBalance);
             }
 
+            binCardItems.addAll(binCardItemsForDate);
             previousDaysClosingStock = closingBalance;
             date = DateUtil.addDayOfMonth(date, 1);
         }

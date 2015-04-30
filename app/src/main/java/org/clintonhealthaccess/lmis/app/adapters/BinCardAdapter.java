@@ -80,12 +80,12 @@ public class BinCardAdapter extends ArrayAdapter<BinCardItem> {
         }
 
         TextView textViewQuantityAdjusted = (TextView) rowView.findViewById(R.id.textViewQuantityAdjusted);
-        if(binCardItem.getQuantityAdjusted()!=0){
+        if (binCardItem.getQuantityAdjusted() != 0) {
             textViewQuantityAdjusted.setText(String.valueOf(binCardItem.getQuantityAdjusted()));
         }
 
         TextView textViewQuantityStockBalance = (TextView) rowView.findViewById(R.id.textViewStockBalance);
-        textViewQuantityStockBalance.setText(String.valueOf(binCardItem.getStockBalance()));
+        textViewQuantityStockBalance.setText(binCardItem.getStockBalance() == -1 ? "-" : String.valueOf(binCardItem.getStockBalance()));
 
         return rowView;
     }
