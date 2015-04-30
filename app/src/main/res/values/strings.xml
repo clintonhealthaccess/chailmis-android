@@ -30,7 +30,7 @@
 
     <string name="app_name">DHIS2 LMIS</string>
 
-    <integer name="sync_interval">60</integer>
+    <integer name="sync_interval">3600</integer> <!--IN SECONDS--> 
     <integer name="monthly_stock_count_day">24</integer>
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
