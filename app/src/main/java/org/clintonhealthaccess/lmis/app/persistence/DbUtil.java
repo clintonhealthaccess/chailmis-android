@@ -115,7 +115,13 @@ public class DbUtil {
     }
 
     public static <T> Dao<T, String> initialiseDao(SQLiteOpenHelper openHelper, Class<T> domainClass) throws SQLException {
-        ConnectionSource connectionSource = new AndroidConnectionSource(openHelper);
+        ConnectionSource connectionSource;
+        if(openHelper instanceof  LmisSqliteOpenHelper){
+            LmisSqliteOpenHelper helper = (LmisSqliteOpenHelper) openHelper;
+            connectionSource = helper.getConnectionSource();
+        }else{
+            connectionSource = new AndroidConnectionSource(openHelper);
+        }
         return createDao(connectionSource, domainClass);
     }
 }
