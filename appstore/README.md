@@ -1,27 +1,22 @@
-Setup Your Own FDroid Repository
+FDroid repository creation and management
 ================================
 
 To setup a device
 -------
-* First install F-Droid from https://f-droid.org/
+* First install F-Droid from [here](https://f-droid.org/)
 * Once in the F-Droid app, click on the menu to navigate to the "Repositories" section
 * In the "Repositories" section, click the + sign to add a new repository
 * There are two repositories that can be added. NOTE: Both are http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
-
-1) For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo. 
-
-2) For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
+  * For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo
+  * For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
 * Once the repository is added, navigate back to your available apps to install DHIS2 LMIS.
 * Install and Update LMIS app
 
 If you are trying to install the app, and the install button does not appear, then you are likely trying to install it on an incompatible OS version. In order to install the app anyway you must enable Preferences | Application Compatibility | Incompatible Version via the F-Droid app preferences.  
 
 
+To setup the F-Droid repository
 ---------
-Repositories are curently stored on the CI server, at the following URL: [http://lmisapp.dhis2nigeria.org.ng](http://lmisapp.dhis2nigeria.org.ng).
-
----------
-
 - `vagrant up`
 - `vagrant ssh`
 - Now Nginx should be running. Check [http://localhost:8888](http://localhost:8888) to see Nginx welcome page.
@@ -44,23 +39,15 @@ Repositories are curently stored on the CI server, at the following URL: [http:/
     - (in host machine) `cp app/build/outputs/apk/app-development-debug.apk appstore/LMIS.apk`
     - (in Vagrant vm) `cd /usr/share/nginx/www/fdroid && mv /vagrant/LMIS.apk repo/`
     - (in Vagrant vm) `fdroid update --create-metadata --clean --verbose`
-- Install apk from Android phone
-    - Install [F-Droid](https://f-droid.org/) first
-    - Remove existing repository, and add your own repository URL (such as: http://10.111.125.58:8888/fdroid/repo)
-    - Now refresh, you should be able to see CHAI LMIS application.
-
-
 
 To publish a development package
 ------
-
 - `cd /var/www/html/fdroid/development/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-development-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
 
 To publish a production package
 -------
-
 - `cd /var/www/html/fdroid/production/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-production-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
