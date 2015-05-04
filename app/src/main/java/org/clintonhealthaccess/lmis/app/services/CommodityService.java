@@ -366,12 +366,18 @@ public class CommodityService {
 
         List<UtilizationItem> utilizationItems = new ArrayList<>();
 
-        if (monthStartDate.after(new Date())) {
+        if (monthStartDate.after(DateUtil.today())) {
             return utilizationItems;
         }
 
-        if (monthEndDate.after(new Date())) {
-            monthEndDate = new Date();
+        if (monthEndDate.after(DateUtil.today())) {
+            Calendar today = Calendar.getInstance();
+            today.set(Calendar.HOUR_OF_DAY, 0 );
+            today.set(Calendar.MINUTE, 0 );
+            today.set(Calendar.SECOND, 0 );
+            today.set(Calendar.MILLISECOND, 0);
+
+            monthEndDate = today.getTime();
         }
 
         for (UtilizationItemName utilizationItemName : UtilizationItemName.values()) {
