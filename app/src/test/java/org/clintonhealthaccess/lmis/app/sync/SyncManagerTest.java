@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.PeriodicSync;
 
 import com.google.inject.Inject;
@@ -49,6 +50,7 @@ import roboguice.inject.InjectResource;
 
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjection;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -64,6 +66,9 @@ public class SyncManagerTest {
 
     @InjectResource(R.string.sync_content_authority)
     private String syncContentAuthority;
+
+    @Inject
+    Context context;
 
     @Before
     public void setUp() throws Exception {
@@ -92,7 +97,7 @@ public class SyncManagerTest {
         syncManager.kickOff();
 
         assertThat(getPeriodicSyncs(user).size(), is(1));
-        assertThat(getPeriodicSyncs(user).get(0).period, is(3600l));
+        assertEquals(context.getResources().getInteger(R.integer.sync_interval), getPeriodicSyncs(user).get(0).period);
     }
 
     private List<PeriodicSync> getPeriodicSyncs(User user) {
