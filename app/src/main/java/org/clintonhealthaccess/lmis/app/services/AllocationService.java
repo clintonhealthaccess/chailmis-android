@@ -210,6 +210,10 @@ public class AllocationService {
             }
         });
 
+        if(filteredForAllocationId == null || filteredForAllocationId.size() == 0){
+            return null;
+        }
+
         CommodityActionValue allocationIdValue = newArrayList(filteredForAllocationId).get(0);
         Allocation allocation = new Allocation(allocationIdValue.getValue(), allocationIdValue.getPeriod());
 

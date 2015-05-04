@@ -173,7 +173,7 @@ public class RegisterActivity extends OrmLiteActivity implements Serializable {
 
         @Override
         protected void onPostExecute(Boolean succeeded) {
-            if (dialog.isShowing()) {
+            if (dialog.isShowing() && dialog.getOwnerActivity()!=null && !dialog.getOwnerActivity().isFinishing()) {
                 dialog.dismiss();
             }
             if (succeeded) {
