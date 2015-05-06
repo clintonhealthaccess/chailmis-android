@@ -61,15 +61,15 @@
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerYear"
+            android:id="@+id/spinnerMonth"
             android:layout_alignParentLeft="true"
             android:layout_margin="10dp" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spinnerMonth"
-            android:layout_toRightOf="@id/spinnerYear"
+            android:id="@+id/spinnerYear"
+            android:layout_toRightOf="@id/spinnerMonth"
             android:layout_margin="10dp" />
 
         <Button

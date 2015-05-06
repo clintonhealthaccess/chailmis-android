@@ -55,42 +55,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/year" />
-
-        <Spinner
-            android:id="@+id/spinnerStartingYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="@string/month" />
 
         <Spinner
             android:id="@+id/spinnerStartingMonth"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginRight="5dp"/>
-
 
         <TextView
-            android:id="@+id/textViewEndingYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/ending_year" />
+            android:text="@string/year" />
 
         <Spinner
-            android:id="@+id/spinnerEndingYear"
+            android:id="@+id/spinnerStartingYear"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginRight="5dp"/>
+
 
         <TextView
             android:id="@+id/textViewEndingMonth"
@@ -101,6 +87,20 @@
 
         <Spinner
             android:id="@+id/spinnerEndingMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/textViewEndingYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/ending_year" />
+
+        <Spinner
+            android:id="@+id/spinnerEndingYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
