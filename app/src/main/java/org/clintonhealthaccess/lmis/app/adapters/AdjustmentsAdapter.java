@@ -185,11 +185,11 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
     private void showReceivedFromAnotherFacilityFields(
             LinearLayout linearLayoutAllocated, TextView textViewCounted,
             Spinner spinnerAdjustmentType, LinearLayout linearLayoutDifference) {
-        linearLayoutAllocated.setVisibility(View.VISIBLE);
+        linearLayoutAllocated.setVisibility(View.INVISIBLE);
         textViewCounted.setVisibility(View.VISIBLE);
         textViewCounted.setText(getContext().getString(R.string.received));
         spinnerAdjustmentType.setVisibility(View.INVISIBLE);
-        linearLayoutDifference.setVisibility(View.VISIBLE);
+        linearLayoutDifference.setVisibility(View.INVISIBLE);
     }
 
     private void hideReceivedFromAnotherFacilityFields(

@@ -96,6 +96,7 @@ public class AdjustmentService {
         categoryService.clearCache();
         commodityService.reloadMostConsumedCommoditiesCache();
         alertsService.disableAllMonthlyStockCountAlerts();
+        alertsService.updateLowStockAlerts();
     }
 
     public int totalAdjustment(final Commodity commodity, final Date startingDate, final Date endDate) {

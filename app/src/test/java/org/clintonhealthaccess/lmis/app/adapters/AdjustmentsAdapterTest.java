@@ -260,7 +260,7 @@ public class AdjustmentsAdapterTest {
     public void shouldShowLinearLayoutAllocatedForReceivedFromAnotherFacility() throws Exception {
         AdjustmentsAdapter adapter = getAdjustmentsAdapter(AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
         LinearLayout linearLayout = (LinearLayout) getViewFromListRow(adapter, R.layout.selected_adjustment_commodity_list_item, R.id.linearLayoutAllocated);
-        ANDROID.assertThat(linearLayout).isVisible();
+        ANDROID.assertThat(linearLayout).isInvisible();
     }
 
     @Test
