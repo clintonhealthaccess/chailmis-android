@@ -27,7 +27,7 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-
+def buildNumber = System.getenv('BUILD_NUMBER') as Integer ?: 0
 
 buildscript {
     repositories {
@@ -56,8 +56,9 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 8
-        versionName "1.7"
+
+        versionCode buildNumber
+        versionName "1.7.${buildNumber}"
     }
 
     packagingOptions {
