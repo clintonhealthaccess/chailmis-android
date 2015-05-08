@@ -37,7 +37,8 @@ public enum UtilizationItemName {
     DOSES_OPENED("Doses Opened"),
     ENDING_BALANCE("Ending Balance"),
     USED("Used"),
-    QUANTITY_RETURNED_TO_LGA("Quantity Returned to LGA");
+    QUANTITY_RETURNED_TO_LGA("Quantity Returned to LGA"),
+    QUANTITY_LOSSES("Quantity Losses");
 
     private String name;
 

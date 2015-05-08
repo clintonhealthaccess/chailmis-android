@@ -31,12 +31,20 @@ package org.clintonhealthaccess.lmis.app.services;
 
 import android.content.Context;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.LossItemDetail;
+import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class LossService {
@@ -79,5 +87,39 @@ public class LossService {
 
     private void adjustStockLevel(LossItem lossItem) {
         stockService.reduceStockLevelFor(lossItem.getCommodity(), lossItem.getTotalLosses(), lossItem.created());
+    }
+
+    public List<UtilizationValue> getLossesValues(Commodity commodity, Date startDate, Date endDate) {
+        List<LossItem> lossItems = GenericService.getItems(commodity, startDate, endDate, Loss.class, LossItem.class, context);
+
+        List<UtilizationValue> utilizationValues = new ArrayList<>();
+
+        Calendar calendar = DateUtil.calendarDate(startDate);
+        Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
+        while (calendar.getTime().before(upperLimitDate)) {
+            int dayReceiveItems = getTotal(calendar.getTime(), lossItems);
+            UtilizationValue utilizationValue =
+                    new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), dayReceiveItems);
+            utilizationValues.add(utilizationValue);
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        return utilizationValues;
+    }
+
+
+    private int getTotal(final Date date, List<LossItem> lossItems) {
+        List<LossItem> daysLossItems = FluentIterable.from(lossItems).filter(new Predicate<LossItem>() {
+            @Override
+            public boolean apply(LossItem input) {
+                return DateUtil.equal(input.getLoss().getCreated(), date);
+            }
+        }).toList();
+
+        int totalLoss = 0;
+        for (LossItem lossItem : daysLossItems) {
+            totalLoss += lossItem.getQuantity();
+        }
+
+        return totalLoss;
     }
 }

@@ -48,6 +48,8 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
+import org.clintonhealthaccess.lmis.app.models.Loss;
+import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -98,6 +100,9 @@ public class CommodityService {
 
     @Inject
     ReceiveService receiveService;
+
+    @Inject
+    LossService lossService;
 
     @Inject
     DataSetService dataSetService;
@@ -412,6 +417,13 @@ public class CommodityService {
                 utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
                         getReturnedToLGA(commodity, monthStartDate, monthEndDate)));
             }
+
+            // add quantity loss
+            if (utilizationItemName.equals(UtilizationItemName.QUANTITY_LOSSES)){
+                utilizationItems.add(new UtilizationItem(utilizationItemName.getName(),
+                        lossService.getLossesValues(commodity, monthStartDate, monthEndDate)));
+            }
+
         }
 
         return utilizationItems;

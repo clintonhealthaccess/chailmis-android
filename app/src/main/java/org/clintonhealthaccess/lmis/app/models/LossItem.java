@@ -170,4 +170,8 @@ public class LossItem extends BaseItem implements Serializable, Snapshotable {
     public Date created() {
         return loss.getCreated();
     }
+
+    public Loss getLoss(){
+        return  loss;
+    }
 }
