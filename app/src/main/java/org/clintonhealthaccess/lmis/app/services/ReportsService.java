@@ -228,17 +228,19 @@ public class ReportsService {
 
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
+                // quantity Received should add up adjustment with reason "Received from other facilities"
+                quantityReceived += adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.RECEIVED_FROM_ANOTHER_FACILITY);
 
                 int quantityDispensedToClients = GenericService.getTotal(commodity, startingDate, endDate,
                         Dispensing.class, DispensingItem.class, context);
-
-                //should calculate all the adjustment ignore the sign.
-                int quantityAdjusted = adjustmentService.totalAdjustmentNumber(commodity, startingDate, endDate);
 
                 int quantityLost = GenericService.getTotal(commodity, startingDate, endDate,
                         Loss.class, LossItem.class, context);
 
                 int commoditiesDispensedToFacilities = adjustmentService.totalAdjustment(commodity, startingDate, endDate, AdjustmentReason.SENT_TO_ANOTHER_FACILITY);
+
+                // quantityAdjusted only refers to quantity sent to other facilities, equal to dispensed to facilities
+                int quantityAdjusted = commoditiesDispensedToFacilities;
 
                 int closingStock = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
 
