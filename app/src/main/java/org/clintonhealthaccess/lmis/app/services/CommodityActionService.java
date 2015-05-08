@@ -175,10 +175,10 @@ public class CommodityActionService {
     }
 
     private int average(List<CommodityActionValue> commodityActionValues, int maxNumberOfValues) {
-        int value = 0;
+        float value = 0;
         for (CommodityActionValue commodityActionValue : commodityActionValues) {
-            value += Integer.parseInt(commodityActionValue.getValue());
+            value += Float.parseFloat(commodityActionValue.getValue());
         }
-        return value / maxNumberOfValues;
+        return (int)value / maxNumberOfValues;
     }
 }
