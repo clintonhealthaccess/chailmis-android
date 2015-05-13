@@ -26,7 +26,7 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 
 ### Jenkins Build Info
 * Uses jenkins master slave to perform all test and build jobs
-* Uses jenkins slave node running under twer user to publish development builds to the fdroid repo
+* Uses jenkins slave node(fdroid-slave) running under twer user to publish development builds to the fdroid repo
   The slave node is needed because the user which owns the fdroid repo on the server MUST be the user to publish
 
 ### Tech stack
