@@ -16,7 +16,7 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 
 ## Developer info
 
-### Build status, repositories
+## Build status, repositories
 
 * [![Build Status](http://104.131.225.22:8080/job/android-unit-test/badge/icon)](http://104.131.225.22:8080/job/android-unit-test/)
 * [Github Repository](https://github.com/chailmis/chailmis-android)
