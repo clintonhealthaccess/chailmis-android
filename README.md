@@ -16,7 +16,7 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 
 ## Developer info
 
-## Build status, repositories
+### Build status, repositories
 
 * [![Build Status](http://104.131.225.22:8080/job/android-unit-test/badge/icon)](http://104.131.225.22:8080/job/android-unit-test/)
 * [Github Repository](https://github.com/chailmis/chailmis-android)
@@ -24,7 +24,7 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 * [CrashLytics repository](https://crashlytics.com/twkla/android/apps/org.clintonhealthaccess.lmis.app/)
 * [App store instructions](https://github.com/chailmis/chailmis-android/blob/master/appstore/README.md)
 
-## Jenkins Build Info
+### Jenkins Build Info
 * Uses jenkins master slave to perform all test and build jobs
 * Uses jenkins slave node running under twer user to publish development builds to the fdroid repo
   The slave node is needed because the user which owns the fdroid repo on the server MUST be the user to publish
