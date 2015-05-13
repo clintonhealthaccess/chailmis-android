@@ -42,12 +42,12 @@ To setup the F-Droid repository
 
 To publish a development package
 ------
-- `cd /var/www/html/fdroid/development/`
+- `cd /usr/share/nginx/html/fdroid/development/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-development-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
 
 To publish a production package
 -------
-- `cd /var/www/html/fdroid/production/`
+- `cd /usr/share/nginx/html/fdroid/production/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-production-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
