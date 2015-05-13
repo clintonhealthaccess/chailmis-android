@@ -24,6 +24,11 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 * [CrashLytics repository](https://crashlytics.com/twkla/android/apps/org.clintonhealthaccess.lmis.app/)
 * [App store instructions](https://github.com/chailmis/chailmis-android/blob/master/appstore/README.md)
 
+## Jenkins Build Info
+* Uses jenkins master slave to perform all test and build jobs
+* Uses jenkins slave node running under twer user to publish development builds to the fdroid repo
+  The slave node is needed because the user which owns the fdroid repo on the server MUST be the user to publish
+
 ### Tech stack
 
 * Target OS: Android 4.2
@@ -44,6 +49,3 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 
 * [Google drive](https://drive.google.com/a/thoughtworks.com/#folders/0Bx_qXlwQO9lRb3lnMjgwZllPcDA)
 * [MyThoughtworks group](https://my.thoughtworks.com/groups/chailmis)
-
-
-
