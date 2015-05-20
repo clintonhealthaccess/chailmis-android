@@ -89,10 +89,18 @@ public class SearchCommodityAdapter extends ArrayAdapter<Commodity> {
             if (constraint != null) {
                 suggestions.clear();
                 for (Commodity commodity : itemsAll) {
-                    if (commodity.getName().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                    if (commodity.getName().toLowerCase().startsWith(constraint.toString().toLowerCase())) {
                         suggestions.add(commodity);
                     }
                 }
+
+                for (Commodity commodity : itemsAll){
+                    if(commodity.getName().toLowerCase().contains(constraint.toString().toLowerCase())
+                            && !suggestions.contains(commodity)){
+                        suggestions.add(commodity);
+                    }
+                }
+
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = suggestions;
                 filterResults.count = suggestions.size();
