@@ -28,9 +28,9 @@
   -->
 <resources>
 
-    <string name="app_name">DHIS2 LMIS</string>
+    <string name="app_name">FaStMan</string> <!-- changed per card #205 -->
 
-    <integer name="sync_interval">3600</integer> <!--IN SECONDS--> 
+    <integer name="sync_interval">3600</integer> <!--IN SECONDS - describes how often the app will synch with the server --> 
     <integer name="monthly_stock_count_day">24</integer>
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
@@ -68,7 +68,7 @@
     <string name="close_selection">Close Selection</string>
     <string name="dispense_submit_validation_message_zero">Please make sure all the quantities are greater than 0</string>
     <string name="dispense_submit_validation_message_filled">Please make sure all the quantities are filled</string>
-    <string name="dispense_submit_validation_message_errors">Please Enter the correct Quantities</string>
+    <string name="dispense_submit_validation_message_errors">Please Enter the correct quantities</string>
     <string name="go_back">Go Back</string>
     <string name="commodity">Commodity</string>
     <string name="adjusted_quantity">Adjusted Quantity</string>
