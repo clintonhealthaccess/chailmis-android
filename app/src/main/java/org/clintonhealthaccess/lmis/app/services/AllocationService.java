@@ -219,19 +219,25 @@ public class AllocationService {
 
         ArrayList<CommodityActionValue> allocationActionValues = newArrayList(commodityActionValues);
         allocationActionValues.remove(allocationIdValue);
-        List<AllocationItem> allocationItems = transform(allocationActionValues, new Function<CommodityActionValue, AllocationItem>() {
-            @Override
-            public AllocationItem apply(CommodityActionValue input) {
+
+        List<AllocationItem> allocationItems = new ArrayList<>();
+        for(CommodityActionValue input : allocationActionValues){
+            // ignore incorrect allocation data.
+            try{
                 AllocationItem allocationItem = new AllocationItem();
-                try {
-                    allocationItem.setQuantity(parseInt(input.getValue()));
-                } catch (NumberFormatException e) {
-                    throw new LmisException("Allocation Amount Not Integer: " + input.getCommodityAction().getActivityType() + " - " + input.getValue(), e);
+                allocationItem.setQuantity(parseInt(input.getValue()));
+                // skip no commodity item.
+                if (input.getCommodityAction().getCommodity() == null){
+                    Log.e("ToAllocation", "Skip AllocationItem because commodity is null => id: " + input.getCommodityAction().getId());
+                    continue;
                 }
                 allocationItem.setCommodity(input.getCommodityAction().getCommodity());
-                return allocationItem;
+                allocationItems.add(allocationItem);
+            }catch (NumberFormatException e){
+                Log.e("ToAllocation", "AllocationItem(" + input.getCommodityAction().getId() +  ") Quantity Not Integer: " + input.getCommodityAction().getActivityType() + " - " + input.getValue());
             }
-        });
+        }
+
         allocation.addTransientItems(allocationItems);
 
         return allocation;

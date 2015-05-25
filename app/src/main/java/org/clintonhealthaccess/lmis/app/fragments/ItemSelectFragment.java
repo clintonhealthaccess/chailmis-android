@@ -29,7 +29,6 @@
 
 package org.clintonhealthaccess.lmis.app.fragments;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -95,7 +94,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
                                                  CommodityDisplayStrategy commodityDisplayStrategy,
                                                  CommoditiesToViewModelsConverter generator, String activityName) {
         Bundle arguments = new Bundle();
-        arguments.putSerializable(ACTIVITY, parent);
         arguments.putSerializable(CATEGORY, category);
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
         arguments.putSerializable(COMMODITY_DISPLAY_STRATEGY, commodityDisplayStrategy);
@@ -104,6 +102,7 @@ public class ItemSelectFragment extends RoboDialogFragment {
 
         ItemSelectFragment fragment = new ItemSelectFragment();
         fragment.setArguments(arguments);
+        fragment.parentActivity = parent;
         return fragment;
     }
 
@@ -111,7 +110,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            parentActivity = (CommoditySelectableActivity) getArguments().getSerializable(ACTIVITY);
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<? extends BaseCommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
             commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(COMMODITY_DISPLAY_STRATEGY);

@@ -80,7 +80,7 @@ import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 
-abstract public class CommoditySelectableActivity extends BaseActivity implements Serializable {
+abstract public class CommoditySelectableActivity extends BaseActivity{
 
     @Inject
     CommodityService commodityService;
