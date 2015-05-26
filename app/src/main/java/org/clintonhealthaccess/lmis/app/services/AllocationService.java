@@ -54,6 +54,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.collect.Collections2.filter;
 import static com.google.common.collect.FluentIterable.from;
@@ -139,9 +141,21 @@ public class AllocationService {
     public void syncAllocations(User user) {
         List<CommodityActionValue> commodityActionValues = lmisServer.fetchAllocations(user);
         List<Allocation> allocations = toAllocations(commodityActionValues);
+
+        String facilityName = user.getFacilityName() == null ? "" : user.getFacilityName();
+        String facility2LetterCode = facilityName.length() > 2 ?
+                facilityName.substring(0, 2).toUpperCase() :
+                facilityName.toUpperCase();
+
         boolean changed = false;
         if (allocations != null) {
             for (Allocation allocation : allocations) {
+                // skip invalid allocation
+                if(!validateAllocationId(facility2LetterCode ,allocation.getAllocationId())){
+                    Log.e("syncAllocations", "Allocation Id (" + allocation.getAllocationId() + ") is not valid , skiped");
+                    continue;
+                }
+
                 if (!isExisting(allocation)) {
                     createAllocation(allocation);
                     changed = true;
@@ -151,6 +165,13 @@ public class AllocationService {
         if (changed) {
             resetCache();
         }
+    }
+
+    private boolean validateAllocationId(String facility2LetterCode, String allocationId){
+        String patternString = facility2LetterCode.toUpperCase() + "\\d+$";
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(allocationId);
+        return matcher.matches();
     }
 
     private void resetCache() {

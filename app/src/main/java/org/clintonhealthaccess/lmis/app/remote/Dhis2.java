@@ -92,6 +92,7 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.thoughtworks.dhis.models.DataElementType.ALLOCATED;
 import static com.thoughtworks.dhis.models.DataElementType.ALLOCATION_ID;
+import static com.thoughtworks.dhis.models.DataElementType.STOCK_ON_HAND;
 import static org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet.generateCommodityActionDataSets;
 import static org.clintonhealthaccess.lmis.app.utils.Helpers.isEmpty;
 
@@ -499,6 +500,12 @@ public class Dhis2 implements LmisServer {
                     commodityAction = new CommodityAction(null, input.getDataElement(),
                             ALLOCATION_ID.getActivity(), ALLOCATED.getActivity());
                 }
+                if(STOCK_ON_HAND.getActivity().equals(commodityAction.getActivityType())
+                        && input.getValue().startsWith("-")){
+                    input.setValue("0");
+                    Log.e("ConvertDataValues", "CommodityAction(" +input.getDataElement()+ ") STOCK_ON_HAND can not be negative, change to 0");
+                }
+
                 return new CommodityActionValue(commodityAction, input.getValue(), input.getPeriod());
             }
         }).toList();

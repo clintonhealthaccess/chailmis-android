@@ -148,7 +148,7 @@ public class AllocationServiceTest extends LMISTestCase {
         assertThat(allocationDao.countOf(), is(2l));
         List<Allocation> allocations = allocationDao.queryForAll();
         Allocation firstAllocation = allocations.get(0);
-        assertThat(firstAllocation.getAllocationId(), is("TW-0001"));
+        assertThat(firstAllocation.getAllocationId(), is("TW0001"));
 
         List<AllocationItem> allocationItems = firstAllocation.getAllocationItems();
         assertThat(allocationItems.size(), is(3));
@@ -179,9 +179,10 @@ public class AllocationServiceTest extends LMISTestCase {
 
     private User setupForAllocations() throws IOException {
         // FIXME: can we mock all this?
-        String orgUnit = "orgnunit";
+        String orgUnit = "TWOrgnUnit";
         User user = new User("test", "pass");
         user.setFacilityCode(orgUnit);
+        user.setFacilityName(orgUnit);
 
         setUpSuccessHttpGetRequest(200, "dataElementGroupSets.json");
         setUpSuccessHttpGetRequest(200, "dataSets.json");
