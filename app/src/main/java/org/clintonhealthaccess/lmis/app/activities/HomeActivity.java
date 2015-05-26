@@ -267,22 +267,12 @@ public class HomeActivity extends BaseActivity implements Serializable {
                 List<StockOnHandGraphBar> bars = new ArrayList<>();
                 int count = 0;
                 for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
-                    int factor = 100;
-                    int amc = commodity.getAMC();
-
-                    //FIXME hack to fix 0 AMC error
-                    amc = amc == 0 ? commodity.getStockOnHand() == 0 ? 1 : commodity.getStockOnHand() : amc;
-
-                    int monthsOfStock = (commodity.getStockOnHand() * factor / amc);
 
                     int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
-                    int minThresholdInMonths = minimumThreshold * factor / amc;
-
                     int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
-                    int maxThresholdInMonths = maxThreshold * factor / amc;
 
                     bars.add(new StockOnHandGraphBar(commodity.getName(),
-                            minThresholdInMonths, maxThresholdInMonths, monthsOfStock,
+                            minimumThreshold, maxThreshold, commodity.getStockOnHand(),
                             colors.get(count), commodity.getStockOnHand()));
                     count++;
                 }
