@@ -91,4 +91,8 @@ public class SmsSyncService {
         editor.putString(SMS_GATEWAY_NUMBER, smsGatewayNumber);
         editor.commit();
     }
+
+    public String getDefaultDhis2SmsNumber() {
+        return defaultDhis2SmsNumber;
+    }
 }

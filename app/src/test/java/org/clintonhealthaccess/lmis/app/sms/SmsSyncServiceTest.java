@@ -94,15 +94,18 @@ public class SmsSyncServiceTest {
 
         smsSyncService.send(dataValueSet);
 
-        verify(mockSmsManager).sendTextMessage("+256785000000", null, "set_1 0510 element_1.11.element_2.22", null, null);
+        String defaultDhis2SmsNumber = smsSyncService.getDefaultDhis2SmsNumber();
+        verify(mockSmsManager).sendTextMessage(defaultDhis2SmsNumber, null, "set_1 0510 element_1.11.element_2.22", null, null);
     }
 
     @Test
     public void shouldSyncSmsGatewayNumberFromLmisServer() throws Exception {
         String expectedGatewayNumber = "+256785111222";
+        String defaultDhis2SmsNumber = smsSyncService.getDefaultDhis2SmsNumber();
+
         User user = new User();
         when(mockUserService.getRegisteredUser()).thenReturn(user);
-        when(mockLmisServer.fetchPhoneNumberConstant(user, SMS_GATEWAY_NUMBER, "+256785000000")).thenReturn(expectedGatewayNumber);
+        when(mockLmisServer.fetchPhoneNumberConstant(user, SMS_GATEWAY_NUMBER, defaultDhis2SmsNumber)).thenReturn(expectedGatewayNumber);
 
         assertThat(sharedPreferences.getString(SMS_GATEWAY_NUMBER, null), nullValue());
 
