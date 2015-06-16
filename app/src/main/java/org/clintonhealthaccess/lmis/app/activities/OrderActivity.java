@@ -121,7 +121,7 @@ public class OrderActivity extends CommoditySelectableActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Commodity commodity = searchCommodityAdapter.getItem(position);
-                onEvent(new CommodityToggledEvent(new OrderCommodityViewModel(commodity)));
+                onEvent(new CommodityToggledEvent(setupOrderCommodityViewModel(commodity)));
                 autoCompleteTextViewCommodities.setText("");
             }
         };
