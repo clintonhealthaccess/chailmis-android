@@ -96,13 +96,13 @@ public class ItemSelectFragment extends RoboDialogFragment {
         Bundle arguments = new Bundle();
         arguments.putSerializable(CATEGORY, category);
         arguments.putSerializable(SELECTED_COMMODITIES, selectedCommodities);
-        arguments.putSerializable(COMMODITY_DISPLAY_STRATEGY, commodityDisplayStrategy);
-        arguments.putSerializable(COMMODITIES_TO_VIEW_MODELS_CONVERTER, generator);
         arguments.putSerializable(ACTIVITY_NAME, activityName);
 
         ItemSelectFragment fragment = new ItemSelectFragment();
         fragment.setArguments(arguments);
         fragment.parentActivity = parent;
+        fragment.commodityDisplayStrategy = commodityDisplayStrategy;
+        fragment.viewModelsConverter = generator;
         return fragment;
     }
 
@@ -112,8 +112,6 @@ public class ItemSelectFragment extends RoboDialogFragment {
         if (getArguments() != null) {
             category = (Category) getArguments().getSerializable(CATEGORY);
             selectedCommodities = (ArrayList<? extends BaseCommodityViewModel>) getArguments().getSerializable(SELECTED_COMMODITIES);
-            commodityDisplayStrategy = (CommodityDisplayStrategy) getArguments().getSerializable(COMMODITY_DISPLAY_STRATEGY);
-            viewModelsConverter = (CommoditiesToViewModelsConverter) getArguments().getSerializable(COMMODITIES_TO_VIEW_MODELS_CONVERTER);
             activityName = (String) getArguments().getSerializable(ACTIVITY_NAME);
         }
     }

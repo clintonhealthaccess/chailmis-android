@@ -34,6 +34,6 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import java.io.Serializable;
 import java.util.List;
 
-public interface CommoditiesToViewModelsConverter extends Serializable {
+public interface CommoditiesToViewModelsConverter {
     public List<? extends BaseCommodityViewModel> execute(List<Commodity> commodities);
 }

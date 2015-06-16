@@ -37,7 +37,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.BaseCommodityViewM
 
 import java.io.Serializable;
 
-abstract public class CommodityDisplayStrategy implements Serializable {
+abstract public class CommodityDisplayStrategy{
     public void apply(BaseCommodityViewModel commodityViewModel, CheckBox checkboxCommoditySelected, TextView alternativeText) {
         if (!allowClick(commodityViewModel)) {
             checkboxCommoditySelected.setVisibility(View.INVISIBLE);
