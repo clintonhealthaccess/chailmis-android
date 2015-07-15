@@ -7,14 +7,16 @@ To setup a device
 * Once in the F-Droid app, click on the menu to navigate to the "Repositories" section
 * In the "Repositories" section, click the + sign to add a new repository
 * There are two repositories that can be added. NOTE: Both are http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
-  * For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo
+  * For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/qa/repo
   * For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
 * Once the repository is added, navigate back to your available apps to install FaStMan (Facility Stock Management Tool).
 * Install and Update LMIS app
 
 If you are trying to install the app, and the install button does not appear, then you are likely trying to install it on an incompatible OS version. In order to install the app anyway you must enable Preferences | Application Compatibility | Incompatible Version via the F-Droid app preferences.  
 
-To setup the F-Droid repository
+Note: The repository at http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo/ is deprecated and should no longer be used, and it will be deleted at some point.
+
+Developer instructions to setup the F-Droid repository
 ---------
 - `vagrant up`
 - `vagrant ssh`
@@ -39,16 +41,16 @@ To setup the F-Droid repository
     - (in Vagrant vm) `cd /usr/share/nginx/www/fdroid && mv /vagrant/LMIS.apk repo/`
     - (in Vagrant vm) `fdroid update --create-metadata --clean --verbose`
 
-To publish a development package
+To publish a package
 ------
-- `cd /usr/share/nginx/html/fdroid/development/`
+You can use Jenkins jobs to publish to QA and production FDroid repositories. The Jenkins scripts have been updated to automatically push the development version to the F-Droid QA repository once the build is complete. The manual instructions are below:
+
+## QA
+- `cd /usr/share/nginx/html/fdroid/qa/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-development-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
 
-Note: The Jenkins scripts have been updated to automatically push the development version to the F-Droid store once the build is complete)
-
-To publish a production package
--------
+## Production
 - `cd /usr/share/nginx/html/fdroid/production/`
 - `wget http://lmisapp.dhis2nigeria.org.ng:8080/job/generate-apk/lastSuccessfulBuild/artifact/app/build/outputs/apk/app-production-debug.apk -O repo/LMIS.apk`
 - `fdroid update --create-metadata --clean --verbose`
