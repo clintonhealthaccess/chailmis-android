@@ -29,6 +29,6 @@
   -->
 
 <resources>
-    <string name="dhis2_base_url">http://lmisdev.dhis2nigeria.org.ng</string>
+    <string name="dhis2_base_url">http://lmisprod.dhis2nigeria.org.ng</string>
     <string name="dhis2_sms_number">38120</string>
 </resources>
