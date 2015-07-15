@@ -14,6 +14,10 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 
 [![Throughput Graph](http://graphs.waffle.io/clintonhealthaccess/chailmis-android/throughput.svg)](https://waffle.io/clintonhealthaccess/chailmis-android/metrics)
 
+## DHIS2 Info
+
+[This document](docs/DHIS2 Config.md) describes the metadata needed/used by the application in DHIS2.
+
 ## Developer info
 
 ### Build status, repositories
