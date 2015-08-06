@@ -67,8 +67,11 @@ android {
     }
 
     productFlavors {
+        mock {
+            applicationId 'org.clintonhealthaccess.lmis.app.mock'
+        }
         development {
-            applicationId 'org.clintonhealthaccess.lmis.app'
+            applicationId 'org.clintonhealthaccess.lmis.app.dev'
         }
         production {
             applicationId 'org.clintonhealthaccess.lmis.app'

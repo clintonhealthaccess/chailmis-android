@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MockFaStMan</string>
+    <integer name="sync_interval">600</integer> <!--IN SECONDS - describes how often the app will synch with the server -->
+</resources>
