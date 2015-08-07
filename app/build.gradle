@@ -58,7 +58,7 @@ android {
         targetSdkVersion 19
 
         versionCode buildNumber
-        versionName "1.7.${buildNumber}"
+        versionName "1.8.${buildNumber}"
     }
 
     packagingOptions {
@@ -67,11 +67,11 @@ android {
     }
 
     productFlavors {
-        mock {
-            applicationId 'org.clintonhealthaccess.lmis.app.mock'
-        }
-        development {
+        dev {
             applicationId 'org.clintonhealthaccess.lmis.app.dev'
+        }
+        qa {
+            applicationId 'org.clintonhealthaccess.lmis.app.qa'
         }
         production {
             applicationId 'org.clintonhealthaccess.lmis.app'
@@ -164,6 +164,11 @@ dependencies {
             'com.android.support:appcompat-v7:19.1.+',
             'de.greenrobot:eventbus:2.2.1',
             'com.squareup.retrofit:retrofit:1.6.1'
+    compile('com.squareup.retrofit:converter-simplexml:1.6.1') {
+        exclude group:'stax', module:'stax-api';
+        exclude group:'stax', module:'stax';
+        exclude group:'xpp3', module:'xpp3'
+    }
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'net.danlew:android.joda:2.4.1'

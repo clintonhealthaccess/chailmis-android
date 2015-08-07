@@ -66,4 +66,6 @@ public interface LmisServer {
     String fetchPhoneNumberConstant(User user, String constantKey, String defaultValue);
 
     List<IndicatorGroup> fetchIndicatorGroups(User user);
+
+    String fetchLatestVersion();
 }

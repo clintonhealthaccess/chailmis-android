@@ -35,6 +35,7 @@
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>
     <string name="sync_account_type">lmis.dhis2nigeria.org.ng</string>
+    <string name="app_market_base_url">http://lmisapp.dhis2nigeria.org.ng</string>
     <string name="register_label">Please register with Facility Credentials:</string>
     <string name="losses">Losses</string>
     <string name="adjustments">Adjustments</string>

@@ -29,10 +29,13 @@
 
 package org.clintonhealthaccess.lmis.app.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.View;
@@ -57,6 +60,7 @@ import org.clintonhealthaccess.lmis.app.models.alerts.LowStockAlert;
 import org.clintonhealthaccess.lmis.app.models.alerts.NotificationMessage;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
+import org.clintonhealthaccess.lmis.app.services.VersionService;
 import org.clintonhealthaccess.lmis.app.sync.SyncManager;
 import org.clintonhealthaccess.lmis.app.views.graphs.StockOnHandGraphBar;
 
@@ -124,6 +128,9 @@ public class HomeActivity extends BaseActivity implements Serializable {
     AlertsService alertsService;
 
     @Inject
+    VersionService versionService;
+
+    @Inject
     CommodityService commodityService;
 
     @InjectView(R.id.barChart)
@@ -162,6 +169,7 @@ public class HomeActivity extends BaseActivity implements Serializable {
         super.onResume();
         setupAlerts();
         updateGraph();
+        checkAppVersion();
     }
 
     @Override
@@ -199,12 +207,48 @@ public class HomeActivity extends BaseActivity implements Serializable {
         }
     }
 
+    private void checkAppVersion() {
+        createCheckVersionTask().execute();
+    }
 
     private void setupAlerts() {
         AsyncTask<Void, Void, List<LowStockAlert>> getAlerts = createAlertsTask();
         getAlerts.execute();
         AsyncTask<Void, Void, List<? extends NotificationMessage>> getNotificationsMessageTask = createNotificationsMessageTask();
         getNotificationsMessageTask.execute();
+    }
+
+    private AsyncTask<Void, Void, Boolean> createCheckVersionTask() {
+        return new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                return versionService.shouldUpgrade();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean needUpgrade) {
+                if (needUpgrade) {
+                    new AlertDialog.Builder(HomeActivity.this)
+                            .setMessage("There is a new version for this app!")
+                            .setTitle("Please upgrade app")
+                            .setNeutralButton("Next time", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton("Upgrade", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show().setCanceledOnTouchOutside(false);
+
+                }
+            }
+        };
     }
 
     private AsyncTask<Void, Void, List<LowStockAlert>> createAlertsTask() {

@@ -50,6 +50,7 @@ import com.thoughtworks.dhis.models.IndicatorGroup;
 import com.thoughtworks.dhis.models.Option;
 import com.thoughtworks.dhis.models.OptionSet;
 
+import org.clintonhealthaccess.lmis.app.BuildConfig;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.models.Category;
@@ -65,6 +66,8 @@ import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.models.api.OptionSetResponse;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2EndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.endpoints.Dhis2Endpoint;
+import org.clintonhealthaccess.lmis.app.remote.endpoints.FDroidEndPoint;
+import org.clintonhealthaccess.lmis.app.remote.endpoints.FDroidEndPointFactory;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataElementGroupSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.DataSetSearchResponse;
 import org.clintonhealthaccess.lmis.app.remote.responses.IndicatorGroupResponse;
@@ -101,6 +104,9 @@ public class Dhis2 implements LmisServer {
     public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     @Inject
     private Dhis2EndPointFactory dhis2EndPointFactory;
+
+    @Inject
+    private FDroidEndPointFactory fDroidEndPointFactory;
 
     @InjectResource(R.integer.monthly_stock_count_day)
     Integer defaultValue;
@@ -475,6 +481,12 @@ public class Dhis2 implements LmisServer {
         } else {
             return defaultValue;
         }
+    }
+
+    @Override
+    public String fetchLatestVersion() {
+        FDroidEndPoint fDroidEndPoint = fDroidEndPointFactory.getEndPoint();
+        return fDroidEndPoint.getVersionInfo(BuildConfig.FLAVOR).getVersion();
     }
 
     public List<CommodityActionValue> convertDataValuesToCommodityActions(List<DataValue> values) {
