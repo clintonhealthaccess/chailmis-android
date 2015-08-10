@@ -11,6 +11,6 @@ public interface FDroidEndPoint {
     @Headers({
             "Content-Type:application/xml"
     })
-    @GET("/fdroid/{flavor}/repo/")
+    @GET("/fdroid/{flavor}/repo")
     FDroid getVersionInfo(@Path("flavor") String flavor);
 }

@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">DevFaStMan</string>
     <integer name="sync_interval">600</integer> <!--IN SECONDS - describes how often the app will synch with the server -->
+    <string name="app_market_base_url">@string/dhis2_base_url</string>
 </resources>
