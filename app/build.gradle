@@ -71,7 +71,7 @@ android {
             applicationId 'org.clintonhealthaccess.lmis.app.dev'
         }
         qa {
-            applicationId 'org.clintonhealthaccess.lmis.app.qa'
+            applicationId 'org.clintonhealthaccess.lmis.app'
         }
         production {
             applicationId 'org.clintonhealthaccess.lmis.app'
