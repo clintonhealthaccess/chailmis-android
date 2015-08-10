@@ -1,6 +1,5 @@
 package org.clintonhealthaccess.lmis.app.remote.endpoints;
 
-import org.clintonhealthaccess.lmis.app.BuildConfig;
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.R;
 

@@ -149,6 +149,7 @@
         </service>
         <service android:name=".backgroundServices.AlertsGenerationIntentService" />
         <service android:name=".backgroundServices.SmsSyncIntentService" />
+        <service android:name=".backgroundServices.VersionIntentService" />
 
         <provider
             android:name=".sync.StubContentProvider"
@@ -177,6 +178,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.UpgradeActivity"
+            android:label="@string/title_activity_upgrade"
+            android:theme="@style/Theme.Base.AppCompat.Dialog.Light.FixedSize"
+            android:screenOrientation="landscape"/>
         <activity
             android:name=".activities.reports.FacilityConsumptionReportRH2Activity"
             android:label="@string/title_activity_rh2"
