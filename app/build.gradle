@@ -112,14 +112,14 @@ jacoco {
 
 def coverageSourceDirs = ['src/main/java']
 
-task jacocoTestReport(type: JacocoReport, dependsOn: "testDevelopmentDebug") {
+task jacocoTestReport(type: JacocoReport, dependsOn: "testQaDebug") {
     reports {
         xml.enabled = true
         html.enabled = true
     }
-    classDirectories = fileTree(dir: './build/intermediates/classes/development/debug/org')
+    classDirectories = fileTree(dir: './build/intermediates/classes/qa/debug/org')
     sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDevelopmentDebug.exec')
+    executionData = files('build/jacoco/testQaDebug.exec')
 }
 
 apply plugin: 'pmd'
