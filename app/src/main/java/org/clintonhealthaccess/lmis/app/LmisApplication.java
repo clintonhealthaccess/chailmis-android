@@ -31,9 +31,11 @@ package org.clintonhealthaccess.lmis.app;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 import com.google.inject.Inject;
@@ -41,6 +43,7 @@ import com.google.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.clintonhealthaccess.lmis.app.backgroundServices.AlertsGenerationIntentService;
+import org.clintonhealthaccess.lmis.app.backgroundServices.DownloadBroadcastReceiver;
 import org.clintonhealthaccess.lmis.app.backgroundServices.SmsSyncIntentService;
 import org.clintonhealthaccess.lmis.app.config.GuiceConfigurationModule;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
@@ -82,6 +85,13 @@ public class LmisApplication extends Application {
         loadAllAllocationstoCache();
         setupAlertsService();
         setupSmsSyncingService();
+        registerDownloadCompleteReceiver();
+    }
+
+    private void registerDownloadCompleteReceiver() {
+        DownloadBroadcastReceiver receiver = new DownloadBroadcastReceiver();
+        IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        registerReceiver(receiver, intentFilter);
     }
 
     private void setupSmsSyncingService() {

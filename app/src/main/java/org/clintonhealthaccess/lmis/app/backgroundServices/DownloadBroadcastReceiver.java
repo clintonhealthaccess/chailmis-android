@@ -10,10 +10,12 @@ import android.os.Build;
 
 public class DownloadBroadcastReceiver extends BroadcastReceiver {
 
-    private String latestVersion;
-
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!validIntent(context, intent)) {
+            return;
+        }
+
         Long fileId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
         if (!validDownloadFile(context, fileId)) {
             return;
@@ -22,18 +24,38 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
         install(context, downloadedFile);
     }
 
+    private boolean validIntent(Context context, Intent intent) {
+        if (intent.getAction() != null && intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+            if (context.getPackageName().equals(intent.getPackage())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean validDownloadFile(Context context, Long fileId) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Cursor c= downloadManager.query(new DownloadManager.Query().setFilterById(fileId));
 
-        if(c.moveToFirst()){
-            String title = c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-            int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-            if(status == DownloadManager.STATUS_SUCCESSFUL && title.contains(latestVersion)){
-                return true;
-            }else{
-                return false;
+        try {
+            if(c.moveToFirst()){
+                int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                if (status != DownloadManager.STATUS_SUCCESSFUL) {
+                    return false;
+                }
+                try {
+                    String versionCode = c.getString(c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+                    String currentVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+                    if(versionCode.compareTo(currentVersion) > 0){
+                        return true;
+                    }
+                } catch (Exception e) {
+                    return false;
+                }
             }
+        } finally {
+            c.close();
         }
         return false;
     }
@@ -57,7 +79,4 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
         context.startActivity(i);
     }
 
-    public void setLatestVersion(String latestVersion) {
-        this.latestVersion = latestVersion;
-    }
 }

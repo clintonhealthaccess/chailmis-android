@@ -19,7 +19,6 @@ public class VersionIntentService extends RoboIntentService {
 
     @Inject
     private LmisServer lmisServer;
-    private DownloadBroadcastReceiver receiver;
 
     public VersionIntentService() {
         super("VersionIntentService");
@@ -37,23 +36,8 @@ public class VersionIntentService extends RoboIntentService {
             return;
         }
         if (FDroid.checkVersion(remoteVersion, currentVersion)) {
-            if (receiver == null) {
-                receiver = new DownloadBroadcastReceiver();
-                IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-                intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
-                registerReceiver(receiver, intentFilter);
-            }
-            receiver.setLatestVersion(remoteVersion);
             EventBus.getDefault().post(new CheckVersionEvent(remoteVersion));
             popupUpgradeDialog(remoteVersion);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (receiver != null) {
-            unregisterReceiver(receiver);
         }
     }
 

@@ -29,6 +29,7 @@ public class UpgradeActivity extends ActionBarActivity {
     public void download(View view) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getString(R.string.app_market_base_url) + "/fdroid/" + BuildConfig.FLAVOR + "/repo/LMIS.apk"));
         request.setTitle("LMIS-" + latestVersion);
+        request.setDescription(latestVersion);
         ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);
         finish();
     }
