@@ -92,7 +92,7 @@ public class DispensingService {
             adjustStockLevel(dispensingItem);
             commoditySnapshotService.add(dispensingItem);
         }
-        commodityService.reloadMostConsumedCommoditiesCache();
+        commodityService.addMostDispensedCommoditiesCache(dispensingItems.get(0).getCommodity());
     }
 
     private void adjustStockLevel(DispensingItem dispensing) {
@@ -133,6 +133,10 @@ public class DispensingService {
 
 
         });
+    }
+
+    public int getDispensedTotalValue(Commodity commodity) {
+        return GenericService.getTotal(commodity, DateUtil.today(), DateUtil.today(), Dispensing.class, DispensingItem.class, context);
     }
 
     public List<UtilizationValue> getDispensedValues(Commodity commodity, Date startDate, Date endDate, boolean forVial) {

@@ -75,7 +75,6 @@ public class LossService {
             adjustStockLevel(lossItem);
             snapshotService.add(lossItem);
         }
-        commodityService.reloadMostConsumedCommoditiesCache();
     }
 
     private void saveLossItemDetails(List<LossItemDetail> lossItemDetails) {

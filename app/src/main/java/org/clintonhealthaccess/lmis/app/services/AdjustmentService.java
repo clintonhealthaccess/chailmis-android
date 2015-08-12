@@ -94,7 +94,6 @@ public class AdjustmentService {
             }
         });
         categoryService.clearCache();
-        commodityService.reloadMostConsumedCommoditiesCache();
         alertsService.disableAllMonthlyStockCountAlerts();
         alertsService.updateLowStockAlerts();
     }

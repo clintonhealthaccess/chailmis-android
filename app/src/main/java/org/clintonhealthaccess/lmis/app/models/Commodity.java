@@ -130,12 +130,6 @@ public class Commodity implements Serializable {
         return id.hashCode();
     }
 
-    public static Comparator<Commodity> AMC_COMPARATOR= new Comparator<Commodity>() {
-        @Override
-        public int compare(Commodity lhs, Commodity rhs) {
-            return rhs.getAMC().compareTo(lhs.getAMC());
-        }
-    };
     public void setCategory(Category category) {
         this.category = category;
     }

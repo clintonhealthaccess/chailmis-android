@@ -48,8 +48,6 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionDataSet;
 import org.clintonhealthaccess.lmis.app.models.DataSet;
-import org.clintonhealthaccess.lmis.app.models.Loss;
-import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
 import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -68,10 +66,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.collect.FluentIterable.from;
-
 import roboguice.inject.InjectResource;
 
+import static com.google.common.collect.FluentIterable.from;
 import static org.clintonhealthaccess.lmis.app.persistence.DbUtil.Operation;
 
 public class CommodityService {
@@ -332,7 +329,7 @@ public class CommodityService {
 
         if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
             List<Commodity> commodities = all();
-            Collections.sort(commodities, Commodity.AMC_COMPARATOR);
+            Collections.sort(commodities, DispensedComparator());
 
             mostConsumedCommodities = commodities != null && commodities.size() > 5 ? commodities.subList(0, 5) : commodities;
 
@@ -346,22 +343,32 @@ public class CommodityService {
         return mostConsumedCommodities;
     }
 
+    private Comparator<Commodity> DispensedComparator() {
+        return new Comparator<Commodity>() {
+            @Override
+            public int compare(Commodity lhs, Commodity rhs) {
+                int lhsDispensedValue = dispensingService.getDispensedTotalValue(lhs);
+                int rhsDispensedValue = dispensingService.getDispensedTotalValue(rhs);
+                return  rhsDispensedValue - lhsDispensedValue;
+            }
+        };
+    }
+
     // used when AMC's are updated
     public void clearMostConsumedCommoditiesCache() {
         mostConsumedCommodities = null;
     }
 
-    public void reloadMostConsumedCommoditiesCache() {
+    public void addMostDispensedCommoditiesCache(Commodity dispensingCommodity) {
         if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
             getMost5HighlyConsumedCommodities();
         } else {
-            for (Commodity commodity : all()) {
-                if (mostConsumedCommodities.contains(commodity)) {
-                    mostConsumedCommodities.remove(commodity);
-                    mostConsumedCommodities.add(commodity);
-                }
+            if (mostConsumedCommodities.contains(dispensingCommodity)) {
+                mostConsumedCommodities.remove(dispensingCommodity);
             }
-            Collections.sort(mostConsumedCommodities, Commodity.AMC_COMPARATOR);
+            mostConsumedCommodities.add(dispensingCommodity);
+            Collections.sort(mostConsumedCommodities, DispensedComparator());
+            mostConsumedCommodities = mostConsumedCommodities != null && mostConsumedCommodities.size() > 5 ? mostConsumedCommodities.subList(0, 5) : mostConsumedCommodities;
         }
     }
 

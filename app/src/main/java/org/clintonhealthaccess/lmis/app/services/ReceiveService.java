@@ -117,7 +117,6 @@ public class ReceiveService {
             stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived(), receiveItem.created());
             commoditySnapshotService.add(receiveItem);
         }
-        commodityService.reloadMostConsumedCommoditiesCache();
         alertsService.updateLowStockAlerts();
     }
 
