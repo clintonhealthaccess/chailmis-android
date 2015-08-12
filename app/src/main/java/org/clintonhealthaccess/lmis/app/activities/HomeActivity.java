@@ -46,6 +46,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.inject.Inject;
 import com.thoughtworks.dhis.models.DataElementType;
 
+import org.clintonhealthaccess.lmis.app.BuildConfig;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.adapters.AlertsAdapter;
 import org.clintonhealthaccess.lmis.app.adapters.NotificationMessageAdapter;
@@ -150,7 +151,9 @@ public class HomeActivity extends BaseActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Crashlytics.start(this);
+        if (BuildConfig.FLAVOR.equals("production")) {
+            Crashlytics.start(this);
+        }
         setupButtonEvents();
         setupGraph();
         setupAutoSync();
