@@ -40,6 +40,8 @@ import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommodityAction;
 import org.clintonhealthaccess.lmis.app.models.CommodityActionValue;
+import org.clintonhealthaccess.lmis.app.models.Dispensing;
+import org.clintonhealthaccess.lmis.app.models.DispensingItem;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationItem;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -47,7 +49,6 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -189,10 +190,17 @@ public class CommodityServiceTest extends LmisTestClass {
     public void shouldReturnMostConsumedCommodities() throws Exception {
         commodityService.initialise(new User("test", "pass"));
         categoryService.clearCache();
-        List<Commodity> commodities = commodityService.getMost5HighlyConsumedCommodities();
 
-        assertThat(commodities.get(0).getAMC(), is(125));
-        assertThat(commodities.get(0).getName(), is("Choloquine"));
+        List<Commodity> allCommodities = commodityService.all();
+        Dispensing dispensing = new Dispensing();
+        Commodity commodity = allCommodities.get(2);
+        DispensingItem newDispensingItem = new DispensingItem(commodity, 3);
+        dispensing.addItem(newDispensingItem);
+        dispensingService.addDispensing(dispensing);
+
+        List<Commodity> commodities = commodityService.getMost5HighlyDispensedCommodities();
+
+        assertThat(commodities.get(0).getName(), is("Quinine"));
     }
 
     private void verifyAllCommodityCategories() {
@@ -336,17 +344,17 @@ public class CommodityServiceTest extends LmisTestClass {
     }
 
     @Test
-    public void shouldReloadMostConsumedCommodities() throws Exception {
+    public void shouldReloadMostDispensedCommodities() throws Exception {
         commodityService.initialise(new User("test", "pass"));
         categoryService.clearCache();
 
-        List<Commodity> mostConsumed = commodityService.getMost5HighlyConsumedCommodities();
+        List<Commodity> mostConsumed = commodityService.getMost5HighlyDispensedCommodities();
         Commodity commodity = mostConsumed.get(0);
-        int expectedStock = commodity.getStockOnHand() - 2;
+        String previousMostDispensedCommodity = commodity.getName();
 
-        adjust(commodity, 2, false, AdjustmentReason.SENT_TO_ANOTHER_FACILITY, adjustmentService);
+        dispense(commodity, 20, dispensingService);
 
-        commodity = commodityService.getMost5HighlyConsumedCommodities().get(0);
-        assertThat(commodity.getStockOnHand(), is(expectedStock));
+        commodity = commodityService.getMost5HighlyDispensedCommodities().get(0);
+        assertThat(commodity.getName(), is(previousMostDispensedCommodity));
     }
 }

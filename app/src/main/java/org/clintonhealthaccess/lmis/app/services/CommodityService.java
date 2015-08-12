@@ -75,7 +75,7 @@ public class CommodityService {
     public static final String MONTHLY_STOCK_COUNT_DAY = "MONTHLY_STOCK_COUNT_DAY";
     public static final String ROUTINE_ORDER_ALERT_DAY = "ROUTINE_ORDER_ALERT_DAY";
 
-    private static List<Commodity> mostConsumedCommodities;
+    private static List<Commodity> mostDispensedCommodities;
 
     @Inject
     private LmisServer lmisServer;
@@ -325,22 +325,22 @@ public class CommodityService {
 
     }
 
-    public List<Commodity> getMost5HighlyConsumedCommodities() {
+    public List<Commodity> getMost5HighlyDispensedCommodities() {
 
-        if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
+        if (mostDispensedCommodities == null || mostDispensedCommodities.size() == 0) {
             List<Commodity> commodities = all();
             Collections.sort(commodities, DispensedComparator());
 
-            mostConsumedCommodities = commodities != null && commodities.size() > 5 ? commodities.subList(0, 5) : commodities;
+            mostDispensedCommodities = commodities != null && commodities.size() > 5 ? commodities.subList(0, 5) : commodities;
 
             //initialize soh, Min and Max stock quantity for these commodities
-            for (Commodity t : mostConsumedCommodities) {
+            for (Commodity t : mostDispensedCommodities) {
                 t.getStockOnHand();
                 t.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
                 t.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
             }
         }
-        return mostConsumedCommodities;
+        return mostDispensedCommodities;
     }
 
     private Comparator<Commodity> DispensedComparator() {
@@ -356,19 +356,19 @@ public class CommodityService {
 
     // used when AMC's are updated
     public void clearMostConsumedCommoditiesCache() {
-        mostConsumedCommodities = null;
+        mostDispensedCommodities = null;
     }
 
     public void addMostDispensedCommoditiesCache(Commodity dispensingCommodity) {
-        if (mostConsumedCommodities == null || mostConsumedCommodities.size() == 0) {
-            getMost5HighlyConsumedCommodities();
+        if (mostDispensedCommodities == null || mostDispensedCommodities.size() == 0) {
+            getMost5HighlyDispensedCommodities();
         } else {
-            if (mostConsumedCommodities.contains(dispensingCommodity)) {
-                mostConsumedCommodities.remove(dispensingCommodity);
+            if (mostDispensedCommodities.contains(dispensingCommodity)) {
+                mostDispensedCommodities.remove(dispensingCommodity);
             }
-            mostConsumedCommodities.add(dispensingCommodity);
-            Collections.sort(mostConsumedCommodities, DispensedComparator());
-            mostConsumedCommodities = mostConsumedCommodities != null && mostConsumedCommodities.size() > 5 ? mostConsumedCommodities.subList(0, 5) : mostConsumedCommodities;
+            mostDispensedCommodities.add(dispensingCommodity);
+            Collections.sort(mostDispensedCommodities, DispensedComparator());
+            mostDispensedCommodities = mostDispensedCommodities != null && mostDispensedCommodities.size() > 5 ? mostDispensedCommodities.subList(0, 5) : mostDispensedCommodities;
         }
     }
 

@@ -113,11 +113,14 @@ public class DispensingServiceTest extends LmisTestClass {
         commodityService.initialise(new User("test", "pass"));
 
         assertThat(dispensingService.getNextPrescriptionId(), is(notNullValue()));
+
+        Commodity commodity = commodityService.all().get(0);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
         String currentMonth = simpleDateFormat.format(new Date());
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0001-%s", currentMonth)));
         for (int i = 0; i < 20; i++) {
             Dispensing dispensing = new Dispensing();
+            dispensing.addItem(new DispensingItem(commodity, 2));
             dispensingService.addDispensing(dispensing);
         }
         assertThat(dispensingService.getNextPrescriptionId(), is(String.format("0021-%s", currentMonth)));

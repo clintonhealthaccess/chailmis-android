@@ -271,7 +271,7 @@ public class HomeActivity extends BaseActivity implements Serializable {
             protected List<StockOnHandGraphBar> doInBackground(Void... params) {
                 List<StockOnHandGraphBar> bars = new ArrayList<>();
                 int count = 0;
-                for (Commodity commodity : commodityService.getMost5HighlyConsumedCommodities()) {
+                for (Commodity commodity : commodityService.getMost5HighlyDispensedCommodities()) {
 
                     int minimumThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MIN_STOCK_QUANTITY.toString());
                     int maxThreshold = commodity.getLatestValueFromCommodityActionByName(DataElementType.MAX_STOCK_QUANTITY.toString());
