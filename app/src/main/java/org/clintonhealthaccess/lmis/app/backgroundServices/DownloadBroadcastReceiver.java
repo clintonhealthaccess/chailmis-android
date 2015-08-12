@@ -74,7 +74,7 @@ public class DownloadBroadcastReceiver extends BroadcastReceiver {
         }
 
         i.setDataAndType(apk, "application/vnd.android.package-archive");
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         context.startActivity(i);
     }

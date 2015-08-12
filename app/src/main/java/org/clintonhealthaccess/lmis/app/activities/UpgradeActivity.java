@@ -10,6 +10,8 @@ import android.view.View;
 import org.clintonhealthaccess.lmis.app.BuildConfig;
 import org.clintonhealthaccess.lmis.app.R;
 
+import java.io.File;
+
 public class UpgradeActivity extends ActionBarActivity {
 
     public static final String LATEST_VERSION_CODE = "latest_code";
@@ -27,9 +29,12 @@ public class UpgradeActivity extends ActionBarActivity {
     }
 
     public void download(View view) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(getString(R.string.app_market_base_url) + "/fdroid/" + BuildConfig.FLAVOR + "/repo/LMIS.apk"));
-        request.setTitle("LMIS-" + latestVersion);
+        Uri apkUri = Uri.parse(getString(R.string.app_market_base_url) + "/fdroid/" + BuildConfig.FLAVOR + "/repo/LMIS.apk");
+        DownloadManager.Request request = new DownloadManager.Request(apkUri);
+        String fileName = "LMIS-" + latestVersion + ".apk";
+        request.setTitle(fileName);
         request.setDescription(latestVersion);
+        request.setDestinationUri(Uri.fromFile(new File(getExternalFilesDir(null).getPath() + "/" + fileName)));
         ((DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE)).enqueue(request);
         finish();
     }
