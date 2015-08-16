@@ -25,7 +25,7 @@ Android Tablet Application for Logistics Management in the DHIS2 Platform. Targe
 * [![Build Status](http://104.131.225.22:8080/job/android-unit-test/badge/icon)](http://104.131.225.22:8080/job/android-unit-test/)
 * [Github Repository](https://github.com/clintonhealthaccess/chailmis-android)
 * [Jenkins CI](http://104.131.225.22:8080/)
-* [CrashLytics repository](https://crashlytics.com/twkla/android/apps/org.clintonhealthaccess.lmis.app/)
+* [CrashLytics repository](https://fabric.io/twkla/android/apps/org.clintonhealthaccess.lmis.app/issues)
 * [App store instructions](https://github.com/clintonhealthaccess/chailmis-android/blob/master/appstore/README.md)
 
 ### Jenkins Build Info
