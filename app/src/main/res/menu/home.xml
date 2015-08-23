@@ -42,4 +42,8 @@
         android:id="@+id/action_help"
         android:title="@string/help"
         app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/action_sync"
+        android:title="@string/sync"
+        app:showAsAction="ifRoom|withText" />
 </menu>

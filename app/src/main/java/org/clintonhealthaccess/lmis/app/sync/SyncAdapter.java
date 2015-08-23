@@ -39,6 +39,7 @@ import android.os.Bundle;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.events.SyncedEvent;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
@@ -47,6 +48,7 @@ import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
 
+import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
 import static android.util.Log.i;
@@ -94,5 +96,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         i("<== Syncing............INDICATORVALUES", account.name);
         commodityActionService.syncIndicatorValues(user, commodityService.all());
 
+        EventBus.getDefault().post(new SyncedEvent());
     }
 }
