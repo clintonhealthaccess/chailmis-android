@@ -43,6 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.activities.AdjustmentsActivity;
 import org.clintonhealthaccess.lmis.app.activities.viewmodels.AdjustmentsViewModel;
@@ -164,6 +165,10 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
         int quantity = commodityViewModel.getQuantityEntered();
         if (quantity > 0) {
             editTextQuantity.setText(Integer.toString(quantity));
+        } else if (quantity ==0) {
+            if (commodityViewModel.isQualityEntered()) {
+                editTextQuantity.setText("0");
+            }
         }
 
         int quantityAllocated = commodityViewModel.getQuantityAllocated();
@@ -242,6 +247,9 @@ public class AdjustmentsAdapter extends ArrayAdapter<AdjustmentsViewModel> {
                 spinnerAdjustmentType.setSelection(isPositive ? types.indexOf("+") : types.indexOf("-"));
                 textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getPhysicalStockCountDifference()));
                 adjustmentsViewModel.setQuantityEntered(quantity);
+                if (StringUtils.isBlank(value)) {
+                    adjustmentsViewModel.clearEnterQuality();
+                }
             } else if (adjustmentsViewModel.getAdjustmentReason().isReceivedFromAnotherFacility()) {
                 textViewAdjustment.setText(String.valueOf(adjustmentsViewModel.getAllocatedReceivedDifference()));
             } else {

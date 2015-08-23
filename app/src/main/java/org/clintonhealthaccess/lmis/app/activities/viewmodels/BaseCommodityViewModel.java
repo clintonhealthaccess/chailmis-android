@@ -38,6 +38,7 @@ public class BaseCommodityViewModel implements Serializable {
     protected int quantityEntered;
     private boolean selected;
     private Commodity commodity;
+    private boolean isQualityEntered = false;
 
     public BaseCommodityViewModel(Commodity commodity) {
         this.commodity = commodity;
@@ -78,6 +79,11 @@ public class BaseCommodityViewModel implements Serializable {
 
     public void setQuantityEntered(int quantityEntered) {
         this.quantityEntered = quantityEntered;
+        this.isQualityEntered = true;
+    }
+
+    public boolean isQualityEntered() {
+        return this.isQualityEntered;
     }
 
     @Override
@@ -101,4 +107,7 @@ public class BaseCommodityViewModel implements Serializable {
         return AMC == 0 ? 1 : (float) commodity.getStockOnHand() / AMC;
     }
 
+    public void clearEnterQuality() {
+        this.isQualityEntered = false;
+    }
 }
