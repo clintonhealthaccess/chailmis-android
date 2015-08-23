@@ -95,7 +95,7 @@ public class CommodityAction implements Serializable {
             Collections.sort(commodityActionValueList, new Comparator<CommodityActionValue>() {
                 @Override
                 public int compare(CommodityActionValue lhs, CommodityActionValue rhs) {
-                    return lhs.getPeriod().compareTo(rhs.getPeriod());
+                    return rhs.getPeriod().compareTo(lhs.getPeriod());
                 }
             });
 
