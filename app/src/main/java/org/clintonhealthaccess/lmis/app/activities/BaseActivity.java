@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -42,10 +43,15 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.R;
+import org.clintonhealthaccess.lmis.app.events.SyncedEvent;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.services.AlertsService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.sync.SyncManager;
+
+import de.greenrobot.event.EventBus;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -54,7 +60,13 @@ public class BaseActivity extends OrmLiteActivity {
     UserService userService;
 
     @Inject
+    SyncManager syncManager;
+
+    @Inject
     AlertsService alertsService;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     TextView textFacilityName;
 
@@ -63,6 +75,7 @@ public class BaseActivity extends OrmLiteActivity {
     public static final String DATE_FORMAT = "dd MMMM yyyy";
 
     protected View menuAlertItem;
+    private static boolean manualSyncFinishing = false;
 
     protected void setFacilityName(String text) {
         textFacilityName.setText(text);
@@ -86,6 +99,7 @@ public class BaseActivity extends OrmLiteActivity {
                     facilityName.substring(0, 2).toUpperCase() :
                     facilityName.toUpperCase();
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -104,6 +118,22 @@ public class BaseActivity extends OrmLiteActivity {
             //Exception when running tests
         }
         return true;
+    }
+
+    private String getLastSyncedTime() {
+        return sharedPreferences.getString("Last_sync_time", null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(SyncedEvent syncedEvent) {
+        manualSyncFinishing = false;
+        invalidateOptionsMenu();
+        Toast.makeText(this, "Sync data with server successfully!", Toast.LENGTH_LONG).show();
     }
 
     public void updateAlertCount(){
@@ -149,8 +179,30 @@ public class BaseActivity extends OrmLiteActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_alert) {
             return true;
+        } else if (item.getItemId() == R.id.action_sync) {
+            syncManager.requestSync();
+            manualSyncFinishing = true;
+            item.setTitle(getString(R.string.syncing));
         }
         return false;
+    }
+
+    @Override
+    protected boolean onPrepareOptionsPanel(View view, Menu menu) {
+        if (!manualSyncFinishing) {
+            MenuItem syncItem = menu.findItem(R.id.action_sync);
+            if (syncItem != null) {
+                syncItem.setTitle(R.string.sync);
+            }
+        }
+
+        String lastSyncedTime = getLastSyncedTime();
+        if (StringUtils.isNotBlank(lastSyncedTime)) {
+            MenuItem item = menu.findItem(R.id.action_last_sync_time);
+            item.setTitle("last sync at:" + lastSyncedTime);
+            item.setVisible(true);
+        }
+        return super.onPrepareOptionsPanel(view, menu);
     }
 
     public void updateAlertCount(final int value, final TextView textView) {

@@ -34,11 +34,13 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.os.Bundle;
 
 import com.google.inject.Inject;
 
+import org.clintonhealthaccess.lmis.app.events.SyncedEvent;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.services.AllocationService;
@@ -46,7 +48,12 @@ import org.clintonhealthaccess.lmis.app.services.CommodityActionService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
 import org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService;
 import org.clintonhealthaccess.lmis.app.services.UserService;
+import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import de.greenrobot.event.EventBus;
 import roboguice.RoboGuice;
 
 import static android.util.Log.i;
@@ -68,6 +75,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Inject
     UserService userService;
 
+    @Inject
+    SharedPreferences sharedPreferences;
+
+    private static SimpleDateFormat dateTimeFormater = new SimpleDateFormat("MMM-dd hh:mm");
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -94,5 +105,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         i("<== Syncing............INDICATORVALUES", account.name);
         commodityActionService.syncIndicatorValues(user, commodityService.all());
 
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("Last_sync_time", dateTimeFormater.format(new Date()));
+        edit.commit();
+        EventBus.getDefault().post(new SyncedEvent());
     }
 }

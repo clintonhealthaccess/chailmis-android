@@ -31,6 +31,7 @@ package org.clintonhealthaccess.lmis.app.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.os.Bundle;
 
 import com.google.common.base.Predicate;
@@ -68,19 +69,23 @@ public class SyncManager {
     private Integer syncInterval;
 
     public void kickOff() {
+        List<Account> lmisAccounts = getAccounts();
+
+        if (lmisAccounts.size() > 0) {
+            kickOffFor(lmisAccounts.get(0));
+        }
+    }
+
+    private List<Account> getAccounts() {
         List<Account> accounts = newArrayList(accountManager.getAccounts());
         i("###### amount of accounts : ", valueOf(accounts.size()));
 
-        List<Account> lmisAccounts = from(accounts).filter(new Predicate<Account>() {
+        return from(accounts).filter(new Predicate<Account>() {
             @Override
             public boolean apply(Account input) {
                 return syncAccountType.equals(input.type);
             }
         }).toList();
-
-        if (lmisAccounts.size() > 0) {
-            kickOffFor(lmisAccounts.get(0));
-        }
     }
 
     private void kickOffFor(Account account) {
@@ -105,4 +110,14 @@ public class SyncManager {
         i("==> Create Sync Account : ", valueOf(success));
     }
 
+    public void requestSync() {
+        List<Account> accounts = getAccounts();
+        if (accounts.size() > 0) {
+            Bundle settingsBundle = new Bundle();
+            settingsBundle.putBoolean(SYNC_EXTRAS_MANUAL, true);
+            settingsBundle.putBoolean(SYNC_EXTRAS_EXPEDITED, true);
+            ContentResolver.requestSync(accounts.get(0), syncContentAuthority, settingsBundle);
+
+        }
+    }
 }

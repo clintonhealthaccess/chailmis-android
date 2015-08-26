@@ -159,7 +159,6 @@ public class HomeActivity extends BaseActivity implements Serializable {
         setupAutoSync();
         startService(new Intent(this, VersionIntentService.class));
 
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -167,12 +166,6 @@ public class HomeActivity extends BaseActivity implements Serializable {
         super.onResume();
         setupAlerts();
         updateGraph();
-    }
-
-    @Override
-    protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
 
