@@ -30,6 +30,7 @@
 package org.clintonhealthaccess.lmis.app.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 
 import com.google.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.clintonhealthaccess.lmis.app.R;
 import org.clintonhealthaccess.lmis.app.events.SyncedEvent;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -62,6 +64,9 @@ public class BaseActivity extends OrmLiteActivity {
 
     @Inject
     AlertsService alertsService;
+
+    @Inject
+    SharedPreferences sharedPreferences;
 
     TextView textFacilityName;
 
@@ -113,6 +118,10 @@ public class BaseActivity extends OrmLiteActivity {
             //Exception when running tests
         }
         return true;
+    }
+
+    private String getLastSyncedTime() {
+        return sharedPreferences.getString("Last_sync_time", null);
     }
 
     @Override
@@ -185,6 +194,13 @@ public class BaseActivity extends OrmLiteActivity {
             if (syncItem != null) {
                 syncItem.setTitle(R.string.sync);
             }
+        }
+
+        String lastSyncedTime = getLastSyncedTime();
+        if (StringUtils.isNotBlank(lastSyncedTime)) {
+            MenuItem item = menu.findItem(R.id.action_last_sync_time);
+            item.setTitle("last sync at:" + lastSyncedTime);
+            item.setVisible(true);
         }
         return super.onPrepareOptionsPanel(view, menu);
     }

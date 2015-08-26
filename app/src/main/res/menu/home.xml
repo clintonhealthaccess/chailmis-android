@@ -46,4 +46,9 @@
         android:id="@+id/action_sync"
         android:title="@string/sync"
         app:showAsAction="ifRoom|withText" />
+    <item android:id="@+id/action_last_sync_time"
+        android:title="Last sync at:"
+        android:visible="false"
+        app:showAsAction="withText|always"/>
+
 </menu>
