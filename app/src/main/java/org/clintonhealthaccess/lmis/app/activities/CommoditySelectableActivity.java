@@ -155,7 +155,6 @@ abstract public class CommoditySelectableActivity extends BaseActivity{
         gridViewSelectedCommodities.setAdapter(arrayAdapter);
 
         afterCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     public void onEvent(CommodityToggledEvent event) {

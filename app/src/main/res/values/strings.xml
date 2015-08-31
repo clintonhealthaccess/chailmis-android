@@ -194,5 +194,7 @@
     <string name="before_select_commodity_bin_load">Please Select The Commodity.</string>
     <string name="commodity_bin_card">Commodity Bin-Card</string>
     <string name="stock_on_hand">Stock on Hand:</string>
+    <string name="sync">Sync</string>
+    <string name="syncing">Syncing</string>
 
 </resources>
