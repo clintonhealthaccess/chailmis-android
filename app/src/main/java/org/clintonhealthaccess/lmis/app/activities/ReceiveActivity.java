@@ -228,7 +228,8 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                             onEvent(event);
                         }
 
-                        ((ReceiveCommoditiesAdapter)arrayAdapter).setQuantityAllocatedDisplay(!selected.contains(getString(R.string.others)));
+                        ((ReceiveCommoditiesAdapter)arrayAdapter).setQuantityAllocatedDisplay(!selected.contains(getString(R.string.others))
+                                && !selected.contains(getString(R.string.zonal_store)));
                         arrayAdapter.notifyDataSetChanged();
                     }
 
