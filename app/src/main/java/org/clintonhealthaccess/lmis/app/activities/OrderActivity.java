@@ -133,7 +133,27 @@ public class OrderActivity extends CommoditySelectableActivity {
 
     @Override
     protected CommodityDisplayStrategy getCheckBoxVisibilityStrategy() {
-        return CommodityDisplayStrategy.ALLOW_ONLY_LGA_COMMODITIES;
+        return new CommodityDisplayStrategy() {
+            @Override
+            public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
+                return !"Vaccines".equals(commodityViewModel.getCommodity().getCategory().getName());
+            }
+
+            @Override
+            public String getMessage() {
+                return String.format("Can't Be Ordered Here");
+            }
+
+            @Override
+            public String getEmptyMessage() {
+                return String.format("Vaccines cannot be ordered from this system");
+            }
+
+            @Override
+            public boolean hideCommodities() {
+                return true;
+            }
+        };
     }
 
     @Override
