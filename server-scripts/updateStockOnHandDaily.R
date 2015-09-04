@@ -96,8 +96,9 @@ halt <- function(hint = "Process stopped.\n") {
 #A static map of commodity types
 #and their factor contribution to the stock on hand for facility level
 
-getConfig<-function(config,con){
-  
+getConfig<-function(file,con){
+#Load the configutation from the named file
+config<-fromJSON(file)
 #Facility level
 #Get all the commodities from the 'All commodities' group set
 config$CommoditiesGroupUID<-dbGetQuery(con,paste0("SELECT uid from dataelementgroupset where name = '",config$CommoditiesGroupName,"';"))$uid
@@ -253,7 +254,7 @@ postPayload<-function(pl,username,password) {
   
   h = basicTextGatherer()
 ptm <- proc.time()
-  curlPerform(url=paste0(base.url,"api/dataValueSets?preheatCache=true"),userpwd=paste0(username,":",password),
+  curlPerform(url=paste0(base.url,"api/dataValueSets?preheatCache=false"),userpwd=paste0(username,":",password),
               httpauth = 1L,
               httpheader=c(Accept="application/xml", Accept="multipart/*", 'Content-Type' = "application/xml"),
               postfields= pl,
@@ -303,37 +304,20 @@ while(!completed) {
 #Name of the analytics table to access
 analytics.table.name<-getAnalyticsTablesName(reportDate,con)
 
-#Configs
-fac.config<-list(type=c('DISPENSED','EXPIRED',
-                        'WASTED','MISSING',
-                        'RECEIVED', 'ADJUSTMENTS',
-                        'FROZEN','LABEL_REMOVED','BREAKAGE','OTHERS','VVM_CHANGE'),
-                 factor=c(-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1),
-                 CommoditiesGroupName="PHC Facility commodities",
-                 ActivityGroupName = 'LMIS Activity Type',
-                 ou.level=4,
-                 soh.name="STOCK_ON_HAND",
-                 stockout=TRUE)
 
-state.config<-list(type=c('STATE STORE LOSSES','STATE STORE ADJUSTMENTS','STATE STORE ISSUED','STATE STORE RECEIVED'),
-                   factor=c(-1,1,-1,1),
-                   CommoditiesGroupName="State Drug Store Commodities",
-                   ActivityGroupName = 'State Store LMIS Activity Types',
-                   ou.level=2,
-                   soh.name="STATE STORE STOCK ON HAND",
-                   stockout=FALSE)
 
 #Get the configs
-fac.config<-getConfig(fac.config,con)
-state.config<-getConfig(state.config,con)
+fac.config<-getConfig("fac.config",con)
+state.config<-getConfig("state.config",con)
 
 
 #Get the stock on hand and then merge with the SOH data elements
 soh.fac<-getSOH(reportDate,fac.config,con)
-
 soh.state<-getSOH(reportDate,state.config,con)
+#Bind the two payloads togeterh
 pl<-rbind(soh.fac,soh.state)
+#Post it
 postPayload(pl,username,password)
-
+#Trigger analytics
 POST(paste0(base.url,"api/resourceTables/analytics?skipResourceTables=true&lastYears=1"),authenticate(username, password))
 
