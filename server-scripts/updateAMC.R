@@ -135,8 +135,8 @@ getMonthlyDispensed<-function(reportDate,con) {
   for (i in 1:length(this.years)) {
     this.year.periods<-periods[periods$year == this.years[i],]
     this.analytics.table<-this.year.periods$table_name[1]
-  this.sql<-paste0("SELECT de as de_uid,uidlevel",ou.level," as ou_uid, monthly ,sum(value) as value from ",this.analytics.table," 
-         where de in ('",paste(disp.des$de_uid,sep="",collapse="','"),"') 
+  this.sql<-paste0("SELECT dx as de_uid,uidlevel",ou.level," as ou_uid, monthly ,sum(value) as value from ",this.analytics.table," 
+         where dx in ('",paste(disp.des$de_uid,sep="",collapse="','"),"') 
          and monthly IN('",paste(this.year.periods$period,sep="",collapse="','"),"') 
          GROUP BY de_uid,monthly,uidlevel",ou.level)
   sql<-paste(sql,"\n",this.sql)
@@ -165,8 +165,8 @@ getMonthlySOD<-function(reportDate,con) {
   for (i in 1:length(this.years)) {
     this.year.periods<-periods[periods$year == this.years[i],]
     this.analytics.table<-this.year.periods$table_name[1]
-    this.sql<-paste0("SELECT de as de_uid,uidlevel",ou.level," as ou_uid ,monthly,MAX(value) as value from ",this.analytics.table," 
-         where de in ('",paste(disp.des$de_uid,sep="",collapse="','"),"') 
+    this.sql<-paste0("SELECT dx as de_uid,uidlevel",ou.level," as ou_uid ,monthly,MAX(value) as value from ",this.analytics.table," 
+         where dx in ('",paste(disp.des$de_uid,sep="",collapse="','"),"') 
          and monthly IN('",paste(this.year.periods$period,sep="",collapse="','"),"') 
          GROUP BY de_uid,monthly,uidlevel",ou.level)
     sql<-paste(sql,"\n",this.sql)
@@ -207,18 +207,20 @@ amc.des<-dbGetQuery(con,sql)
 amc.des<-amc.des[complete.cases(amc.des),]
 #Remap the aggregate data
 d.agg<-merge(d.agg,amc.des,by="commodities_uid")
-
+#Assemble the payload as XML
 foo<-paste0('<dataValueSet xmlns="http://dhis2.org/schema/dxf/2.0">',
             paste('<dataValue dataElement="',as.character(d.agg$dataelement_uid),'" period="',
                   as.character(getCurrentMonthPeriod(reportDate)),'" orgUnit="',
                   as.character(d.agg$ou_uid),'" value="',as.character(round(d.agg$value,0)),'"/>',sep="",collapse=""),"</dataValueSet>")
-cat(foo,file="foodata.xml")
+
+#Get a curl handle and paste the payload
 h = basicTextGatherer()
 curlPerform(url=paste0(base.url,"api/dataValueSets"),userpwd=paste0(username,":",password),
             httpauth = 1L,
             httpheader=c(Accept="application/xml", Accept="multipart/*", 'Content-Type' = "application/xml"),
             writefunction = h$update,
             postfields= foo) 
+
 
 #We are going to post this back as a system notifcation
 payload<-list(subject="Result of AMC update",text=saveXML(xmlParse(h$value())))
