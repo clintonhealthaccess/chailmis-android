@@ -1,0 +1,8 @@
+dbUserName<-""
+dbPassword<-""
+dbName<-""
+dbPort<-
+dbHost<-""
+username<-""
+password<-""
+base.url<-""
