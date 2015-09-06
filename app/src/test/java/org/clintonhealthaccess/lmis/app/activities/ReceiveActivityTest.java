@@ -40,6 +40,7 @@ import org.clintonhealthaccess.lmis.app.activities.viewmodels.ReceiveCommodityVi
 import org.clintonhealthaccess.lmis.app.events.CommodityToggledEvent;
 import org.clintonhealthaccess.lmis.app.models.Allocation;
 import org.clintonhealthaccess.lmis.app.models.AllocationItem;
+import org.clintonhealthaccess.lmis.app.models.Category;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Receive;
 import org.clintonhealthaccess.lmis.app.models.User;
@@ -434,22 +435,44 @@ public class ReceiveActivityTest {
     }
 
     @Test
-    public void shouldAllowYouToSelectLGACommoditiesWhenLGAIsSelected() throws Exception {
+    public void shouldAllowYouToSelectLGANonVaccinesCommoditiesWhenLGAIsSelected() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.spinnerSource = mock(Spinner.class);
         when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.lga));
         Commodity commodity = mock(Commodity.class);
+        when(commodity.getCategory()).thenReturn(new Category("NonVaccines"));
         when(commodity.isNonLGA()).thenReturn(false);
         assertTrue(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
     }
 
     @Test
-    public void shouldNotAllowYouToSelectNonLGACommoditiesWhenLGAIsSelected() throws Exception {
+    public void shouldNotAllowYouToSelectVaccinesCommoditiesWhenLGASelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.lga));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getCategory()).thenReturn(new Category("Vaccines"));
+        assertFalse(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+    }
+
+    @Test
+    public void shouldNotAllowYouToSelectVaccinesCommoditiesWhenOthersSourcesSelected() throws Exception {
+        ReceiveActivity receiveActivity = getReceiveActivity();
+        receiveActivity.spinnerSource = mock(Spinner.class);
+        when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.others));
+        Commodity commodity = mock(Commodity.class);
+        when(commodity.getCategory()).thenReturn(new Category("Vaccines"));
+        assertFalse(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
+    }
+
+    @Test
+    public void shouldNotAllowYouToSelectNonLGANonVaccinesCommoditiesWhenLGAIsSelected() throws Exception {
         ReceiveActivity receiveActivity = getReceiveActivity();
         receiveActivity.spinnerSource = mock(Spinner.class);
         when(receiveActivity.spinnerSource.getSelectedItem()).thenReturn(application.getString(R.string.lga));
         Commodity commodity = mock(Commodity.class);
         when(commodity.isNonLGA()).thenReturn(true);
+        when(commodity.getCategory()).thenReturn(new Category("NonVaccines"));
         assertFalse(receiveActivity.getCheckBoxVisibilityStrategy().allowClick(new BaseCommodityViewModel(commodity)));
 
     }

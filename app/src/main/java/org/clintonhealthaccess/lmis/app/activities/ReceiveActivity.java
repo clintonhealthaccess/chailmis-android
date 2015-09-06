@@ -124,7 +124,11 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                 if (spinnerSource.getSelectedItem().equals(getString(R.string.zonal_store))) {
                     return commodityViewModel.getCommodity().isNonLGA();
                 } else {
-                    return !commodityViewModel.getCommodity().isNonLGA();
+                    if ("Vaccines".equals(commodityViewModel.getCommodity().getCategory().getName())) {
+                        return false;
+                    } else {
+                        return !commodityViewModel.getCommodity().isNonLGA();
+                    }
                 }
             }
 
@@ -135,7 +139,12 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
             @Override
             public String getEmptyMessage() {
-                return String.format("Commodities in this category can not be received from %s", spinnerSource.getSelectedItem().toString());
+                String currentSource = spinnerSource.getSelectedItem().toString();
+                if (!currentSource.equals(getString(R.string.zonal_store))) {
+                    return "Select source: zonal cold chain store";
+                } else {
+                    return String.format("Commodities in this category can not be received from %s", currentSource);
+                }
             }
 
             @Override
