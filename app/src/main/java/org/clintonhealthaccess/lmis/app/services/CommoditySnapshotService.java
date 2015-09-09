@@ -76,6 +76,10 @@ public class CommoditySnapshotService {
     private SmsSyncService smsSyncService;
 
     public void add(final Snapshotable snapshotable) {
+        add(snapshotable, false);
+    }
+
+    public void add(final Snapshotable snapshotable, boolean isReplace) {
 
         List<CommoditySnapshotValue> commoditySnapshotValues = null;
         try {
@@ -91,14 +95,19 @@ public class CommoditySnapshotService {
             if (commoditySnapshots.isEmpty()) {
                 createNewSnapshot(value, snapshotDao);
             } else {
-                updateSnapshot(value, snapshotDao, commoditySnapshots);
+                updateSnapshot(value, snapshotDao, commoditySnapshots, isReplace);
             }
         }
     }
 
-    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao, List<CommoditySnapshot> commoditySnapshots) {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao,
+                                List<CommoditySnapshot> commoditySnapshots, boolean isReplace) {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
-        commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
+        if (isReplace) {
+            commoditySnapshot.setValue(commoditySnapshotValue.getValue());
+        } else {
+            commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
+        }
         commoditySnapshot.setSynced(false);
         snapshotDao.update(commoditySnapshot);
     }

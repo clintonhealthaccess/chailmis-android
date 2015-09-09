@@ -108,6 +108,10 @@ public class CommoditySnapshot {
         }
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     public static DataValueSet toDataValueSet(List<CommoditySnapshot> snapshotsToSync, String orgUnit) {
         DataValueSet dataValueSet = new DataValueSet();
         for (CommoditySnapshot snapshot : snapshotsToSync) {

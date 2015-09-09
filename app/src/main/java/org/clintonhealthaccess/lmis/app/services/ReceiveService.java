@@ -114,7 +114,7 @@ public class ReceiveService {
         GenericDao<ReceiveItem> receiveItemDao = new GenericDao<>(ReceiveItem.class, context);
         for (ReceiveItem receiveItem : receiveItems) {
             receiveItemDao.create(receiveItem);
-            stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived(), receiveItem.created());
+            commoditySnapshotService.add(stockService.increaseStockLevelFor(receiveItem.getCommodity(), receiveItem.getQuantityReceived(), receiveItem.created()), true);
             commoditySnapshotService.add(receiveItem);
         }
         alertsService.updateLowStockAlerts();

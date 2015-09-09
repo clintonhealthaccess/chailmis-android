@@ -325,7 +325,7 @@ public class CommodityServiceTest extends LmisTestClass {
         commodityService.initialise(new User("test", "pass"));
         categoryService.clearCache();
 
-        Commodity commodity = categoryService.all().get(6).getCommodities().get(0);
+        Commodity commodity = categoryService.all().get(0).getCommodities().get(0);
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();

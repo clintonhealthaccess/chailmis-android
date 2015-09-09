@@ -38,6 +38,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
 import org.clintonhealthaccess.lmis.app.models.AdjustmentReason;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
@@ -83,12 +84,14 @@ public class AdjustmentService {
             public String operate(Dao dao) throws SQLException {
                 for (Adjustment adjustment : adjustments) {
                     dao.create(adjustment);
-                    commoditySnapshotService.add(adjustment);
+                    StockItemSnapshot sis;
                     if (adjustment.isPositive()) {
-                        stockService.increaseStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
+                        sis = stockService.increaseStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
                     } else {
-                        stockService.reduceStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
+                        sis = stockService.reduceStockLevelFor(adjustment.getCommodity(), adjustment.getQuantity(), adjustment.getCreated());
                     }
+                    commoditySnapshotService.add(sis, true);
+                    commoditySnapshotService.add(adjustment);
                 }
                 return null;
             }

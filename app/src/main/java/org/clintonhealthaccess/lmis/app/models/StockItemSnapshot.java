@@ -33,14 +33,20 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.clintonhealthaccess.lmis.app.services.Snapshotable;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.ToString;
 
+import static com.thoughtworks.dhis.models.DataElementType.STOCK_ON_HAND;
+
 @DatabaseTable
 @ToString
-public class StockItemSnapshot {
+public class StockItemSnapshot implements Snapshotable {
 
     @DatabaseField(generatedId = true)
     protected int id;
@@ -111,6 +117,19 @@ public class StockItemSnapshot {
 
     public Commodity getCommodity() {
         return commodity;
+    }
+
+    @Override
+    public List<CommoditySnapshotValue> getActivitiesValues() throws Exception {
+        List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>(1);
+        commoditySnapshotValues.add(new CommoditySnapshotValue(
+                getCommodity().getCommodityAction(STOCK_ON_HAND.getActivity()), getQuantity(), getDate()));
+        return commoditySnapshotValues;
+    }
+
+    @Override
+    public Date getDate() {
+        return getCreated();
     }
 
     @Override
