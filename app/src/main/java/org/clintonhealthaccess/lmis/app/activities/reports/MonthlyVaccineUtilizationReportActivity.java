@@ -59,6 +59,7 @@ import org.clintonhealthaccess.lmis.app.models.reports.MonthlyVaccineUtilization
 import org.clintonhealthaccess.lmis.app.services.ReportsService;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 import org.clintonhealthaccess.lmis.app.views.LmisProgressDialog;
+import org.clintonhealthaccess.lmis.app.views.NonScrollListView;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -225,7 +226,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
 
         for (MonthlyVaccineUtilizationReportItem reportItem : reportItems) {
             LinearLayout outerLayout = new LinearLayout(context);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 230);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             outerLayout.setLayoutParams(params);
             outerLayout.setOrientation(LinearLayout.HORIZONTAL);
 
@@ -235,7 +236,7 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             textView.setTextColor(getResources().getColor(R.color.black));
             outerLayout.addView(textView);
 
-            ListView listViewItemNames = new ListView(context);
+            NonScrollListView listViewItemNames = new NonScrollListView(context);
             listViewItemNames.setAdapter(new MonthlyVaccineUtilizationReportAdapter(context,
                     R.layout.monthly_vaccine_utilization_report_item, reportItem.getUtilizationItems(), true));
             LinearLayout.LayoutParams paramsListView = new LinearLayout.LayoutParams(240, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -245,8 +246,8 @@ public class MonthlyVaccineUtilizationReportActivity extends BaseActivity {
             linearLayoutCommodityNamesAndItemNames.addView(outerLayout);
 
 
-            ListView listViewItemValues = new ListView(context);
-            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 230);
+            NonScrollListView listViewItemValues = new NonScrollListView(context);
+            LinearLayout.LayoutParams paramsListViewValues = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             listViewItemValues.setLayoutParams(paramsListViewValues);
 
             listViewItemValues.setAdapter(new MonthlyVaccineUtilizationReportAdapter(context,

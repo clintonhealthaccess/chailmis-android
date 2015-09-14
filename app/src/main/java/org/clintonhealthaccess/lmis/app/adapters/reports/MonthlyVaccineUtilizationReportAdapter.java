@@ -32,6 +32,7 @@ package org.clintonhealthaccess.lmis.app.adapters.reports;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,9 @@ public class MonthlyVaccineUtilizationReportAdapter extends ArrayAdapter<Utiliza
         if (isNamesListView) {
             TextView textView = new TextView(getContext());
             textView.setText(item.getName());
+            textView.setMaxLines(1);
+            textView.setSingleLine();
+            textView.setEllipsize(TextUtils.TruncateAt.END);
             textView.setTextColor(getContext().getResources().getColor(R.color.black));
             setBold(position, textView);
             linearLayout.addView(textView);
