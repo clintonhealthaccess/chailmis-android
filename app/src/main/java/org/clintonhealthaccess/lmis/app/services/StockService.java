@@ -36,7 +36,6 @@ import com.j256.ormlite.dao.Dao;
 
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.StockItem;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 
 import java.sql.SQLException;
@@ -66,32 +65,30 @@ public class StockService {
         return commodity.getStockOnHand();
     }
 
-    public StockItemSnapshot reduceStockLevelFor(final Commodity commodity, int quantity, Date date) {
+    public void reduceStockLevelFor(final Commodity commodity, int quantity, Date date) {
         StockItem stockItem = commodity.reduceStockOnHandBy(quantity);
-        StockItemSnapshot siss = saveStockLevel(commodity, stockItem, date);
+        saveStockLevel(commodity, stockItem, date);
         categoryService.clearCache();
-        return siss;
     }
 
-    public StockItemSnapshot increaseStockLevelFor(Commodity commodity, int quantity, Date date) {
+    public void increaseStockLevelFor(Commodity commodity, int quantity, Date date) {
         StockItem stockItem = commodity.increaseStockOnHandBy(quantity);
-        StockItemSnapshot siss = saveStockLevel(commodity, stockItem, date);
+        saveStockLevel(commodity, stockItem, date);
         categoryService.clearCache();
-        return siss;
     }
 
-    private StockItemSnapshot saveStockLevel(final Commodity commodity, final StockItem stockItem, final Date date) {
+    private void saveStockLevel(final Commodity commodity, final StockItem stockItem, final Date date) {
         dbUtil.withDao(context, StockItem.class, new DbUtil.Operation<StockItem, Void>() {
 
             @Override
             public Void operate(Dao<StockItem, String> dao) throws SQLException {
                 dao.update(stockItem);
+                stockItemSnapshotService.createOrUpdate(commodity, stockItem.getQuantity(), date);
                 //FIXME: Disabled the immediate update of lowstocklevel alerts till feedback from CHAI
                 //alertService.updateCommodityLowStockAlert(commodity);
                 return null;
             }
         });
-        return stockItemSnapshotService.createOrUpdate(commodity, stockItem.getQuantity(), date);
     }
 
 }

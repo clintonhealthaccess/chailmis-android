@@ -40,8 +40,10 @@ import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.clintonhealthaccess.lmis.app.LmisException;
 import org.clintonhealthaccess.lmis.app.models.Adjustment;
+import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.CommoditySnapshotValue;
+import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.User;
 import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
@@ -49,6 +51,8 @@ import org.clintonhealthaccess.lmis.app.remote.LmisServer;
 import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.util.Log.e;
@@ -75,11 +79,13 @@ public class CommoditySnapshotService {
     @Inject
     private SmsSyncService smsSyncService;
 
-    public void add(final Snapshotable snapshotable) {
-        add(snapshotable, false);
-    }
+    @Inject
+    private CommodityService commodityService;
 
-    public void add(final Snapshotable snapshotable, boolean isReplace) {
+    @Inject
+    private StockItemSnapshotService stohService;
+
+    public void add(final Snapshotable snapshotable) {
 
         List<CommoditySnapshotValue> commoditySnapshotValues = null;
         try {
@@ -95,19 +101,14 @@ public class CommoditySnapshotService {
             if (commoditySnapshots.isEmpty()) {
                 createNewSnapshot(value, snapshotDao);
             } else {
-                updateSnapshot(value, snapshotDao, commoditySnapshots, isReplace);
+                updateSnapshot(value, snapshotDao, commoditySnapshots);
             }
         }
     }
 
-    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao,
-                                List<CommoditySnapshot> commoditySnapshots, boolean isReplace) {
+    private void updateSnapshot(CommoditySnapshotValue commoditySnapshotValue, GenericDao<CommoditySnapshot> snapshotDao, List<CommoditySnapshot> commoditySnapshots) {
         CommoditySnapshot commoditySnapshot = commoditySnapshots.get(0);
-        if (isReplace) {
-            commoditySnapshot.setValue(commoditySnapshotValue.getValue());
-        } else {
-            commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
-        }
+        commoditySnapshot.incrementValue(commoditySnapshotValue.getValue());
         commoditySnapshot.setSynced(false);
         snapshotDao.update(commoditySnapshot);
     }
@@ -151,6 +152,30 @@ public class CommoditySnapshotService {
                 return !input.isSmsSent();
             }
         }).toList();
+    }
+
+    public void syncSOHWithServer(User user) {
+        List<CommoditySnapshot> sohSnapshotsToSync = new ArrayList<>();
+        for (Commodity commodity : commodityService.sortedAll()) {
+            try {
+                List<CommoditySnapshotValue> commoditySnapshotValues = stohService.getLatest(commodity, new Date()).getActivitiesValues();
+                for (CommoditySnapshotValue value : commoditySnapshotValues) {
+                    sohSnapshotsToSync.add(new CommoditySnapshot(value));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+        }
+        if (!isEmpty(sohSnapshotsToSync)) {
+            i("==> Syncing SOH...........", sohSnapshotsToSync.size() + " snapshots");
+            DataValueSet valueSet = toDataValueSet(sohSnapshotsToSync, user.getFacilityCode());
+            try {
+                DataValueSetPushResponse response = lmisServer.pushDataValueSet(valueSet, user);
+            } catch (LmisException ex) {
+                e("==> Syncing SOH...........", sohSnapshotsToSync.size() + " snapshots failed");
+            }
+        }
     }
 
     public void syncWithServer(User user) {

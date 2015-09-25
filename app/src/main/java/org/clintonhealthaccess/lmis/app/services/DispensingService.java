@@ -41,7 +41,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Dispensing;
 import org.clintonhealthaccess.lmis.app.models.DispensingItem;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
@@ -90,14 +89,14 @@ public class DispensingService {
             }
         });
         for (DispensingItem dispensingItem : dispensingItems) {
-            commoditySnapshotService.add(adjustStockLevel(dispensingItem), true);
+            adjustStockLevel(dispensingItem);
             commoditySnapshotService.add(dispensingItem);
         }
         commodityService.addMostDispensedCommoditiesCache(dispensingItems.get(0).getCommodity());
     }
 
-    private StockItemSnapshot adjustStockLevel(DispensingItem dispensing) {
-        return stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity(), dispensing.created());
+    private void adjustStockLevel(DispensingItem dispensing) {
+        stockService.reduceStockLevelFor(dispensing.getCommodity(), dispensing.getQuantity(), dispensing.created());
     }
 
     public String getNextPrescriptionId() {

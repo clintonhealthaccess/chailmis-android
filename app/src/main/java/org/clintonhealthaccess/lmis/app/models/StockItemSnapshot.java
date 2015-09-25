@@ -41,7 +41,6 @@ import java.util.Date;
 import java.util.List;
 
 import lombok.ToString;
-
 import static com.thoughtworks.dhis.models.DataElementType.STOCK_ON_HAND;
 
 @DatabaseTable
@@ -120,19 +119,6 @@ public class StockItemSnapshot implements Snapshotable {
     }
 
     @Override
-    public List<CommoditySnapshotValue> getActivitiesValues() throws Exception {
-        List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>(1);
-        commoditySnapshotValues.add(new CommoditySnapshotValue(
-                getCommodity().getCommodityAction(STOCK_ON_HAND.getActivity()), getQuantity(), getDate()));
-        return commoditySnapshotValues;
-    }
-
-    @Override
-    public Date getDate() {
-        return getCreated();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -145,6 +131,19 @@ public class StockItemSnapshot implements Snapshotable {
         if (!dateFormat.format(created).equals(dateFormat.format(that.created))) return false;
 
         return true;
+    }
+
+    @Override
+    public List<CommoditySnapshotValue> getActivitiesValues() throws Exception {
+        List<CommoditySnapshotValue> commoditySnapshotValues = new ArrayList<>(1);
+        commoditySnapshotValues.add(new CommoditySnapshotValue(
+                               getCommodity().getCommodityAction(STOCK_ON_HAND.getActivity()), getQuantity(), getCreated()));
+        return commoditySnapshotValues;
+    }
+
+    @Override
+    public Date getDate() {
+        return getCreated();
     }
 
     @Override

@@ -30,8 +30,6 @@
 package org.clintonhealthaccess.lmis.app.services;
 
 import com.google.inject.Inject;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.clintonhealthaccess.lmis.LmisTestClass;
 import org.clintonhealthaccess.lmis.app.models.Commodity;
@@ -39,19 +37,14 @@ import org.clintonhealthaccess.lmis.app.models.CommoditySnapshot;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.User;
-import org.clintonhealthaccess.lmis.app.persistence.DbUtil;
 import org.clintonhealthaccess.lmis.utils.RobolectricGradleTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import static com.thoughtworks.dhis.models.DataElementType.STOCK_ON_HAND;
-import static org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService.COMMODITY_ACTIVITY_ID;
-import static org.clintonhealthaccess.lmis.app.services.CommoditySnapshotService.COMMODITY_ID;
 import static org.clintonhealthaccess.lmis.utils.TestInjectionUtil.setUpInjectionWithMockLmisServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -64,9 +57,6 @@ public class LossServiceTest extends LmisTestClass {
 
     @Inject
     private CommodityService commodityService;
-
-    @Inject
-    private DbUtil dbUtil;
 
     private GenericDao<Loss> lossDao;
     private GenericDao<CommoditySnapshot> snapshotGenericDao;
@@ -123,5 +113,6 @@ public class LossServiceTest extends LmisTestClass {
         lossService.saveLoss(loss);
         commodity = commodityService.all().get(0);
         assertThat(commodity.getStockOnHand(), is(expectedStockOnHand));
+        assertThat(snapshotGenericDao.queryForAll().size(), is(2));
     }
 }

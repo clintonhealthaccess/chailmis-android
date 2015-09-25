@@ -39,7 +39,6 @@ import org.clintonhealthaccess.lmis.app.models.Commodity;
 import org.clintonhealthaccess.lmis.app.models.Loss;
 import org.clintonhealthaccess.lmis.app.models.LossItem;
 import org.clintonhealthaccess.lmis.app.models.LossItemDetail;
-import org.clintonhealthaccess.lmis.app.models.StockItemSnapshot;
 import org.clintonhealthaccess.lmis.app.models.reports.UtilizationValue;
 import org.clintonhealthaccess.lmis.app.utils.DateUtil;
 
@@ -73,7 +72,7 @@ public class LossService {
         for (LossItem lossItem : lossItems) {
             lossItemDao.create(lossItem);
             saveLossItemDetails(lossItem.getLossItemDetails());
-            snapshotService.add(adjustStockLevel(lossItem), true);
+            adjustStockLevel(lossItem);
             snapshotService.add(lossItem);
         }
     }
@@ -85,8 +84,8 @@ public class LossService {
         }
     }
 
-    private StockItemSnapshot adjustStockLevel(LossItem lossItem) {
-        return stockService.reduceStockLevelFor(lossItem.getCommodity(), lossItem.getTotalLosses(), lossItem.created());
+    private void adjustStockLevel(LossItem lossItem) {
+        stockService.reduceStockLevelFor(lossItem.getCommodity(), lossItem.getTotalLosses(), lossItem.created());
     }
 
     public List<UtilizationValue> getLossesValues(Commodity commodity, Date startDate, Date endDate) {
