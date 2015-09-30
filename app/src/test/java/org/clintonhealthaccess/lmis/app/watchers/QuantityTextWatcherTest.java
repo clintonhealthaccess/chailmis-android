@@ -79,7 +79,6 @@ public class QuantityTextWatcherTest {
         when(mockStockService.getStockLevelFor(Matchers.<Commodity>anyObject())).thenReturn(2);
         watcher.afterTextChanged(new Factory().newEditable("12"));
         verify(editText).setError(anyString());
-
     }
 
     @Test

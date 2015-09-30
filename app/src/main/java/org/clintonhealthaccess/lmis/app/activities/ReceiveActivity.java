@@ -121,9 +121,15 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
         return new CommodityDisplayStrategy() {
             @Override
             public boolean allowClick(BaseCommodityViewModel commodityViewModel) {
-                if (spinnerSource.getSelectedItem().equals(getString(R.string.zonal_store))) {
+                String selectedSource = (String) spinnerSource.getSelectedItem();
+                if (selectedSource.equals(getString(R.string.zonal_store_for_receive))) {
                     return commodityViewModel.getCommodity().isNonLGA();
                 } else {
+                    if (selectedSource.equals(getString(R.string.lga_for_receive))) {
+                        if (allocation == null) {
+                            return false;
+                        }
+                    }
                     if ("Vaccines".equals(commodityViewModel.getCommodity().getCategory().getName())) {
                         return false;
                     } else {
@@ -140,10 +146,12 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
             @Override
             public String getEmptyMessage() {
                 String currentSource = spinnerSource.getSelectedItem().toString();
-                if (!currentSource.equals(getString(R.string.zonal_store))) {
+                if (currentSource.equals(getString(R.string.zonal_store_for_receive))) {
+                    return String.format("Commodities in this category can not be received from %s", currentSource);
+                } else if (currentSource.equals(getString(R.string.others_for_receive))) {
                     return "Select source: zonal cold chain store";
                 } else {
-                    return String.format("Commodities in this category can not be received from %s", currentSource);
+                    return "Please enter valid allocation ID";
                 }
             }
 
@@ -183,7 +191,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     }
 
     public List<String> getReceiveSources() {
-        return Arrays.asList(getString(R.string.lga), getString(R.string.zonal_store), getString(R.string.others));
+        return Arrays.asList(getString(R.string.others_for_receive), getString(R.string.zonal_store_for_receive), getString(R.string.lga_for_receive));
     }
 
     @Override
@@ -205,7 +213,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                         String selected = getReceiveSources().get(position);
-                        if (selected.contains(getString(R.string.lga))) {
+                        if (selected.contains(getString(R.string.lga_for_receive))) {
                             setAllocation(textViewAllocationId.getText().toString());
                             textViewAllocationId.setEnabled(true);
                             textViewAllocationId.setVisibility(View.VISIBLE);
@@ -219,7 +227,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                             textViewAllocationId.setEnabled(false);
                         }
                         List<CommodityToggledEvent> events = new ArrayList<CommodityToggledEvent>();
-                        if (selected.contains(getString(R.string.zonal_store))) {
+                        if (selected.contains(getString(R.string.zonal_store_for_receive))) {
                             for (BaseCommodityViewModel model : selectedCommodities) {
                                 if (!model.getCommodity().isNonLGA()) {
                                     events.add(new CommodityToggledEvent(model));
@@ -237,8 +245,8 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
                             onEvent(event);
                         }
 
-                        ((ReceiveCommoditiesAdapter)arrayAdapter).setQuantityAllocatedDisplay(!selected.contains(getString(R.string.others))
-                                && !selected.contains(getString(R.string.zonal_store)));
+                        ((ReceiveCommoditiesAdapter)arrayAdapter).setQuantityAllocatedDisplay(!selected.contains(getString(R.string.others_for_receive))
+                                && !selected.contains(getString(R.string.zonal_store_for_receive)));
                         arrayAdapter.notifyDataSetChanged();
                     }
 
@@ -279,7 +287,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
 
     public Receive generateReceive() {
         //user input a allocation id, getEndPoint a dummy one
-        if ((allocation == null && spinnerSource.getSelectedItem().toString().contains(getString(R.string.lga)))
+        if ((allocation == null && spinnerSource.getSelectedItem().toString().contains(getString(R.string.lga_for_receive)))
                 || (allocation != null && allocation.isDummy())) {
             generateDummyAllocation(textViewAllocationId.getText().toString().trim());
         }
