@@ -52,6 +52,7 @@ import org.clintonhealthaccess.lmis.app.sms.SmsSyncService;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -156,11 +157,25 @@ public class CommoditySnapshotService {
 
     public void syncSOHWithServer(User user) {
         List<CommoditySnapshot> sohSnapshotsToSync = new ArrayList<>();
+        final Date dateOfYesterday = getDateOfYesterday();
+        final Date dateOfToday = new Date();
         for (Commodity commodity : commodityService.sortedAll()) {
             try {
-                List<CommoditySnapshotValue> commoditySnapshotValues = stohService.getLatest(commodity, new Date()).getActivitiesValues();
-                for (CommoditySnapshotValue value : commoditySnapshotValues) {
-                    sohSnapshotsToSync.add(new CommoditySnapshot(value));
+                int quantityOfYesterday = 0, quantityOfToday = 0;
+                StockItemSnapshot sohOfYesterday = stohService.get(commodity, dateOfYesterday);
+                StockItemSnapshot sohOfToday = stohService.get(commodity, dateOfToday);
+                if (sohOfYesterday != null) {
+                    quantityOfYesterday = sohOfYesterday.getQuantity();
+                }
+                if (sohOfToday != null) {
+                    sohOfToday.setQuantity(sohOfToday.getQuantity() + quantityOfYesterday);
+                    quantityOfToday = sohOfToday.getQuantity();
+                }
+                sohOfToday = stohService.createOrUpdate(commodity, quantityOfToday, dateOfToday);
+                if (sohOfToday != null && sohOfToday.getActivitiesValues() != null) {
+                    for (CommoditySnapshotValue value : sohOfToday.getActivitiesValues()) {
+                        sohSnapshotsToSync.add(new CommoditySnapshot(value));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -192,6 +207,12 @@ public class CommoditySnapshotService {
                 e("==> Syncing...........", snapshotsToSync.size() + " snapshots failed");
             }
         }
+    }
+
+    private Date getDateOfYesterday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DATE, -1);
+        return calendar.getTime();
     }
 
     public void syncWithServerThroughSms(User user) {
