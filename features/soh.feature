@@ -6,17 +6,17 @@ Feature: Stock on Hand
   Scenario: Updating with absolute numbers
     Given the server has "5" items of type "A"
     When I update SOH with "Received" "A" "10"
-    And I wait for the sync period at "01:00AM"
     And the sync succeeds
-    Then the server shows that there are "15" items of type "A" for my clinic
+    Then the client updates SOH for "A" with value "10"
+    And the server shows that there are "15" items of type "A" for my clinic
 
   Scenario: Chaining with absolute numbers
     Given the server has "5" items of type "A"
     When I update SOH with "Received" "A" "10"
     And I update SOH with "Dispensed" "A" "5"
-    And I wait for the sync period at "12:00PM"
     And the sync succeeds
-    Then the server shows that there are "10" items of type "A" for my clinic
+    Then the client updates SOH for "A" with value "5"
+    And the server shows that there are "10" items of type "A" for my clinic
 
   Scenario: Retry to send SOH only at prescribed intervals
     Given the server has "5" items of type "A"
@@ -26,6 +26,14 @@ Feature: Stock on Hand
     And I wait for the sync period at "12:00PM"
     And the sync succeeds
     Then the server shows that there are "15" items of type "A" for my clinic
+
+  Scenario: Chaining with absolute numbers manually
+    Given the server has "5" items of type "A"
+    When I update SOH with "Received" "A" "10"
+    And I update SOH with "Dispensed" "A" "5"
+    And the manual sync succeeds
+    Then the client updates SOH for "A" with value "5"
+    And the server shows that there are "10" items of type "A" for my clinic
 
   Scenario: Querying the server for current information
     Given the server has "5" items of type "A"
