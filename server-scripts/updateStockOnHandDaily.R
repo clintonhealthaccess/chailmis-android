@@ -146,10 +146,12 @@ getStockMovement<-function(reportDate,config,con) {
     if ( i < length(analytics.tables) ) { sql<-paste(sql,"\n UNION \n")}  }
   sql<-paste0(sql ," ORDER BY ou_uid,de_uid,daily")
   d<-dbGetQuery(con,sql)
+  d<-d[complete.cases(d),]
+  if ( nrow(d) > 0 & !is.null(d) ) {
   d<-merge(d,config$all.commodities.des[,c("de_uid","commodities_uid","type","factor")],by="de_uid")
   d$value<-d$value * as.numeric(as.character(d$factor))
   d<-aggregate(value ~ ou_uid + commodities_uid + daily, data=d,FUN=sumSafe)
-  return(d) 
+  return(d) } else { return (NULL) }
 }
 
 
@@ -164,7 +166,8 @@ getSOH<-function(reportDate,config,con) {
     if ( i< length(analytics.tables) ) { sql<-paste(sql,"\n UNION \n")}
   }
   #All of the stock on hand values for the period of interest
-  soh.init<-dbGetQuery(con,sql)
+  soh.init<-dbGetQuery(con,sql)  
+  soh.init<-soh.init[complete.cases(soh.init),]
   #Handle the case if their is no data
   if( nrow(soh.init) == 0 ) {soh.init<-data.frame(commodities_uid=character(),
                                                   ou_uid=character(),
@@ -179,7 +182,8 @@ getSOH<-function(reportDate,config,con) {
   #Get the stock movement over this time period
   sm<-getStockMovement(reportDate,config,con)
   #Bind these together. This is the total stock movement, along with the initial start balance
-  d<-rbind(soh.init,sm)
+  if (  !is.null(sm) ) {
+  d<-rbind(soh.init,sm) } else { d<-soh.init }
   d<-arrange(d,ou_uid,commodities_uid,daily)
   
   #This data frame must be padded. Either from the initial stock movement
@@ -253,7 +257,7 @@ postPayload<-function(pl,username,password) {
   
   h = basicTextGatherer()
 ptm <- proc.time()
-  curlPerform(url=paste0(base.url,"api/dataValueSets?preheatCache=true"),userpwd=paste0(username,":",password),
+  curlPerform(url=paste0(base.url,"api/dataValueSets?preheatCache=false"),userpwd=paste0(username,":",password),
               httpauth = 1L,
               httpheader=c(Accept="application/xml", Accept="multipart/*", 'Content-Type' = "application/xml"),
               postfields= pl,
@@ -323,16 +327,25 @@ state.config<-list(type=c('STATE STORE LOSSES','STATE STORE ADJUSTMENTS','STATE 
                    soh.name="STATE STORE STOCK ON HAND",
                    stockout=FALSE)
 
+lga.config<-list(type=c('STATE STORE LOSSES','STATE STORE ADJUSTMENTS','STATE STORE ISSUED','STATE STORE RECEIVED'),
+                   factor=c(-1,1,-1,1),
+                   CommoditiesGroupName="State Drug Store Commodities",
+                   ActivityGroupName = 'State Store LMIS Activity Types',
+                   ou.level=3,
+                   soh.name="STATE STORE STOCK ON HAND",
+                   stockout=FALSE)
+
 #Get the configs
 fac.config<-getConfig(fac.config,con)
 state.config<-getConfig(state.config,con)
-
+lga.config<-getConfig(lga.config,con)
 
 #Get the stock on hand and then merge with the SOH data elements
 soh.fac<-getSOH(reportDate,fac.config,con)
-
 soh.state<-getSOH(reportDate,state.config,con)
-pl<-rbind(soh.fac,soh.state)
+soh.lga<-getSOH(reportDate,lga.config,con)
+pl<-rbind(soh.fac,soh.state,soh.lga)
+
 postPayload(pl,username,password)
 
 POST(paste0(base.url,"api/resourceTables/analytics?skipResourceTables=true&lastYears=1"),authenticate(username, password))
