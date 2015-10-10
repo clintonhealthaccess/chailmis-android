@@ -30,7 +30,7 @@
 
     <string name="app_name">FaStMan</string> <!-- changed per card #205 -->
 
-    <integer name="sync_interval">3600</integer> <!--IN SECONDS - describes how often the app will synch with the server --> 
+    <integer name="sync_interval">21600</integer> <!--IN SECONDS - describes how often the app will synch with the server -->
     <integer name="monthly_stock_count_day">24</integer>
 
     <string name="sync_content_authority">org.clintonhealthaccess.lmis.app.sync</string>

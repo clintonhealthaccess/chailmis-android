@@ -34,6 +34,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.thoughtworks.dhis.models.DataElementType;
 import com.thoughtworks.dhis.models.Indicator;
 import com.thoughtworks.dhis.models.IndicatorGroup;
+import com.thoughtworks.dhis.models.DataValueSet;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
@@ -46,6 +47,7 @@ import org.clintonhealthaccess.lmis.app.models.DataSet;
 import org.clintonhealthaccess.lmis.app.models.OrderReason;
 import org.clintonhealthaccess.lmis.app.models.OrderType;
 import org.clintonhealthaccess.lmis.app.models.User;
+import org.clintonhealthaccess.lmis.app.models.api.DataValueSetPushResponse;
 import org.clintonhealthaccess.lmis.app.persistence.LmisSqliteOpenHelper;
 import org.clintonhealthaccess.lmis.app.services.CategoryService;
 import org.clintonhealthaccess.lmis.app.services.CommodityService;
@@ -291,5 +293,18 @@ public class Dhis2Test extends LMISTestCase {
         List<CommodityActionValue> commodityActionValues = dhis2.fetchIndicatorValues(new User(), commodities);
 
         assertThat(commodityActionValues.size(), is(10));
+    }
+
+    @Test
+    public void shouldPushDataSetToServer() throws Exception {
+        //for successful case
+        setUpSuccessHttpPostRequest(200, "successfulSnapshotPush.json");
+        DataValueSetPushResponse response = dhis2.pushDataValueSet(new DataValueSet(), new User());
+        assertThat(response.isSuccess(), is(true));
+
+        //for failure case
+        setUpSuccessHttpPostRequest(200, "failureSnapshotPush.json");
+        response = dhis2.pushDataValueSet(new DataValueSet(), new User());
+        assertThat(response.isSuccess(), is(false));
     }
 }
