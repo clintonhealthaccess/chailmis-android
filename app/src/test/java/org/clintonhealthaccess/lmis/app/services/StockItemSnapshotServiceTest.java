@@ -154,24 +154,6 @@ public class StockItemSnapshotServiceTest extends LmisTestClass {
     }
 
     @Test
-    public void shouldReturnLatestAvailableStockItemSnapshot() throws Exception {
-        Commodity commodity = commodityService.all().get(0);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        Date snapshotDate = calendar.getTime();
-
-        StockItemSnapshot stockItemSnapshot = stockItemSnapshotService.createOrUpdate(commodity, 10, snapshotDate);
-
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        Date date2DaysAhead = calendar.getTime();
-        StockItemSnapshot latestSnapshot = stockItemSnapshotService.getLatest(commodity, date2DaysAhead);
-
-        assertThat(latestSnapshot, is(notNullValue()));
-        assertThat(latestSnapshot, is(stockItemSnapshot));
-    }
-
-    @Test
     public void shouldReturnCorrectStockOutDays() throws Exception {
         Commodity commodity = commodityService.all().get(0);
 

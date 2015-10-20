@@ -151,7 +151,7 @@ public class StockItemSnapshotService {
                     @Override
                     public StockItemSnapshot operate(Dao<StockItemSnapshot, String> dao) throws SQLException {
                         QueryBuilder<StockItemSnapshot, String> queryBuilder = dao.queryBuilder();
-                        queryBuilder.where().eq("commodity_id", commodity.getId()).and().le("created", currentDate);
+                        queryBuilder.where().eq("commodity_id", commodity.getId()).and().eq("created", currentDate);
                         queryBuilder.orderBy("created", false);
                         PreparedQuery<StockItemSnapshot> query = queryBuilder.prepare();
 
