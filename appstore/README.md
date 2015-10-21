@@ -7,14 +7,12 @@ To setup a device
 * Once in the F-Droid app, click on the menu to navigate to the "Repositories" section
 * In the "Repositories" section, click the + sign to add a new repository
 * There are two repositories that can be added. NOTE: Both are http, not https. Therefore, you may have to delete the "s" in the default field on F-Droid
-  * For development use: http://lmisapp.dhis2nigeria.org.ng/fdroid/qa/repo
+  * For dev/QA use: http://lmisapp.dhis2nigeria.org.ng/fdroid/qa/repo
   * For production use: http://lmisapp.dhis2nigeria.org.ng/fdroid/production/repo
 * Once the repository is added, navigate back to your available apps to install FaStMan (Facility Stock Management Tool).
 * Install and Update LMIS app
 
-If you are trying to install the app, and the install button does not appear, then you are likely trying to install it on an incompatible OS version. In order to install the app anyway you must enable Preferences | Application Compatibility | Incompatible Version via the F-Droid app preferences.  
-
-Note: The repository at http://lmisapp.dhis2nigeria.org.ng/fdroid/development/repo/ is deprecated and should no longer be used, and it will be deleted at some point.
+If you are trying to install the app, and the install button does not appear, then you are likely trying to install it on an incompatible OS version. In order to install the app anyway you must enable Preferences | Application Compatibility | Incompatible Version via the F-Droid app preferences.
 
 Developer instructions to setup the F-Droid repository
 ---------
