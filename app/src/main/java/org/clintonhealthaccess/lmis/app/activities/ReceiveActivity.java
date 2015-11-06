@@ -100,6 +100,8 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     private List<String> completedAllocationIds;
     private String presetAllocationId;
 
+    private static final List<Integer> FIXED_SOURCES = Arrays.asList(R.string.others, R.string.zonal_store, R.string.lga);
+
 
     @Override
     protected Button getSubmitButton() {
@@ -292,7 +294,7 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
             generateDummyAllocation(textViewAllocationId.getText().toString().trim());
         }
 
-        Receive receive = new Receive(spinnerSource.getSelectedItem().toString(), allocation);
+        Receive receive = new Receive(getString(FIXED_SOURCES.get(spinnerSource.getSelectedItemPosition())), allocation);
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
             ReceiveItem receiveItem = viewModel.getReceiveItem();

@@ -245,7 +245,7 @@ public class ReceiveActivityTest {
 
         assertThat(receive.getReceiveItems().size(), is(1));
         assertThat(receive.getReceiveItems().get(0).getCommodity().getName(), is(PANADOL));
-        assertThat(receive.getSource(), is(application.getString(R.string.others_for_receive)));
+        assertThat(receive.getSource(), is(application.getString(R.string.others)));
     }
 
     @Test
@@ -256,7 +256,7 @@ public class ReceiveActivityTest {
         String applicationString = application.getString(R.string.zonal_store_for_receive);
         setSource(receiveActivity, applicationString);
         Receive receive = receiveActivity.generateReceive();
-        assertThat(receive.getSource(), is(applicationString));
+        assertThat(receive.getSource(), is(application.getString(R.string.zonal_store)));
     }
 
     @Test
