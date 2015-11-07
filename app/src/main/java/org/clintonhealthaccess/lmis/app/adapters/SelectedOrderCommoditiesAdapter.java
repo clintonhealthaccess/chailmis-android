@@ -111,7 +111,7 @@ public class SelectedOrderCommoditiesAdapter extends ArrayAdapter<OrderCommodity
         initialiseDates(orderCommodityViewModel, textViewStartDate, textViewEndDate);
         textViewStartDate.addTextChangedListener(new StartDateTextWatcher(orderCommodityViewModel, textViewStartDate, textViewEndDate, spinnerUnexpectedReasons));
         textViewEndDate.addTextChangedListener(new EndDateTextWatcher(orderCommodityViewModel, spinnerUnexpectedReasons));
-        setDateTextClickListeners(textViewStartDate, textViewEndDate);
+        //setDateTextClickListeners(textViewStartDate, textViewEndDate);
         setVisibilityOfUnexpectedReasonsSpinner(null, null, orderCommodityViewModel, spinnerUnexpectedReasons);
         doUpdateEndDate(orderCommodityViewModel, textViewStartDate, textViewEndDate);
         return rowView;
