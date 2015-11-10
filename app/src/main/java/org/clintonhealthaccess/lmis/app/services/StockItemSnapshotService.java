@@ -113,6 +113,7 @@ public class StockItemSnapshotService {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -128,6 +129,32 @@ public class StockItemSnapshotService {
         return 0;
     }
 
+    public int getOpenningBalance(Commodity commodity, Date date) throws  Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date requiredDate = calendar.getTime();
+
+        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity, requiredDate);
+        if (latestStockItemSnapshot != null) {
+            return latestStockItemSnapshot.getQuantity();
+        }
+        return 0;
+    }
+
+    public int getClosingBalance(Commodity commodity, Date date) throws  Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Date requiredDate = calendar.getTime();
+
+        StockItemSnapshot latestStockItemSnapshot = getLatest(commodity, requiredDate);
+        if (latestStockItemSnapshot != null) {
+            return latestStockItemSnapshot.getQuantity();
+        }
+        return 0;
+    }
+
+    @SuppressWarnings("unused")
     public int getLatestStock(Commodity commodity, Date date, boolean isOpeningStock, List<StockItemSnapshot> stockItemSnapshots) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -173,7 +200,7 @@ public class StockItemSnapshotService {
 
     public int getStockOutDays(Commodity commodity, Date startingDate, Date endDate) throws Exception {
 
-        int openingStock = getLatestStock(commodity, startingDate, true);
+        int openingStock = getOpenningBalance(commodity, startingDate);
 
         int numOfStockOutDays = 0;
 

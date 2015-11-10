@@ -487,7 +487,7 @@ public class CommodityService {
 
         List<UtilizationValue> utilizationValues = new ArrayList<>();
 
-        int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
+        int previousDaysClosingStock = stockItemSnapshotService.getClosingBalance(commodity, startDate);
 
         Calendar calendar = DateUtil.calendarDate(startDate);
 
@@ -515,7 +515,7 @@ public class CommodityService {
 
         List<UtilizationValue> utilizationValues = new ArrayList<>();
 
-        int openingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, true);
+        int openingStock = stockItemSnapshotService.getOpenningBalance(commodity, startDate);
         int previousDaysOpeningStock = openingStock;
 
         Calendar calendar = DateUtil.calendarDate(startDate);
