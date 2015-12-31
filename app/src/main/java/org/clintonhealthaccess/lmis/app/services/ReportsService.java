@@ -107,7 +107,7 @@ public class ReportsService {
 
             for (Commodity commodity : category.getCommodities()) {
 
-                int openingStock = stockItemSnapshotService.getOpenningBalance(commodity, startingDate);
+                int openingStock = stockItemSnapshotService.getLatestStock(commodity, startingDate, true);
 
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
@@ -120,7 +120,7 @@ public class ReportsService {
 
                 int quantityAdjusted = adjustmentService.totalAdjustment(commodity, startingDate, endDate);
 
-                int stockOnHand = stockItemSnapshotService.getClosingBalance(commodity, endDate);
+                int stockOnHand = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
 
                 int amc = commodityActionService.getMonthlyValue(commodity, startingDate, endDate, DataElementType.AMC);
 
@@ -224,7 +224,7 @@ public class ReportsService {
             category = categoryService.get(category);
             for (Commodity commodity : category.getCommodities()) {
 
-                int openingStock = stockItemSnapshotService.getOpenningBalance(commodity, startingDate);
+                int openingStock = stockItemSnapshotService.getLatestStock(commodity, startingDate, true);
 
                 int quantityReceived = GenericService.getTotal(commodity, startingDate, endDate,
                         Receive.class, ReceiveItem.class, context);
@@ -242,7 +242,7 @@ public class ReportsService {
                 // quantityAdjusted only refers to quantity sent to other facilities, equal to dispensed to facilities
                 int quantityAdjusted = commoditiesDispensedToFacilities;
 
-                int closingStock = stockItemSnapshotService.getClosingBalance(commodity, endDate);
+                int closingStock = stockItemSnapshotService.getLatestStock(commodity, endDate, false);
 
                 FacilityConsumptionReportRH2Item item = new FacilityConsumptionReportRH2Item(commodity.getName(),
                         openingStock, quantityReceived, quantityDispensedToClients, quantityAdjusted,
@@ -314,7 +314,7 @@ public class ReportsService {
         List<StockItemSnapshot> stockItemSnapshots = stockItemSnapshotService.get(commodity, startDate, today);
         List<Adjustment> adjustments = adjustmentService.getAdjustments(commodity, startDate, today);
 
-        int previousDaysClosingStock = stockItemSnapshotService.getClosingBalance(commodity, startDate);
+        int previousDaysClosingStock = stockItemSnapshotService.getLatestStock(commodity, startDate, false);
 
         List<BinCardItem> binCardItems = new ArrayList<>();
         Date date = startDate;
