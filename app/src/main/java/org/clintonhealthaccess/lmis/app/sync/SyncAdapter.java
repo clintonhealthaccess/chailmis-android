@@ -96,7 +96,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         i("==> Syncing...........SNAPSHOTS", account.name);
         commoditySnapshotService.syncWithServer(user);
 
-        i("==> Syncing...........SOH SNAPSHOTS", account.name);
+        //i("==> Syncing...........SOH SNAPSHOTS", account.name);
         //commoditySnapshotService.syncSOHWithServer(user);
 
         i("<== Syncing............ALLOCATIONS", account.name);

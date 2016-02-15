@@ -148,7 +148,7 @@ public class DispensingService {
 
         Date upperLimitDate = DateUtil.addDayOfMonth(endDate, 1);
 
-        int dosesPerVial = commodity.dosesPerVial();
+        int dosesPerVial = 1;//commodity.dosesPerVial();
 
         while (calendar.getTime().before(upperLimitDate)) {
             int dayDispensingItems = getTotal(calendar.getTime(), items);

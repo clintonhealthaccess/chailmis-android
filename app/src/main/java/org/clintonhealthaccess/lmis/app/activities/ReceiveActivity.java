@@ -330,8 +330,13 @@ public class ReceiveActivity extends CommoditySelectableActivity implements Seri
     private boolean quantitiesAreValid() {
         for (int i = 0; i < arrayAdapter.getCount(); i++) {
             ReceiveCommodityViewModel viewModel = (ReceiveCommodityViewModel) arrayAdapter.getItem(i);
-            if (viewModel.getQuantityAllocated() == 0 && viewModel.getQuantityReceived() == 0)
+            if (viewModel.getQuantityAllocated() == 0 && viewModel.getQuantityReceived() == 0) {
                 return false;
+            }
+            //Temitayo
+            if (viewModel.getQuantityReceived() % viewModel.getDose() != 0) {
+                return false;
+            }
         }
         return true;
     }

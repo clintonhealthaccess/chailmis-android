@@ -57,6 +57,10 @@ public class BaseCommodityViewModel implements Serializable {
         return commodity.getName();
     }
 
+    public int getDose(){
+        return commodity.dosesPerVial();
+    } //Temitayo
+
     public Commodity getCommodity() {
         return commodity;
     }

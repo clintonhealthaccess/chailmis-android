@@ -41,6 +41,7 @@ public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
     private boolean quantityAllocatedDisabled = false;
     private int quantityAllocated;
     private int quantityReceived;
+    private Commodity commodity;
 
     public ReceiveCommodityViewModel(Commodity commodity) {
         super(commodity);
@@ -51,6 +52,9 @@ public class ReceiveCommodityViewModel extends BaseCommodityViewModel {
         this.quantityAllocated = quantityAllocated;
         this.quantityReceived = quantityReceived;
     }
+    public int getDose(){
+        return super.getDose();
+    } //Temitayo
 
     public ReceiveCommodityViewModel(AllocationItem item) {
         super(item.getCommodity());
