@@ -158,7 +158,7 @@ public class DispensingService {
             }
 
             UtilizationValue utilizationValue =
-                    new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), dayDispensingItems);
+                    new UtilizationValue(DateUtil.dayNumber(calendar.getTime()), ((int)(Math.ceil(dayDispensingItems/(double)commodity.dosesPerVial())*commodity.dosesPerVial())));
             utilizationValues.add(utilizationValue);
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
